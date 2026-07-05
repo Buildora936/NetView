@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>NetView - Auth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#0B0F19">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* =========================
+   BASE
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #0B0F19, #05070D);
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: fadeIn 0.6s ease;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.logo img {
+  width: 90px;
+  filter: drop-shadow(0 0 12px rgba(80,120,255,0.6));
+}
+
+.logo h1 {
+  font-size: 22px;
+  margin-top: 10px;
+  color: #7aa7ff;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   TABS
+========================= */
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  color: #aaa;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tabs button.active {
+  background: rgba(122,167,255,0.15);
+  color: white;
+}
+
+/* =========================
+   FORM
+========================= */
+
+form {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+form.active {
+  display: flex;
+}
+
+input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.3);
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #7aa7ff;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button.submit {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #2f5cff, #7aa7ff);
+  color: white;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+button.submit:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   SMALL TEXT
+========================= */
+
+small {
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error {
+  color: #ff4d4d;
+  font-size: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 500px) {
+  .container {
+    margin: 20px;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="NetView.png" alt="NetView Logo">
+    <h1>NetView</h1>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="active" onclick="showTab('login')">Connexion</button>
+    <button onclick="showTab('signup')">Créer un compte</button>
+  </div>
+
+  <!-- LOGIN -->
+  <form id="loginForm" class="active">
+    <input type="email" id="loginEmail" placeholder="Email ou username">
+    <input type="password" id="loginPassword" placeholder="Mot de passe">
+    <button type="button" class="submit" onclick="login()">Se connecter</button>
+    <div class="error" id="loginError"></div>
+    <small>Mot de passe oublié bientôt disponible</small>
+  </form>
+
+  <!-- SIGNUP -->
+  <form id="signupForm">
+    <input type="text" id="username" placeholder="Nom d'utilisateur">
+    <input type="text" id="displayName" placeholder="Nom affiché">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPassword" placeholder="Mot de passe">
+    <input type="password" id="confirmPassword" placeholder="Confirmer mot de passe">
+
+    <button type="button" class="submit" onclick="signup()">
+      Créer mon compte
+    </button>
+
+    <div class="error" id="signupError"></div>
+
+    <small>
+      En créant un compte, vous acceptez les conditions NetView
+    </small>
+  </form>
+
+</div>
+
+<script type="module">
+
+import { signIn, signUp } from "./auth.js";
+
+/* =========================
+   TAB SYSTEM
+========================= */
+
+window.showTab = (tab) => {
+
+  document.getElementById("loginForm").classList.remove("active");
+  document.getElementById("signupForm").classList.remove("active");
+
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+
+  if(tab === "login") {
+    document.getElementById("loginForm").classList.add("active");
+    document.querySelectorAll(".tabs button")[0].classList.add("active");
+  } else {
+    document.getElementById("signupForm").classList.add("active");
+    document.querySelectorAll(".tabs button")[1].classList.add("active");
+  }
+
+};
+
+/* =========================
+   LOGIN
+========================= */
+
+window.login = async () => {
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  const res = await signIn(email, password);
+
+  if(res.error) {
+    document.getElementById("loginError").textContent = res.error.message;
+    return;
+  }
+
+  window.location.href = "index.html";
+};
+
+/* =========================
+   SIGNUP
+========================= */
+
+window.signup = async () => {
+
+  const username = document.getElementById("username").value;
+  const displayName = document.getElementById("displayName").value;
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
+  const confirm = document.getElementById("confirmPassword").value;
+
+  if(password !== confirm) {
+    document.getElementById("signupError").textContent = "Les mots de passe ne correspondent pas";
+    return;
+  }
+
+  const res = await signUp(email, password);
+
+  if(res.error) {
+    document.getElementById("signupError").textContent = res.error.message;
+    return;
+  }
+
+  window.location.href = "index.html";
+};
+
+</script>
+
+</body>
+</html>
