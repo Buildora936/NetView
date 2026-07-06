@@ -1,1 +1,483 @@
+/* ==========================================
+   NetView
+   Design System
+   buttons.css
+========================================== */
 
+
+/* ==========================================
+   Base Button
+========================================== */
+
+.nv-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: .5rem;
+
+    padding: .75rem 1.5rem;
+
+    border-radius: var(--nv-radius-md);
+
+    border: none;
+
+    font-size: var(--nv-text-md);
+
+    font-weight: var(--nv-semibold);
+
+    cursor: pointer;
+
+    transition:
+
+        transform var(--nv-speed-fast) var(--nv-ease),
+
+        box-shadow var(--nv-speed-fast) var(--nv-ease),
+
+        background var(--nv-speed-fast) var(--nv-ease),
+
+        color var(--nv-speed-fast) var(--nv-ease);
+
+    user-select: none;
+
+}
+
+
+/* ==========================================
+   Hover Global
+========================================== */
+
+.nv-btn:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+.nv-btn:active {
+
+    transform: scale(.97);
+
+}
+
+
+.nv-btn:disabled {
+
+    opacity: .5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+/* ==========================================
+   Primary Button
+========================================== */
+
+.nv-btn-primary {
+
+    background: var(--nv-primary);
+
+    color: #fff;
+
+}
+
+
+.nv-btn-primary:hover {
+
+    box-shadow:
+
+        0 10px 30px
+
+        rgba(37,99,235,.35);
+
+}
+
+
+/* ==========================================
+   Gradient Button
+========================================== */
+
+.nv-btn-gradient {
+
+    background:
+
+        var(--nv-gradient-primary);
+
+    background-size: 200% 200%;
+
+    color: white;
+
+}
+
+
+.nv-btn-gradient:hover {
+
+    animation:
+
+        nvGradientMove
+
+        2s
+
+        infinite;
+
+}
+
+
+/* ==========================================
+   Secondary Button
+========================================== */
+
+.nv-btn-secondary {
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+    border:
+
+        1px solid var(--nv-border);
+
+}
+
+
+.nv-btn-secondary:hover {
+
+    border-color:
+
+        var(--nv-primary);
+
+}
+
+
+/* ==========================================
+   Ghost Button
+========================================== */
+
+.nv-btn-ghost {
+
+    background:
+
+        transparent;
+
+    color:
+
+        var(--nv-text-secondary);
+
+}
+
+
+.nv-btn-ghost:hover {
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+/* ==========================================
+   Premium Pro Button
+========================================== */
+
+.nv-btn-pro {
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #2563EB,
+
+            #7C3AED
+
+        );
+
+    color:white;
+
+    box-shadow:
+
+        0 0 25px
+
+        rgba(124,58,237,.35);
+
+}
+
+
+.nv-btn-pro:hover {
+
+    box-shadow:
+
+        0 0 40px
+
+        rgba(124,58,237,.55);
+
+}
+
+
+/* ==========================================
+   Live Button
+========================================== */
+
+.nv-btn-live {
+
+    background:
+
+        #ef4444;
+
+    color:white;
+
+}
+
+
+.nv-btn-live:hover {
+
+    animation:
+
+        nvLivePulse
+
+        1.5s
+
+        infinite;
+
+}
+
+
+/* ==========================================
+   Danger Button
+========================================== */
+
+.nv-btn-danger {
+
+    background:
+
+        var(--nv-danger);
+
+    color:white;
+
+}
+
+
+/* ==========================================
+   Success Button
+========================================== */
+
+.nv-btn-success {
+
+    background:
+
+        var(--nv-success);
+
+    color:white;
+
+}
+
+
+/* ==========================================
+   Outline Button
+========================================== */
+
+.nv-btn-outline {
+
+    background:
+
+        transparent;
+
+    color:
+
+        var(--nv-primary);
+
+    border:
+
+        1px solid var(--nv-primary);
+
+}
+
+
+.nv-btn-outline:hover {
+
+    background:
+
+        var(--nv-primary);
+
+    color:white;
+
+}
+
+
+/* ==========================================
+   Icon Button
+========================================== */
+
+.nv-icon-btn {
+
+    width:
+
+        42px;
+
+    height:
+
+        42px;
+
+    display:
+
+        inline-flex;
+
+    align-items:
+
+        center;
+
+    justify-content:
+
+        center;
+
+    border-radius:
+
+        50%;
+
+    border:none;
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+    cursor:pointer;
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-icon-btn:hover {
+
+    background:
+
+        var(--nv-primary);
+
+    color:white;
+
+    transform:
+
+        scale(1.08);
+
+}
+
+
+/* ==========================================
+   Button Sizes
+========================================== */
+
+.nv-btn-sm {
+
+    padding:
+
+        .5rem 1rem;
+
+    font-size:
+
+        var(--nv-text-sm);
+
+}
+
+
+.nv-btn-lg {
+
+    padding:
+
+        1rem 2rem;
+
+    font-size:
+
+        var(--nv-text-lg);
+
+}
+
+
+.nv-btn-xl {
+
+    padding:
+
+        1.25rem 2.5rem;
+
+    font-size:
+
+        var(--nv-text-xl);
+
+}
+
+
+/* ==========================================
+   Full Width
+========================================== */
+
+.nv-btn-block {
+
+    width:
+
+        100%;
+
+}
+
+
+/* ==========================================
+   Loading Button
+========================================== */
+
+.nv-btn-loading {
+
+    pointer-events:none;
+
+    position:relative;
+
+    color:transparent;
+
+}
+
+
+.nv-btn-loading::after {
+
+    content:"";
+
+    width:18px;
+
+    height:18px;
+
+    border:
+
+        2px solid rgba(255,255,255,.5);
+
+    border-top-color:white;
+
+    border-radius:50%;
+
+    animation:
+
+        nvRotate
+
+        .8s linear infinite;
+
+    position:absolute;
+
+}
