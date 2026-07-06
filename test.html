@@ -11,29 +11,25 @@
 <title>NetView System Test</title>
 
 
-<!-- Core CSS -->
+<!-- CORE CSS -->
 
 <link rel="stylesheet" href="css/core/variables.css">
-
 <link rel="stylesheet" href="css/core/reset.css">
-
 <link rel="stylesheet" href="css/core/typography.css">
-
 <link rel="stylesheet" href="css/core/animations.css">
+<link rel="stylesheet" href="css/core/utilities.css">
 
 
-<!-- Components -->
+<!-- COMPONENTS CSS -->
 
 <link rel="stylesheet" href="css/components/buttons.css">
-
 <link rel="stylesheet" href="css/components/forms.css">
-
 <link rel="stylesheet" href="css/components/cards.css">
-
+<link rel="stylesheet" href="css/components/header.css">
+<link rel="stylesheet" href="css/components/sidebar.css">
+<link rel="stylesheet" href="css/components/footer.css">
 <link rel="stylesheet" href="css/components/modal.css">
-
 <link rel="stylesheet" href="css/components/toast.css">
-
 <link rel="stylesheet" href="css/components/loader.css">
 
 
@@ -43,7 +39,117 @@
 <body>
 
 
-<main style="padding:40px;">
+<!-- HEADER TEST -->
+
+<header class="nv-header">
+
+
+<div class="nv-header-logo">
+
+<img src="" alt="NetView">
+
+<span>
+NetView
+</span>
+
+</div>
+
+
+
+<div class="nv-header-search">
+
+<input 
+class="nv-input"
+placeholder="Rechercher sur NetView">
+
+
+</div>
+
+
+
+<div class="nv-header-actions">
+
+<button class="nv-icon-btn">
+🔔
+</button>
+
+
+<button class="nv-btn nv-btn-primary">
+
+Créer
+
+</button>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+<!-- SIDEBAR TEST -->
+
+
+<aside class="nv-sidebar">
+
+
+<nav class="nv-sidebar-nav">
+
+
+<div class="nv-sidebar-item active">
+
+<div class="nv-sidebar-icon">
+🏠
+</div>
+
+<div class="nv-sidebar-text">
+Accueil
+</div>
+
+</div>
+
+
+
+<div class="nv-sidebar-item">
+
+<div class="nv-sidebar-icon">
+🎬
+</div>
+
+<div class="nv-sidebar-text">
+Vidéos
+</div>
+
+</div>
+
+
+
+<div class="nv-sidebar-item">
+
+<div class="nv-sidebar-icon">
+💬
+</div>
+
+<div class="nv-sidebar-text">
+Messages
+</div>
+
+</div>
+
+
+</nav>
+
+
+</aside>
+
+
+
+
+
+<main class="nv-content" style="padding:40px;">
 
 
 <h1>
@@ -52,9 +158,213 @@ NetView Core Test
 
 
 <p>
-Vérification des fondations JavaScript.
+Test complet CSS + JavaScript
 </p>
 
+
+
+
+
+<!-- BUTTON TEST -->
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+Buttons
+</h2>
+
+
+<button class="nv-btn nv-btn-primary">
+
+Primary
+
+</button>
+
+
+<button class="nv-btn nv-btn-gradient">
+
+Gradient
+
+</button>
+
+
+<button class="nv-btn nv-btn-pro">
+
+Pro
+
+</button>
+
+
+<button class="nv-btn nv-btn-live">
+
+Live
+
+</button>
+
+
+</section>
+
+
+
+
+
+
+<!-- FORM TEST -->
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+Forms
+</h2>
+
+
+<div class="nv-form-group">
+
+
+<label class="nv-label">
+
+Email
+
+</label>
+
+
+<input 
+class="nv-input"
+placeholder="email">
+
+
+</div>
+
+
+
+<textarea
+class="nv-textarea"
+placeholder="Description">
+
+</textarea>
+
+
+
+</section>
+
+
+
+
+
+
+<!-- CARD TEST -->
+
+
+<section>
+
+
+<h2>
+Cards
+</h2>
+
+
+
+<div class="nv-card nv-video-card">
+
+
+<div class="nv-card-media">
+
+
+<img 
+src="https://picsum.photos/600/300">
+
+
+</div>
+
+
+
+<div class="nv-card-body">
+
+
+<div class="nv-video-title">
+
+Vidéo test NetView
+
+</div>
+
+
+<div class="nv-video-info">
+
+1000 vues
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- UI TEST -->
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+JavaScript UI
+</h2>
+
+
+
+<button 
+id="toast"
+class="nv-btn nv-btn-primary">
+
+Toast
+
+</button>
+
+
+
+<button 
+id="modal"
+class="nv-btn nv-btn-secondary">
+
+Modal
+
+</button>
+
+
+
+<button 
+id="loader"
+class="nv-btn nv-btn-pro">
+
+Loader
+
+</button>
+
+
+</section>
+
+
+
+
+
+
+
+
+<!-- AUTH TEST -->
 
 
 <section class="nv-card nv-card-body">
@@ -65,90 +375,29 @@ Authentication
 </h2>
 
 
-<button 
-class="nv-btn nv-btn-primary"
-id="sessionBtn">
+<button
+id="session"
+class="nv-btn nv-btn-outline">
 
 Tester Session
 
 </button>
 
 
-
-<button 
-class="nv-btn nv-btn-secondary"
-id="roleBtn">
+<button
+id="role"
+class="nv-btn nv-btn-outline">
 
 Tester Role
 
 </button>
 
 
-
 </section>
 
 
 
 
-<section class="nv-card nv-card-body">
-
-
-<h2>
-UI System
-</h2>
-
-
-<button 
-class="nv-btn nv-btn-gradient"
-id="toastBtn">
-
-Test Toast
-
-</button>
-
-
-
-<button 
-class="nv-btn nv-btn-pro"
-id="modalBtn">
-
-Test Modal
-
-</button>
-
-
-
-<button 
-class="nv-btn nv-btn-live"
-id="loaderBtn">
-
-Test Loader
-
-</button>
-
-
-</section>
-
-
-
-<section class="nv-card nv-card-body">
-
-
-<h2>
-Navigation
-</h2>
-
-
-<button
-class="nv-btn nv-btn-outline"
-id="pageBtn">
-
-Tester Navigation
-
-</button>
-
-
-</section>
 
 
 
@@ -158,7 +407,9 @@ Tester Navigation
 
 
 
-<!-- Modal Test -->
+
+
+<!-- MODAL -->
 
 
 <div 
@@ -172,19 +423,18 @@ class="nv-modal-overlay">
 <div class="nv-modal-header">
 
 
-<h3 class="nv-modal-title">
+<div class="nv-modal-title">
 
 NetView Modal
 
-</h3>
+</div>
 
 
 <button 
 class="nv-modal-close"
-data-modal-close>
+id="closeModal">
 
 ×
-
 
 </button>
 
@@ -195,25 +445,10 @@ data-modal-close>
 
 <div class="nv-modal-body">
 
-Système de modal fonctionnel.
+Modal système fonctionnel.
 
 </div>
 
-
-
-<div class="nv-modal-footer">
-
-
-<button 
-class="nv-btn nv-btn-primary"
-data-modal-close>
-
-Fermer
-
-</button>
-
-
-</div>
 
 
 </div>
@@ -225,7 +460,15 @@ Fermer
 
 
 
-<div class="nv-page-loader" style="display:none;">
+
+
+<!-- LOADER -->
+
+
+<div 
+class="nv-page-loader"
+id="pageLoader"
+style="display:none;">
 
 
 <div class="nv-spinner nv-spinner-lg"></div>
@@ -233,12 +476,16 @@ Fermer
 
 <div class="nv-loader-text">
 
-Chargement NetView...
+Chargement NetView
 
 </div>
 
 
 </div>
+
+
+
+
 
 
 
@@ -249,9 +496,11 @@ Chargement NetView...
 
 import {
 
+
 getSession,
 
 getRole
+
 
 } from "./js/core/auth.js";
 
@@ -259,23 +508,17 @@ getRole
 
 import {
 
-navigate
-
-} from "./js/core/navigation.js";
-
-
-
-import {
 
 showToast,
 
 openModal,
 
-closeAllModals,
+closeModal,
 
 showLoader,
 
 hideLoader
+
 
 } from "./js/core/ui.js";
 
@@ -283,124 +526,18 @@ hideLoader
 
 
 
-// Session Test
+
+// Toast
 
 
 document
-.getElementById("sessionBtn")
-.onclick = async ()=>{
-
-
-try{
-
-
-const session =
-await getSession();
-
-
-
-if(session){
-
-
-showToast(
-"Session active",
-"success"
-);
-
-
-}
-
-else{
-
-
-showToast(
-"Aucune session",
-"warning"
-);
-
-
-}
-
-
-
-}
-
-catch(error){
-
-
-showToast(
-error.message,
-"error"
-);
-
-
-}
-
-
-};
-
-
-
-
-
-// Role Test
-
-
-document
-.getElementById("roleBtn")
-.onclick = async ()=>{
-
-
-try{
-
-
-const role =
-await getRole();
-
-
-
-showToast(
-
-"Role : " + (role || "aucun"),
-
-"info"
-
-);
-
-
-
-}
-
-catch(error){
-
-
-showToast(
-error.message,
-"error"
-);
-
-
-}
-
-
-
-};
-
-
-
-
-
-// Toast Test
-
-
-document
-.getElementById("toastBtn")
+.getElementById("toast")
 .onclick = ()=>{
 
 
 showToast(
 
-"NetView UI fonctionne",
+"NetView Toast fonctionne",
 
 "success"
 
@@ -413,11 +550,12 @@ showToast(
 
 
 
-// Modal Test
+
+// Modal
 
 
 document
-.getElementById("modalBtn")
+.getElementById("modal")
 .onclick = ()=>{
 
 
@@ -430,38 +568,33 @@ openModal(
 
 
 
-
-
 document
-.querySelectorAll("[data-modal-close]")
-.forEach(btn=>{
+.getElementById("closeModal")
+.onclick = ()=>{
 
 
-btn.onclick = ()=>{
-
-
-closeAllModals();
+closeModal(
+"testModal"
+);
 
 
 };
 
 
-});
 
 
 
 
 
-// Loader Test
+// Loader
 
 
 document
-.getElementById("loaderBtn")
+.getElementById("loader")
 .onclick = ()=>{
 
 
 showLoader();
-
 
 
 setTimeout(()=>{
@@ -472,9 +605,9 @@ hideLoader();
 
 showToast(
 
-"Loader terminé",
+"Chargement terminé",
 
-"success"
+"info"
 
 );
 
@@ -482,31 +615,132 @@ showToast(
 },2000);
 
 
-
 };
 
 
 
 
 
-// Navigation Test
+
+
+
+// Session
 
 
 document
-.getElementById("pageBtn")
-.onclick = ()=>{
+.getElementById("session")
+.onclick = async ()=>{
 
 
-navigate(
-"index.html"
+try{
+
+
+const session = await getSession();
+
+
+
+if(session){
+
+
+showToast(
+
+"Utilisateur connecté",
+
+"success"
+
 );
 
 
+}
+
+else{
+
+
+showToast(
+
+"Aucune session active",
+
+"warning"
+
+);
+
+
+}
+
+
+}
+
+catch(error){
+
+
+showToast(
+
+error.message,
+
+"error"
+
+);
+
+
+}
+
+
 };
+
+
+
+
+
+
+
+// Role
+
+
+document
+.getElementById("role")
+.onclick = async ()=>{
+
+
+try{
+
+
+const role = await getRole();
+
+
+
+showToast(
+
+"Role : " + (role ?? "aucun"),
+
+"info"
+
+);
+
+
+}
+
+catch(error){
+
+
+showToast(
+
+error.message,
+
+"error"
+
+);
+
+
+}
+
+
+};
+
 
 
 
 </script>
+
 
 
 </body>
