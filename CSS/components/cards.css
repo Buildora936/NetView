@@ -1,1 +1,499 @@
+/* ==========================================
+   NetView
+   Design System
+   cards.css
+========================================== */
 
+
+/* ==========================================
+   Base Card
+========================================== */
+
+.nv-card {
+
+    background:
+
+        var(--nv-surface);
+
+    border:
+
+        1px solid var(--nv-border);
+
+    border-radius:
+
+        var(--nv-radius-lg);
+
+    overflow:hidden;
+
+    transition:
+
+        transform var(--nv-speed-normal) var(--nv-ease),
+
+        box-shadow var(--nv-speed-normal) var(--nv-ease),
+
+        border-color var(--nv-speed-normal) var(--nv-ease);
+
+}
+
+
+/* ==========================================
+   Card Hover
+========================================== */
+
+.nv-card:hover {
+
+    transform:
+
+        translateY(-6px);
+
+    border-color:
+
+        rgba(37,99,235,.5);
+
+    box-shadow:
+
+        0 20px 50px
+
+        rgba(0,0,0,.35);
+
+}
+
+
+/* ==========================================
+   Card Body
+========================================== */
+
+.nv-card-body {
+
+    padding:
+
+        var(--nv-space-5);
+
+}
+
+
+/* ==========================================
+   Card Header
+========================================== */
+
+.nv-card-header {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:1rem;
+
+}
+
+
+/* ==========================================
+   Card Footer
+========================================== */
+
+.nv-card-footer {
+
+    padding:
+
+        var(--nv-space-4)
+
+        var(--nv-space-5);
+
+    border-top:
+
+        1px solid var(--nv-border);
+
+}
+
+
+/* ==========================================
+   Media Card
+========================================== */
+
+.nv-card-media {
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:
+
+        16 / 9;
+
+    overflow:hidden;
+
+}
+
+
+.nv-card-media img,
+.nv-card-media video {
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:
+
+        transform var(--nv-speed-medium)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-card:hover .nv-card-media img,
+.nv-card:hover .nv-card-media video {
+
+    transform:
+
+        scale(1.05);
+
+}
+
+
+/* ==========================================
+   Video Card
+========================================== */
+
+.nv-video-card {
+
+    cursor:pointer;
+
+}
+
+
+.nv-video-title {
+
+    margin-top:
+
+        var(--nv-space-3);
+
+    font-size:
+
+        var(--nv-text-md);
+
+    font-weight:
+
+        var(--nv-semibold);
+
+    color:
+
+        var(--nv-text);
+
+    display:
+
+        -webkit-box;
+
+    -webkit-line-clamp:
+
+        2;
+
+    -webkit-box-orient:
+
+        vertical;
+
+    overflow:hidden;
+
+}
+
+
+.nv-video-info {
+
+    margin-top:
+
+        .5rem;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.5rem;
+
+    color:
+
+        var(--nv-text-muted);
+
+    font-size:
+
+        var(--nv-text-sm);
+
+}
+
+
+/* ==========================================
+   Avatar
+========================================== */
+
+.nv-avatar {
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+
+.nv-avatar-sm {
+
+    width:32px;
+
+    height:32px;
+
+}
+
+
+.nv-avatar-lg {
+
+    width:72px;
+
+    height:72px;
+
+}
+
+
+/* ==========================================
+   Channel Card
+========================================== */
+
+.nv-channel-card {
+
+    text-align:center;
+
+    padding:
+
+        var(--nv-space-6);
+
+}
+
+
+.nv-channel-card .nv-avatar {
+
+    margin:auto;
+
+}
+
+
+.nv-channel-name {
+
+    margin-top:1rem;
+
+    font-weight:
+
+        var(--nv-bold);
+
+}
+
+
+/* ==========================================
+   Live Card
+========================================== */
+
+.nv-live-card {
+
+    position:relative;
+
+}
+
+
+.nv-live-badge {
+
+    position:absolute;
+
+    top:12px;
+
+    left:12px;
+
+    background:
+
+        #ef4444;
+
+    color:white;
+
+    padding:
+
+        .35rem .75rem;
+
+    border-radius:
+
+        999px;
+
+    font-size:
+
+        var(--nv-text-xs);
+
+    font-weight:
+
+        var(--nv-bold);
+
+    animation:
+
+        nvLivePulse
+
+        1.5s
+
+        infinite;
+
+}
+
+
+/* ==========================================
+   Product Card
+========================================== */
+
+.nv-product-card {
+
+    cursor:pointer;
+
+}
+
+
+.nv-product-image {
+
+    aspect-ratio:
+
+        1 / 1;
+
+    overflow:hidden;
+
+}
+
+
+.nv-product-image img {
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.nv-product-price {
+
+    color:
+
+        var(--nv-primary);
+
+    font-size:
+
+        var(--nv-text-lg);
+
+    font-weight:
+
+        var(--nv-bold);
+
+}
+
+
+/* ==========================================
+   Premium Card
+========================================== */
+
+.nv-card-premium {
+
+    background:
+
+        linear-gradient(
+
+            145deg,
+
+            rgba(37,99,235,.15),
+
+            var(--nv-surface)
+
+        );
+
+    border-color:
+
+        rgba(37,99,235,.4);
+
+}
+
+
+/* ==========================================
+   Glass Card
+========================================== */
+
+.nv-card-glass {
+
+    background:
+
+        rgba(17,24,39,.65);
+
+    backdrop-filter:
+
+        blur(20px);
+
+    border:
+
+        1px solid rgba(255,255,255,.08);
+
+}
+
+
+/* ==========================================
+   Skeleton Card
+========================================== */
+
+.nv-card-skeleton {
+
+    overflow:hidden;
+
+}
+
+
+.nv-skeleton-box {
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            var(--nv-surface),
+
+            var(--nv-surface-2),
+
+            var(--nv-surface)
+
+        );
+
+    background-size:
+
+        200% 100%;
+
+    animation:
+
+        nvSkeleton
+
+        1.5s
+
+        infinite;
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-card-body {
+
+        padding:
+
+            var(--nv-space-4);
+
+    }
+
+}
