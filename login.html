@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Connexion - NetView</title>
+
+
+<link rel="icon" href="NetView.png">
+
+
+<link rel="stylesheet" href="CSS/core/variables.css">
+
+<link rel="stylesheet" href="CSS/core/reset.css">
+
+<link rel="stylesheet" href="CSS/core/typography.css">
+
+<link rel="stylesheet" href="CSS/core/animations.css">
+
+<link rel="stylesheet" href="CSS/core/utilities.css">
+
+
+<link rel="stylesheet" href="CSS/components/buttons.css">
+
+<link rel="stylesheet" href="CSS/components/forms.css">
+
+<link rel="stylesheet" href="CSS/components/cards.css">
+
+<link rel="stylesheet" href="CSS/components/toast.css">
+
+<link rel="stylesheet" href="CSS/components/loader.css">
+
+
+</head>
+
+
+<body class="nv-auth-page">
+
+
+<main class="nv-auth-container">
+
+
+<section class="nv-auth-card nv-card">
+
+
+<div class="nv-auth-logo">
+
+
+<img 
+src="NetView.png"
+alt="NetView">
+
+
+</div>
+
+
+
+
+<h1>
+
+Bienvenue sur NetView
+
+</h1>
+
+
+<p>
+
+Connectez-vous pour accéder à votre univers.
+
+</p>
+
+
+
+
+<form id="loginForm">
+
+
+<div class="nv-form-group">
+
+
+<label class="nv-label">
+
+Email
+
+</label>
+
+
+<input
+
+type="email"
+
+id="email"
+
+class="nv-input"
+
+placeholder="Votre email"
+
+required>
+
+
+</div>
+
+
+
+
+
+<div class="nv-form-group">
+
+
+<label class="nv-label">
+
+Mot de passe
+
+</label>
+
+
+<input
+
+type="password"
+
+id="password"
+
+class="nv-input"
+
+placeholder="Votre mot de passe"
+
+required>
+
+
+</div>
+
+
+
+
+
+<button
+
+type="submit"
+
+class="nv-btn nv-btn-gradient"
+
+id="loginButton">
+
+
+Se connecter
+
+
+</button>
+
+
+</form>
+
+
+
+
+
+<div class="nv-auth-links">
+
+
+<a href="signup.html">
+
+Créer un compte
+
+</a>
+
+
+
+<a href="#">
+
+Mot de passe oublié ?
+
+</a>
+
+
+</div>
+
+
+
+</section>
+
+
+</main>
+
+
+
+
+
+<script type="module">
+
+
+import {
+
+signIn,
+
+getSession,
+
+getRole
+
+} from "./js/core/auth.js";
+
+
+
+import {
+
+showToast,
+
+buttonLoading
+
+} from "./js/core/ui.js";
+
+
+
+import {
+
+navigate
+
+} from "./js/core/navigation.js";
+
+
+
+
+
+// ==========================================
+// Intelligent Redirect
+// ==========================================
+
+
+async function intelligentRedirect(){
+
+
+const role =
+await getRole();
+
+
+
+if(
+
+role === "creator" ||
+
+role === "pro"
+
+){
+
+
+const studio =
+localStorage.getItem(
+"netview_need_studio"
+);
+
+
+
+if(studio){
+
+
+navigate(
+"studio.html"
+);
+
+
+return;
+
+}
+
+
+}
+
+
+
+
+const lastPage =
+localStorage.getItem(
+"netview_last_page"
+);
+
+
+
+if(lastPage){
+
+
+navigate(
+lastPage
+);
+
+
+return;
+
+}
+
+
+
+navigate(
+"index.html"
+);
+
+
+}
+
+
+
+
+
+// ==========================================
+// Login
+// ==========================================
+
+
+const form =
+document.getElementById(
+"loginForm"
+);
+
+
+
+const button =
+document.getElementById(
+"loginButton"
+);
+
+
+
+
+
+form.addEventListener(
+"submit",
+async(e)=>{
+
+
+e.preventDefault();
+
+
+
+const email =
+document
+.getElementById("email")
+.value.trim();
+
+
+
+const password =
+document
+.getElementById("password")
+.value;
+
+
+
+buttonLoading(
+button,
+true
+);
+
+
+
+try{
+
+
+const {
+
+error
+
+} =
+await signIn(
+email,
+password
+);
+
+
+
+if(error){
+
+throw error;
+
+}
+
+
+
+
+
+showToast(
+
+"Connexion réussie",
+
+"success"
+
+);
+
+
+
+setTimeout(()=>{
+
+
+intelligentRedirect();
+
+
+},800);
+
+
+
+
+
+}
+
+catch(error){
+
+
+
+showToast(
+
+error.message,
+
+"error"
+
+);
+
+
+
+}
+
+finally{
+
+
+buttonLoading(
+button,
+false
+);
+
+
+}
+
+
+
+});
+
+
+
+</script>
+
+
+</body>
+
+</html>
