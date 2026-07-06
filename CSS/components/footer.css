@@ -1,1 +1,392 @@
+/* ==========================================
+   NetView
+   Design System
+   footer.css
+========================================== */
 
+
+/* ==========================================
+   Footer Container
+========================================== */
+
+.nv-footer {
+
+    width:100%;
+
+    background:
+
+        var(--nv-background);
+
+    border-top:
+
+        1px solid var(--nv-border);
+
+    padding:
+
+        4rem var(--nv-space-6)
+
+        2rem;
+
+}
+
+
+/* ==========================================
+   Footer Grid
+========================================== */
+
+.nv-footer-grid {
+
+    max-width:
+
+        var(--nv-container);
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(4,1fr);
+
+    gap:
+
+        3rem;
+
+}
+
+
+/* ==========================================
+   Footer Brand
+========================================== */
+
+.nv-footer-brand {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1rem;
+
+}
+
+
+.nv-footer-logo {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+}
+
+
+.nv-footer-logo img {
+
+    width:42px;
+
+    height:42px;
+
+}
+
+
+.nv-footer-logo span {
+
+    font-size:
+
+        var(--nv-text-xl);
+
+    font-weight:
+
+        var(--nv-black);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+.nv-footer-description {
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-size:
+
+        var(--nv-text-sm);
+
+    line-height:
+
+        1.7;
+
+}
+
+
+/* ==========================================
+   Footer Column
+========================================== */
+
+.nv-footer-column {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.75rem;
+
+}
+
+
+.nv-footer-title {
+
+    font-size:
+
+        var(--nv-text-md);
+
+    font-weight:
+
+        var(--nv-bold);
+
+    color:
+
+        var(--nv-text);
+
+    margin-bottom:
+
+        .5rem;
+
+}
+
+
+/* ==========================================
+   Footer Links
+========================================== */
+
+.nv-footer-link {
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-size:
+
+        var(--nv-text-sm);
+
+    transition:
+
+        color var(--nv-speed-fast)
+
+        var(--nv-ease),
+
+        transform var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-footer-link:hover {
+
+    color:
+
+        var(--nv-primary);
+
+    transform:
+
+        translateX(4px);
+
+}
+
+
+/* ==========================================
+   Social Icons
+========================================== */
+
+.nv-footer-socials {
+
+    display:flex;
+
+    gap:.75rem;
+
+}
+
+
+.nv-footer-social {
+
+    width:38px;
+
+    height:38px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:
+
+        50%;
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text-secondary);
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-footer-social:hover {
+
+    background:
+
+        var(--nv-primary);
+
+    color:white;
+
+    transform:
+
+        translateY(-3px);
+
+}
+
+
+/* ==========================================
+   Bottom Footer
+========================================== */
+
+.nv-footer-bottom {
+
+    max-width:
+
+        var(--nv-container);
+
+    margin:
+
+        3rem auto 0;
+
+    padding-top:
+
+        1.5rem;
+
+    border-top:
+
+        1px solid var(--nv-border);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:1rem;
+
+}
+
+
+.nv-footer-copy {
+
+    color:
+
+        var(--nv-text-muted);
+
+    font-size:
+
+        var(--nv-text-sm);
+
+}
+
+
+/* ==========================================
+   Footer Badge
+========================================== */
+
+.nv-footer-badge {
+
+    padding:
+
+        .35rem .8rem;
+
+    border-radius:
+
+        999px;
+
+    background:
+
+        rgba(37,99,235,.15);
+
+    color:
+
+        var(--nv-primary);
+
+    font-size:
+
+        var(--nv-text-xs);
+
+    font-weight:
+
+        var(--nv-semibold);
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:900px){
+
+    .nv-footer-grid {
+
+        grid-template-columns:
+
+            repeat(2,1fr);
+
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .nv-footer {
+
+        padding:
+
+            3rem var(--nv-space-4)
+
+            1.5rem;
+
+    }
+
+
+    .nv-footer-grid {
+
+        grid-template-columns:
+
+            1fr;
+
+    }
+
+
+    .nv-footer-bottom {
+
+        flex-direction:
+
+            column;
+
+        text-align:center;
+
+    }
+
+}
