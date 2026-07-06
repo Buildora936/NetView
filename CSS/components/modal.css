@@ -1,1 +1,410 @@
+/* ==========================================
+   NetView
+   Design System
+   modal.css
+========================================== */
 
+
+/* ==========================================
+   Modal Overlay
+========================================== */
+
+.nv-modal-overlay {
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+
+        rgba(0,0,0,.65);
+
+    backdrop-filter:
+
+        blur(10px);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+
+        opacity var(--nv-speed-normal)
+
+        var(--nv-ease),
+
+        visibility var(--nv-speed-normal);
+
+    z-index:
+
+        var(--nv-z-modal);
+
+}
+
+
+/* ==========================================
+   Modal Active
+========================================== */
+
+.nv-modal-overlay.active {
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+/* ==========================================
+   Modal Container
+========================================== */
+
+.nv-modal {
+
+    width:
+
+        min(500px,90%);
+
+    max-height:
+
+        90vh;
+
+    overflow-y:auto;
+
+    background:
+
+        var(--nv-surface);
+
+    border:
+
+        1px solid var(--nv-border);
+
+    border-radius:
+
+        var(--nv-radius-xl);
+
+    box-shadow:
+
+        0 30px 80px
+
+        rgba(0,0,0,.5);
+
+    transform:
+
+        translateY(40px)
+
+        scale(.95);
+
+    opacity:0;
+
+    transition:
+
+        transform var(--nv-speed-normal)
+
+        var(--nv-ease),
+
+        opacity var(--nv-speed-normal)
+
+        var(--nv-ease);
+
+}
+
+
+/* ==========================================
+   Modal Open Animation
+========================================== */
+
+.nv-modal-overlay.active .nv-modal {
+
+    transform:
+
+        translateY(0)
+
+        scale(1);
+
+    opacity:1;
+
+}
+
+
+/* ==========================================
+   Glass Modal
+========================================== */
+
+.nv-modal-glass {
+
+    background:
+
+        rgba(17,24,39,.75);
+
+    backdrop-filter:
+
+        blur(25px);
+
+}
+
+
+/* ==========================================
+   Modal Header
+========================================== */
+
+.nv-modal-header {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+
+        1.5rem;
+
+    border-bottom:
+
+        1px solid var(--nv-border);
+
+}
+
+
+.nv-modal-title {
+
+    font-size:
+
+        var(--nv-text-lg);
+
+    font-weight:
+
+        var(--nv-bold);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+/* ==========================================
+   Close Button
+========================================== */
+
+.nv-modal-close {
+
+    width:36px;
+
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:
+
+        50%;
+
+    background:
+
+        transparent;
+
+    color:
+
+        var(--nv-text-secondary);
+
+    cursor:pointer;
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-modal-close:hover {
+
+    background:
+
+        var(--nv-surface-2);
+
+    color:
+
+        var(--nv-text);
+
+    transform:
+
+        rotate(90deg);
+
+}
+
+
+/* ==========================================
+   Modal Body
+========================================== */
+
+.nv-modal-body {
+
+    padding:
+
+        1.5rem;
+
+    color:
+
+        var(--nv-text-secondary);
+
+}
+
+
+/* ==========================================
+   Modal Footer
+========================================== */
+
+.nv-modal-footer {
+
+    padding:
+
+        1.5rem;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:1rem;
+
+    border-top:
+
+        1px solid var(--nv-border);
+
+}
+
+
+/* ==========================================
+   Small Modal
+========================================== */
+
+.nv-modal-sm {
+
+    width:
+
+        min(350px,90%);
+
+}
+
+
+/* ==========================================
+   Large Modal
+========================================== */
+
+.nv-modal-lg {
+
+    width:
+
+        min(800px,95%);
+
+}
+
+
+/* ==========================================
+   Full Screen Modal
+========================================== */
+
+.nv-modal-full {
+
+    width:95%;
+
+    height:90vh;
+
+}
+
+
+/* ==========================================
+   Confirmation Modal
+========================================== */
+
+.nv-modal-confirm {
+
+    text-align:center;
+
+}
+
+
+.nv-modal-confirm-icon {
+
+    width:70px;
+
+    height:70px;
+
+    margin:
+
+        0 auto 1rem;
+
+    border-radius:
+
+        50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+
+        rgba(37,99,235,.15);
+
+    color:
+
+        var(--nv-primary);
+
+    font-size:
+
+        2rem;
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:600px){
+
+    .nv-modal {
+
+        width:
+
+            95%;
+
+        border-radius:
+
+            var(--nv-radius-lg);
+
+    }
+
+
+    .nv-modal-footer {
+
+        flex-direction:
+
+            column;
+
+    }
+
+
+    .nv-modal-footer .nv-btn {
+
+        width:
+
+            100%;
+
+    }
+
+}
