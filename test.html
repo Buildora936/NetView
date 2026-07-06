@@ -11,26 +11,43 @@
 <title>NetView System Test</title>
 
 
-<!-- CORE CSS -->
+<!-- ==========================
+     CORE CSS
+========================== -->
 
-<link rel="stylesheet" href="css/core/variables.css">
-<link rel="stylesheet" href="css/core/reset.css">
-<link rel="stylesheet" href="css/core/typography.css">
-<link rel="stylesheet" href="css/core/animations.css">
-<link rel="stylesheet" href="css/core/utilities.css">
+<link rel="stylesheet" href="CSS/core/variables.css">
+
+<link rel="stylesheet" href="CSS/core/reset.css">
+
+<link rel="stylesheet" href="CSS/core/typography.css">
+
+<link rel="stylesheet" href="CSS/core/animations.css">
+
+<link rel="stylesheet" href="CSS/core/utilities.css">
 
 
-<!-- COMPONENTS CSS -->
 
-<link rel="stylesheet" href="css/components/buttons.css">
-<link rel="stylesheet" href="css/components/forms.css">
-<link rel="stylesheet" href="css/components/cards.css">
-<link rel="stylesheet" href="css/components/header.css">
-<link rel="stylesheet" href="css/components/sidebar.css">
-<link rel="stylesheet" href="css/components/footer.css">
-<link rel="stylesheet" href="css/components/modal.css">
-<link rel="stylesheet" href="css/components/toast.css">
-<link rel="stylesheet" href="css/components/loader.css">
+<!-- ==========================
+     COMPONENTS CSS
+========================== -->
+
+<link rel="stylesheet" href="CSS/components/buttons.css">
+
+<link rel="stylesheet" href="CSS/components/forms.css">
+
+<link rel="stylesheet" href="CSS/components/cards.css">
+
+<link rel="stylesheet" href="CSS/components/header.css">
+
+<link rel="stylesheet" href="CSS/components/sidebar.css">
+
+<link rel="stylesheet" href="CSS/components/footer.css">
+
+<link rel="stylesheet" href="CSS/components/modal.css">
+
+<link rel="stylesheet" href="CSS/components/toast.css">
+
+<link rel="stylesheet" href="CSS/components/loader.css">
 
 
 </head>
@@ -39,14 +56,9 @@
 <body>
 
 
-<!-- HEADER TEST -->
-
 <header class="nv-header">
 
-
 <div class="nv-header-logo">
-
-<img src="" alt="NetView">
 
 <span>
 NetView
@@ -55,54 +67,20 @@ NetView
 </div>
 
 
-
-<div class="nv-header-search">
-
-<input 
-class="nv-input"
-placeholder="Rechercher sur NetView">
-
-
-</div>
-
-
-
-<div class="nv-header-actions">
-
-<button class="nv-icon-btn">
-🔔
-</button>
-
-
-<button class="nv-btn nv-btn-primary">
-
-Créer
-
-</button>
-
-
-</div>
-
-
 </header>
 
-
-
-
-
-<!-- SIDEBAR TEST -->
 
 
 <aside class="nv-sidebar">
 
 
-<nav class="nv-sidebar-nav">
+<div class="nv-sidebar-nav">
 
 
 <div class="nv-sidebar-item active">
 
 <div class="nv-sidebar-icon">
-🏠
+⌂
 </div>
 
 <div class="nv-sidebar-text">
@@ -112,11 +90,10 @@ Accueil
 </div>
 
 
-
 <div class="nv-sidebar-item">
 
 <div class="nv-sidebar-icon">
-🎬
+▶
 </div>
 
 <div class="nv-sidebar-text">
@@ -126,21 +103,7 @@ Vidéos
 </div>
 
 
-
-<div class="nv-sidebar-item">
-
-<div class="nv-sidebar-icon">
-💬
 </div>
-
-<div class="nv-sidebar-text">
-Messages
-</div>
-
-</div>
-
-
-</nav>
 
 
 </aside>
@@ -148,8 +111,10 @@ Messages
 
 
 
+<main class="nv-content">
 
-<main class="nv-content" style="padding:40px;">
+
+<section class="nv-card nv-card-body">
 
 
 <h1>
@@ -158,50 +123,8 @@ NetView Core Test
 
 
 <p>
-Test complet CSS + JavaScript
+Test officiel Jour 2 + Jour 3
 </p>
-
-
-
-
-
-<!-- BUTTON TEST -->
-
-
-<section class="nv-card nv-card-body">
-
-
-<h2>
-Buttons
-</h2>
-
-
-<button class="nv-btn nv-btn-primary">
-
-Primary
-
-</button>
-
-
-<button class="nv-btn nv-btn-gradient">
-
-Gradient
-
-</button>
-
-
-<button class="nv-btn nv-btn-pro">
-
-Pro
-
-</button>
-
-
-<button class="nv-btn nv-btn-live">
-
-Live
-
-</button>
 
 
 </section>
@@ -210,8 +133,41 @@ Live
 
 
 
+<section class="nv-card nv-card-body">
 
-<!-- FORM TEST -->
+
+<h2>
+CSS Components
+</h2>
+
+
+
+<button class="nv-btn nv-btn-primary">
+
+Primary Button
+
+</button>
+
+
+<button class="nv-btn nv-btn-gradient">
+
+Gradient Button
+
+</button>
+
+
+<button class="nv-btn nv-btn-pro">
+
+Pro Button
+
+</button>
+
+
+
+</section>
+
+
+
 
 
 <section class="nv-card nv-card-body">
@@ -234,72 +190,7 @@ Email
 
 <input 
 class="nv-input"
-placeholder="email">
-
-
-</div>
-
-
-
-<textarea
-class="nv-textarea"
-placeholder="Description">
-
-</textarea>
-
-
-
-</section>
-
-
-
-
-
-
-<!-- CARD TEST -->
-
-
-<section>
-
-
-<h2>
-Cards
-</h2>
-
-
-
-<div class="nv-card nv-video-card">
-
-
-<div class="nv-card-media">
-
-
-<img 
-src="https://picsum.photos/600/300">
-
-
-</div>
-
-
-
-<div class="nv-card-body">
-
-
-<div class="nv-video-title">
-
-Vidéo test NetView
-
-</div>
-
-
-<div class="nv-video-info">
-
-1000 vues
-
-</div>
-
-
-</div>
+placeholder="email@netview.com">
 
 
 </div>
@@ -311,24 +202,40 @@ Vidéo test NetView
 
 
 
-
-
-
-<!-- UI TEST -->
 
 
 <section class="nv-card nv-card-body">
 
 
 <h2>
-JavaScript UI
+JavaScript Tests
 </h2>
 
 
 
 <button 
-id="toast"
-class="nv-btn nv-btn-primary">
+class="nv-btn nv-btn-primary"
+id="session">
+
+Session
+
+</button>
+
+
+
+<button 
+class="nv-btn nv-btn-secondary"
+id="role">
+
+Role
+
+</button>
+
+
+
+<button 
+class="nv-btn nv-btn-gradient"
+id="toast">
 
 Toast
 
@@ -337,8 +244,8 @@ Toast
 
 
 <button 
-id="modal"
-class="nv-btn nv-btn-secondary">
+class="nv-btn nv-btn-pro"
+id="modal">
 
 Modal
 
@@ -347,58 +254,26 @@ Modal
 
 
 <button 
-id="loader"
-class="nv-btn nv-btn-pro">
+class="nv-btn nv-btn-live"
+id="loader">
 
 Loader
 
 </button>
 
 
-</section>
 
+<button 
+class="nv-btn nv-btn-outline"
+id="navigation">
 
-
-
-
-
-
-
-<!-- AUTH TEST -->
-
-
-<section class="nv-card nv-card-body">
-
-
-<h2>
-Authentication
-</h2>
-
-
-<button
-id="session"
-class="nv-btn nv-btn-outline">
-
-Tester Session
+Navigation
 
 </button>
 
 
-<button
-id="role"
-class="nv-btn nv-btn-outline">
-
-Tester Role
-
-</button>
-
 
 </section>
-
-
-
-
-
 
 
 </main>
@@ -407,14 +282,14 @@ Tester Role
 
 
 
-
-
-<!-- MODAL -->
+<!-- ==========================
+     MODAL TEST
+========================== -->
 
 
 <div 
-id="testModal"
-class="nv-modal-overlay">
+class="nv-modal-overlay"
+id="testModal">
 
 
 <div class="nv-modal">
@@ -425,7 +300,7 @@ class="nv-modal-overlay">
 
 <div class="nv-modal-title">
 
-NetView Modal
+NetView Modal Test
 
 </div>
 
@@ -436,6 +311,7 @@ id="closeModal">
 
 ×
 
+
 </button>
 
 
@@ -445,15 +321,17 @@ id="closeModal">
 
 <div class="nv-modal-body">
 
-Modal système fonctionnel.
 
-</div>
-
+Le système de modal fonctionne.
 
 
 </div>
 
 
+
+</div>
+
+
 </div>
 
 
@@ -461,13 +339,14 @@ Modal système fonctionnel.
 
 
 
-
-<!-- LOADER -->
+<!-- ==========================
+     LOADER TEST
+========================== -->
 
 
 <div 
 class="nv-page-loader"
-id="pageLoader"
+id="loaderBox"
 style="display:none;">
 
 
@@ -487,27 +366,28 @@ Chargement NetView
 
 
 
-
-
-
-
 <script type="module">
 
 
 import {
 
-
 getSession,
 
-getRole
+getRole,
 
+getProfile
 
 } from "./js/core/auth.js";
 
 
-
 import {
 
+navigate
+
+} from "./js/core/navigation.js";
+
+
+import {
 
 showToast,
 
@@ -519,15 +399,123 @@ showLoader,
 
 hideLoader
 
-
 } from "./js/core/ui.js";
 
 
 
 
 
+// ==========================
+// SESSION TEST
+// ==========================
 
-// Toast
+
+document
+.getElementById("session")
+.onclick = async ()=>{
+
+
+try{
+
+
+const session =
+await getSession();
+
+
+
+if(session){
+
+
+showToast(
+"Session active",
+"success"
+);
+
+
+}
+
+else{
+
+
+showToast(
+"Aucune session",
+"warning"
+);
+
+
+}
+
+
+}
+
+catch(error){
+
+
+showToast(
+error.message,
+"error"
+);
+
+
+}
+
+
+};
+
+
+
+
+
+// ==========================
+// ROLE TEST
+// ==========================
+
+
+document
+.getElementById("role")
+.onclick = async ()=>{
+
+
+try{
+
+
+const role =
+await getRole();
+
+
+
+showToast(
+
+"Role : " + (role ?? "aucun"),
+
+"info"
+
+);
+
+
+}
+
+catch(error){
+
+
+showToast(
+error.message,
+"error"
+);
+
+
+}
+
+
+};
+
+
+
+
+
+// ==========================
+// TOAST
+// ==========================
 
 
 document
@@ -550,8 +538,9 @@ showToast(
 
 
 
-
-// Modal
+// ==========================
+// MODAL
+// ==========================
 
 
 document
@@ -565,7 +554,6 @@ openModal(
 
 
 };
-
 
 
 document
@@ -584,9 +572,9 @@ closeModal(
 
 
 
-
-
-// Loader
+// ==========================
+// LOADER
+// ==========================
 
 
 document
@@ -594,20 +582,28 @@ document
 .onclick = ()=>{
 
 
-showLoader();
+const box =
+document.getElementById(
+"loaderBox"
+);
+
+
+
+box.style.display="flex";
+
 
 
 setTimeout(()=>{
 
 
-hideLoader();
+box.style.display="none";
 
 
 showToast(
 
-"Chargement terminé",
+"Loader terminé",
 
-"info"
+"success"
 
 );
 
@@ -621,126 +617,26 @@ showToast(
 
 
 
-
-
-
-// Session
-
-
-document
-.getElementById("session")
-.onclick = async ()=>{
-
-
-try{
-
-
-const session = await getSession();
-
-
-
-if(session){
-
-
-showToast(
-
-"Utilisateur connecté",
-
-"success"
-
-);
-
-
-}
-
-else{
-
-
-showToast(
-
-"Aucune session active",
-
-"warning"
-
-);
-
-
-}
-
-
-}
-
-catch(error){
-
-
-showToast(
-
-error.message,
-
-"error"
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-
-
-// Role
+// ==========================
+// NAVIGATION
+// ==========================
 
 
 document
-.getElementById("role")
-.onclick = async ()=>{
+.getElementById("navigation")
+.onclick = ()=>{
 
 
-try{
-
-
-const role = await getRole();
-
-
-
-showToast(
-
-"Role : " + (role ?? "aucun"),
-
-"info"
-
+navigate(
+"index.html"
 );
-
-
-}
-
-catch(error){
-
-
-showToast(
-
-error.message,
-
-"error"
-
-);
-
-
-}
 
 
 };
-
 
 
 
 </script>
-
 
 
 </body>
