@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NetView System Test</title>
+
+
+<!-- Core CSS -->
+
+<link rel="stylesheet" href="css/core/variables.css">
+
+<link rel="stylesheet" href="css/core/reset.css">
+
+<link rel="stylesheet" href="css/core/typography.css">
+
+<link rel="stylesheet" href="css/core/animations.css">
+
+
+<!-- Components -->
+
+<link rel="stylesheet" href="css/components/buttons.css">
+
+<link rel="stylesheet" href="css/components/forms.css">
+
+<link rel="stylesheet" href="css/components/cards.css">
+
+<link rel="stylesheet" href="css/components/modal.css">
+
+<link rel="stylesheet" href="css/components/toast.css">
+
+<link rel="stylesheet" href="css/components/loader.css">
+
+
+</head>
+
+
+<body>
+
+
+<main style="padding:40px;">
+
+
+<h1>
+NetView Core Test
+</h1>
+
+
+<p>
+Vérification des fondations JavaScript.
+</p>
+
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+Authentication
+</h2>
+
+
+<button 
+class="nv-btn nv-btn-primary"
+id="sessionBtn">
+
+Tester Session
+
+</button>
+
+
+
+<button 
+class="nv-btn nv-btn-secondary"
+id="roleBtn">
+
+Tester Role
+
+</button>
+
+
+
+</section>
+
+
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+UI System
+</h2>
+
+
+<button 
+class="nv-btn nv-btn-gradient"
+id="toastBtn">
+
+Test Toast
+
+</button>
+
+
+
+<button 
+class="nv-btn nv-btn-pro"
+id="modalBtn">
+
+Test Modal
+
+</button>
+
+
+
+<button 
+class="nv-btn nv-btn-live"
+id="loaderBtn">
+
+Test Loader
+
+</button>
+
+
+</section>
+
+
+
+<section class="nv-card nv-card-body">
+
+
+<h2>
+Navigation
+</h2>
+
+
+<button
+class="nv-btn nv-btn-outline"
+id="pageBtn">
+
+Tester Navigation
+
+</button>
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+
+<!-- Modal Test -->
+
+
+<div 
+id="testModal"
+class="nv-modal-overlay">
+
+
+<div class="nv-modal">
+
+
+<div class="nv-modal-header">
+
+
+<h3 class="nv-modal-title">
+
+NetView Modal
+
+</h3>
+
+
+<button 
+class="nv-modal-close"
+data-modal-close>
+
+×
+
+
+</button>
+
+
+</div>
+
+
+
+<div class="nv-modal-body">
+
+Système de modal fonctionnel.
+
+</div>
+
+
+
+<div class="nv-modal-footer">
+
+
+<button 
+class="nv-btn nv-btn-primary"
+data-modal-close>
+
+Fermer
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="nv-page-loader" style="display:none;">
+
+
+<div class="nv-spinner nv-spinner-lg"></div>
+
+
+<div class="nv-loader-text">
+
+Chargement NetView...
+
+</div>
+
+
+</div>
+
+
+
+
+
+<script type="module">
+
+
+import {
+
+getSession,
+
+getRole
+
+} from "./js/core/auth.js";
+
+
+
+import {
+
+navigate
+
+} from "./js/core/navigation.js";
+
+
+
+import {
+
+showToast,
+
+openModal,
+
+closeAllModals,
+
+showLoader,
+
+hideLoader
+
+} from "./js/core/ui.js";
+
+
+
+
+
+// Session Test
+
+
+document
+.getElementById("sessionBtn")
+.onclick = async ()=>{
+
+
+try{
+
+
+const session =
+await getSession();
+
+
+
+if(session){
+
+
+showToast(
+"Session active",
+"success"
+);
+
+
+}
+
+else{
+
+
+showToast(
+"Aucune session",
+"warning"
+);
+
+
+}
+
+
+
+}
+
+catch(error){
+
+
+showToast(
+error.message,
+"error"
+);
+
+
+}
+
+
+};
+
+
+
+
+
+// Role Test
+
+
+document
+.getElementById("roleBtn")
+.onclick = async ()=>{
+
+
+try{
+
+
+const role =
+await getRole();
+
+
+
+showToast(
+
+"Role : " + (role || "aucun"),
+
+"info"
+
+);
+
+
+
+}
+
+catch(error){
+
+
+showToast(
+error.message,
+"error"
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+// Toast Test
+
+
+document
+.getElementById("toastBtn")
+.onclick = ()=>{
+
+
+showToast(
+
+"NetView UI fonctionne",
+
+"success"
+
+);
+
+
+};
+
+
+
+
+
+// Modal Test
+
+
+document
+.getElementById("modalBtn")
+.onclick = ()=>{
+
+
+openModal(
+"testModal"
+);
+
+
+};
+
+
+
+
+
+document
+.querySelectorAll("[data-modal-close]")
+.forEach(btn=>{
+
+
+btn.onclick = ()=>{
+
+
+closeAllModals();
+
+
+};
+
+
+});
+
+
+
+
+
+// Loader Test
+
+
+document
+.getElementById("loaderBtn")
+.onclick = ()=>{
+
+
+showLoader();
+
+
+
+setTimeout(()=>{
+
+
+hideLoader();
+
+
+showToast(
+
+"Loader terminé",
+
+"success"
+
+);
+
+
+},2000);
+
+
+
+};
+
+
+
+
+
+// Navigation Test
+
+
+document
+.getElementById("pageBtn")
+.onclick = ()=>{
+
+
+navigate(
+"index.html"
+);
+
+
+};
+
+
+
+</script>
+
+
+</body>
+
+</html>
