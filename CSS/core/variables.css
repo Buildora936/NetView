@@ -1,0 +1,267 @@
+/* ==========================================
+   NetView
+   Design System
+   variables.css
+========================================== */
+
+:root {
+
+    /* ==========================================
+       Brand
+    ========================================== */
+
+    --nv-primary: #2563EB;
+    --nv-primary-hover: #1D4ED8;
+    --nv-primary-active: #1E40AF;
+
+    --nv-gradient-primary:
+        linear-gradient(
+            135deg,
+            #2563EB 0%,
+            #1D4ED8 50%,
+            #1E40AF 100%
+        );
+
+    /* ==========================================
+       Accent Colors
+    ========================================== */
+
+    --nv-success: #22C55E;
+
+    --nv-warning: #F59E0B;
+
+    --nv-danger: #EF4444;
+
+    --nv-info: #06B6D4;
+
+    --nv-premium: #8B5CF6;
+
+    --nv-live-start: #FF3B5C;
+
+    --nv-live-middle: #FF1744;
+
+    --nv-live-end: #FF006E;
+
+    --nv-gradient-live:
+        linear-gradient(
+            135deg,
+            var(--nv-live-start),
+            var(--nv-live-middle),
+            var(--nv-live-end)
+        );
+
+    /* ==========================================
+       Dark Theme
+    ========================================== */
+
+    --nv-bg: #0B1220;
+
+    --nv-surface: #111827;
+
+    --nv-surface-2: #1F2937;
+
+    --nv-card: #192131;
+
+    --nv-hover: #253045;
+
+    /* ==========================================
+       Text
+    ========================================== */
+
+    --nv-text: #FFFFFF;
+
+    --nv-text-secondary: #CBD5E1;
+
+    --nv-text-muted: #94A3B8;
+
+    --nv-text-disabled: #64748B;
+
+    /* ==========================================
+       Border
+    ========================================== */
+
+    --nv-border:
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
+    --nv-border-strong:
+        rgba(
+            255,
+            255,
+            255,
+            .16
+        );
+
+    /* ==========================================
+       Shadow
+    ========================================== */
+
+    --nv-shadow-xs:
+        0 2px 8px
+        rgba(0,0,0,.15);
+
+    --nv-shadow-sm:
+        0 6px 18px
+        rgba(0,0,0,.20);
+
+    --nv-shadow-md:
+        0 14px 40px
+        rgba(0,0,0,.30);
+
+    --nv-shadow-lg:
+        0 28px 70px
+        rgba(0,0,0,.40);
+
+    /* ==========================================
+       Blue Glow
+    ========================================== */
+
+    --nv-glow:
+
+        0 0 10px
+        rgba(37,99,235,.15),
+
+        0 0 25px
+        rgba(37,99,235,.10);
+
+    /* ==========================================
+       Radius
+    ========================================== */
+
+    --nv-radius-xs: 8px;
+
+    --nv-radius-sm: 12px;
+
+    --nv-radius-md: 16px;
+
+    --nv-radius-lg: 20px;
+
+    --nv-radius-xl: 28px;
+
+    --nv-radius-round: 999px;
+
+    /* ==========================================
+       Layout
+    ========================================== */
+
+    --nv-header-height: 72px;
+
+    --nv-sidebar-width: 280px;
+
+    --nv-sidebar-mini: 88px;
+
+    --nv-container: 1700px;
+
+    /* ==========================================
+       Spacing
+    ========================================== */
+
+    --nv-space-1: 4px;
+
+    --nv-space-2: 8px;
+
+    --nv-space-3: 12px;
+
+    --nv-space-4: 16px;
+
+    --nv-space-5: 20px;
+
+    --nv-space-6: 24px;
+
+    --nv-space-7: 32px;
+
+    --nv-space-8: 40px;
+
+    --nv-space-9: 56px;
+
+    --nv-space-10: 72px;
+
+    /* ==========================================
+       Font Sizes
+    ========================================== */
+
+    --nv-text-xs: .75rem;
+
+    --nv-text-sm: .875rem;
+
+    --nv-text-md: 1rem;
+
+    --nv-text-lg: 1.125rem;
+
+    --nv-text-xl: 1.25rem;
+
+    --nv-text-2xl: 1.5rem;
+
+    --nv-text-3xl: 2rem;
+
+    --nv-text-4xl: 2.75rem;
+
+    --nv-text-5xl: 3.5rem;
+
+    /* ==========================================
+       Font Weight
+    ========================================== */
+
+    --nv-light: 300;
+
+    --nv-regular: 400;
+
+    --nv-medium: 500;
+
+    --nv-semibold: 600;
+
+    --nv-bold: 700;
+
+    --nv-black: 800;
+
+    /* ==========================================
+       Animation
+    ========================================== */
+
+    --nv-speed-fast: 120ms;
+
+    --nv-speed-normal: 180ms;
+
+    --nv-speed-medium: 250ms;
+
+    --nv-speed-slow: 350ms;
+
+    --nv-ease:
+        cubic-bezier(
+            .22,
+            1,
+            .36,
+            1
+        );
+
+    /* ==========================================
+       Blur
+    ========================================== */
+
+    --nv-blur-sm: 6px;
+
+    --nv-blur-md: 12px;
+
+    --nv-blur-lg: 20px;
+
+    /* ==========================================
+       Z-index
+    ========================================== */
+
+    --nv-z-dropdown: 100;
+
+    --nv-z-sidebar: 200;
+
+    --nv-z-header: 300;
+
+    --nv-z-modal: 900;
+
+    --nv-z-toast: 1000;
+
+    --nv-z-loader: 1100;
+
+}
