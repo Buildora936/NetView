@@ -1,1 +1,404 @@
+/* ==========================================
+   NetView
+   Design System
+   sidebar.css
+========================================== */
 
+
+/* ==========================================
+   Sidebar Container
+========================================== */
+
+.nv-sidebar {
+
+    position:fixed;
+
+    top:72px;
+
+    left:0;
+
+    width:260px;
+
+    height:
+
+        calc(100vh - 72px);
+
+    padding:
+
+        var(--nv-space-5);
+
+    background:
+
+        var(--nv-background);
+
+    border-right:
+
+        1px solid var(--nv-border);
+
+    overflow-y:auto;
+
+    z-index:
+
+        var(--nv-z-sidebar);
+
+    transition:
+
+        width var(--nv-speed-normal)
+
+        var(--nv-ease),
+
+        transform var(--nv-speed-normal)
+
+        var(--nv-ease);
+
+}
+
+
+/* ==========================================
+   Sidebar Navigation
+========================================== */
+
+.nv-sidebar-nav {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.35rem;
+
+}
+
+
+/* ==========================================
+   Sidebar Item
+========================================== */
+
+.nv-sidebar-item {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    padding:
+
+        .85rem 1rem;
+
+    border-radius:
+
+        var(--nv-radius-md);
+
+    color:
+
+        var(--nv-text-secondary);
+
+    cursor:pointer;
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-sidebar-item:hover {
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+    transform:
+
+        translateX(4px);
+
+}
+
+
+/* ==========================================
+   Active Item
+========================================== */
+
+.nv-sidebar-item.active {
+
+    background:
+
+        rgba(37,99,235,.15);
+
+    color:
+
+        var(--nv-primary);
+
+    font-weight:
+
+        var(--nv-semibold);
+
+}
+
+
+.nv-sidebar-item.active::before {
+
+    content:"";
+
+    width:4px;
+
+    height:28px;
+
+    background:
+
+        var(--nv-primary);
+
+    border-radius:
+
+        999px;
+
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.nv-sidebar-icon {
+
+    width:24px;
+
+    height:24px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-shrink:0;
+
+}
+
+
+/* ==========================================
+   Text
+========================================== */
+
+.nv-sidebar-text {
+
+    font-size:
+
+        var(--nv-text-md);
+
+    white-space:nowrap;
+
+}
+
+
+/* ==========================================
+   Section Title
+========================================== */
+
+.nv-sidebar-title {
+
+    margin:
+
+        1.5rem 1rem .75rem;
+
+    font-size:
+
+        var(--nv-text-xs);
+
+    font-weight:
+
+        var(--nv-bold);
+
+    color:
+
+        var(--nv-text-muted);
+
+    text-transform:
+
+        uppercase;
+
+    letter-spacing:
+
+        .08em;
+
+}
+
+
+/* ==========================================
+   Divider
+========================================== */
+
+.nv-sidebar-divider {
+
+    height:1px;
+
+    width:100%;
+
+    background:
+
+        var(--nv-border);
+
+    margin:
+
+        1rem 0;
+
+}
+
+
+/* ==========================================
+   Creator / Pro Zone
+========================================== */
+
+.nv-sidebar-premium {
+
+    padding:
+
+        1rem;
+
+    border-radius:
+
+        var(--nv-radius-lg);
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            rgba(37,99,235,.2),
+
+            rgba(124,58,237,.15)
+
+        );
+
+    border:
+
+        1px solid rgba(37,99,235,.35);
+
+}
+
+
+.nv-sidebar-premium-title {
+
+    font-weight:
+
+        var(--nv-bold);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+.nv-sidebar-premium-text {
+
+    margin-top:.5rem;
+
+    font-size:
+
+        var(--nv-text-sm);
+
+    color:
+
+        var(--nv-text-secondary);
+
+}
+
+
+/* ==========================================
+   Collapsed Sidebar
+========================================== */
+
+.nv-sidebar.collapsed {
+
+    width:88px;
+
+}
+
+
+.nv-sidebar.collapsed .nv-sidebar-text,
+.nv-sidebar.collapsed .nv-sidebar-title,
+.nv-sidebar.collapsed .nv-sidebar-premium {
+
+    display:none;
+
+}
+
+
+.nv-sidebar.collapsed .nv-sidebar-item {
+
+    justify-content:center;
+
+}
+
+
+/* ==========================================
+   Main Content Offset
+========================================== */
+
+.nv-content {
+
+    margin-left:260px;
+
+    transition:
+
+        margin-left var(--nv-speed-normal)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-content.sidebar-small {
+
+    margin-left:88px;
+
+}
+
+
+/* ==========================================
+   Mobile Sidebar
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-sidebar {
+
+        top:64px;
+
+        width:280px;
+
+        transform:
+
+            translateX(-100%);
+
+    }
+
+
+    .nv-sidebar.open {
+
+        transform:
+
+            translateX(0);
+
+        box-shadow:
+
+            20px 0 50px rgba(0,0,0,.35);
+
+    }
+
+
+    .nv-content {
+
+        margin-left:0;
+
+    }
+
+}
