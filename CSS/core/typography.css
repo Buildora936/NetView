@@ -1,1 +1,396 @@
+/* ==========================================
+   NetView
+   Design System
+   typography.css
+========================================== */
 
+/* ==========================================
+   Google Font
+========================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* ==========================================
+   Body
+========================================== */
+
+body {
+
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: var(--nv-text-md);
+
+    font-weight: var(--nv-regular);
+
+    line-height: 1.6;
+
+    color: var(--nv-text);
+
+}
+
+/* ==========================================
+   Headings
+========================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    font-weight: var(--nv-bold);
+
+    line-height: 1.2;
+
+    letter-spacing: -.02em;
+
+    color: var(--nv-text);
+
+}
+
+h1 {
+
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+
+}
+
+h2 {
+
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+
+}
+
+h3 {
+
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+
+}
+
+h4 {
+
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+
+}
+
+h5 {
+
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+
+}
+
+h6 {
+
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+
+}
+
+/* ==========================================
+   Paragraph
+========================================== */
+
+p {
+
+    color: var(--nv-text-secondary);
+
+    font-size: var(--nv-text-md);
+
+    line-height: 1.7;
+
+}
+
+/* ==========================================
+   Strong
+========================================== */
+
+strong,
+b {
+
+    font-weight: var(--nv-bold);
+
+    color: var(--nv-text);
+
+}
+
+/* ==========================================
+   Small
+========================================== */
+
+small {
+
+    font-size: var(--nv-text-sm);
+
+    color: var(--nv-text-muted);
+
+}
+
+/* ==========================================
+   Links
+========================================== */
+
+a {
+
+    transition:
+        color var(--nv-speed-normal) var(--nv-ease);
+
+}
+
+a:hover {
+
+    color: var(--nv-primary);
+
+}
+
+/* ==========================================
+   Code
+========================================== */
+
+code,
+pre {
+
+    font-family:
+
+        Consolas,
+
+        "Courier New",
+
+        monospace;
+
+}
+
+code {
+
+    padding: 2px 6px;
+
+    border-radius: 6px;
+
+    background: var(--nv-surface-2);
+
+}
+
+pre {
+
+    overflow-x: auto;
+
+    padding: 16px;
+
+    border-radius: var(--nv-radius-md);
+
+    background: var(--nv-surface);
+
+}
+
+/* ==========================================
+   Selection
+========================================== */
+
+::selection {
+
+    background: var(--nv-primary);
+
+    color: #fff;
+
+}
+
+/* ==========================================
+   Utility Classes
+========================================== */
+
+.text-primary {
+
+    color: var(--nv-text);
+
+}
+
+.text-secondary {
+
+    color: var(--nv-text-secondary);
+
+}
+
+.text-muted {
+
+    color: var(--nv-text-muted);
+
+}
+
+.text-success {
+
+    color: var(--nv-success);
+
+}
+
+.text-warning {
+
+    color: var(--nv-warning);
+
+}
+
+.text-danger {
+
+    color: var(--nv-danger);
+
+}
+
+.text-info {
+
+    color: var(--nv-info);
+
+}
+
+.text-premium {
+
+    color: var(--nv-premium);
+
+}
+
+.text-live {
+
+    background: var(--nv-gradient-live);
+
+    -webkit-background-clip: text;
+
+    background-clip: text;
+
+    color: transparent;
+
+}
+
+/* ==========================================
+   Font Weight
+========================================== */
+
+.fw-light {
+
+    font-weight: var(--nv-light);
+
+}
+
+.fw-regular {
+
+    font-weight: var(--nv-regular);
+
+}
+
+.fw-medium {
+
+    font-weight: var(--nv-medium);
+
+}
+
+.fw-semibold {
+
+    font-weight: var(--nv-semibold);
+
+}
+
+.fw-bold {
+
+    font-weight: var(--nv-bold);
+
+}
+
+.fw-black {
+
+    font-weight: var(--nv-black);
+
+}
+
+/* ==========================================
+   Text Alignment
+========================================== */
+
+.text-left {
+
+    text-align: left;
+
+}
+
+.text-center {
+
+    text-align: center;
+
+}
+
+.text-right {
+
+    text-align: right;
+
+}
+
+/* ==========================================
+   Text Transform
+========================================== */
+
+.uppercase {
+
+    text-transform: uppercase;
+
+}
+
+.lowercase {
+
+    text-transform: lowercase;
+
+}
+
+.capitalize {
+
+    text-transform: capitalize;
+
+}
+
+/* ==========================================
+   Truncate
+========================================== */
+
+.truncate {
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+/* ==========================================
+   Multi Line Clamp
+========================================== */
+
+.line-2,
+.line-3,
+.line-4 {
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+
+}
+
+.line-2 {
+
+    -webkit-line-clamp: 2;
+
+}
+
+.line-3 {
+
+    -webkit-line-clamp: 3;
+
+}
+
+.line-4 {
+
+    -webkit-line-clamp: 4;
+
+}
