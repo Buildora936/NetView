@@ -1,1 +1,402 @@
+/* ==========================================
+   NetView
+   Design System
+   header.css
+========================================== */
 
+
+/* ==========================================
+   Header Container
+========================================== */
+
+.nv-header {
+
+    position:sticky;
+
+    top:0;
+
+    width:100%;
+
+    height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+
+        0 var(--nv-space-6);
+
+    background:
+
+        rgba(10,15,25,.75);
+
+    backdrop-filter:
+
+        blur(18px);
+
+    -webkit-backdrop-filter:
+
+        blur(18px);
+
+    border-bottom:
+
+        1px solid var(--nv-border);
+
+    z-index:
+
+        var(--nv-z-header);
+
+}
+
+
+/* ==========================================
+   Logo
+========================================== */
+
+.nv-header-logo {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+    cursor:pointer;
+
+}
+
+
+.nv-header-logo img {
+
+    width:42px;
+
+    height:42px;
+
+    object-fit:contain;
+
+}
+
+
+.nv-header-logo span {
+
+    font-size:
+
+        var(--nv-text-xl);
+
+    font-weight:
+
+        var(--nv-black);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+/* ==========================================
+   Center Search
+========================================== */
+
+.nv-header-search {
+
+    flex:1;
+
+    max-width:650px;
+
+    margin:
+
+        0 2rem;
+
+}
+
+
+.nv-header-search input {
+
+    width:100%;
+
+    height:44px;
+
+    padding:
+
+        0 1.5rem;
+
+    border-radius:
+
+        var(--nv-radius-round);
+
+    background:
+
+        var(--nv-surface);
+
+    border:
+
+        1px solid var(--nv-border);
+
+    color:
+
+        var(--nv-text);
+
+    outline:none;
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-header-search input:focus {
+
+    border-color:
+
+        var(--nv-primary);
+
+    box-shadow:
+
+        0 0 0 4px
+
+        rgba(37,99,235,.18);
+
+}
+
+
+/* ==========================================
+   Header Actions
+========================================== */
+
+.nv-header-actions {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+}
+
+
+/* ==========================================
+   Header Icon
+========================================== */
+
+.nv-header-icon {
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:
+
+        transparent;
+
+    color:
+
+        var(--nv-text-secondary);
+
+    cursor:pointer;
+
+    transition:
+
+        all var(--nv-speed-fast)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-header-icon:hover {
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+    transform:
+
+        scale(1.08);
+
+}
+
+
+/* ==========================================
+   Notification Badge
+========================================== */
+
+.nv-notification-badge {
+
+    position:absolute;
+
+    top:5px;
+
+    right:5px;
+
+    min-width:18px;
+
+    height:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+
+        #ef4444;
+
+    color:white;
+
+    border-radius:
+
+        999px;
+
+    font-size:
+
+        11px;
+
+    font-weight:
+
+        var(--nv-bold);
+
+}
+
+
+/* ==========================================
+   Upload Button
+========================================== */
+
+.nv-header-upload {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.5rem;
+
+}
+
+
+/* ==========================================
+   User Menu
+========================================== */
+
+.nv-user-menu {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+    cursor:pointer;
+
+}
+
+
+.nv-user-avatar {
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:
+
+        50%;
+
+    object-fit:cover;
+
+    border:
+
+        2px solid transparent;
+
+    transition:
+
+        border-color var(--nv-speed-fast);
+
+}
+
+
+.nv-user-avatar:hover {
+
+    border-color:
+
+        var(--nv-primary);
+
+}
+
+
+/* ==========================================
+   Header Divider
+========================================== */
+
+.nv-header-divider {
+
+    height:28px;
+
+    width:1px;
+
+    background:
+
+        var(--nv-border);
+
+}
+
+
+/* ==========================================
+   Mobile Header
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-header {
+
+        height:64px;
+
+        padding:
+
+            0 var(--nv-space-4);
+
+    }
+
+
+    .nv-header-logo span {
+
+        display:none;
+
+    }
+
+
+    .nv-header-search {
+
+        margin:
+
+            0 .5rem;
+
+    }
+
+
+    .nv-header-upload {
+
+        display:none;
+
+    }
+
+
+}
