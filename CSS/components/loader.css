@@ -1,1 +1,434 @@
+/* ==========================================
+   NetView
+   Design System
+   loader.css
+========================================== */
 
+
+/* ==========================================
+   Global Spinner
+========================================== */
+
+.nv-spinner {
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    border:
+
+        4px solid rgba(255,255,255,.15);
+
+    border-top-color:
+
+        var(--nv-primary);
+
+    animation:
+
+        nvRotate
+
+        .8s linear infinite;
+
+}
+
+
+/* ==========================================
+   Small Spinner
+========================================== */
+
+.nv-spinner-sm {
+
+    width:20px;
+
+    height:20px;
+
+    border-width:
+
+        2px;
+
+}
+
+
+/* ==========================================
+   Large Spinner
+========================================== */
+
+.nv-spinner-lg {
+
+    width:70px;
+
+    height:70px;
+
+    border-width:
+
+        5px;
+
+}
+
+
+/* ==========================================
+   Page Loader
+========================================== */
+
+.nv-page-loader {
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-direction:column;
+
+    gap:1rem;
+
+    background:
+
+        var(--nv-background);
+
+    z-index:
+
+        var(--nv-z-loader);
+
+}
+
+
+/* ==========================================
+   Logo Loader
+========================================== */
+
+.nv-logo-loader {
+
+    width:80px;
+
+    height:80px;
+
+    animation:
+
+        nvPulse
+
+        2s
+
+        infinite;
+
+}
+
+
+.nv-loader-text {
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-size:
+
+        var(--nv-text-sm);
+
+}
+
+
+/* ==========================================
+   Skeleton Base
+========================================== */
+
+.nv-skeleton {
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            var(--nv-surface),
+
+            var(--nv-surface-2),
+
+            var(--nv-surface)
+
+        );
+
+    background-size:
+
+        200% 100%;
+
+    animation:
+
+        nvSkeleton
+
+        1.5s
+
+        infinite;
+
+}
+
+
+/* ==========================================
+   Skeleton Elements
+========================================== */
+
+.nv-skeleton-text {
+
+    height:
+
+        14px;
+
+    border-radius:
+
+        8px;
+
+    width:
+
+        100%;
+
+}
+
+
+.nv-skeleton-title {
+
+    height:
+
+        22px;
+
+    width:
+
+        70%;
+
+    border-radius:
+
+        8px;
+
+}
+
+
+.nv-skeleton-avatar {
+
+    width:
+
+        44px;
+
+    height:
+
+        44px;
+
+    border-radius:
+
+        50%;
+
+}
+
+
+.nv-skeleton-image {
+
+    width:
+
+        100%;
+
+    aspect-ratio:
+
+        16/9;
+
+    border-radius:
+
+        var(--nv-radius-md);
+
+}
+
+
+/* ==========================================
+   Video Skeleton
+========================================== */
+
+.nv-video-skeleton {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1rem;
+
+}
+
+
+.nv-video-skeleton-content {
+
+    display:flex;
+
+    gap:.75rem;
+
+}
+
+
+/* ==========================================
+   Upload Loader
+========================================== */
+
+.nv-upload-loader {
+
+    width:
+
+        100%;
+
+    height:
+
+        8px;
+
+    background:
+
+        var(--nv-surface-2);
+
+    border-radius:
+
+        999px;
+
+    overflow:hidden;
+
+}
+
+
+.nv-upload-progress {
+
+    height:
+
+        100%;
+
+    width:
+
+        0%;
+
+    background:
+
+        var(--nv-primary);
+
+    border-radius:
+
+        inherit;
+
+    transition:
+
+        width .3s ease;
+
+}
+
+
+/* ==========================================
+   Loading Button
+========================================== */
+
+.nv-loading-dots {
+
+    display:flex;
+
+    gap:5px;
+
+}
+
+
+.nv-loading-dots span {
+
+    width:8px;
+
+    height:8px;
+
+    background:
+
+        var(--nv-primary);
+
+    border-radius:50%;
+
+    animation:
+
+        nvBounce
+
+        1.4s
+
+        infinite;
+
+}
+
+
+.nv-loading-dots span:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+
+.nv-loading-dots span:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+
+/* ==========================================
+   Infinite Scroll Loader
+========================================== */
+
+.nv-infinite-loader {
+
+    display:flex;
+
+    justify-content:center;
+
+    padding:2rem;
+
+}
+
+
+/* ==========================================
+   Blur Loading Image
+========================================== */
+
+.nv-image-loading {
+
+    filter:
+
+        blur(12px);
+
+    transform:
+
+        scale(1.05);
+
+    transition:
+
+        filter .5s ease,
+
+        transform .5s ease;
+
+}
+
+
+.nv-image-loaded {
+
+    filter:
+
+        blur(0);
+
+    transform:
+
+        scale(1);
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-page-loader .nv-spinner-lg {
+
+        width:55px;
+
+        height:55px;
+
+    }
+
+}
