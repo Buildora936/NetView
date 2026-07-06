@@ -1,1 +1,874 @@
+/* ==========================================
+   NetView
+   Design System
+   utilities.css
+   Part 1
+========================================== */
 
+/* ==========================================
+   Containers
+========================================== */
+
+.container {
+
+    width: 100%;
+
+    max-width: var(--nv-container);
+
+    margin-inline: auto;
+
+    padding-inline: var(--nv-space-6);
+
+}
+
+.container-fluid {
+
+    width: 100%;
+
+    padding-inline: var(--nv-space-6);
+
+}
+
+/* ==========================================
+   Display
+========================================== */
+
+.d-none {
+
+    display: none !important;
+
+}
+
+.d-block {
+
+    display: block !important;
+
+}
+
+.d-inline {
+
+    display: inline !important;
+
+}
+
+.d-inline-block {
+
+    display: inline-block !important;
+
+}
+
+.d-flex {
+
+    display: flex !important;
+
+}
+
+.d-inline-flex {
+
+    display: inline-flex !important;
+
+}
+
+.d-grid {
+
+    display: grid !important;
+
+}
+
+/* ==========================================
+   Flex Direction
+========================================== */
+
+.flex-row {
+
+    flex-direction: row;
+
+}
+
+.flex-column {
+
+    flex-direction: column;
+
+}
+
+.flex-row-reverse {
+
+    flex-direction: row-reverse;
+
+}
+
+.flex-column-reverse {
+
+    flex-direction: column-reverse;
+
+}
+
+/* ==========================================
+   Flex Wrap
+========================================== */
+
+.flex-wrap {
+
+    flex-wrap: wrap;
+
+}
+
+.flex-nowrap {
+
+    flex-wrap: nowrap;
+
+}
+
+.flex-wrap-reverse {
+
+    flex-wrap: wrap-reverse;
+
+}
+
+/* ==========================================
+   Justify Content
+========================================== */
+
+.justify-start {
+
+    justify-content: flex-start;
+
+}
+
+.justify-center {
+
+    justify-content: center;
+
+}
+
+.justify-end {
+
+    justify-content: flex-end;
+
+}
+
+.justify-between {
+
+    justify-content: space-between;
+
+}
+
+.justify-around {
+
+    justify-content: space-around;
+
+}
+
+.justify-evenly {
+
+    justify-content: space-evenly;
+
+}
+
+/* ==========================================
+   Align Items
+========================================== */
+
+.items-start {
+
+    align-items: flex-start;
+
+}
+
+.items-center {
+
+    align-items: center;
+
+}
+
+.items-end {
+
+    align-items: flex-end;
+
+}
+
+.items-stretch {
+
+    align-items: stretch;
+
+}
+
+.items-baseline {
+
+    align-items: baseline;
+
+}
+
+/* ==========================================
+   Align Self
+========================================== */
+
+.self-start {
+
+    align-self: flex-start;
+
+}
+
+.self-center {
+
+    align-self: center;
+
+}
+
+.self-end {
+
+    align-self: flex-end;
+
+}
+
+.self-stretch {
+
+    align-self: stretch;
+
+}
+
+/* ==========================================
+   Flex Grow / Shrink
+========================================== */
+
+.flex-1 {
+
+    flex: 1;
+
+}
+
+.flex-auto {
+
+    flex: auto;
+
+}
+
+.flex-grow {
+
+    flex-grow: 1;
+
+}
+
+.flex-shrink {
+
+    flex-shrink: 1;
+
+}
+
+.flex-no-shrink {
+
+    flex-shrink: 0;
+
+}
+
+/* ==========================================
+   Gap
+========================================== */
+
+.gap-1 {
+
+    gap: var(--nv-space-1);
+
+}
+
+.gap-2 {
+
+    gap: var(--nv-space-2);
+
+}
+
+.gap-3 {
+
+    gap: var(--nv-space-3);
+
+}
+
+.gap-4 {
+
+    gap: var(--nv-space-4);
+
+}
+
+.gap-5 {
+
+    gap: var(--nv-space-5);
+
+}
+
+.gap-6 {
+
+    gap: var(--nv-space-6);
+
+}
+
+.gap-7 {
+
+    gap: var(--nv-space-7);
+
+}
+
+.gap-8 {
+
+    gap: var(--nv-space-8);
+
+}
+
+/* ==========================================
+   Grid
+========================================== */
+
+.grid-2 {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+}
+
+.grid-3 {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+}
+
+.grid-4 {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+.grid-5 {
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+}
+
+.grid-6 {
+
+    display: grid;
+
+    grid-template-columns: repeat(6, 1fr);
+
+}
+
+/* ==========================================
+   Auto Grid
+========================================== */
+
+.grid-auto-200 {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(200px, 1fr)
+        );
+
+}
+
+.grid-auto-250 {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(250px, 1fr)
+        );
+
+}
+
+.grid-auto-300 {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+
+}
+
+.grid-auto-350 {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(350px, 1fr)
+        );
+
+}
+
+/* ==========================================
+   Center Helpers
+========================================== */
+
+.center {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+.center-column {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+/* ==========================================
+   NetView
+   Design System
+   utilities.css
+   Part 2
+========================================== */
+
+/* ==========================================
+   Width
+========================================== */
+
+.w-100 { width: 100%; }
+.w-90  { width: 90%; }
+.w-80  { width: 80%; }
+.w-70  { width: 70%; }
+.w-60  { width: 60%; }
+.w-50  { width: 50%; }
+.w-40  { width: 40%; }
+.w-30  { width: 30%; }
+.w-20  { width: 20%; }
+.w-auto { width: auto; }
+
+/* ==========================================
+   Height
+========================================== */
+
+.h-100 { height: 100%; }
+.h-90  { height: 90%; }
+.h-80  { height: 80%; }
+.h-70  { height: 70%; }
+.h-60  { height: 60%; }
+.h-50  { height: 50%; }
+.h-auto { height: auto; }
+
+/* ==========================================
+   Viewport
+========================================== */
+
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.w-screen {
+    width: 100vw;
+}
+
+/* ==========================================
+   Margin
+========================================== */
+
+.m-0 { margin: 0; }
+.m-1 { margin: var(--nv-space-1); }
+.m-2 { margin: var(--nv-space-2); }
+.m-3 { margin: var(--nv-space-3); }
+.m-4 { margin: var(--nv-space-4); }
+.m-5 { margin: var(--nv-space-5); }
+.m-6 { margin: var(--nv-space-6); }
+.m-7 { margin: var(--nv-space-7); }
+.m-8 { margin: var(--nv-space-8); }
+
+/* Axis */
+
+.mx-auto {
+    margin-inline: auto;
+}
+
+.mx-1 { margin-inline: var(--nv-space-1); }
+.mx-2 { margin-inline: var(--nv-space-2); }
+.mx-3 { margin-inline: var(--nv-space-3); }
+.mx-4 { margin-inline: var(--nv-space-4); }
+.mx-5 { margin-inline: var(--nv-space-5); }
+
+.my-1 { margin-block: var(--nv-space-1); }
+.my-2 { margin-block: var(--nv-space-2); }
+.my-3 { margin-block: var(--nv-space-3); }
+.my-4 { margin-block: var(--nv-space-4); }
+.my-5 { margin-block: var(--nv-space-5); }
+
+/* ==========================================
+   Padding
+========================================== */
+
+.p-0 { padding: 0; }
+.p-1 { padding: var(--nv-space-1); }
+.p-2 { padding: var(--nv-space-2); }
+.p-3 { padding: var(--nv-space-3); }
+.p-4 { padding: var(--nv-space-4); }
+.p-5 { padding: var(--nv-space-5); }
+.p-6 { padding: var(--nv-space-6); }
+.p-7 { padding: var(--nv-space-7); }
+.p-8 { padding: var(--nv-space-8); }
+
+.px-1 { padding-inline: var(--nv-space-1); }
+.px-2 { padding-inline: var(--nv-space-2); }
+.px-3 { padding-inline: var(--nv-space-3); }
+.px-4 { padding-inline: var(--nv-space-4); }
+.px-5 { padding-inline: var(--nv-space-5); }
+
+.py-1 { padding-block: var(--nv-space-1); }
+.py-2 { padding-block: var(--nv-space-2); }
+.py-3 { padding-block: var(--nv-space-3); }
+.py-4 { padding-block: var(--nv-space-4); }
+.py-5 { padding-block: var(--nv-space-5); }
+
+/* ==========================================
+   Position
+========================================== */
+
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-sticky { position: sticky; }
+
+/* Position helpers */
+
+.top-0 { top: 0; }
+.bottom-0 { bottom: 0; }
+.left-0 { left: 0; }
+.right-0 { right: 0; }
+
+/* ==========================================
+   Overflow
+========================================== */
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* ==========================================
+   Visibility
+========================================== */
+
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+/* ==========================================
+   Opacity
+========================================== */
+
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* ==========================================
+   Z-Index
+========================================== */
+
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+
+.z-header { z-index: var(--nv-z-header); }
+.z-sidebar { z-index: var(--nv-z-sidebar); }
+.z-modal { z-index: var(--nv-z-modal); }
+.z-toast { z-index: var(--nv-z-toast); }
+.z-loader { z-index: var(--nv-z-loader); }
+
+/* ==========================================
+   Cursor
+========================================== */
+
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+.cursor-grab { cursor: grab; }
+.cursor-grabbing { cursor: grabbing; }
+
+/* ==========================================
+   User Select
+========================================== */
+
+.select-none { user-select: none; }
+.select-text { user-select: text; }
+.select-all { user-select: all; }
+
+/* ==========================================
+   Pointer Events
+========================================== */
+
+.pointer-none { pointer-events: none; }
+.pointer-auto { pointer-events: auto; }
+
+/* ==========================================
+   NetView
+   Design System
+   utilities.css
+   Part 3
+========================================== */
+
+/* ==========================================
+   Border Radius
+========================================== */
+
+.rounded-0 { border-radius: 0; }
+.rounded-1 { border-radius: var(--nv-radius-xs); }
+.rounded-2 { border-radius: var(--nv-radius-sm); }
+.rounded-3 { border-radius: var(--nv-radius-md); }
+.rounded-4 { border-radius: var(--nv-radius-lg); }
+.rounded-5 { border-radius: var(--nv-radius-xl); }
+.rounded-full { border-radius: var(--nv-radius-round); }
+
+/* ==========================================
+   Shadows
+========================================== */
+
+.shadow-none { box-shadow: none; }
+.shadow-xs { box-shadow: var(--nv-shadow-xs); }
+.shadow-sm { box-shadow: var(--nv-shadow-sm); }
+.shadow-md { box-shadow: var(--nv-shadow-md); }
+.shadow-lg { box-shadow: var(--nv-shadow-lg); }
+
+/* ==========================================
+   Glow Effects
+========================================== */
+
+.glow-primary {
+    box-shadow: var(--nv-glow);
+}
+
+.glow-hover {
+    transition: box-shadow var(--nv-speed-normal) var(--nv-ease);
+}
+
+.glow-hover:hover {
+    box-shadow: var(--nv-glow);
+}
+
+/* ==========================================
+   Glassmorphism
+========================================== */
+
+.glass {
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(var(--nv-blur-md));
+    -webkit-backdrop-filter: blur(var(--nv-blur-md));
+    border: 1px solid var(--nv-border);
+}
+
+.glass-strong {
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(var(--nv-blur-lg));
+    -webkit-backdrop-filter: blur(var(--nv-blur-lg));
+    border: 1px solid var(--nv-border-strong);
+}
+
+/* ==========================================
+   Blur Helpers
+========================================== */
+
+.blur-sm { filter: blur(var(--nv-blur-sm)); }
+.blur-md { filter: blur(var(--nv-blur-md)); }
+.blur-lg { filter: blur(var(--nv-blur-lg)); }
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(var(--nv-blur-sm));
+}
+
+.backdrop-blur-md {
+    backdrop-filter: blur(var(--nv-blur-md));
+}
+
+.backdrop-blur-lg {
+    backdrop-filter: blur(var(--nv-blur-lg));
+}
+
+/* ==========================================
+   Hover Utilities
+========================================== */
+
+.hover-lift {
+    transition: transform var(--nv-speed-normal) var(--nv-ease);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+.hover-scale {
+    transition: transform var(--nv-speed-normal) var(--nv-ease);
+}
+
+.hover-scale:hover {
+    transform: scale(1.03);
+}
+
+.hover-bright {
+    transition: filter var(--nv-speed-normal) var(--nv-ease);
+}
+
+.hover-bright:hover {
+    filter: brightness(1.1);
+}
+
+/* ==========================================
+   Opacity Hover
+========================================== */
+
+.hover-opacity {
+    transition: opacity var(--nv-speed-normal) var(--nv-ease);
+}
+
+.hover-opacity:hover {
+    opacity: 0.8;
+}
+
+/* ==========================================
+   Borders
+========================================== */
+
+.border { border: 1px solid var(--nv-border); }
+.border-strong { border: 1px solid var(--nv-border-strong); }
+.border-none { border: none; }
+
+/* ==========================================
+   Divider
+========================================== */
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: var(--nv-border);
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================
+   Focus Utilities
+========================================== */
+
+.focus-ring:focus-visible {
+    outline: 2px solid var(--nv-primary);
+    outline-offset: 2px;
+}
+
+/* ==========================================
+   Scroll Behavior
+========================================== */
+
+.scroll-smooth {
+    scroll-behavior: smooth;
+}
+
+/* ==========================================
+   Text Helpers
+========================================== */
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.text-break {
+    word-break: break-word;
+}
+
+/* ==========================================
+   Aspect Ratio
+========================================== */
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+/* ==========================================
+   Image Fit
+========================================== */
+
+.object-cover {
+    object-fit: cover;
+}
+
+.object-contain {
+    object-fit: contain;
+}
+
+/* ==========================================
+   Disabled State Helper
+========================================== */
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ==========================================
+   Responsive Helpers (basic)
+========================================== */
+
+@media (max-width: 768px) {
+
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .text-center-mobile {
+        text-align: center !important;
+    }
+
+    .flex-column-mobile {
+        flex-direction: column !important;
+    }
+
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .hide-tablet {
+        display: none !important;
+    }
+
+}
