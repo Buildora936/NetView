@@ -1,1 +1,359 @@
+/* ==========================================
+   NetView
+   Design System
+   reset.css
+========================================== */
 
+/* ==========================================
+   Box Model
+========================================== */
+
+*,
+*::before,
+*::after {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+/* ==========================================
+   HTML
+========================================== */
+
+html {
+
+    font-size: 16px;
+
+    scroll-behavior: smooth;
+
+    -webkit-text-size-adjust: 100%;
+
+    text-size-adjust: 100%;
+
+}
+
+/* ==========================================
+   Body
+========================================== */
+
+body {
+
+    min-height: 100vh;
+
+    background: var(--nv-bg);
+
+    color: var(--nv-text);
+
+    overflow-x: hidden;
+
+    text-rendering: optimizeLegibility;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+}
+
+/* ==========================================
+   Images
+========================================== */
+
+img,
+picture,
+video,
+canvas,
+svg {
+
+    display: block;
+
+    max-width: 100%;
+
+    user-select: none;
+
+}
+
+/* ==========================================
+   Media
+========================================== */
+
+audio,
+video {
+
+    width: 100%;
+
+}
+
+/* ==========================================
+   Forms
+========================================== */
+
+input,
+textarea,
+button,
+select {
+
+    font: inherit;
+
+    color: inherit;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+}
+
+/* ==========================================
+   Textarea
+========================================== */
+
+textarea {
+
+    resize: vertical;
+
+}
+
+/* ==========================================
+   Buttons
+========================================== */
+
+button {
+
+    cursor: pointer;
+
+    user-select: none;
+
+}
+
+/* ==========================================
+   Links
+========================================== */
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+/* ==========================================
+   Lists
+========================================== */
+
+ul,
+ol {
+
+    list-style: none;
+
+}
+
+/* ==========================================
+   Tables
+========================================== */
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+/* ==========================================
+   Quotes
+========================================== */
+
+blockquote,
+q {
+
+    quotes: none;
+
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+
+    content: "";
+
+}
+
+/* ==========================================
+   Horizontal Rule
+========================================== */
+
+hr {
+
+    border: none;
+
+}
+
+/* ==========================================
+   Hidden
+========================================== */
+
+[hidden] {
+
+    display: none !important;
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+:disabled {
+
+    cursor: not-allowed;
+
+}
+
+/* ==========================================
+   Placeholder
+========================================== */
+
+::placeholder {
+
+    color: var(--nv-text-muted);
+
+    opacity: 1;
+
+}
+
+/* ==========================================
+   Selection
+========================================== */
+
+::selection {
+
+    background: var(--nv-primary);
+
+    color: #fff;
+
+}
+
+/* ==========================================
+   Scrollbar
+========================================== */
+
+* {
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        var(--nv-primary)
+        var(--nv-surface);
+
+}
+
+::-webkit-scrollbar {
+
+    width: 10px;
+
+    height: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+
+    background: var(--nv-surface);
+
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: var(--nv-hover);
+
+    border-radius: 999px;
+
+    border: 2px solid var(--nv-surface);
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+    background: var(--nv-primary);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+:focus-visible {
+
+    outline: 2px solid var(--nv-primary);
+
+    outline-offset: 2px;
+
+}
+
+/* ==========================================
+   SVG
+========================================== */
+
+svg {
+
+    fill: currentColor;
+
+}
+
+/* ==========================================
+   Inputs Autofill
+========================================== */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+
+    -webkit-text-fill-color: var(--nv-text);
+
+    transition: background-color 99999s;
+
+}
+
+/* ==========================================
+   Drag
+========================================== */
+
+img {
+
+    -webkit-user-drag: none;
+
+}
+
+/* ==========================================
+   Tap Highlight
+========================================== */
+
+* {
+
+    -webkit-tap-highlight-color: transparent;
+
+}
+
+/* ==========================================
+   Reduce Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    * {
+
+        animation-duration: .01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: .01ms !important;
+
+        scroll-behavior: auto !important;
+
+    }
+
+}
