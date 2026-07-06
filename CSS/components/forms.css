@@ -1,1 +1,556 @@
+/* ==========================================
+   NetView
+   Design System
+   forms.css
+========================================== */
 
+
+/* ==========================================
+   Form Container
+========================================== */
+
+.nv-form {
+
+    width:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:var(--nv-space-5);
+
+}
+
+
+/* ==========================================
+   Form Group
+========================================== */
+
+.nv-form-group {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.5rem;
+
+}
+
+
+/* ==========================================
+   Labels
+========================================== */
+
+.nv-label {
+
+    font-size:var(--nv-text-sm);
+
+    font-weight:var(--nv-semibold);
+
+    color:var(--nv-text);
+
+}
+
+
+.nv-required {
+
+    color:var(--nv-danger);
+
+}
+
+
+/* ==========================================
+   Inputs Base
+========================================== */
+
+.nv-input,
+.nv-textarea,
+.nv-select {
+
+    width:100%;
+
+    padding:.9rem 1rem;
+
+    background:
+
+        var(--nv-surface);
+
+    border:
+
+        1px solid var(--nv-border);
+
+    border-radius:
+
+        var(--nv-radius-md);
+
+    color:
+
+        var(--nv-text);
+
+    font-size:
+
+        var(--nv-text-md);
+
+    outline:none;
+
+    transition:
+
+        border-color var(--nv-speed-fast) var(--nv-ease),
+
+        box-shadow var(--nv-speed-fast) var(--nv-ease),
+
+        background var(--nv-speed-fast) var(--nv-ease);
+
+}
+
+
+/* ==========================================
+   Placeholder
+========================================== */
+
+.nv-input::placeholder,
+.nv-textarea::placeholder {
+
+    color:
+
+        var(--nv-text-muted);
+
+}
+
+
+/* ==========================================
+   Focus
+========================================== */
+
+.nv-input:focus,
+.nv-textarea:focus,
+.nv-select:focus {
+
+    border-color:
+
+        var(--nv-primary);
+
+    box-shadow:
+
+        0 0 0 4px
+
+        rgba(37,99,235,.18);
+
+}
+
+
+/* ==========================================
+   Hover
+========================================== */
+
+.nv-input:hover,
+.nv-textarea:hover,
+.nv-select:hover {
+
+    border-color:
+
+        var(--nv-border-strong);
+
+}
+
+
+/* ==========================================
+   Textarea
+========================================== */
+
+.nv-textarea {
+
+    min-height:140px;
+
+    resize:vertical;
+
+}
+
+
+/* ==========================================
+   Select
+========================================== */
+
+.nv-select {
+
+    cursor:pointer;
+
+    appearance:none;
+
+}
+
+
+/* ==========================================
+   Input With Icon
+========================================== */
+
+.nv-input-wrapper {
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+.nv-input-wrapper .nv-input {
+
+    padding-left:3rem;
+
+}
+
+
+.nv-input-icon {
+
+    position:absolute;
+
+    left:1rem;
+
+    color:
+
+        var(--nv-text-muted);
+
+    pointer-events:none;
+
+}
+
+
+/* ==========================================
+   Password Field
+========================================== */
+
+.nv-password-wrapper {
+
+    position:relative;
+
+}
+
+
+.nv-password-toggle {
+
+    position:absolute;
+
+    right:1rem;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    color:
+
+        var(--nv-text-muted);
+
+}
+
+
+.nv-password-toggle:hover {
+
+    color:
+
+        var(--nv-primary);
+
+}
+
+
+/* ==========================================
+   Search Input
+========================================== */
+
+.nv-search {
+
+    border-radius:
+
+        var(--nv-radius-round);
+
+    padding-left:
+
+        1.25rem;
+
+}
+
+
+/* ==========================================
+   Error State
+========================================== */
+
+.nv-input-error {
+
+    border-color:
+
+        var(--nv-danger);
+
+}
+
+
+.nv-input-error:focus {
+
+    box-shadow:
+
+        0 0 0 4px
+
+        rgba(239,68,68,.18);
+
+}
+
+
+/* ==========================================
+   Success State
+========================================== */
+
+.nv-input-success {
+
+    border-color:
+
+        var(--nv-success);
+
+}
+
+
+/* ==========================================
+   Help Text
+========================================== */
+
+.nv-help {
+
+    font-size:
+
+        var(--nv-text-sm);
+
+    color:
+
+        var(--nv-text-muted);
+
+}
+
+
+/* ==========================================
+   Error Message
+========================================== */
+
+.nv-error-message {
+
+    font-size:
+
+        var(--nv-text-sm);
+
+    color:
+
+        var(--nv-danger);
+
+}
+
+
+/* ==========================================
+   Checkbox
+========================================== */
+
+.nv-checkbox {
+
+    width:18px;
+
+    height:18px;
+
+    accent-color:
+
+        var(--nv-primary);
+
+    cursor:pointer;
+
+}
+
+
+/* ==========================================
+   Radio
+========================================== */
+
+.nv-radio {
+
+    width:18px;
+
+    height:18px;
+
+    accent-color:
+
+        var(--nv-primary);
+
+    cursor:pointer;
+
+}
+
+
+/* ==========================================
+   Switch
+========================================== */
+
+.nv-switch {
+
+    position:relative;
+
+    width:52px;
+
+    height:28px;
+
+}
+
+
+.nv-switch input {
+
+    opacity:0;
+
+    width:0;
+
+    height:0;
+
+}
+
+
+.nv-slider {
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        var(--nv-surface-2);
+
+    border-radius:
+
+        999px;
+
+    cursor:pointer;
+
+    transition:
+
+        .3s;
+
+}
+
+
+.nv-slider::before {
+
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+
+    height:22px;
+
+    left:3px;
+
+    bottom:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+
+}
+
+
+.nv-switch input:checked + .nv-slider {
+
+    background:
+
+        var(--nv-primary);
+
+}
+
+
+.nv-switch input:checked + .nv-slider::before {
+
+    transform:
+
+        translateX(24px);
+
+}
+
+
+/* ==========================================
+   Upload Zone
+========================================== */
+
+.nv-upload-zone {
+
+    width:100%;
+
+    min-height:180px;
+
+    border:
+
+        2px dashed var(--nv-border);
+
+    border-radius:
+
+        var(--nv-radius-lg);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:1rem;
+
+    cursor:pointer;
+
+    transition:
+
+        all var(--nv-speed-normal)
+
+        var(--nv-ease);
+
+}
+
+
+.nv-upload-zone:hover {
+
+    border-color:
+
+        var(--nv-primary);
+
+    background:
+
+        rgba(37,99,235,.08);
+
+}
+
+
+/* ==========================================
+   Form Disabled
+========================================== */
+
+.nv-form-disabled {
+
+    opacity:.5;
+
+    pointer-events:none;
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-input,
+    .nv-textarea,
+    .nv-select {
+
+        font-size:
+
+            var(--nv-text-sm);
+
+    }
+
+}
