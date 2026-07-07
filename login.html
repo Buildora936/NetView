@@ -1196,25 +1196,16 @@ loginForm.addEventListener(
 
         }
 
-        // ==========================================
+// ==========================================
 // Intelligent Redirect
 // ==========================================
 
-const profile =
-    await getProfile();
-
-const role =
-    await getRole();
-
-const lastPage =
-    sessionStorage.getItem(
-        "netview_last_page"
-    );
-
-// Profil non configuré
+// Nouveau compte
 if(
+
     profile &&
     !profile.username
+
 ){
 
     navigate(
@@ -1225,7 +1216,37 @@ if(
 
 }
 
-// Reprendre la dernière page
+// Creator / Pro
+if(
+
+    role==="creator" ||
+
+    role==="pro"
+
+){
+
+    const openStudio =
+        sessionStorage.getItem(
+            "netview_open_studio"
+        );
+
+    if(openStudio==="true"){
+
+        sessionStorage.removeItem(
+            "netview_open_studio"
+        );
+
+        navigate(
+            "studio.html"
+        );
+
+        return;
+
+    }
+
+}
+
+// Dernière page
 if(
 
     lastPage &&
@@ -1250,11 +1271,10 @@ if(
 
 }
 
-// Accueil par défaut
+// Accueil
 navigate(
     "index.html"
 );
-
     }
 
 );
