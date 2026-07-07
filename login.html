@@ -679,7 +679,31 @@ Layout
     color:var(--nv-text-muted);
 
 }
+.nv-input-icon svg{
 
+    width:22px;
+
+    height:22px;
+
+}
+
+
+.nv-password-toggle svg{
+
+    width:22px;
+
+    height:22px;
+
+    transition:.3s;
+
+}
+
+
+.nv-password-toggle:hover svg{
+
+    transform:scale(1.1);
+
+}
 /* ==========================================
 Responsive
 ========================================== */
@@ -798,7 +822,26 @@ required>
 
 <div class="nv-input-icon">
 
-✉
+<svg 
+viewBox="0 0 24 24"
+fill="none"
+xmlns="http://www.w3.org/2000/svg">
+
+<path
+d="M4 6H20C21.1 6 22 6.9 22 8V16C22 17.1 21.1 18 20 18H4C2.9 18 2 17.1 2 16V8C2 6.9 2.9 6 4 6Z"
+stroke="currentColor"
+stroke-width="2"
+stroke-linecap="round"
+stroke-linejoin="round"/>
+
+<path
+d="M22 8L12 14L2 8"
+stroke="currentColor"
+stroke-width="2"
+stroke-linecap="round"
+stroke-linejoin="round"/>
+
+</svg>
 
 </div>
 
@@ -832,7 +875,27 @@ required>
 
 <div class="nv-input-icon">
 
-🔒
+<svg
+viewBox="0 0 24 24"
+fill="none"
+xmlns="http://www.w3.org/2000/svg">
+
+<rect
+x="3"
+y="11"
+width="18"
+height="10"
+rx="2"
+stroke="currentColor"
+stroke-width="2"/>
+
+<path
+d="M7 11V7C7 4.8 8.8 3 11 3H13C15.2 3 17 4.8 17 7V11"
+stroke="currentColor"
+stroke-width="2"
+stroke-linecap="round"/>
+
+</svg>
 
 </div>
 
@@ -842,12 +905,52 @@ type="button"
 
 id="togglePassword"
 
-class="nv-password-toggle">
+class="nv-password-toggle"
 
-👁
+aria-label="Afficher le mot de passe">
+
+
+<svg
+
+id="eyeIcon"
+
+viewBox="0 0 24 24"
+
+fill="none"
+
+xmlns="http://www.w3.org/2000/svg">
+
+
+<path
+
+d="M1 12C1 12 5 5 12 5C19 5 23 12 23 12C23 12 19 19 12 19C5 19 1 12 1 12Z"
+
+stroke="currentColor"
+
+stroke-width="2"
+
+stroke-linecap="round"
+
+stroke-linejoin="round"/>
+
+
+<circle
+
+cx="12"
+
+cy="12"
+
+r="3"
+
+stroke="currentColor"
+
+stroke-width="2"/>
+
+
+</svg>
+
 
 </button>
-
 </div>
 
 <div class="nv-login-options">
