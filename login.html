@@ -695,6 +695,41 @@ Responsive
 
     }
 
+    .error{
+
+    display:none;
+
+    margin-top:1rem;
+
+    padding:1rem;
+
+    border-radius:12px;
+
+    background:
+    rgba(239,68,68,.12);
+
+    border:
+    1px solid rgba(239,68,68,.35);
+
+    color:
+    #ef4444;
+
+    font-size:.95rem;
+
+    text-align:center;
+
+    animation:
+    fadeUp .3s ease;
+
+}
+
+
+.error.show{
+
+    display:block;
+
+}
+    
     .nv-login-card{
 
         padding:2rem 1.5rem;
@@ -894,6 +929,15 @@ class="nv-btn nv-btn-gradient nv-login-button">
 Se connecter
 
 </button>
+
+
+<div
+
+class="error"
+
+id="loginError">
+
+</div>
 </form>
 
 <div class="nv-divider">
@@ -979,6 +1023,11 @@ import {
 // Elements
 // ==========================================
 
+const loginError =
+document.getElementById(
+    "loginError"
+);
+    
 const loginForm =
     document.getElementById("loginForm");
 
@@ -1099,19 +1148,26 @@ loginForm.addEventListener(
 
         try {
 
-            const {
-                error
-            } = await signIn(
-                email,
-                password
-            );
+            const response = await signIn(
+    email,
+    password
+);
 
-            if (error) {
 
-                throw error;
+if (
+    !response ||
+    response.error ||
+    !response.data ||
+    !response.data.session
+){
 
-            }
+    throw new Error(
+        response?.error?.message ||
+        "Adresse e-mail ou mot de passe incorrect."
+    );
 
+}
+            
             if (rememberMe.checked) {
 
                 localStorage.setItem(
@@ -1295,11 +1351,46 @@ loginForm.addEventListener(
     }
 
 
-    showToast(
-        message,
-        "error"
+    if(loginError){
+
+    loginError.textContent =
+        message;
+
+    loginError.classList.add(
+        "show"
     );
 
+}
+
+
+showToast(
+    message,
+    "error"
+);
+
+            [
+emailInput,
+passwordInput
+].forEach(input=>{
+
+    input.addEventListener(
+        "input",
+        ()=>{
+
+            if(loginError){
+
+                loginError.textContent="";
+
+                loginError.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+});
 
 }
 
