@@ -949,115 +949,85 @@ style="display:none;">
 <script type="module">
 
 // ==========================================
+// NetView Login
+// login.html
+// ==========================================
+
+// ==========================================
 // Imports
 // ==========================================
 
 import {
-
     signIn,
-
-    getRole,
-
-    getProfile
-
+    getProfile,
+    getRole
 } from "./js/core/auth.js";
 
 import {
-
     navigate
-
 } from "./js/core/navigation.js";
 
 import {
-
     showToast,
-
     showLoader,
-
     hideLoader,
-
     buttonLoading
-
 } from "./js/core/ui.js";
-
 
 // ==========================================
 // Elements
 // ==========================================
 
 const loginForm =
-document.getElementById(
-    "loginForm"
-);
+    document.getElementById("loginForm");
 
 const emailInput =
-document.getElementById(
-    "email"
-);
+    document.getElementById("email");
 
 const passwordInput =
-document.getElementById(
-    "password"
-);
-
-const loginButton =
-document.getElementById(
-    "loginButton"
-);
-
-const togglePassword =
-document.getElementById(
-    "togglePassword"
-);
+    document.getElementById("password");
 
 const rememberMe =
-document.getElementById(
-    "rememberMe"
-);
+    document.getElementById("rememberMe");
 
+const loginButton =
+    document.getElementById("loginButton");
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+// ==========================================
+// Variables
+// ==========================================
+
+let submitting = false;
 
 // ==========================================
 // Password Visibility
 // ==========================================
 
-togglePassword.addEventListener(
-    "click",
-    ()=>{
+togglePassword.addEventListener("click", () => {
 
-        if(passwordInput.type==="password"){
+    const hidden =
+        passwordInput.type === "password";
 
-            passwordInput.type="text";
+    passwordInput.type =
+        hidden ? "text" : "password";
 
-            togglePassword.innerHTML =
+    togglePassword.innerHTML = hidden
+        ? '<i class="fa-regular fa-eye-slash"></i>'
+        : '<i class="fa-regular fa-eye"></i>';
 
-'<i class="fa-regular fa-eye-slash"></i>';
-
-        }
-
-        else{
-
-            passwordInput.type="password";
-
-           togglePassword.innerHTML =
-
-'<i class="fa-regular fa-eye"></i>';
-
-        }
-
-    }
-);
-
+});
 
 // ==========================================
 // Remember Email
 // ==========================================
 
 const savedEmail =
-localStorage.getItem(
-    "netview_saved_email"
-);
+    localStorage.getItem("netview_saved_email");
 
-if(savedEmail){
+if (savedEmail) {
 
     emailInput.value = savedEmail;
 
@@ -1065,34 +1035,37 @@ if(savedEmail){
 
 }
 
-
 // ==========================================
-// Login
+// Form Submit
 // ==========================================
 
 loginForm.addEventListener(
-"submit",
+    "submit",
+    async (event) => {
 
-async(event)=>{
+        event.preventDefault();
 
-event.preventDefault();
+        if (submitting) {
 
-const email =
-emailInput.value.trim();
+            return;
 
-const password =
-passwordInput.value;
+        }
 
+        const email =
+            emailInput.value.trim();
 
-// Validation //
-          if(email===""){
+        const password =
+            passwordInput.value;
+
+        // ===============================
+        // Validation
+        // ===============================
+
+        if (!email) {
 
             showToast(
-
                 "Veuillez saisir votre adresse e-mail.",
-
                 "warning"
-
             );
 
             emailInput.focus();
@@ -1101,14 +1074,11 @@ passwordInput.value;
 
         }
 
-        if(password===""){
+        if (!password) {
 
             showToast(
-
                 "Veuillez saisir votre mot de passe.",
-
                 "warning"
-
             );
 
             passwordInput.focus();
@@ -1117,135 +1087,110 @@ passwordInput.value;
 
         }
 
-        try{
+        submitting = true;
 
-            buttonLoading(
+        buttonLoading(
+            loginButton,
+            true
+        );
 
-                loginButton,
+        showLoader();
 
-                true
-
-            );
-
-            showLoader();
+        try {
 
             const {
-
-                data,
-
                 error
-
             } = await signIn(
-
                 email,
-
                 password
-
             );
 
-            if(error){
+            if (error) {
 
                 throw error;
 
             }
 
-            if(rememberMe.checked){
+            if (rememberMe.checked) {
 
                 localStorage.setItem(
-
                     "netview_saved_email",
-
                     email
-
                 );
 
-            }
-
-            else{
+            } else {
 
                 localStorage.removeItem(
-
                     "netview_saved_email"
-
                 );
 
             }
 
             showToast(
-
                 "Connexion réussie.",
-
                 "success"
-
             );
 
             const profile =
-
                 await getProfile();
 
             const role =
-
                 await getRole();
 
-            // =====================================
-            // Redirection intelligente
-            // =====================================
+                       // ==========================================
+            // Intelligent Redirect System
+            // ==========================================
 
-            if(
 
+            // Nouveau profil non configuré
+            if (
                 profile &&
-
                 !profile.username
+            ) {
 
-            ){
-
-                setTimeout(()=>{
+                setTimeout(() => {
 
                     navigate(
-
                         "profile.html"
-
                     );
 
-                },800);
+                }, 800);
 
                 return;
 
             }
 
-            if(
 
-                role==="creator" ||
-
-                role==="pro"
-
-            ){
+            // Creator / Pro
+            // Redirection vers studio si demandé
+            if (
+                role === "creator" ||
+                role === "pro"
+            ) {
 
                 const openStudio =
-
-                sessionStorage.getItem(
-
-                    "netview_open_studio"
-
-                );
-
-                if(openStudio==="true"){
-
-                    sessionStorage.removeItem(
-
+                    sessionStorage.getItem(
                         "netview_open_studio"
-
                     );
 
-                    setTimeout(()=>{
+
+                if (
+                    openStudio === "true"
+                ) {
+
+                    sessionStorage.removeItem(
+                        "netview_open_studio"
+                    );
+
+
+                    setTimeout(() => {
 
                         navigate(
-
                             "studio.html"
-
                         );
 
-                    },800);
+                    }, 800);
+
 
                     return;
 
@@ -1253,77 +1198,81 @@ passwordInput.value;
 
             }
 
+
+            // Dernière page visitée
             const lastPage =
-
-            sessionStorage.getItem(
-
-                "netview_last_page"
-
-            );
-
-            if(
-
-                lastPage &&
-
-                lastPage!=="login.html" &&
-
-                lastPage!=="signup.html" &&
-
-                lastPage!=="auth.html"
-
-            ){
-
-                sessionStorage.removeItem(
-
+                sessionStorage.getItem(
                     "netview_last_page"
-
                 );
 
-                setTimeout(()=>{
+
+            if (
+                lastPage &&
+                lastPage !== "login.html" &&
+                lastPage !== "signup.html" &&
+                lastPage !== "auth.html"
+            ) {
+
+
+                sessionStorage.removeItem(
+                    "netview_last_page"
+                );
+
+
+                setTimeout(() => {
 
                     navigate(
-
                         lastPage
-
                     );
 
-                },800);
+                }, 800);
+
 
                 return;
 
             }
 
-            setTimeout(()=>{
+
+
+            // Accueil par défaut
+            setTimeout(() => {
 
                 navigate(
-
                     "index.html"
-
                 );
 
-            },800);
+            }, 800);
+
+
 
         }
 
-        catch(error){
+        catch(error) {
 
-            console.error(error);
+
+            console.error(
+                "Login error:",
+                error
+            );
+
 
             showToast(
 
                 error.message ||
-
                 "Impossible de se connecter.",
 
                 "error"
 
             );
 
+
         }
 
-        finally{
+        finally {
+
 
             hideLoader();
+
 
             buttonLoading(
 
@@ -1333,123 +1282,48 @@ passwordInput.value;
 
             );
 
-        }
 
-    }
+            submitting = false;
 
-);
-  // ==========================================
-// Session
-// ==========================================
-
-window.addEventListener(
-
-    "load",
-
-    async()=>{
-
-        try{
-
-            const profile =
-
-                await getProfile();
-
-            if(!profile){
-
-                return;
-
-            }
-
-            const role =
-
-                await getRole();
-
-            const lastPage =
-
-                sessionStorage.getItem(
-
-                    "netview_last_page"
-
-                );
-
-            if(
-
-                !lastPage ||
-
-                lastPage==="login.html" ||
-
-                lastPage==="signup.html" ||
-
-                lastPage==="auth.html"
-
-            ){
-
-                return;
-
-            }
-
-            if(
-
-                role==="creator" ||
-
-                role==="pro"
-
-            ){
-
-                showToast(
-
-                    "Session active détectée.",
-
-                    "info"
-
-                );
-
-            }
 
         }
 
-        catch(error){
-
-            console.error(error);
-
-        }
 
     }
 
 );
 
 
+
 // ==========================================
-// Save Last Page
+// Save Last Page Before Leaving
 // ==========================================
 
 document.addEventListener(
-
     "click",
+    (event) => {
 
-    event=>{
 
         const link =
+            event.target.closest("a");
 
-        event.target.closest("a");
 
-        if(!link){
+        if (!link) {
 
             return;
 
         }
 
+
         const href =
+            link.getAttribute("href");
 
-        link.getAttribute("href");
 
-        if(
-
+        if (
             href &&
-
             href.endsWith(".html")
+        ) {
 
-        ){
 
             sessionStorage.setItem(
 
@@ -1459,81 +1333,75 @@ document.addEventListener(
 
             );
 
+
         }
+
 
     }
 
 );
 
 
+
 // ==========================================
-// Keyboard Shortcuts
+// Keyboard Shortcut
 // ==========================================
 
 document.addEventListener(
-
     "keydown",
+    (event) => {
 
-    event=>{
 
-        if(
+        if (
+            event.key === "Enter" &&
+            document.activeElement === passwordInput
+        ) {
 
-            event.key==="Enter" &&
-
-            document.activeElement===passwordInput
-
-        ){
 
             loginForm.requestSubmit();
 
+
         }
+
 
     }
 
 );
 
 
+
 // ==========================================
-// Input Animations
+// Input Focus Animation
 // ==========================================
 
 document
-
 .querySelectorAll(".nv-input")
+.forEach(input => {
 
-.forEach(input=>{
 
     input.addEventListener(
-
         "focus",
-
-        ()=>{
+        () => {
 
             input.parentElement.classList.add(
-
                 "focused"
-
             );
 
         }
-
     );
+
 
     input.addEventListener(
-
         "blur",
-
-        ()=>{
+        () => {
 
             input.parentElement.classList.remove(
-
                 "focused"
-
             );
 
         }
-
     );
+
 
 });
 
@@ -1542,58 +1410,188 @@ document
 // Accessibility
 // ==========================================
 
-passwordInput.setAttribute(
+if (emailInput) {
 
-    "aria-label",
+    emailInput.setAttribute(
+        "aria-label",
+        "Adresse e-mail"
+    );
 
-    "Mot de passe"
+}
 
-);
 
-emailInput.setAttribute(
+if (passwordInput) {
 
-    "aria-label",
+    passwordInput.setAttribute(
+        "aria-label",
+        "Mot de passe"
+    );
 
-    "Adresse e-mail"
+}
 
-);
 
-togglePassword.setAttribute(
+if (togglePassword) {
 
-    "aria-label",
+    togglePassword.setAttribute(
+        "aria-label",
+        "Afficher ou masquer le mot de passe"
+    );
 
-    "Afficher ou masquer le mot de passe"
-
-);
+}
 
 
 // ==========================================
-// Performance
+// Auto Session Check
 // ==========================================
 
 window.addEventListener(
+    "load",
+    async () => {
 
-    "pageshow",
+        try {
 
-    ()=>{
 
-        hideLoader();
+            const profile =
+                await getProfile();
 
-        buttonLoading(
 
-            loginButton,
+            if (!profile) {
 
-            false
+                return;
 
-        );
+            }
+
+
+            const role =
+                await getRole();
+
+
+            console.log(
+                "Session détectée:",
+                role
+            );
+
+
+        }
+
+        catch(error) {
+
+
+            console.error(
+                "Session check error:",
+                error
+            );
+
+
+        }
+
 
     }
 
 );
 
 
+
 // ==========================================
-// NetView Login Ready
+// Reset Loader On Page Restore
+// ==========================================
+
+window.addEventListener(
+    "pageshow",
+    () => {
+
+
+        hideLoader();
+
+
+        buttonLoading(
+            loginButton,
+            false
+        );
+
+
+    }
+);
+
+
+
+// ==========================================
+// Network Status
+// ==========================================
+
+window.addEventListener(
+    "offline",
+    () => {
+
+
+        showToast(
+            "Connexion internet interrompue.",
+            "error"
+        );
+
+
+    }
+);
+
+
+
+window.addEventListener(
+    "online",
+    () => {
+
+
+        showToast(
+            "Connexion rétablie.",
+            "success"
+        );
+
+
+    }
+);
+
+
+
+// ==========================================
+// Prevent Password Copy Issue
+// ==========================================
+
+passwordInput.addEventListener(
+    "paste",
+    () => {
+
+
+        passwordInput.classList.add(
+            "focused"
+        );
+
+
+    }
+);
+
+
+
+// ==========================================
+// Security: Clear Sensitive Data
+// ==========================================
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+
+        passwordInput.value = "";
+
+
+        hideLoader();
+
+
+    }
+);
+
+
+
+// ==========================================
+// NetView Login Status
 // ==========================================
 
 console.log(
@@ -1604,126 +1602,147 @@ console.log(
 
 );
   
+ 
 // ==========================================
-// Final Security Checks
+// Final UI Protection
+// ==========================================
+
+
+// Empêcher les clics multiples rapides
+loginButton.addEventListener(
+    "click",
+    () => {
+
+        if (submitting) {
+
+            loginButton.disabled = true;
+
+        }
+
+    }
+);
+
+
+
+// ==========================================
+// Restore Button State
 // ==========================================
 
 window.addEventListener(
+    "load",
+    () => {
 
-    "beforeunload",
-
-    ()=>{
+        buttonLoading(
+            loginButton,
+            false
+        );
 
         hideLoader();
 
     }
-
 );
 
 
+
 // ==========================================
-// Prevent Multiple Submit
+// Input Validation Enhancement
 // ==========================================
 
-let submitting = false;
+emailInput.addEventListener(
+    "input",
+    () => {
+
+        emailInput.value =
+            emailInput.value.trim();
+
+    }
+);
 
 
-loginForm.addEventListener(
 
-    "submit",
+// ==========================================
+// Remember Preference Cleanup
+// ==========================================
 
-    ()=>{
+rememberMe.addEventListener(
+    "change",
+    () => {
 
-        if(submitting){
 
-            return false;
+        if (!rememberMe.checked) {
+
+
+            localStorage.removeItem(
+                "netview_saved_email"
+            );
+
 
         }
 
-        submitting = true;
 
     }
-
 );
 
 
+
 // ==========================================
-// Network Error Handler
+// Browser Back Protection
 // ==========================================
 
 window.addEventListener(
+    "popstate",
+    () => {
 
-    "offline",
 
-    ()=>{
+        hideLoader();
 
-        showToast(
 
-            "Connexion internet interrompue.",
-
-            "error"
-
+        buttonLoading(
+            loginButton,
+            false
         );
 
-    }
 
+    }
 );
 
+
+
+// ==========================================
+// Final Error Protection
+// ==========================================
 
 window.addEventListener(
+    "error",
+    (event) => {
 
-    "online",
 
-    ()=>{
-
-        showToast(
-
-            "Connexion rétablie.",
-
-            "success"
-
+        console.error(
+            "NetView Login Error:",
+            event.error
         );
 
-    }
 
+    }
 );
 
 
+
 // ==========================================
-// SVG Icon System Preparation
+// Module Ready
 // ==========================================
 
-/*
-
-Les icônes seront remplacées par des SVG inline :
-
-Email :
-<svg viewBox="0 0 24 24">
-
-Cadenas :
-<svg viewBox="0 0 24 24">
-
-Œil :
-<svg viewBox="0 0 24 24">
-
-Cela sera appliqué dans la correction design.
-
-*/
+console.log(
+    "%cNetView Authentication Module Loaded",
+    "color:#60A5FA;font-size:14px;font-weight:bold;"
+);
 
 
 // ==========================================
 // End Login Module
 // ==========================================
 
-console.log(
-
-    "NetView Authentication Module Loaded"
-
-);
-
-
 </script>
-
 
 </body>
 
