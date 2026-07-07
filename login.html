@@ -989,9 +989,11 @@ style="display:none;">
 
 import {
     signIn,
-    getSession
+    getSession,
+    getProfile,
+    getRole
 } from "./js/core/auth.js";
-
+    
 import {
     navigate
 } from "./js/core/navigation.js";
@@ -1194,14 +1196,112 @@ loginForm.addEventListener(
 
         }
 
-        navigate(
-            "index.html"
-        );
+        // ==========================================
+// Intelligent Redirect
+// ==========================================
+
+const profile =
+    await getProfile();
+
+const role =
+    await getRole();
+
+const lastPage =
+    sessionStorage.getItem(
+        "netview_last_page"
+    );
+
+// Profil non configuré
+if(
+    profile &&
+    !profile.username
+){
+
+    navigate(
+        "profile.html"
+    );
+
+    return;
+
+}
+
+// Reprendre la dernière page
+if(
+
+    lastPage &&
+
+    ![
+        "auth.html",
+        "login.html",
+        "signup.html"
+    ].includes(lastPage)
+
+){
+
+    sessionStorage.removeItem(
+        "netview_last_page"
+    );
+
+    navigate(
+        lastPage
+    );
+
+    return;
+
+}
+
+// Accueil par défaut
+navigate(
+    "index.html"
+);
 
     }
 
 );
+// ==========================================
+// Save Last Page
+// ==========================================
 
+document.addEventListener(
+
+    "click",
+
+    event=>{
+
+        const link =
+            event.target.closest("a");
+
+        if(!link){
+
+            return;
+
+        }
+
+        const href =
+            link.getAttribute("href");
+
+        if(
+
+            href &&
+
+            href.endsWith(".html")
+
+        ){
+
+            sessionStorage.setItem(
+
+                "netview_last_page",
+
+                href
+
+            );
+
+        }
+
+    }
+
+);
+    
 // ==========================================
 // Remove Error While Typing
 // ==========================================
