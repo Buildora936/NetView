@@ -1473,6 +1473,19 @@ document.addEventListener(
     "keydown",
     (event) => {
 
+        [emailInput, passwordInput].forEach(input => {
+
+    input.addEventListener("input", () => {
+
+        loginError.textContent = "";
+
+        loginError.style.display = "none";
+
+        loginError.classList.remove("show");
+
+    });
+
+});
 
         if (
             event.key === "Enter" &&
@@ -1596,23 +1609,41 @@ window.addEventListener(
 
         }
 
-        catch(error) {
+        catch (error) {
 
+    console.error("Login error:", error);
 
-            console.error(
-                "Session check error:",
-                error
-            );
+    let message = "Impossible de se connecter.";
 
+    if (error.message) {
+
+        if (error.message.includes("Invalid login credentials")) {
+
+            message = "Adresse e-mail ou mot de passe incorrect.";
 
         }
 
+        else if (error.message.includes("Email not confirmed")) {
+
+            message = "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
+
+        }
+
+        else {
+
+            message = error.message;
+
+        }
 
     }
 
-);
+    loginError.textContent = message;
+    loginError.style.display = "block";
+    loginError.classList.add("show");
 
+    showToast(message, "error");
 
+}
 
 // ==========================================
 // Reset Loader On Page Restore
