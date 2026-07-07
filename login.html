@@ -988,7 +988,8 @@ style="display:none;">
 <script type="module">
 
 import {
-    signIn
+    signIn,
+    getSession
 } from "./js/core/auth.js";
 
 import {
@@ -1027,6 +1028,35 @@ const togglePassword =
 document.getElementById("togglePassword");
 
 // ==========================================
+// Existing Session
+// ==========================================
+
+(async()=>{
+
+    try{
+
+        const session =
+            await getSession();
+
+        if(session){
+
+            navigate(
+                "index.html"
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+})();
+    
+// ==========================================
 // Remember Me
 // ==========================================
 
@@ -1050,28 +1080,38 @@ if(savedEmail){
 // ==========================================
 
 togglePassword.addEventListener(
+
     "click",
+
     ()=>{
 
-        if(password.type==="password"){
+        const visible =
+            password.type === "text";
 
-            password.type="text";
+        password.type =
+            visible
+            ? "password"
+            : "text";
 
-            togglePassword.innerHTML =
-            '<i class="fa-regular fa-eye-slash"></i>';
+        togglePassword.innerHTML =
+            visible
 
-        }
+            ? '<i class="fa-regular fa-eye"></i>'
 
-        else{
+            : '<i class="fa-regular fa-eye-slash"></i>';
 
-            password.type="password";
+        togglePassword.setAttribute(
 
-            togglePassword.innerHTML =
-            '<i class="fa-regular fa-eye"></i>';
+            "aria-label",
 
-        }
+            visible
+            ? "Afficher le mot de passe"
+            : "Masquer le mot de passe"
+
+        );
 
     }
+
 );
 
 // ==========================================
@@ -1188,7 +1228,31 @@ password
     );
 
 });
+// ==========================================
+// Focus
+// ==========================================
 
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        if(email.value){
+
+            password.focus();
+
+        }
+
+        else{
+
+            email.focus();
+
+        }
+
+    }
+
+);
 </script>
     
 </body>
