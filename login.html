@@ -987,19 +987,8 @@ style="display:none;">
 
 <script type="module">
 
-// ==========================================
-// NetView Login
-// login.html
-// ==========================================
-
-// ==========================================
-// Imports
-// ==========================================
-
 import {
-    signIn,
-    getProfile,
-    getRole
+    signIn
 } from "./js/core/auth.js";
 
 import {
@@ -1007,7 +996,6 @@ import {
 } from "./js/core/navigation.js";
 
 import {
-    showToast,
     showLoader,
     hideLoader,
     buttonLoading
@@ -1017,121 +1005,82 @@ import {
 // Elements
 // ==========================================
 
+const loginForm =
+document.getElementById(
+    "loginForm"
+);
+
+const email =
+document.getElementById(
+    "email"
+);
+
+const password =
+document.getElementById(
+    "password"
+);
+
+const loginButton =
+document.getElementById(
+    "loginButton"
+);
+
 const loginError =
 document.getElementById(
     "loginError"
 );
-    
-const loginForm =
-    document.getElementById("loginForm");
-
-const emailInput =
-    document.getElementById("email");
-
-const passwordInput =
-    document.getElementById("password");
-
-const rememberMe =
-    document.getElementById("rememberMe");
-
-const loginButton =
-    document.getElementById("loginButton");
 
 const togglePassword =
-    document.getElementById("togglePassword");
-
-// ==========================================
-// Variables
-// ==========================================
-
-let submitting = false;
+document.getElementById(
+    "togglePassword"
+);
 
 // ==========================================
 // Password Visibility
 // ==========================================
 
-togglePassword.addEventListener("click", () => {
+togglePassword.addEventListener(
+    "click",
+    ()=>{
 
-    const hidden =
-        passwordInput.type === "password";
+        if(password.type==="password"){
 
-    passwordInput.type =
-        hidden ? "text" : "password";
+            password.type="text";
 
-    togglePassword.innerHTML = hidden
-        ? '<i class="fa-regular fa-eye-slash"></i>'
-        : '<i class="fa-regular fa-eye"></i>';
+            togglePassword.innerHTML =
+            '<i class="fa-regular fa-eye-slash"></i>';
 
-});
+        }
 
-// ==========================================
-// Remember Email
-// ==========================================
+        else{
 
-const savedEmail =
-    localStorage.getItem("netview_saved_email");
+            password.type="password";
 
-if (savedEmail) {
+            togglePassword.innerHTML =
+            '<i class="fa-regular fa-eye"></i>';
 
-    emailInput.value = savedEmail;
+        }
 
-    rememberMe.checked = true;
-
-}
+    }
+);
 
 // ==========================================
-// Form Submit
+// Login
 // ==========================================
 
 loginForm.addEventListener(
+
     "submit",
-    async (event) => {
+
+    async(event)=>{
 
         event.preventDefault();
 
-        if (submitting) {
+        loginError.textContent="";
 
-            return;
-
-        }
-
-        const email =
-            emailInput.value.trim();
-
-        const password =
-            passwordInput.value;
-
-        // ===============================
-        // Validation
-        // ===============================
-
-        if (!email) {
-
-            showToast(
-                "Veuillez saisir votre adresse e-mail.",
-                "warning"
-            );
-
-            emailInput.focus();
-
-            return;
-
-        }
-
-        if (!password) {
-
-            showToast(
-                "Veuillez saisir votre mot de passe.",
-                "warning"
-            );
-
-            passwordInput.focus();
-
-            return;
-
-        }
-
-        submitting = true;
+        loginError.classList.remove(
+            "show"
+        );
 
         buttonLoading(
             loginButton,
@@ -1140,760 +1089,41 @@ loginForm.addEventListener(
 
         showLoader();
 
-        try {
+        const res = await signIn(
 
-            const response = await signIn(
-    email,
-    password
-);
+            email.value.trim(),
 
+            password.value
 
-if (response.error) {
+        );
 
-    throw new Error(
-        response.error.message
-    );
+        hideLoader();
 
-}
-            
-            if (rememberMe.checked) {
+        buttonLoading(
+            loginButton,
+            false
+        );
 
-                localStorage.setItem(
-                    "netview_saved_email",
-                    email
-                );
+        if(res.error){
 
-            } else {
+            loginError.textContent =
+                res.error.message;
 
-                localStorage.removeItem(
-                    "netview_saved_email"
-                );
-
-            }
-
-            showToast(
-                "Connexion réussie.",
-                "success"
+            loginError.classList.add(
+                "show"
             );
-
-            const profile =
-                await getProfile();
-
-            const role =
-                await getRole();
-
-                       // ==========================================
-            // Intelligent Redirect System
-            // ==========================================
-
-
-            // Nouveau profil non configuré
-            if (
-                profile &&
-                !profile.username
-            ) {
-
-                setTimeout(() => {
-
-                    navigate(
-                        "profile.html"
-                    );
-
-                }, 800);
-
-                return;
-
-            }
-
-
-            // Creator / Pro
-            // Redirection vers studio si demandé
-            if (
-                role === "creator" ||
-                role === "pro"
-            ) {
-
-                const openStudio =
-                    sessionStorage.getItem(
-                        "netview_open_studio"
-                    );
-
-
-                if (
-                    openStudio === "true"
-                ) {
-
-                    sessionStorage.removeItem(
-                        "netview_open_studio"
-                    );
-
-
-                    setTimeout(() => {
-
-                        navigate(
-                            "studio.html"
-                        );
-
-                    }, 800);
-
-
-                    return;
-
-                }
-
-            }
-
-
-            // Dernière page visitée
-            const lastPage =
-                sessionStorage.getItem(
-                    "netview_last_page"
-                );
-
-
-            if (
-                lastPage &&
-                lastPage !== "login.html" &&
-                lastPage !== "signup.html" &&
-                lastPage !== "auth.html"
-            ) {
-
-
-                sessionStorage.removeItem(
-                    "netview_last_page"
-                );
-
-
-                setTimeout(() => {
-
-                    navigate(
-                        lastPage
-                    );
-
-                }, 800);
-
-
-                return;
-
-            }
-
-
-
-            // Accueil par défaut
-            setTimeout(() => {
-
-                navigate(
-                    "index.html"
-                );
-
-            }, 800);
-
-
-
-        }
-
-        catch(error){
-
-
-    console.error(
-        "Login error:",
-        error
-    );
-
-
-    let message =
-    "Impossible de se connecter.";
-
-
-    if(error.message){
-
-        if(
-            error.message.includes(
-                "Invalid login credentials"
-            )
-        ){
-
-            message =
-            "Adresse e-mail ou mot de passe incorrect.";
-
-        }
-
-        else if(
-            error.message.includes(
-                "Email not confirmed"
-            )
-        ){
-
-            message =
-            "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
-
-        }
-
-        else{
-
-            message =
-            error.message;
-
-        }
-
-    }
-
-            [
-emailInput,
-passwordInput
-].forEach(input=>{
-
-    input.addEventListener(
-        "input",
-        ()=>{
-
-    if(loginError){
-
-    loginError.textContent =
-        message;
-
-    loginError.classList.add(
-        "show"
-    );
-
-}
-
-
-showToast(
-    message,
-    "error"
-);
-
-            [
-emailInput,
-passwordInput
-].forEach(input=>{
-
-    input.addEventListener(
-        "input",
-        ()=>{
-
-           if(loginError){
-
-    loginError.innerText = message;
-
-    loginError.style.display = "block";
-
-    loginError.classList.add("show");
-
-}
-
-        }
-    );
-
-});
-
-}
-
-        finally {
-
-
-            hideLoader();
-
-
-            buttonLoading(
-
-                loginButton,
-
-                false
-
-            );
-
-
-            submitting = false;
-
-
-        }
-
-
-    }
-
-);
-
-
-
-// ==========================================
-// Save Last Page Before Leaving
-// ==========================================
-
-document.addEventListener(
-    "click",
-    (event) => {
-
-
-        const link =
-            event.target.closest("a");
-
-
-        if (!link) {
 
             return;
 
         }
 
-
-        const href =
-            link.getAttribute("href");
-
-
-        if (
-            href &&
-            href.endsWith(".html")
-        ) {
-
-
-            sessionStorage.setItem(
-
-                "netview_last_page",
-
-                href
-
-            );
-
-
-        }
-
-
-    }
-
-);
-
-
-
-// ==========================================
-// Keyboard Shortcut
-// ==========================================
-
-document.addEventListener(
-    "keydown",
-    (event) => {
-
-        [emailInput, passwordInput].forEach(input => {
-
-    input.addEventListener("input", () => {
-
-        loginError.textContent = "";
-
-        loginError.style.display = "none";
-
-        loginError.classList.remove("show");
-
-    });
-
-});
-
-        if (
-            event.key === "Enter" &&
-            document.activeElement === passwordInput
-        ) {
-
-
-            loginForm.requestSubmit();
-
-
-        }
-
-
-    }
-
-);
-
-
-
-// ==========================================
-// Input Focus Animation
-// ==========================================
-
-document
-.querySelectorAll(".nv-input")
-.forEach(input => {
-
-
-    input.addEventListener(
-        "focus",
-        () => {
-
-            input.parentElement.classList.add(
-                "focused"
-            );
-
-        }
-    );
-
-
-    input.addEventListener(
-        "blur",
-        () => {
-
-            input.parentElement.classList.remove(
-                "focused"
-            );
-
-        }
-    );
-
-
-});
-
-
-// ==========================================
-// Accessibility
-// ==========================================
-
-if (emailInput) {
-
-    emailInput.setAttribute(
-        "aria-label",
-        "Adresse e-mail"
-    );
-
-}
-
-
-if (passwordInput) {
-
-    passwordInput.setAttribute(
-        "aria-label",
-        "Mot de passe"
-    );
-
-}
-
-
-if (togglePassword) {
-
-    togglePassword.setAttribute(
-        "aria-label",
-        "Afficher ou masquer le mot de passe"
-    );
-
-}
-
-
-// ==========================================
-// Auto Session Check
-// ==========================================
-
-window.addEventListener(
-    "load",
-    async () => {
-
-        try {
-
-
-            const profile =
-                await getProfile();
-
-
-            if (!profile) {
-
-                return;
-
-            }
-
-
-            const role =
-                await getRole();
-
-
-            console.log(
-                "Session détectée:",
-                role
-            );
-
-
-        }
-
-        catch (error) {
-
-    console.error("Login error:", error);
-
-    let message = "Impossible de se connecter.";
-
-    if (error.message) {
-
-        if (error.message.includes("Invalid login credentials")) {
-
-            message = "Adresse e-mail ou mot de passe incorrect.";
-
-        }
-
-        else if (error.message.includes("Email not confirmed")) {
-
-            message = "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
-
-        }
-
-        else {
-
-            message = error.message;
-
-        }
-
-    }
-
-    loginError.textContent = message;
-    loginError.style.display = "block";
-    loginError.classList.add("show");
-
-    showToast(message, "error");
-
-}
-
-// ==========================================
-// Reset Loader On Page Restore
-// ==========================================
-
-window.addEventListener(
-    "pageshow",
-    () => {
-
-
-        hideLoader();
-
-
-        buttonLoading(
-            loginButton,
-            false
+        navigate(
+            "index.html"
         );
 
-
     }
-);
-
-
-
-// ==========================================
-// Network Status
-// ==========================================
-
-window.addEventListener(
-    "offline",
-    () => {
-
-
-        showToast(
-            "Connexion internet interrompue.",
-            "error"
-        );
-
-
-    }
-);
-
-
-
-window.addEventListener(
-    "online",
-    () => {
-
-
-        showToast(
-            "Connexion rétablie.",
-            "success"
-        );
-
-
-    }
-);
-
-
-
-// ==========================================
-// Prevent Password Copy Issue
-// ==========================================
-
-passwordInput.addEventListener(
-    "paste",
-    () => {
-
-
-        passwordInput.classList.add(
-            "focused"
-        );
-
-
-    }
-);
-
-
-
-// ==========================================
-// Security: Clear Sensitive Data
-// ==========================================
-
-window.addEventListener(
-    "beforeunload",
-    () => {
-
-
-        passwordInput.value = "";
-
-
-        hideLoader();
-
-
-    }
-);
-
-
-
-// ==========================================
-// NetView Login Status
-// ==========================================
-
-console.log(
-
-    "%cNetView Login Ready",
-
-    "color:#2563EB;font-size:14px;font-weight:bold;"
 
 );
-  
- 
-// ==========================================
-// Final UI Protection
-// ==========================================
-
-
-// Empêcher les clics multiples rapides
-loginButton.addEventListener(
-    "click",
-    () => {
-
-        if (submitting) {
-
-            loginButton.disabled = true;
-
-        }
-
-    }
-);
-
-
-
-// ==========================================
-// Restore Button State
-// ==========================================
-
-window.addEventListener(
-    "load",
-    () => {
-
-        buttonLoading(
-            loginButton,
-            false
-        );
-
-        hideLoader();
-
-    }
-);
-
-
-
-// ==========================================
-// Input Validation Enhancement
-// ==========================================
-
-emailInput.addEventListener(
-    "input",
-    () => {
-
-        emailInput.value =
-            emailInput.value.trim();
-
-    }
-);
-
-
-
-// ==========================================
-// Remember Preference Cleanup
-// ==========================================
-
-rememberMe.addEventListener(
-    "change",
-    () => {
-
-
-        if (!rememberMe.checked) {
-
-
-            localStorage.removeItem(
-                "netview_saved_email"
-            );
-
-
-        }
-
-
-    }
-);
-
-
-
-// ==========================================
-// Browser Back Protection
-// ==========================================
-
-window.addEventListener(
-    "popstate",
-    () => {
-
-
-        hideLoader();
-
-
-        buttonLoading(
-            loginButton,
-            false
-        );
-
-
-    }
-);
-
-
-
-// ==========================================
-// Final Error Protection
-// ==========================================
-
-window.addEventListener(
-    "error",
-    (event) => {
-
-
-        console.error(
-            "NetView Login Error:",
-            event.error
-        );
-
-
-    }
-);
-
-
-
-// ==========================================
-// Module Ready
-// ==========================================
-
-console.log(
-    "%cNetView Authentication Module Loaded",
-    "color:#60A5FA;font-size:14px;font-weight:bold;"
-);
-
-
-// ==========================================
-// End Login Module
-// ==========================================
 
 </script>
 
