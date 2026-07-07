@@ -1248,26 +1248,60 @@ loginForm.addEventListener(
 
         }
 
-        catch(error) {
+        catch(error){
 
 
-            console.error(
-                "Login error:",
-                error
-            );
+    console.error(
+        "Login error:",
+        error
+    );
 
 
-            showToast(
+    let message =
+    "Impossible de se connecter.";
 
-                error.message ||
-                "Impossible de se connecter.",
 
-                "error"
+    if(error.message){
 
-            );
+        if(
+            error.message.includes(
+                "Invalid login credentials"
+            )
+        ){
 
+            message =
+            "Adresse e-mail ou mot de passe incorrect.";
 
         }
+
+        else if(
+            error.message.includes(
+                "Email not confirmed"
+            )
+        ){
+
+            message =
+            "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
+
+        }
+
+        else{
+
+            message =
+            error.message;
+
+        }
+
+    }
+
+
+    showToast(
+        message,
+        "error"
+    );
+
+
+}
 
         finally {
 
