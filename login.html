@@ -1148,16 +1148,10 @@ loginForm.addEventListener(
 );
 
 
-if (
-    !response ||
-    response.error ||
-    !response.data ||
-    !response.data.session
-){
+if (response.error) {
 
     throw new Error(
-        response?.error?.message ||
-        "Adresse e-mail ou mot de passe incorrect."
+        response.error.message
     );
 
 }
@@ -1344,6 +1338,14 @@ if (
 
     }
 
+            [
+emailInput,
+passwordInput
+].forEach(input=>{
+
+    input.addEventListener(
+        "input",
+        ()=>{
 
     if(loginError){
 
@@ -1371,15 +1373,15 @@ passwordInput
         "input",
         ()=>{
 
-            if(loginError){
+           if(loginError){
 
-                loginError.textContent="";
+    loginError.innerText = message;
 
-                loginError.classList.remove(
-                    "show"
-                );
+    loginError.style.display = "block";
 
-            }
+    loginError.classList.add("show");
+
+}
 
         }
     );
