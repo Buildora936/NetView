@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>NetView Test Login</title>
+
+<style>
+
+body{
+
+    font-family:Arial,sans-serif;
+
+    background:#111827;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+.card{
+
+    width:350px;
+
+    padding:30px;
+
+    border-radius:12px;
+
+    background:#1f2937;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:10px 0;
+
+    border:none;
+
+    border-radius:8px;
+
+    box-sizing:border-box;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#2563eb;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+#error{
+
+    color:#ef4444;
+
+    margin-top:15px;
+
+}
+
+#success{
+
+    color:#22c55e;
+
+    margin-top:15px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Connexion Test</h2>
+
+<input
+id="email"
+type="email"
+placeholder="Email">
+
+<input
+id="password"
+type="password"
+placeholder="Mot de passe">
+
+<button id="loginBtn">
+
+Se connecter
+
+</button>
+
+<div id="error"></div>
+
+<div id="success"></div>
+
+</div>
+
+<script type="module">
+
+import {
+
+    signIn
+
+} from "./js/core/auth.js";
+
+const email =
+document.getElementById("email");
+
+const password =
+document.getElementById("password");
+
+const button =
+document.getElementById("loginBtn");
+
+const error =
+document.getElementById("error");
+
+const success =
+document.getElementById("success");
+
+button.addEventListener(
+
+    "click",
+
+    async()=>{
+
+        error.textContent="";
+
+        success.textContent="";
+
+        const res = await signIn(
+
+            email.value.trim(),
+
+            password.value
+
+        );
+
+        console.log(res);
+
+        if(res.error){
+
+            error.textContent =
+                res.error.message;
+
+            return;
+
+        }
+
+        success.textContent =
+            "Connexion réussie.";
+
+    }
+
+);
+
+</script>
+
+</body>
+
+</html>
