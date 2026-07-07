@@ -260,8 +260,8 @@
 
     --nv-z-modal: 900;
 
-    --nv-z-toast: 1000;
+    --nv-z-toast: 9999;
 
-    --nv-z-loader: 1100;
+    --nv-z-loader: 10000;
 
 }
