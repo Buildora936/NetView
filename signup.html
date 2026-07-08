@@ -7,18 +7,6 @@
   <meta name="monetag" content="a2854efa46b5edd759eb56b769d02cc6">
 <meta name="theme-color" content="#181818">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-<link
-    rel="icon"
-    type="image/png"
-    href="NetView_icone.png">
-
-/* ==================================================
-   NetView
-   signup.html
-   Part 1/3
-   Animated Background
-================================================== */
 <link
     rel="stylesheet"
     href="CSS/components/buttons.css">
@@ -43,16 +31,25 @@
     rel="stylesheet"
     href="CSS/components/loader.css">
 
+  
+<style>
+  /* ==================================================
+SIGNUP PAGE
+================================================== */
+
 body{
 
     overflow-x:hidden;
 
-    background:var(--nv-background);
+    overflow-y:auto;
+
+    background:
+    var(--nv-background);
 
 }
 
 /* ==================================================
-   Background
+Animated Background
 ================================================== */
 
 .nv-login-background{
@@ -63,12 +60,11 @@ body{
 
     overflow:hidden;
 
-    z-index:-20;
+    z-index:-10;
 
     background:
-
     radial-gradient(circle at top left,
-    rgba(37,99,235,.25),
+    rgba(37,99,235,.22),
     transparent 35%),
 
     radial-gradient(circle at bottom right,
@@ -84,46 +80,32 @@ body{
 
 }
 
-/* ==================================================
-   Animated Glow
-================================================== */
-
 .nv-login-background::before{
 
     content:"";
 
     position:absolute;
 
-    inset:-30%;
+    inset:-20%;
 
     background:
 
     linear-gradient(
-    120deg,
-
+    135deg,
     transparent,
-
-    rgba(37,99,235,.12),
-
+    rgba(37,99,235,.08),
     transparent,
-
-    rgba(96,165,250,.10),
-
+    rgba(96,165,250,.08),
     transparent);
 
     background-size:300% 300%;
 
-    filter:blur(90px);
-
     animation:
+    gradientMove 20s linear infinite;
 
-    gradientMove 18s linear infinite;
+    filter:blur(80px);
 
 }
-
-/* ==================================================
-   Animated Grid
-================================================== */
 
 .nv-login-background::after{
 
@@ -136,28 +118,27 @@ body{
     background-image:
 
     linear-gradient(
-    rgba(255,255,255,.035) 1px,
+    rgba(255,255,255,.03) 1px,
     transparent 1px),
 
     linear-gradient(
     90deg,
-    rgba(255,255,255,.035) 1px,
+    rgba(255,255,255,.03) 1px,
     transparent 1px);
 
     background-size:
+    50px 50px;
 
-    60px 60px;
-
-    opacity:.6;
-
-    animation:
-
-    gridMove 18s linear infinite;
+    mask-image:
+    radial-gradient(
+    circle,
+    white,
+    transparent 90%);
 
 }
 
 /* ==================================================
-   Floating Orbs
+Blue Orbs
 ================================================== */
 
 .nv-orb{
@@ -166,26 +147,24 @@ body{
 
     border-radius:50%;
 
-    filter:blur(70px);
+    filter:blur(60px);
 
     animation:
-
-    orbFloat 12s ease-in-out infinite;
+    floatOrb 12s ease-in-out infinite;
 
 }
 
 .nv-orb.one{
 
-    width:320px;
+    width:300px;
 
-    height:320px;
-
-    left:-100px;
+    height:300px;
 
     top:-120px;
 
-    background:
+    left:-120px;
 
+    background:
     rgba(37,99,235,.30);
 
 }
@@ -198,36 +177,34 @@ body{
 
     right:-80px;
 
-    bottom:-90px;
+    bottom:-80px;
 
     background:
+    rgba(96,165,250,.25);
 
-    rgba(59,130,246,.25);
-
-    animation-delay:3s;
+    animation-delay:2s;
 
 }
 
 .nv-orb.three{
 
-    width:190px;
+    width:180px;
 
-    height:190px;
+    height:180px;
 
     top:45%;
 
     left:55%;
 
     background:
+    rgba(59,130,246,.18);
 
-    rgba(96,165,250,.18);
-
-    animation-delay:6s;
+    animation-delay:5s;
 
 }
 
 /* ==================================================
-   Particles
+Particles
 ================================================== */
 
 .nv-particles{
@@ -249,196 +226,28 @@ body{
     border-radius:50%;
 
     background:
-
     rgba(255,255,255,.55);
 
-    box-shadow:
-
-    0 0 12px rgba(255,255,255,.45);
-
     animation:
-
     particleFloat linear infinite;
 
 }
 
-.nv-particles span:nth-child(1){left:4%;top:10%;animation-duration:18s;}
-.nv-particles span:nth-child(2){left:12%;top:78%;animation-duration:22s;}
-.nv-particles span:nth-child(3){left:24%;top:36%;animation-duration:20s;}
-.nv-particles span:nth-child(4){left:35%;top:90%;animation-duration:17s;}
-.nv-particles span:nth-child(5){left:46%;top:18%;animation-duration:19s;}
-.nv-particles span:nth-child(6){left:57%;top:64%;animation-duration:21s;}
-.nv-particles span:nth-child(7){left:66%;top:28%;animation-duration:16s;}
-.nv-particles span:nth-child(8){left:78%;top:82%;animation-duration:23s;}
-.nv-particles span:nth-child(9){left:87%;top:16%;animation-duration:24s;}
-.nv-particles span:nth-child(10){left:92%;top:58%;animation-duration:18s;}
-.nv-particles span:nth-child(11){left:52%;top:42%;animation-duration:20s;}
-.nv-particles span:nth-child(12){left:18%;top:56%;animation-duration:15s;}
+.nv-particles span:nth-child(1){left:6%;top:14%;animation-duration:18s;}
+.nv-particles span:nth-child(2){left:20%;top:70%;animation-duration:22s;}
+.nv-particles span:nth-child(3){left:34%;top:38%;animation-duration:17s;}
+.nv-particles span:nth-child(4){left:48%;top:82%;animation-duration:20s;}
+.nv-particles span:nth-child(5){left:62%;top:22%;animation-duration:15s;}
+.nv-particles span:nth-child(6){left:74%;top:56%;animation-duration:19s;}
+.nv-particles span:nth-child(7){left:85%;top:14%;animation-duration:24s;}
+.nv-particles span:nth-child(8){left:91%;top:72%;animation-duration:21s;}
+.nv-particles span:nth-child(9){left:14%;top:46%;animation-duration:16s;}
+.nv-particles span:nth-child(10){left:55%;top:10%;animation-duration:23s;}
+.nv-particles span:nth-child(11){left:40%;top:58%;animation-duration:18s;}
+.nv-particles span:nth-child(12){left:78%;top:34%;animation-duration:20s;}
 
 /* ==================================================
-   Animations
-================================================== */
-
-@keyframes gradientMove{
-
-    0%{
-
-        transform:translateX(-15%) rotate(0deg);
-
-    }
-
-    50%{
-
-        transform:translateX(15%) rotate(180deg);
-
-    }
-
-    100%{
-
-        transform:translateX(-15%) rotate(360deg);
-
-    }
-
-}
-
-@keyframes orbFloat{
-
-    0%{
-
-        transform:translate(0,0) scale(1);
-
-    }
-
-    25%{
-
-        transform:translate(30px,-25px) scale(1.08);
-
-    }
-
-    50%{
-
-        transform:translate(0,-50px) scale(.95);
-
-    }
-
-    75%{
-
-        transform:translate(-30px,-20px) scale(1.05);
-
-    }
-
-    100%{
-
-        transform:translate(0,0) scale(1);
-
-    }
-
-}
-
-@keyframes particleFloat{
-
-    0%{
-
-        transform:translateY(0) scale(.8);
-
-        opacity:.2;
-
-    }
-
-    20%{
-
-        opacity:1;
-
-    }
-
-    50%{
-
-        transform:translateY(-90px) translateX(15px) scale(1.4);
-
-    }
-
-    80%{
-
-        opacity:1;
-
-    }
-
-    100%{
-
-        transform:translateY(-180px) translateX(-10px) scale(.6);
-
-        opacity:0;
-
-    }
-
-}
-
-@keyframes gridMove{
-
-    from{
-
-        transform:translate(0,0);
-
-    }
-
-    to{
-
-        transform:translate(60px,60px);
-
-    }
-
-}
-
-@keyframes logoFloat{
-
-    0%{
-
-        transform:translateY(0);
-
-    }
-
-    50%{
-
-        transform:translateY(-8px);
-
-    }
-
-    100%{
-
-        transform:translateY(0);
-
-    }
-
-}
-
-@keyframes fadeUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(35px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
-/* ==================================================
-   NetView
-   signup.html
-   Part 2/3
-   Layout & Form
-================================================== */
-
-/* ==================================================
-   Layout
+Layout
 ================================================== */
 
 .nv-login{
@@ -449,45 +258,37 @@ body{
 
     justify-content:center;
 
-    align-items:center;
+    align-items:flex-start;
 
-    padding:3rem 1.5rem;
+    padding:2rem;
 
 }
 
-/* ==================================================
-   Card
-================================================== */
-
 .nv-login-card{
-
-    position:relative;
 
     width:min(100%,560px);
 
-    padding:2.8rem;
+    padding:2.75rem;
 
     border-radius:32px;
+
+    position:relative;
 
     overflow:hidden;
 
     backdrop-filter:blur(30px);
 
     background:
-
-        rgba(15,23,42,.72);
+    rgba(15,23,42,.70);
 
     border:
-
-        1px solid rgba(255,255,255,.08);
+    1px solid rgba(255,255,255,.08);
 
     box-shadow:
-
-        0 40px 120px rgba(0,0,0,.45);
+    0 40px 90px rgba(0,0,0,.45);
 
     animation:
-
-        fadeUp .8s ease;
+    fadeUp .8s ease;
 
 }
 
@@ -505,23 +306,15 @@ body{
 
     background:
 
-        linear-gradient(
-
-            135deg,
-
-            rgba(37,99,235,.9),
-
-            rgba(96,165,250,.25),
-
-            transparent
-
-        );
+    linear-gradient(
+    135deg,
+    rgba(37,99,235,.7),
+    rgba(96,165,250,.15),
+    transparent);
 
     -webkit-mask:
-
-        linear-gradient(#fff 0 0) content-box,
-
-        linear-gradient(#fff 0 0);
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
 
     -webkit-mask-composite:xor;
 
@@ -530,10 +323,6 @@ body{
     pointer-events:none;
 
 }
-
-/* ==================================================
-   Logo
-================================================== */
 
 .nv-login-logo{
 
@@ -544,35 +333,31 @@ body{
     margin:auto;
 
     animation:
-
-        logoFloat 5s ease-in-out infinite;
+    floatLogo 5s ease-in-out infinite;
 
 }
 
 .nv-login-title{
 
-    margin-top:1.4rem;
-
     text-align:center;
+
+    margin-top:1.5rem;
 
 }
 
 .nv-login-subtitle{
 
-    margin-top:.8rem;
-
-    margin-bottom:2rem;
+    text-align:center;
 
     color:var(--nv-text-secondary);
 
-    text-align:center;
+    margin-top:.75rem;
 
-    line-height:1.7;
+    margin-bottom:2rem;
 
 }
-
 /* ==================================================
-   Form
+Form
 ================================================== */
 
 .nv-login-form{
@@ -581,7 +366,17 @@ body{
 
     flex-direction:column;
 
-    gap:1.25rem;
+    gap:1.4rem;
+
+}
+
+.nv-form-row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:1rem;
 
 }
 
@@ -591,29 +386,25 @@ body{
 
 }
 
-/* ==================================================
-   Inputs
-================================================== */
+.nv-label{
+
+    display:block;
+
+    margin-bottom:.55rem;
+
+}
 
 .nv-input{
 
     width:100%;
 
-    height:58px;
+    height:60px;
 
     padding-left:3.25rem;
 
-    padding-right:3.2rem;
+    padding-right:3.25rem;
 
-    transition:
-
-        .25s;
-
-}
-
-.nv-input:hover{
-
-    transform:translateY(-1px);
+    font-size:1rem;
 
 }
 
@@ -622,22 +413,6 @@ body{
     transform:translateY(-2px);
 
 }
-
-/* ==================================================
-   Select
-================================================== */
-
-select.nv-input{
-
-    appearance:none;
-
-    cursor:pointer;
-
-}
-
-/* ==================================================
-   Icons
-================================================== */
 
 .nv-input-icon{
 
@@ -649,28 +424,32 @@ select.nv-input{
 
     transform:translateY(-50%);
 
-    color:
+    width:22px;
 
-        var(--nv-text-secondary);
+    height:22px;
 
-    font-size:1rem;
+    display:flex;
 
-    transition:.25s;
+    align-items:center;
+
+    justify-content:center;
+
+    color:var(--nv-text-secondary);
 
     pointer-events:none;
 
+    transition:.3s;
+
 }
 
-.nv-form-group:focus-within .nv-input-icon{
+.nv-input:focus ~ .nv-input-icon{
 
-    color:
-
-        var(--nv-primary);
+    color:var(--nv-primary);
 
 }
 
 /* ==================================================
-   Password Button
+Password Toggle
 ================================================== */
 
 .nv-password-toggle{
@@ -685,15 +464,13 @@ select.nv-input{
 
     border:none;
 
-    background:none;
+    background:transparent;
 
-    color:
-
-        var(--nv-text-secondary);
-
-    font-size:1rem;
+    color:var(--nv-text-secondary);
 
     cursor:pointer;
+
+    font-size:1.05rem;
 
     transition:.25s;
 
@@ -701,31 +478,25 @@ select.nv-input{
 
 .nv-password-toggle:hover{
 
-    color:
+    color:var(--nv-primary);
 
-        var(--nv-primary);
-
-    transform:
-
-        translateY(-50%)
-
-        scale(1.1);
+    transform:translateY(-50%) scale(1.08);
 
 }
 
 /* ==================================================
-   Button
+Button
 ================================================== */
 
 .nv-login-button{
-
-    position:relative;
 
     width:100%;
 
     height:60px;
 
     margin-top:.5rem;
+
+    position:relative;
 
     overflow:hidden;
 
@@ -741,23 +512,23 @@ select.nv-input{
 
     left:-120%;
 
-    width:55%;
+    width:60%;
 
     height:100%;
 
     background:
 
-        linear-gradient(
+    linear-gradient(
 
-            90deg,
+        90deg,
 
-            transparent,
+        transparent,
 
-            rgba(255,255,255,.35),
+        rgba(255,255,255,.35),
 
-            transparent
+        transparent
 
-        );
+    );
 
     transition:.8s;
 
@@ -765,39 +536,41 @@ select.nv-input{
 
 .nv-login-button:hover::before{
 
-    left:170%;
+    left:160%;
 
 }
 
 /* ==================================================
-   Error
+Error
 ================================================== */
 
 .error{
 
     display:none;
 
-    padding:.9rem 1rem;
+    margin-top:1rem;
+
+    padding:1rem;
 
     border-radius:12px;
 
     background:
 
-        rgba(239,68,68,.12);
+    rgba(239,68,68,.12);
 
     border:
 
-        1px solid rgba(239,68,68,.25);
+    1px solid rgba(239,68,68,.35);
 
-    color:#ff8d8d;
+    color:#ef4444;
 
     font-size:.95rem;
 
-    line-height:1.5;
+    text-align:center;
 
     animation:
 
-        fadeUp .35s ease;
+    fadeUp .3s ease;
 
 }
 
@@ -808,47 +581,122 @@ select.nv-input{
 }
 
 /* ==================================================
-   Terms
+Success
+================================================== */
+
+.success{
+
+    display:none;
+
+    margin-top:1rem;
+
+    padding:1rem;
+
+    border-radius:12px;
+
+    background:
+
+    rgba(34,197,94,.12);
+
+    border:
+
+    1px solid rgba(34,197,94,.35);
+
+    color:#22c55e;
+
+    font-size:.95rem;
+
+    text-align:center;
+
+    animation:
+
+    fadeUp .3s ease;
+
+}
+
+.success.show{
+
+    display:block;
+
+}
+/* ==================================================
+Terms / Login Link
 ================================================== */
 
 .nv-terms{
 
-    margin-top:1.8rem;
-
     text-align:center;
 
-    color:
+    margin-top:1rem;
 
-        var(--nv-text-secondary);
+    color:var(--nv-text-secondary);
 
-    line-height:1.8;
+    font-size:.85rem;
 
-    font-size:.9rem;
+    line-height:1.7;
 
 }
 
+
 .nv-terms a{
 
-    color:
-
-        var(--nv-primary);
+    color:var(--nv-primary);
 
     text-decoration:none;
 
     font-weight:600;
 
+    transition:.3s;
+
 }
+
 
 .nv-terms a:hover{
 
-    color:
-
-        var(--nv-primary-light);
+    color:var(--nv-primary-light);
 
 }
 
+
 /* ==================================================
-   Divider
+Already Account
+================================================== */
+
+.nv-login-link{
+
+    text-align:center;
+
+    margin-top:1.5rem;
+
+    color:var(--nv-text-secondary);
+
+    line-height:1.7;
+
+}
+
+
+.nv-login-link a{
+
+    color:var(--nv-primary);
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:.3s;
+
+}
+
+
+.nv-login-link a:hover{
+
+    color:var(--nv-primary-light);
+
+}
+
+
+/* ==================================================
+Divider
 ================================================== */
 
 .nv-divider{
@@ -859,13 +707,16 @@ select.nv-input{
 
     gap:1rem;
 
-    margin:2rem 0 1.25rem;
+    margin:2rem 0 1.5rem;
 
     color:
 
-        var(--nv-text-muted);
+    var(--nv-text-muted);
+
+    font-size:.9rem;
 
 }
+
 
 .nv-divider::before,
 
@@ -879,39 +730,14 @@ select.nv-input{
 
     background:
 
-        rgba(255,255,255,.08);
+    rgba(255,255,255,.08);
 
 }
+
 
 /* ==================================================
-   Bottom
+Version
 ================================================== */
-
-.nv-signup{
-
-    text-align:center;
-
-}
-
-.nv-signup a{
-
-    color:
-
-        var(--nv-primary);
-
-    font-weight:700;
-
-    text-decoration:none;
-
-}
-
-.nv-signup a:hover{
-
-    color:
-
-        var(--nv-primary-light);
-
-}
 
 .nv-version{
 
@@ -919,275 +745,30 @@ select.nv-input{
 
     text-align:center;
 
+    font-size:.8rem;
+
     color:
 
-        var(--nv-text-muted);
-
-    font-size:.82rem;
+    var(--nv-text-muted);
 
 }
-/* ==================================================
-   NetView
-   signup.html
-   Part 3/3
-   Effects • Responsive • Polish
-================================================== */
+
 
 /* ==================================================
-   Focus Glow
+Mobile Responsive
 ================================================== */
-
-.nv-form-group::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    border-radius:16px;
-
-    pointer-events:none;
-
-    opacity:0;
-
-    transition:.3s;
-
-    box-shadow:
-
-        0 0 0 2px rgba(37,99,235,.15),
-
-        0 0 30px rgba(37,99,235,.20);
-
-}
-
-.nv-form-group:focus-within::after{
-
-    opacity:1;
-
-}
-
-/* ==================================================
-   Floating Card Effect
-================================================== */
-
-.nv-login-card{
-
-    transition:
-
-        transform .35s ease,
-
-        box-shadow .35s ease;
-
-}
-
-.nv-login-card:hover{
-
-    transform:
-
-        translateY(-6px);
-
-    box-shadow:
-
-        0 55px 130px rgba(0,0,0,.55);
-
-}
-
-/* ==================================================
-   Logo Hover
-================================================== */
-
-.nv-login-logo{
-
-    transition:
-
-        transform .35s ease,
-
-        filter .35s ease;
-
-}
-
-.nv-login-logo:hover{
-
-    transform:
-
-        scale(1.05);
-
-    filter:
-
-        drop-shadow(0 0 25px rgba(37,99,235,.45));
-
-}
-
-/* ==================================================
-   Input Hover
-================================================== */
-
-.nv-input{
-
-    transition:
-
-        border-color .25s,
-
-        box-shadow .25s,
-
-        transform .25s;
-
-}
-
-.nv-input:hover{
-
-    border-color:
-
-        rgba(96,165,250,.35);
-
-}
-
-.nv-input:focus{
-
-    border-color:
-
-        var(--nv-primary);
-
-    box-shadow:
-
-        0 0 0 4px rgba(37,99,235,.15);
-
-}
-
-/* ==================================================
-   Select Cursor
-================================================== */
-
-select.nv-input{
-
-    cursor:pointer;
-
-}
-
-/* ==================================================
-   Button Animation
-================================================== */
-
-.nv-login-button{
-
-    transition:
-
-        transform .25s,
-
-        box-shadow .25s;
-
-}
-
-.nv-login-button:hover{
-
-    transform:
-
-        translateY(-2px);
-
-    box-shadow:
-
-        0 12px 30px rgba(37,99,235,.35);
-
-}
-
-.nv-login-button:active{
-
-    transform:
-
-        scale(.98);
-
-}
-
-/* ==================================================
-   Links
-================================================== */
-
-a{
-
-    transition:
-
-        color .25s ease;
-
-}
-
-/* ==================================================
-   Scrollbar
-================================================== */
-
-::-webkit-scrollbar{
-
-    width:10px;
-
-}
-
-::-webkit-scrollbar-track{
-
-    background:#050b16;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:
-
-        rgba(37,99,235,.45);
-
-    border-radius:20px;
-
-}
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:
-
-        rgba(37,99,235,.75);
-
-}
-
-/* ==================================================
-   Selection
-================================================== */
-
-::selection{
-
-    background:
-
-        rgba(37,99,235,.35);
-
-    color:#fff;
-
-}
-
-/* ==================================================
-   Responsive
-================================================== */
-
-@media(max-width:992px){
-
-    .nv-login{
-
-        padding:2rem 1rem;
-
-    }
-
-}
 
 @media(max-width:768px){
 
-    body{
-
-        overflow:auto;
-
-    }
 
     .nv-login{
 
+        padding:1rem;
+
         align-items:flex-start;
 
-        padding:1.25rem;
-
     }
+
 
     .nv-login-card{
 
@@ -1199,104 +780,135 @@ a{
 
     }
 
+
     .nv-login-logo{
 
-        width:240px;
+        width:100px;
 
     }
+
+
+    .nv-form-row{
+
+        grid-template-columns:1fr;
+
+    }
+
 
     .nv-login-title{
 
-        font-size:1.8rem;
+        font-size:1.5rem;
 
     }
 
-    .nv-input{
 
-        height:56px;
+    .nv-login-subtitle{
 
         font-size:.95rem;
 
     }
 
-    .nv-login-button{
-
-        height:56px;
-
-    }
 
 }
 
-@media(max-width:480px){
+
+/* ==================================================
+Small Mobile
+================================================== */
+
+@media(max-width:420px){
+
+
+    .nv-login{
+
+        padding:.75rem;
+
+    }
+
 
     .nv-login-card{
 
-        padding:1.5rem 1.2rem;
-
-        border-radius:20px;
+        padding:1.5rem 1rem;
 
     }
 
-    .nv-login-title{
-
-        font-size:1.55rem;
-
-    }
-
-    .nv-login-subtitle{
-
-        font-size:.92rem;
-
-    }
 
     .nv-input{
 
-        height:54px;
-
-        padding-left:3rem;
-
-        padding-right:3rem;
+        height:55px;
 
     }
 
-    .nv-input-icon{
 
-        left:1rem;
+    .nv-login-button{
 
-    }
-
-    .nv-password-toggle{
-
-        right:.9rem;
+        height:55px;
 
     }
 
-    .nv-terms{
-
-        font-size:.82rem;
-
-    }
 
 }
 
+
 /* ==================================================
-   Reduced Motion
+Loading State
+================================================== */
+
+.nv-login-button.loading{
+
+    pointer-events:none;
+
+    opacity:.8;
+
+}
+
+
+.nv-login-button.loading::before{
+
+    display:none;
+
+}
+
+
+/* ==================================================
+Accessibility
+================================================== */
+
+.nv-input:focus-visible,
+
+.nv-password-toggle:focus-visible,
+
+.nv-login-button:focus-visible{
+
+    outline:
+
+    2px solid var(--nv-primary);
+
+    outline-offset:3px;
+
+}
+
+
+/* ==================================================
+Reduced Motion
 ================================================== */
 
 @media(prefers-reduced-motion:reduce){
 
+
     *{
 
-        animation:none !important;
+        animation-duration:.01ms !important;
 
-        transition:none !important;
+        animation-iteration-count:1 !important;
 
-        scroll-behavior:auto !important;
+        transition-duration:.01ms !important;
 
     }
 
 }
 </style>
+</head>
 <body>
 
 <div class="nv-login-background">
