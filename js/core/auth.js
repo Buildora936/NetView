@@ -20,6 +20,16 @@ export async function signUp(email, password) {
 
 }
 
+export async function refreshSession(){
+
+    await supabase.auth.refreshSession();
+
+    const { data } =
+    await supabase.auth.getUser();
+
+    return data.user;
+
+}
 
 export async function signIn(email, password) {
 
@@ -81,7 +91,7 @@ export async function isAuthenticated() {
 
 export async function getProfile() {
 
-    const user = await getUser();
+    const user = await refreshSession();
 
     if (!user) return null;
 
