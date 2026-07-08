@@ -1764,9 +1764,9 @@ try{
     // Redirect
     // ==========================================
 
-    window.location.href =
-        "verify-email.html?email=" +
-        encodeURIComponent(email);
+    document
+    .getElementById("verifyModal")
+    .classList.add("active");
 
 }
 
