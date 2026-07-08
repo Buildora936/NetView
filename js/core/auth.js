@@ -217,3 +217,19 @@ export function onAuthChange(callback) {
     );
 
 }
+export async function refreshUser(){
+
+    await supabase.auth.refreshSession();
+
+    const { data, error } =
+        await supabase.auth.getUser();
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data.user;
+
+}
