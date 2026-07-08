@@ -1726,7 +1726,17 @@ try{
     // ==========================================
     // Create Profile
     // ==========================================
+    const {
+    data: sessionData
+} = await supabase.auth.getSession();
 
+console.log("Session :", sessionData.session);
+
+const {
+    data: userData
+} = await supabase.auth.getUser();
+
+console.log("User :", userData.user);
     const { error: profileError } =
         await supabase
         .from("profiles")
