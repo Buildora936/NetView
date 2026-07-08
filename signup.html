@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Lumio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="monetag" content="a2854efa46b5edd759eb56b769d02cc6">
+<meta name="theme-color" content="#181818">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+/* ==================================================
+   NetView
+   signup.html
+   Part 1/3
+   Animated Background
+================================================== */
+
+body{
+
+    overflow-x:hidden;
+
+    background:var(--nv-background);
+
+}
+
+/* ==================================================
+   Background
+================================================== */
+
+.nv-login-background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-20;
+
+    background:
+
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.25),
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+    rgba(59,130,246,.18),
+    transparent 40%),
+
+    linear-gradient(
+    145deg,
+    #020617,
+    #071124,
+    #0B1120,
+    #020617);
+
+}
+
+/* ==================================================
+   Animated Glow
+================================================== */
+
+.nv-login-background::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-30%;
+
+    background:
+
+    linear-gradient(
+    120deg,
+
+    transparent,
+
+    rgba(37,99,235,.12),
+
+    transparent,
+
+    rgba(96,165,250,.10),
+
+    transparent);
+
+    background-size:300% 300%;
+
+    filter:blur(90px);
+
+    animation:
+
+    gradientMove 18s linear infinite;
+
+}
+
+/* ==================================================
+   Animated Grid
+================================================== */
+
+.nv-login-background::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(
+    rgba(255,255,255,.035) 1px,
+    transparent 1px),
+
+    linear-gradient(
+    90deg,
+    rgba(255,255,255,.035) 1px,
+    transparent 1px);
+
+    background-size:
+
+    60px 60px;
+
+    opacity:.6;
+
+    animation:
+
+    gridMove 18s linear infinite;
+
+}
+
+/* ==================================================
+   Floating Orbs
+================================================== */
+
+.nv-orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(70px);
+
+    animation:
+
+    orbFloat 12s ease-in-out infinite;
+
+}
+
+.nv-orb.one{
+
+    width:320px;
+
+    height:320px;
+
+    left:-100px;
+
+    top:-120px;
+
+    background:
+
+    rgba(37,99,235,.30);
+
+}
+
+.nv-orb.two{
+
+    width:260px;
+
+    height:260px;
+
+    right:-80px;
+
+    bottom:-90px;
+
+    background:
+
+    rgba(59,130,246,.25);
+
+    animation-delay:3s;
+
+}
+
+.nv-orb.three{
+
+    width:190px;
+
+    height:190px;
+
+    top:45%;
+
+    left:55%;
+
+    background:
+
+    rgba(96,165,250,.18);
+
+    animation-delay:6s;
+
+}
+
+/* ==================================================
+   Particles
+================================================== */
+
+.nv-particles{
+
+    position:absolute;
+
+    inset:0;
+
+}
+
+.nv-particles span{
+
+    position:absolute;
+
+    width:3px;
+
+    height:3px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.55);
+
+    box-shadow:
+
+    0 0 12px rgba(255,255,255,.45);
+
+    animation:
+
+    particleFloat linear infinite;
+
+}
+
+.nv-particles span:nth-child(1){left:4%;top:10%;animation-duration:18s;}
+.nv-particles span:nth-child(2){left:12%;top:78%;animation-duration:22s;}
+.nv-particles span:nth-child(3){left:24%;top:36%;animation-duration:20s;}
+.nv-particles span:nth-child(4){left:35%;top:90%;animation-duration:17s;}
+.nv-particles span:nth-child(5){left:46%;top:18%;animation-duration:19s;}
+.nv-particles span:nth-child(6){left:57%;top:64%;animation-duration:21s;}
+.nv-particles span:nth-child(7){left:66%;top:28%;animation-duration:16s;}
+.nv-particles span:nth-child(8){left:78%;top:82%;animation-duration:23s;}
+.nv-particles span:nth-child(9){left:87%;top:16%;animation-duration:24s;}
+.nv-particles span:nth-child(10){left:92%;top:58%;animation-duration:18s;}
+.nv-particles span:nth-child(11){left:52%;top:42%;animation-duration:20s;}
+.nv-particles span:nth-child(12){left:18%;top:56%;animation-duration:15s;}
+
+/* ==================================================
+   Animations
+================================================== */
+
+@keyframes gradientMove{
+
+    0%{
+
+        transform:translateX(-15%) rotate(0deg);
+
+    }
+
+    50%{
+
+        transform:translateX(15%) rotate(180deg);
+
+    }
+
+    100%{
+
+        transform:translateX(-15%) rotate(360deg);
+
+    }
+
+}
+
+@keyframes orbFloat{
+
+    0%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+    25%{
+
+        transform:translate(30px,-25px) scale(1.08);
+
+    }
+
+    50%{
+
+        transform:translate(0,-50px) scale(.95);
+
+    }
+
+    75%{
+
+        transform:translate(-30px,-20px) scale(1.05);
+
+    }
+
+    100%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+}
+
+@keyframes particleFloat{
+
+    0%{
+
+        transform:translateY(0) scale(.8);
+
+        opacity:.2;
+
+    }
+
+    20%{
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        transform:translateY(-90px) translateX(15px) scale(1.4);
+
+    }
+
+    80%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:translateY(-180px) translateX(-10px) scale(.6);
+
+        opacity:0;
+
+    }
+
+}
+
+@keyframes gridMove{
+
+    from{
+
+        transform:translate(0,0);
+
+    }
+
+    to{
+
+        transform:translate(60px,60px);
+
+    }
+
+}
+
+@keyframes logoFloat{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(35px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+/* ==================================================
+   NetView
+   signup.html
+   Part 2/3
+   Layout & Form
+================================================== */
+
+/* ==================================================
+   Layout
+================================================== */
+
+.nv-login{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:3rem 1.5rem;
+
+}
+
+/* ==================================================
+   Card
+================================================== */
+
+.nv-login-card{
+
+    position:relative;
+
+    width:min(100%,560px);
+
+    padding:2.8rem;
+
+    border-radius:32px;
+
+    overflow:hidden;
+
+    backdrop-filter:blur(30px);
+
+    background:
+
+        rgba(15,23,42,.72);
+
+    border:
+
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+
+        0 40px 120px rgba(0,0,0,.45);
+
+    animation:
+
+        fadeUp .8s ease;
+
+}
+
+.nv-login-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:inherit;
+
+    padding:1px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            rgba(37,99,235,.9),
+
+            rgba(96,165,250,.25),
+
+            transparent
+
+        );
+
+    -webkit-mask:
+
+        linear-gradient(#fff 0 0) content-box,
+
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask-composite:exclude;
+
+    pointer-events:none;
+
+}
+
+/* ==================================================
+   Logo
+================================================== */
+
+.nv-login-logo{
+
+    width:110px;
+
+    display:block;
+
+    margin:auto;
+
+    animation:
+
+        logoFloat 5s ease-in-out infinite;
+
+}
+
+.nv-login-title{
+
+    margin-top:1.4rem;
+
+    text-align:center;
+
+}
+
+.nv-login-subtitle{
+
+    margin-top:.8rem;
+
+    margin-bottom:2rem;
+
+    color:var(--nv-text-secondary);
+
+    text-align:center;
+
+    line-height:1.7;
+
+}
+
+/* ==================================================
+   Form
+================================================== */
+
+.nv-login-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1.25rem;
+
+}
+
+.nv-form-group{
+
+    position:relative;
+
+}
+
+/* ==================================================
+   Inputs
+================================================== */
+
+.nv-input{
+
+    width:100%;
+
+    height:58px;
+
+    padding-left:3.25rem;
+
+    padding-right:3.2rem;
+
+    transition:
+
+        .25s;
+
+}
+
+.nv-input:hover{
+
+    transform:translateY(-1px);
+
+}
+
+.nv-input:focus{
+
+    transform:translateY(-2px);
+
+}
+
+/* ==================================================
+   Select
+================================================== */
+
+select.nv-input{
+
+    appearance:none;
+
+    cursor:pointer;
+
+}
+
+/* ==================================================
+   Icons
+================================================== */
+
+.nv-input-icon{
+
+    position:absolute;
+
+    left:1.1rem;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-size:1rem;
+
+    transition:.25s;
+
+    pointer-events:none;
+
+}
+
+.nv-form-group:focus-within .nv-input-icon{
+
+    color:
+
+        var(--nv-primary);
+
+}
+
+/* ==================================================
+   Password Button
+================================================== */
+
+.nv-password-toggle{
+
+    position:absolute;
+
+    top:50%;
+
+    right:1rem;
+
+    transform:translateY(-50%);
+
+    border:none;
+
+    background:none;
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-size:1rem;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.nv-password-toggle:hover{
+
+    color:
+
+        var(--nv-primary);
+
+    transform:
+
+        translateY(-50%)
+
+        scale(1.1);
+
+}
+
+/* ==================================================
+   Button
+================================================== */
+
+.nv-login-button{
+
+    position:relative;
+
+    width:100%;
+
+    height:60px;
+
+    margin-top:.5rem;
+
+    overflow:hidden;
+
+}
+
+.nv-login-button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:55%;
+
+    height:100%;
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            transparent,
+
+            rgba(255,255,255,.35),
+
+            transparent
+
+        );
+
+    transition:.8s;
+
+}
+
+.nv-login-button:hover::before{
+
+    left:170%;
+
+}
+
+/* ==================================================
+   Error
+================================================== */
+
+.error{
+
+    display:none;
+
+    padding:.9rem 1rem;
+
+    border-radius:12px;
+
+    background:
+
+        rgba(239,68,68,.12);
+
+    border:
+
+        1px solid rgba(239,68,68,.25);
+
+    color:#ff8d8d;
+
+    font-size:.95rem;
+
+    line-height:1.5;
+
+    animation:
+
+        fadeUp .35s ease;
+
+}
+
+.error.show{
+
+    display:block;
+
+}
+
+/* ==================================================
+   Terms
+================================================== */
+
+.nv-terms{
+
+    margin-top:1.8rem;
+
+    text-align:center;
+
+    color:
+
+        var(--nv-text-secondary);
+
+    line-height:1.8;
+
+    font-size:.9rem;
+
+}
+
+.nv-terms a{
+
+    color:
+
+        var(--nv-primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.nv-terms a:hover{
+
+    color:
+
+        var(--nv-primary-light);
+
+}
+
+/* ==================================================
+   Divider
+================================================== */
+
+.nv-divider{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    margin:2rem 0 1.25rem;
+
+    color:
+
+        var(--nv-text-muted);
+
+}
+
+.nv-divider::before,
+
+.nv-divider::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:
+
+        rgba(255,255,255,.08);
+
+}
+
+/* ==================================================
+   Bottom
+================================================== */
+
+.nv-signup{
+
+    text-align:center;
+
+}
+
+.nv-signup a{
+
+    color:
+
+        var(--nv-primary);
+
+    font-weight:700;
+
+    text-decoration:none;
+
+}
+
+.nv-signup a:hover{
+
+    color:
+
+        var(--nv-primary-light);
+
+}
+
+.nv-version{
+
+    margin-top:2rem;
+
+    text-align:center;
+
+    color:
+
+        var(--nv-text-muted);
+
+    font-size:.82rem;
+
+}
+/* ==================================================
+   NetView
+   signup.html
+   Part 3/3
+   Effects • Responsive • Polish
+================================================== */
+
+/* ==================================================
+   Focus Glow
+================================================== */
+
+.nv-form-group::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:16px;
+
+    pointer-events:none;
+
+    opacity:0;
+
+    transition:.3s;
+
+    box-shadow:
+
+        0 0 0 2px rgba(37,99,235,.15),
+
+        0 0 30px rgba(37,99,235,.20);
+
+}
+
+.nv-form-group:focus-within::after{
+
+    opacity:1;
+
+}
+
+/* ==================================================
+   Floating Card Effect
+================================================== */
+
+.nv-login-card{
+
+    transition:
+
+        transform .35s ease,
+
+        box-shadow .35s ease;
+
+}
+
+.nv-login-card:hover{
+
+    transform:
+
+        translateY(-6px);
+
+    box-shadow:
+
+        0 55px 130px rgba(0,0,0,.55);
+
+}
+
+/* ==================================================
+   Logo Hover
+================================================== */
+
+.nv-login-logo{
+
+    transition:
+
+        transform .35s ease,
+
+        filter .35s ease;
+
+}
+
+.nv-login-logo:hover{
+
+    transform:
+
+        scale(1.05);
+
+    filter:
+
+        drop-shadow(0 0 25px rgba(37,99,235,.45));
+
+}
+
+/* ==================================================
+   Input Hover
+================================================== */
+
+.nv-input{
+
+    transition:
+
+        border-color .25s,
+
+        box-shadow .25s,
+
+        transform .25s;
+
+}
+
+.nv-input:hover{
+
+    border-color:
+
+        rgba(96,165,250,.35);
+
+}
+
+.nv-input:focus{
+
+    border-color:
+
+        var(--nv-primary);
+
+    box-shadow:
+
+        0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+/* ==================================================
+   Select Cursor
+================================================== */
+
+select.nv-input{
+
+    cursor:pointer;
+
+}
+
+/* ==================================================
+   Button Animation
+================================================== */
+
+.nv-login-button{
+
+    transition:
+
+        transform .25s,
+
+        box-shadow .25s;
+
+}
+
+.nv-login-button:hover{
+
+    transform:
+
+        translateY(-2px);
+
+    box-shadow:
+
+        0 12px 30px rgba(37,99,235,.35);
+
+}
+
+.nv-login-button:active{
+
+    transform:
+
+        scale(.98);
+
+}
+
+/* ==================================================
+   Links
+================================================== */
+
+a{
+
+    transition:
+
+        color .25s ease;
+
+}
+
+/* ==================================================
+   Scrollbar
+================================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#050b16;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:
+
+        rgba(37,99,235,.45);
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+        rgba(37,99,235,.75);
+
+}
+
+/* ==================================================
+   Selection
+================================================== */
+
+::selection{
+
+    background:
+
+        rgba(37,99,235,.35);
+
+    color:#fff;
+
+}
+
+/* ==================================================
+   Responsive
+================================================== */
+
+@media(max-width:992px){
+
+    .nv-login{
+
+        padding:2rem 1rem;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    body{
+
+        overflow:auto;
+
+    }
+
+    .nv-login{
+
+        align-items:flex-start;
+
+        padding:1.25rem;
+
+    }
+
+    .nv-login-card{
+
+        width:100%;
+
+        padding:2rem 1.5rem;
+
+        border-radius:24px;
+
+    }
+
+    .nv-login-logo{
+
+        width:90px;
+
+    }
+
+    .nv-login-title{
+
+        font-size:1.8rem;
+
+    }
+
+    .nv-input{
+
+        height:56px;
+
+        font-size:.95rem;
+
+    }
+
+    .nv-login-button{
+
+        height:56px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .nv-login-card{
+
+        padding:1.5rem 1.2rem;
+
+        border-radius:20px;
+
+    }
+
+    .nv-login-title{
+
+        font-size:1.55rem;
+
+    }
+
+    .nv-login-subtitle{
+
+        font-size:.92rem;
+
+    }
+
+    .nv-input{
+
+        height:54px;
+
+        padding-left:3rem;
+
+        padding-right:3rem;
+
+    }
+
+    .nv-input-icon{
+
+        left:1rem;
+
+    }
+
+    .nv-password-toggle{
+
+        right:.9rem;
+
+    }
+
+    .nv-terms{
+
+        font-size:.82rem;
+
+    }
+
+}
+
+/* ==================================================
+   Reduced Motion
+================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *{
+
+        animation:none !important;
+
+        transition:none !important;
+
+        scroll-behavior:auto !important;
+
+    }
+
+}
+<body>
+
+<div class="nv-login-background">
+
+    <div class="nv-orb one"></div>
+
+    <div class="nv-orb two"></div>
+
+    <div class="nv-orb three"></div>
+
+    <div class="nv-particles">
+
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+
+    </div>
+
+</div>
+
+<main class="nv-login">
+
+<section class="nv-login-card">
+
+<img
+    src="NetView.png"
+    alt="NetView"
+    class="nv-login-logo">
+
+<h1 class="nv-login-title">
+
+Créer votre compte
+
+</h1>
+
+<p class="nv-login-subtitle">
+
+Rejoignez NetView pour publier des vidéos, créer des chaînes, regarder des lives, discuter avec votre communauté et vendre vos produits.
+
+</p>
+
+<form
+id="signupForm"
+class="nv-login-form">
+
+<!-- Username -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="username">
+
+Nom d'utilisateur
+
+</label>
+
+<input
+
+id="username"
+
+type="text"
+
+class="nv-input"
+
+placeholder="@nomutilisateur"
+
+autocomplete="username"
+
+required>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-at"></i>
+
+</div>
+
+</div>
+
+<!-- Display Name -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="displayName">
+
+Nom affiché
+
+</label>
+
+<input
+
+id="displayName"
+
+type="text"
+
+class="nv-input"
+
+placeholder="Votre nom"
+
+autocomplete="name"
+
+required>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-user"></i>
+
+</div>
+
+</div>
+
+<!-- Email -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="email">
+
+Adresse e-mail
+
+</label>
+
+<input
+
+id="email"
+
+type="email"
+
+class="nv-input"
+
+placeholder="exemple@email.com"
+
+autocomplete="email"
+
+required>
+
+<div class="nv-input-icon">
+
+<i class="fa-regular fa-envelope"></i>
+
+</div>
+
+</div>
+
+<!-- Country -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="country">
+
+Pays
+
+</label>
+
+<select
+id="country"
+class="nv-input"
+required>
+
+<option value="">Choisir un pays</option>
+
+</select>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-earth-americas"></i>
+
+</div>
+
+</div>
+
+<!-- Language -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="language">
+
+Langue
+
+</label>
+
+<select
+id="language"
+class="nv-input"
+required>
+
+<option value="">Choisir une langue</option>
+
+<option value="fr">Français</option>
+
+<option value="en">English</option>
+
+<option value="es">Español</option>
+
+<option value="pt">Português</option>
+
+</select>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-language"></i>
+
+</div>
+
+</div>
+
+<!-- Password -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="password">
+
+Mot de passe
+
+</label>
+
+<input
+
+id="password"
+
+type="password"
+
+class="nv-input"
+
+placeholder="Minimum 8 caractères"
+
+autocomplete="new-password"
+
+required>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-lock"></i>
+
+</div>
+
+<button
+
+type="button"
+
+id="togglePassword"
+
+class="nv-password-toggle">
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+<!-- Confirm Password -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label"
+for="confirmPassword">
+
+Confirmer le mot de passe
+
+</label>
+
+<input
+
+id="confirmPassword"
+
+type="password"
+
+class="nv-input"
+
+placeholder="Confirmez votre mot de passe"
+
+autocomplete="new-password"
+
+required>
+
+<div class="nv-input-icon">
+
+<i class="fa-solid fa-lock"></i>
+
+</div>
+
+<button
+
+type="button"
+
+id="toggleConfirmPassword"
+
+class="nv-password-toggle">
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+<button
+
+type="submit"
+
+id="signupButton"
+
+class="nv-btn nv-btn-gradient nv-login-button">
+
+Créer un compte
+
+</button>
+
+<div
+class="error"
+id="signupError">
+
+</div>
+
+</form>
+
+<div class="nv-terms">
+
+En créant un compte NetView, vous acceptez nos
+
+<a href="conditions-utilisation.html">
+
+Conditions d'utilisation
+
+</a>
+
+et notre
+
+<a href="privacy.html">
+
+Politique de confidentialité
+
+</a>.
+
+</div>
+
+<div class="nv-divider">
+
+<span>
+
+Vous avez déjà un compte ?
+
+</span>
+
+</div>
+
+<div class="nv-signup">
+
+<a href="login.html">
+
+Se connecter
+
+</a>
+
+</div>
+
+<div class="nv-version">
+
+NetView v1.0 • Tous droits réservés
+
+</div>
+
+</section>
+
+</main>
+
+<div
+
+class="nv-page-loader"
+
+id="pageLoader"
+
+style="display:none;">
+
+<div class="nv-spinner nv-spinner-lg"></div>
+
+<div class="nv-loader-text">
+
+Création du compte...
+
+</div>
+
+</div>
+
+<script type="module">
+<script type="module">
+
+// ==========================================
+// NetView
+// signup.html
+// Part 1/2
+// ==========================================
+
+// ==========================================
+// Imports
+// ==========================================
+
+import { signUp } from "./js/core/auth.js";
+
+import { supabase } from "./js/core/supabase.js";
+
+import {
+    showLoader,
+    hideLoader,
+    buttonLoading
+} from "./js/core/ui.js";
+
+// ==========================================
+// Elements
+// ==========================================
+
+const signupForm =
+    document.getElementById("signupForm");
+
+const usernameInput =
+    document.getElementById("username");
+
+const displayNameInput =
+    document.getElementById("displayName");
+
+const emailInput =
+    document.getElementById("email");
+
+const countryInput =
+    document.getElementById("country");
+
+const languageInput =
+    document.getElementById("language");
+
+const passwordInput =
+    document.getElementById("password");
+
+const confirmPasswordInput =
+    document.getElementById("confirmPassword");
+
+const signupButton =
+    document.getElementById("signupButton");
+
+const signupError =
+    document.getElementById("signupError");
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+const toggleConfirmPassword =
+    document.getElementById("toggleConfirmPassword");
+
+// ==========================================
+// Variables
+// ==========================================
+
+let submitting = false;
+
+// ==========================================
+// Password Visibility
+// ==========================================
+
+togglePassword.addEventListener("click",()=>{
+
+    const hidden =
+        passwordInput.type==="password";
+
+    passwordInput.type =
+        hidden ? "text" : "password";
+
+    togglePassword.innerHTML =
+        hidden
+        ? '<i class="fa-regular fa-eye-slash"></i>'
+        : '<i class="fa-regular fa-eye"></i>';
+
+});
+
+toggleConfirmPassword.addEventListener("click",()=>{
+
+    const hidden =
+        confirmPasswordInput.type==="password";
+
+    confirmPasswordInput.type =
+        hidden ? "text" : "password";
+
+    toggleConfirmPassword.innerHTML =
+        hidden
+        ? '<i class="fa-regular fa-eye-slash"></i>'
+        : '<i class="fa-regular fa-eye"></i>';
+
+});
+
+// ==========================================
+// Error Helper
+// ==========================================
+
+function showError(message){
+
+    signupError.textContent = message;
+
+    signupError.classList.add("show");
+
+}
+
+function clearError(){
+
+    signupError.textContent = "";
+
+    signupError.classList.remove("show");
+
+}
+
+// ==========================================
+// Username Check
+// ==========================================
+
+async function usernameExists(username){
+
+    const { data, error } =
+        await supabase
+        .from("profiles")
+        .select("id")
+        .eq("username", username)
+        .limit(1);
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data.length > 0;
+
+}
+
+// ==========================================
+// Form Submit
+// ==========================================
+
+signupForm.addEventListener(
+"submit",
+async(event)=>{
+
+event.preventDefault();
+
+if(submitting){
+
+    return;
+
+}
+
+clearError();
+
+const username =
+    usernameInput.value.trim().toLowerCase();
+
+const displayName =
+    displayNameInput.value.trim();
+
+const email =
+    emailInput.value.trim().toLowerCase();
+
+const country =
+    countryInput.value;
+
+const language =
+    languageInput.value;
+
+const password =
+    passwordInput.value;
+
+const confirmPassword =
+    confirmPasswordInput.value;
+
+// ==========================================
+// Validation
+// ==========================================
+
+if(!username){
+
+    showError(
+        "Veuillez saisir un nom d'utilisateur."
+    );
+
+    usernameInput.focus();
+
+    return;
+
+}
+
+if(username.length < 3){
+
+    showError(
+        "Le nom d'utilisateur doit contenir au moins 3 caractères."
+    );
+
+    usernameInput.focus();
+
+    return;
+
+}
+
+if(!/^[a-z0-9._]+$/.test(username)){
+
+    showError(
+        "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, points et tirets bas."
+    );
+
+    usernameInput.focus();
+
+    return;
+
+}
+
+if(!displayName){
+
+    showError(
+        "Veuillez saisir un nom affiché."
+    );
+
+    displayNameInput.focus();
+
+    return;
+
+}
+
+if(!email){
+
+    showError(
+        "Veuillez saisir votre adresse e-mail."
+    );
+
+    emailInput.focus();
+
+    return;
+
+}
+
+if(!country){
+
+    showError(
+        "Veuillez sélectionner votre pays."
+    );
+
+    countryInput.focus();
+
+    return;
+
+}
+
+if(!language){
+
+    showError(
+        "Veuillez sélectionner une langue."
+    );
+
+    languageInput.focus();
+
+    return;
+
+}
+
+if(password.length < 8){
+
+    showError(
+        "Le mot de passe doit contenir au moins 8 caractères."
+    );
+
+    passwordInput.focus();
+
+    return;
+
+}
+
+if(password !== confirmPassword){
+
+    showError(
+        "Les mots de passe ne correspondent pas."
+    );
+
+    confirmPasswordInput.focus();
+
+    return;
+
+}
+
+try{
+
+    if(await usernameExists(username)){
+
+        showError(
+            "Ce nom d'utilisateur est déjà utilisé."
+        );
+
+        usernameInput.focus();
+
+        return;
+
+    }
+
+    submitting = true;
+
+    buttonLoading(
+        signupButton,
+        true
+    );
+
+    showLoader();
+      // ==========================================
+    // Create Account
+    // ==========================================
+
+    const { data, error } = await signUp(
+        email,
+        password
+    );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    if(!data.user){
+
+        throw new Error(
+            "Impossible de créer le compte."
+        );
+
+    }
+
+    // ==========================================
+    // Create Profile
+    // ==========================================
+
+    const { error: profileError } =
+        await supabase
+        .from("profiles")
+        .insert({
+
+            id: data.user.id,
+
+            username: username,
+
+            display_name: displayName,
+
+            avatar_url: null,
+
+            banner_url: null,
+
+            bio: "",
+
+            country: country,
+
+            language: language,
+
+            verified: false,
+
+            company_verified: false
+
+        });
+
+    if(profileError){
+
+        throw profileError;
+
+    }
+
+    // ==========================================
+    // Redirect
+    // ==========================================
+
+    window.location.href =
+        "verify-email.html?email=" +
+        encodeURIComponent(email);
+
+}
+
+catch(error){
+
+    console.error(error);
+
+    let message =
+        "Impossible de créer le compte.";
+
+    if(error.message){
+
+        if(
+            error.message.includes(
+                "User already registered"
+            )
+        ){
+
+            message =
+            "Cette adresse e-mail est déjà utilisée.";
+
+        }
+
+        else if(
+            error.message.includes(
+                "Password should be at least"
+            )
+        ){
+
+            message =
+            "Le mot de passe doit contenir au moins 8 caractères.";
+
+        }
+
+        else{
+
+            message =
+                error.message;
+
+        }
+
+    }
+
+    showError(message);
+
+}
+
+finally{
+
+    hideLoader();
+
+    buttonLoading(
+        signupButton,
+        false
+    );
+
+    submitting = false;
+
+}
+
+});
+
+// ==========================================
+// Country List
+// ==========================================
+
+const countries = [
+
+"Afghanistan","Afrique du Sud","Albanie","Algérie","Allemagne",
+"Andorre","Angola","Arabie saoudite","Argentine","Arménie",
+"Australie","Autriche","Bahamas","Bangladesh","Belgique",
+"Bénin","Bolivie","Bosnie-Herzégovine","Botswana","Brésil",
+"Bulgarie","Burkina Faso","Burundi","Cambodge","Cameroun",
+"Canada","Cap-Vert","Chili","Chine","Chypre",
+"Colombie","Comores","Congo","Corée du Nord","Corée du Sud",
+"Costa Rica","Côte d'Ivoire","Croatie","Cuba","Danemark",
+"Djibouti","Égypte","Émirats arabes unis","Équateur","Espagne",
+"Estonie","États-Unis","Éthiopie","Finlande","France",
+"Gabon","Gambie","Ghana","Grèce","Guatemala",
+"Guinée","Haïti","Honduras","Hongrie","Inde",
+"Indonésie","Irak","Iran","Irlande","Islande",
+"Italie","Jamaïque","Japon","Kenya","Laos",
+"Liban","Libéria","Libye","Luxembourg","Madagascar",
+"Malaisie","Mali","Maroc","Maurice","Mexique",
+"Monaco","Mozambique","Namibie","Népal","Nicaragua",
+"Niger","Nigéria","Norvège","Nouvelle-Zélande","Ouganda",
+"Pakistan","Panama","Paraguay","Pays-Bas","Pérou",
+"Philippines","Pologne","Portugal","Qatar","République dominicaine",
+"Roumanie","Royaume-Uni","Russie","Rwanda","Sénégal",
+"Serbie","Singapour","Somalie","Soudan","Sri Lanka",
+"Suède","Suisse","Syrie","Tanzanie","Tchad",
+"Thaïlande","Togo","Tunisie","Turquie","Ukraine",
+"Uruguay","Venezuela","Viêt Nam","Yémen","Zambie","Zimbabwe"
+
+];
+
+countries.forEach(country=>{
+
+    const option =
+        document.createElement("option");
+
+    option.value = country;
+
+    option.textContent = country;
+
+    countryInput.appendChild(option);
+
+});
+
+// ==========================================
+// Accessibility
+// ==========================================
+
+[
+    usernameInput,
+    displayNameInput,
+    emailInput,
+    countryInput,
+    languageInput,
+    passwordInput,
+    confirmPasswordInput
+].forEach(input=>{
+
+    input.addEventListener("input",()=>{
+
+        clearError();
+
+    });
+
+});
+
+// ==========================================
+// Ready
+// ==========================================
+
+console.log(
+
+    "NetView Signup Ready"
+
+);
+
+</script>
+</script>
+
+</body>
+</html>
