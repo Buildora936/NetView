@@ -13,10 +13,21 @@ export async function signUp(email, password) {
 
     return await supabase.auth.signUp({
 
-        email,
-        password
+    email,
 
-    });
+    password,
+
+    options:{
+
+        emailRedirectTo:
+
+            window.location.origin +
+
+            "/confirm-email.html"
+
+    }
+
+});
 
 }
 
