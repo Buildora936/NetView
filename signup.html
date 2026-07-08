@@ -1726,49 +1726,20 @@ try{
     // ==========================================
     // Create Profile
     // ==========================================
-    const {
-    data: sessionData
-} = await supabase.auth.getSession();
+ await supabase
+.from("profiles")
+.update({
 
-console.log("Session :", sessionData.session);
+    username,
 
-const {
-    data: userData
-} = await supabase.auth.getUser();
+    display_name: displayName,
 
-console.log("User :", userData.user);
-    const { error: profileError } =
-        await supabase
-        .from("profiles")
-        .insert({
+    country,
 
-            id: data.user.id,
+    language
 
-            username: username,
-
-            display_name: displayName,
-
-            avatar_url: null,
-
-            banner_url: null,
-
-            bio: "",
-
-            country: country,
-
-            language: language,
-
-            verified: false,
-
-            company_verified: false
-
-        });
-
-    if(profileError){
-
-        throw profileError;
-
-    }
+})
+.eq("id", data.user.id);
 
     // ==========================================
     // Redirect
