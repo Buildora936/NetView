@@ -1381,6 +1381,44 @@ import {
     buttonLoading
 } from "./js/core/ui.js";
 
+
+const params = new URLSearchParams(location.search);
+
+const status = params.get("status");
+if(status==="expired"){
+
+    document
+    .getElementById("verifyModal")
+    .classList.add("active");
+
+    document
+    .getElementById("verifyTitle")
+    .textContent =
+    "Le lien de confirmation a expiré";
+
+    document
+    .getElementById("verifyText")
+    .textContent =
+    "Cliquez sur « Renvoyer l'e-mail » pour recevoir un nouveau lien de confirmation.";
+
+}
+if(status==="failed"){
+
+    document
+    .getElementById("verifyModal")
+    .classList.add("active");
+
+    document
+    .getElementById("verifyTitle")
+    .textContent =
+    "La confirmation a échoué";
+
+    document
+    .getElementById("verifyText")
+    .textContent =
+    "Le lien est invalide ou votre compte n'a pas encore été confirmé.";
+
+}
 // ==========================================
 // Elements
 // ==========================================
