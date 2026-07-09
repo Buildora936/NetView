@@ -1381,44 +1381,6 @@ import {
     buttonLoading
 } from "./js/core/ui.js";
 
-
-const params = new URLSearchParams(location.search);
-
-const status = params.get("status");
-if(status==="expired"){
-
-    document
-    .getElementById("verifyModal")
-    .classList.add("active");
-
-    document
-    .getElementById("verifyTitle")
-    .textContent =
-    "Le lien de confirmation a expiré";
-
-    document
-    .getElementById("verifyText")
-    .textContent =
-    "Cliquez sur « Renvoyer l'e-mail » pour recevoir un nouveau lien de confirmation.";
-
-}
-if(status==="failed"){
-
-    document
-    .getElementById("verifyModal")
-    .classList.add("active");
-
-    document
-    .getElementById("verifyTitle")
-    .textContent =
-    "La confirmation a échoué";
-
-    document
-    .getElementById("verifyText")
-    .textContent =
-    "Le lien est invalide ou votre compte n'a pas encore été confirmé.";
-
-}
 // ==========================================
 // Elements
 // ==========================================
@@ -1989,7 +1951,9 @@ function openVerifyModal(status){
 
             text.textContent =
             "Nous avons envoyé un e-mail de confirmation. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer votre compte.";
-
+        verifyButton.style.display="inline-flex";
+        
+resendButton.style.display="none";
         break;
 
         case "expired":
@@ -1999,10 +1963,12 @@ function openVerifyModal(status){
 
             text.textContent =
             "Le lien de confirmation a expiré. Cliquez sur le bouton ci-dessous pour recevoir un nouvel e-mail.";
+        verifyButton.style.display="none";
 
+resendButton.style.display="inline-flex";
         break;
 
-        case "invalid":
+        case "failed":
 
             title.textContent =
             "Lien invalide";
