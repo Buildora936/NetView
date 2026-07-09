@@ -1335,37 +1335,18 @@ Création du compte...
 
     <div class="nv-modal">
 
-        <h2>Confirmez votre adresse e-mail</h2>
+<h2 id="verifyTitle"></h2>
 
-        <p>
+<p id="verifyText"></p>
 
-            Nous avons envoyé un e-mail de confirmation à votre adresse.
+<div id="verifyMessage"></div>
 
-        </p>
+<button id="resendButton">
 
-        <p>
+Renvoyer l'e-mail
 
-            Ouvrez votre boîte de réception, cliquez sur le lien de confirmation,
-            puis revenez sur cette page.
-
-        </p>
-
-        <button
-            id="verifyButton"
-            class="nv-btn nv-btn-gradient">
-
-            J'ai confirmé mon compte
-
-        </button>
-
-        <button
-            id="resendButton"
-            class="nv-btn">
-
-            Renvoyer l'e-mail
-
-        </button>
-
+</button>
+      
         <div
             id="verifyMessage"
             class="error">
@@ -1387,13 +1368,9 @@ Création du compte...
 // Imports
 // ==========================================
 import {
-
     signUp,
-
-    refreshUser,
-
+    getUser,
     resendVerification
-
 } from "./js/core/auth.js";
 
 import { supabase } from "./js/core/supabase.js";
@@ -1726,7 +1703,8 @@ try{
     // ==========================================
     // Create Profile
     // ==========================================
- await supabase
+ const { error: profileError } =
+await supabase
 .from("profiles")
 .update({
 
@@ -1741,14 +1719,23 @@ try{
 })
 .eq("id", data.user.id);
 
+if(profileError){
+
+    throw profileError;
+
+}
+
     // ==========================================
     // Redirect
     // ==========================================
 
-    document
-    .getElementById("verifyModal")
-    .classList.add("active");
+   history.replaceState(
+    {},
+    "",
+    "signup.html?status=sent"
+);
 
+openVerifyModal("sent");
 }
 
 catch(error){
@@ -1878,97 +1865,139 @@ countries.forEach(country=>{
     });
 
 });
-const verifyButton =
-document.getElementById(
-    "verifyButton"
-);
 
-verifyButton.addEventListener(
-    "click",
-    async()=>{
-
-        const user =
-        await getUser();
-
-        if(!user){
-
-            return;
-
-        }
-
-        if(user.email_confirmed_at){
-
-            window.location.href =
-            "profile.html";
-
-            return;
-
-        }
-
-        document
-        .getElementById("verifyMessage")
-        .classList.add("show");
-
-        document
-        .getElementById("verifyMessage")
-        .textContent =
-
-        "Votre adresse e-mail n'est pas encore confirmée.";
-
-    }
-);
 
 const resendButton =
-document.getElementById(
-    "resendButton"
-);
+document.getElementById("resendButton");
 
 resendButton.addEventListener(
-    "click",
-    async()=>{
+"click",
+async()=>{
 
-        const user =
-        await getUser();
+    const user =
+    await getUser();
 
-        if(!user){
+    if(!user){
 
-            return;
-
-        }
-
-        const {
-
-            error
-
-        } = await resendVerification(
-            user.email
-        );
-
-        const box =
-        document.getElementById(
-            "verifyMessage"
-        );
-
-        box.classList.add("show");
-
-        if(error){
-
-            box.textContent =
-            error.message;
-
-            return;
-
-        }
-
-        box.textContent =
-        "Un nouvel e-mail de confirmation a été envoyé.";
+        return;
 
     }
+
+    const box =
+    document.getElementById(
+        "verifyMessage"
+    );
+
+    const { error } =
+    await resendVerification(
+        user.email
+    );
+
+    box.classList.add(
+        "show"
+    );
+
+    if(error){
+
+        box.textContent =
+        error.message;
+
+        return;
+
+    }
+
+    box.textContent =
+    "Un nouvel e-mail de confirmation a été envoyé.";
+
+}
 );
 // ==========================================
 // Ready
 // ==========================================
+function openVerifyModal(status){
 
+    const modal =
+    document.getElementById(
+        "verifyModal"
+    );
+
+    const title =
+    document.getElementById(
+        "verifyTitle"
+    );
+
+    const text =
+    document.getElementById(
+        "verifyText"
+    );
+
+    const message =
+    document.getElementById(
+        "verifyMessage"
+    );
+
+    message.textContent="";
+
+    message.classList.remove(
+        "show"
+    );
+
+    switch(status){
+
+        case "sent":
+
+            title.textContent =
+            "Vérifiez votre adresse e-mail";
+
+            text.textContent =
+            "Nous avons envoyé un e-mail de confirmation. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer votre compte.";
+
+        break;
+
+        case "expired":
+
+            title.textContent =
+            "Lien expiré";
+
+            text.textContent =
+            "Le lien de confirmation a expiré. Cliquez sur le bouton ci-dessous pour recevoir un nouvel e-mail.";
+
+        break;
+
+        case "invalid":
+
+            title.textContent =
+            "Lien invalide";
+
+            text.textContent =
+            "Ce lien est invalide ou a déjà été utilisé.";
+
+        break;
+
+    }
+
+    modal.classList.add(
+        "active"
+    );
+
+}
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const status =
+params.get(
+"status"
+);
+
+if(status){
+
+    openVerifyModal(
+        status
+    );
+
+}
 console.log(
 
     "NetView Signup Ready"
