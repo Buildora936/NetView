@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Lumio</title>
+<title>inscription sur Netview</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="monetag" content="a2854efa46b5edd759eb56b769d02cc6">
 <meta name="theme-color" content="#181818">
@@ -1866,6 +1866,8 @@ countries.forEach(country=>{
 
 });
 
+const verifyButton =
+document.getElementById("verifyButton");
 
 const resendButton =
 document.getElementById("resendButton");
@@ -1911,14 +1913,22 @@ async()=>{
 
 }
 );
+verifyButton.addEventListener(
+"click",
+()=>{
+
+    window.open(
+        "https://mail.google.com",
+        "_blank"
+    );
+
+}
+);
 // ==========================================
 // Ready
 // ==========================================
 function openVerifyModal(status){
   
-    const verifyButton =
-document.getElementById("verifyButton");
-    
     const modal =
     document.getElementById(
         "verifyModal"
@@ -1971,15 +1981,21 @@ resendButton.style.display="none";
 resendButton.style.display="inline-flex";
         break;
 
-        case "failed":
+       case "failed":
 
-            title.textContent =
-            "Lien invalide";
+    title.textContent =
+    "Confirmation impossible";
 
-            text.textContent =
-            "Ce lien est invalide ou a déjà été utilisé.";
+    text.textContent =
+    "Le lien est invalide ou a déjà été utilisé. Vous pouvez demander un nouvel e-mail.";
 
-        break;
+    verifyButton.style.display =
+    "none";
+
+    resendButton.style.display =
+    "inline-flex";
+
+break;
 
     }
 
