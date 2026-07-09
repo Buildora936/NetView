@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Confirmation du compte</title>
+
+<script type="module">
+
+import { supabase } from "./js/core/supabase.js";
+
+(async()=>{
+
+    // -------------------------
+    // Cas erreur envoyé par Supabase
+    // -------------------------
+
+    const hash =
+        window.location.hash;
+
+    if(hash.includes("error=")){
+
+        const params =
+            new URLSearchParams(
+                hash.substring(1)
+            );
+
+        const code =
+            params.get("error_code");
+
+        if(code==="otp_expired"){
+
+            location.replace(
+                "signup.html?status=expired"
+            );
+
+            return;
+
+        }
+
+        location.replace(
+            "signup.html?status=failed"
+        );
+
+        return;
+
+    }
+
+    // -------------------------
+    // Demande à Supabase
+    // -------------------------
+
+    const {
+
+        data
+
+    } =
+    await supabase.auth.getUser();
+
+    if(
+
+        data.user &&
+
+        data.user.email_confirmed_at
+
+    ){
+
+        location.replace(
+            "profile.html"
+        );
+
+        return;
+
+    }
+
+    location.replace(
+        "signup.html?status=failed"
+    );
+
+})();
+
+</script>
+
+</head>
+
+<body>
+
+Patientez...
+
+</body>
+
+</html>
