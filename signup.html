@@ -1088,43 +1088,40 @@ required>
 
 <!-- Country -->
 
-<div class="nv-form-group">
+<div class="country-picker">
 
-<label
-class="nv-label"
-for="country">
+<div
+id="selectedCountry"
+class="selected-country">
 
-Pays
-
-</label>
-
-<div class="nv-form-group">
-
-    <input
-        type="text"
-        id="countrySearch"
-        class="nv-input"
-        placeholder="Rechercher un pays..."
-        autocomplete="off">
+Choisissez votre pays
 
 </div>
 
-<select
-    id="country"
-    class="nv-input">
+<div
+id="countryDropdown"
+class="country-dropdown">
 
-    <option value="">
-        Sélectionnez votre pays
-    </option>
+<input
 
-</select>
-<div class="nv-input-icon">
+id="countryInput"
 
-<i class="fa-solid fa-earth-americas"></i>
+type="text"
+
+placeholder="🔍 Rechercher un pays..."
+
+autocomplete="off">
+
+<div id="countryList"></div>
 
 </div>
 
 </div>
+
+<input
+type="hidden"
+id="country"
+name="country">
 
 <!-- Language -->
 
@@ -1171,7 +1168,7 @@ required>
 class="nv-label"
 for="password">
 
-Mot de passe
+Mot de passe 
 
 </label>
 
@@ -1405,6 +1402,8 @@ import {
     buttonLoading
 
 } from "./js/core/ui.js";
+  
+import { COUNTRIES } from "./js/assets/countries.js";
 
 // ==========================================
 // Elements
@@ -1552,120 +1551,6 @@ async function usernameExists(username){
 }
 
 // ==========================================
-// Verify Modal
-// ==========================================
-
-function openVerifyModal(status){
-
-    const modal =
-    document.getElementById("verifyModal");
-
-    const title =
-    document.getElementById("verifyTitle");
-
-    const text =
-    document.getElementById("verifyText");
-
-    const message =
-    document.getElementById("verifyMessage");
-
-    const verifyButton =
-    document.getElementById("verifyButton");
-
-    const resendButton =
-    document.getElementById("resendButton");
-
-    if(
-        !modal ||
-        !title ||
-        !text ||
-        !message ||
-        !verifyButton ||
-        !resendButton
-    ){
-
-        console.error(
-            "Le modal de vérification est incomplet."
-        );
-
-        return;
-
-    }
-
-    message.textContent = "";
-
-    message.classList.remove("show");
-
-    verifyButton.style.display = "none";
-
-    resendButton.style.display = "none";
-
-    switch(status){
-
-        case "sent":
-
-            title.textContent =
-            "Vérifiez votre adresse e-mail";
-
-            text.textContent =
-            "Nous venons d'envoyer un e-mail de confirmation. Ouvrez votre boîte de réception puis cliquez sur le lien reçu pour activer votre compte NetView.";
-
-            verifyButton.style.display =
-            "inline-flex";
-
-        break;
-
-        case "expired":
-
-            title.textContent =
-            "Le lien a expiré";
-
-            text.textContent =
-            "Votre lien de confirmation n'est plus valide. Demandez un nouvel e-mail de confirmation.";
-
-            resendButton.style.display =
-            "inline-flex";
-
-        break;
-
-        case "failed":
-
-            title.textContent =
-            "Confirmation impossible";
-
-            text.textContent =
-            "Le lien est invalide ou votre compte n'a pas pu être confirmé.";
-
-            resendButton.style.display =
-            "inline-flex";
-
-        break;
-
-    }
-
-    modal.classList.add("active");
-
-}
-
-// ==========================================
-// Open Modal From URL
-// signup.html?status=...
-// ==========================================
-
-const params =
-new URLSearchParams(window.location.search);
-
-const status =
-params.get("status");
-
-if(status){
-
-    openVerifyModal(status);
-
-}
-
-
-// ==========================================
 // NetView
 // signup.html
 // Part 3/5
@@ -1713,7 +1598,7 @@ emailInput.value
 
 
 const country =
-countryInput.value;
+selectedCountryCode.value;
 
 
 const language =
@@ -2362,142 +2247,17 @@ resendButton?.addEventListener(
 // Part 5/5
 // Countries + Search
 // ==========================================
+const countryInput =
+document.getElementById("countryInput");
 
-const countrySearch =
-document.getElementById(
-    "countrySearch"
-);
+const countryList =
+document.getElementById("countryList");
 
-const countries = [
+const selectedCountry =
+document.getElementById("selectedCountry");
 
-"Afghanistan",
-"Afrique du Sud",
-"Albanie",
-"Algérie",
-"Allemagne",
-"Andorre",
-"Angola",
-"Arabie saoudite",
-"Argentine",
-"Arménie",
-"Australie",
-"Autriche",
-"Bahamas",
-"Bangladesh",
-"Belgique",
-"Bénin",
-"Bolivie",
-"Bosnie-Herzégovine",
-"Botswana",
-"Brésil",
-"Bulgarie",
-"Burkina Faso",
-"Burundi",
-"Cambodge",
-"Cameroun",
-"Canada",
-"Cap-Vert",
-"Chili",
-"Chine",
-"Chypre",
-"Colombie",
-"Comores",
-"Congo",
-"Corée du Nord",
-"Corée du Sud",
-"Costa Rica",
-"Côte d'Ivoire",
-"Croatie",
-"Cuba",
-"Danemark",
-"Djibouti",
-"Égypte",
-"Émirats arabes unis",
-"Équateur",
-"Espagne",
-"Estonie",
-"États-Unis",
-"Éthiopie",
-"Finlande",
-"France",
-"Gabon",
-"Gambie",
-"Ghana",
-"Grèce",
-"Guatemala",
-"Guinée",
-"Haïti",
-"Honduras",
-"Hongrie",
-"Inde",
-"Indonésie",
-"Irak",
-"Iran",
-"Irlande",
-"Islande",
-"Italie",
-"Jamaïque",
-"Japon",
-"Kenya",
-"Laos",
-"Liban",
-"Libéria",
-"Libye",
-"Luxembourg",
-"Madagascar",
-"Malaisie",
-"Mali",
-"Maroc",
-"Maurice",
-"Mexique",
-"Monaco",
-"Mozambique",
-"Namibie",
-"Népal",
-"Nicaragua",
-"Niger",
-"Nigéria",
-"Norvège",
-"Nouvelle-Zélande",
-"Ouganda",
-"Pakistan",
-"Panama",
-"Paraguay",
-"Pays-Bas",
-"Pérou",
-"Philippines",
-"Pologne",
-"Portugal",
-"Qatar",
-"République dominicaine",
-"Roumanie",
-"Royaume-Uni",
-"Russie",
-"Rwanda",
-"Sénégal",
-"Serbie",
-"Singapour",
-"Somalie",
-"Soudan",
-"Sri Lanka",
-"Suède",
-"Suisse",
-"Syrie",
-"Tanzanie",
-"Tchad",
-"Thaïlande",
-"Togo",
-"Tunisie",
-"Turquie",
-"Ukraine",
-"Uruguay",
-"Venezuela",
-"Viêt Nam",
-"Yémen",
-"Zambie",
-"Zimbabwe"
-
-];
+const selectedCountryCode =
+document.getElementById("country");
 
 function renderCountries(filter=""){
 
@@ -2550,23 +2310,6 @@ function renderCountries(filter=""){
 
 }
 
-renderCountries();
-
-countrySearch.addEventListener(
-
-    "input",
-
-    ()=>{
-
-        renderCountries(
-
-            countrySearch.value
-
-        );
-
-    }
-
-);
 
 // ==========================================
 // Clear Errors
