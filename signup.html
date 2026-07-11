@@ -917,7 +917,27 @@ Accessibility
     outline-offset:3px;
 
 }
+.nv-modal-overlay{
 
+    position:fixed;
+    inset:0;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(0,0,0,.7);
+
+    z-index:9999;
+
+}
+
+.nv-modal-overlay.active{
+
+    display:flex;
+
+}
 
 /* ==================================================
 Reduced Motion
@@ -1731,20 +1751,41 @@ function selectCountry(country){
 
     countrySearch.value = "";
 
-    countryDropdown.classList.remove(
-        "active"
-    );
+    countryModal.classList.remove("active");
 
 }
 
-selectedCountryBox.addEventListener(
-    "click",
-    ()=>{
+selectedCountryBox.addEventListener("click", () => {
 
-        countryDropdown.classList.toggle(
-            "active"
-        );
+    countryModal.classList.add("active");
 
+    renderCountries();
+
+    setTimeout(() => {
+
+        countrySearch.focus();
+
+    },100);
+
+});
+  countryModal.addEventListener("click",(event)=>{
+
+    if(event.target===countryModal){
+
+        countryModal.classList.remove("active");
+
+    }
+
+});
+document.addEventListener("keydown",(event)=>{
+
+    if(event.key==="Escape"){
+
+        countryModal.classList.remove("active");
+
+    }
+
+});
         renderCountries(
             countrySearch.value
         );
