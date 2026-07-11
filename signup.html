@@ -1586,10 +1586,6 @@ document.getElementById("verifyMessage");
 const resendButton =
 document.getElementById("resendButton");
 
-  closeCountryModal.addEventListener("click",()=>{
-
-    countryModal.classList.remove("active");
-
   console.log(selectedCountryBox);
 console.log(countryModal);
 console.log(countrySearch);
@@ -1787,6 +1783,11 @@ selectedCountryBox.addEventListener("click", () => {
     }
 
 });
+
+  closeCountryModal.addEventListener("click",()=>{
+
+    countryModal.classList.remove("active");
+    
 document.addEventListener("keydown",(event)=>{
 
     if(event.key==="Escape"){
