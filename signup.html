@@ -1088,40 +1088,127 @@ required>
 
 <!-- Country -->
 
-<div class="country-picker">
+<!-- ==========================================
+Country Picker
+========================================== -->
+
+<div class="nv-form-group">
+
+<label
+class="nv-label">
+
+Pays
+
+</label>
 
 <div
+
 id="selectedCountry"
-class="selected-country">
+
+class="nv-input nv-country-selector"
+
+tabindex="0">
+
+<span
+id="selectedCountryFlag">
+
+🌍
+
+</span>
+
+<span
+id="selectedCountryName">
 
 Choisissez votre pays
 
-</div>
+</span>
 
-<div
-id="countryDropdown"
-class="country-dropdown">
+<i class="fa-solid fa-chevron-down"></i>
+
+</div>
 
 <input
 
-id="countryInput"
+type="hidden"
+
+id="country"
+
+name="country"
+
+required>
+
+</div>
+
+
+<!-- ==========================================
+Country Modal
+========================================== -->
+
+<div
+
+id="countryModal"
+
+class="nv-modal-overlay">
+
+<div class="nv-modal nv-country-modal">
+
+<!-- Header -->
+
+<div class="nv-country-header">
+
+<h2>
+
+Choisissez votre pays
+
+</h2>
+
+<button
+
+type="button"
+
+id="closeCountryModal"
+
+class="nv-modal-close">
+
+<i class="fa-solid fa-xmark"></i>
+
+</button>
+
+</div>
+
+<!-- Search -->
+
+<div class="nv-country-search">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
 
 type="text"
 
-placeholder="🔍 Rechercher un pays..."
+id="countrySearch"
+
+placeholder="Rechercher un pays..."
 
 autocomplete="off">
 
-<div id="countryList"></div>
+</div>
+
+<!-- Countries -->
+
+<div
+
+id="countryList"
+
+class="nv-country-list">
+
+<!-- Généré en JavaScript -->
 
 </div>
 
 </div>
 
-<input
-type="hidden"
-id="country"
-name="country">
+</div>
 
 <!-- Language -->
 
@@ -1991,7 +2078,10 @@ signupForm.addEventListener(
                 form.email,
                 form.password
             );
-
+            sessionStorage.setItem(
+    "pendingVerificationEmail",
+    form.email
+);
             if(error){
 
                 throw error;
@@ -2163,22 +2253,23 @@ resendButton.addEventListener(
 
         try{
 
-            const user =
-            await getUser();
+            const email =
 
-            if(!user){
+            sessionStorage.getItem(
+                "pendingVerificationEmail"
+            );
+
+            if(!email){
 
                 throw new Error(
-                    "Reconnectez-vous pour renvoyer l'e-mail de confirmation."
+                    "Impossible de retrouver l'adresse e-mail."
                 );
 
             }
 
             const {
                 error
-            } = await resendVerification(
-                user.email
-            );
+            } = await resendVerification(email);
 
             if(error){
 
@@ -2186,23 +2277,23 @@ resendButton.addEventListener(
 
             }
 
+            verifyMessage.textContent =
+            "Un nouvel e-mail de confirmation a été envoyé.";
+
             verifyMessage.classList.add(
                 "show"
             );
-
-            verifyMessage.textContent =
-            "Un nouvel e-mail de confirmation a été envoyé.";
 
         }
 
         catch(error){
 
+            verifyMessage.textContent =
+            error.message;
+
             verifyMessage.classList.add(
                 "show"
             );
-
-            verifyMessage.textContent =
-            error.message;
 
         }
 
@@ -2215,8 +2306,6 @@ resendButton.addEventListener(
     }
 
 );
-
-
 // ==========================================
 // Input Events
 // ==========================================
