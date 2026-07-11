@@ -512,9 +512,14 @@ Accessibility
     z-index:9999;
 }
 
+/* CORRECTION CSS DU MODAL - Force l'apparition correcte du conteneur et du modal interne */
 .nv-modal-overlay.active{
-    display:flex;
+    display:flex !important;
 }
+.nv-modal-overlay.active .nv-modal{
+    display:block !important;
+}
+
 #selectedCountry * {
     pointer-events: none;
 }
@@ -736,6 +741,9 @@ const passwordInput = document.getElementById("password");
 const confirmPasswordInput = document.getElementById("confirmPassword");
 
 const selectedCountryBox = document.getElementById("selectedCountry");
+const selectedCountryFlag = document.getElementById("selectedCountryFlag");
+const selectedCountryName = document.getElementById("selectedCountryName");
+
 const countrySearch = document.getElementById("countrySearch");
 const countryList = document.getElementById("countryList");
 const countryModal = document.getElementById("countryModal");
@@ -826,13 +834,12 @@ function renderCountries(search = "") {
 
 function selectCountry(country) {
     selectedCountry = country;
-    if (selectedCountryBox) {
-        selectedCountryBox.innerHTML = `
-            <span>${country.flag}</span>
-            <span>${country.name}</span>
-        `;
-        selectedCountryBox.classList.add("selected");
-    }
+    
+    // CORRECTION ICI : On met à jour précisément les enfants sans écraser la flèche
+    if (selectedCountryFlag) selectedCountryFlag.innerHTML = country.flag;
+    if (selectedCountryName) selectedCountryName.textContent = country.name;
+    if (selectedCountryBox) selectedCountryBox.classList.add("selected");
+    
     if (countryInput) countryInput.value = country.name;
     if (countrySearch) countrySearch.value = "";
     if (countryModal) countryModal.classList.remove("active");
@@ -878,7 +885,7 @@ if (countrySearch) {
     });
 }
 
-// Initialisation de la liste au chargement
+// Initialisation au chargement
 renderCountries();
 
 // ==========================================
@@ -1004,13 +1011,10 @@ if (signupForm) {
             showLoader();
             buttonLoading(signupButton, true);
 
-            // CORRECTION CLÉ : Arrêt immédiat si le pseudo est déjà pris
             const exists = await usernameExists(form.username);
             if (exists) {
                 showError("Ce nom d'utilisateur est déjà utilisé.");
                 if (usernameInput) usernameInput.focus();
-                
-                // On sort de la fonction et on rétablit l'UI dans le bloc finally
                 return; 
             }
 
@@ -1074,7 +1078,6 @@ function openVerifyModal(status = "sent") {
     }
 }
 
-// Rendu disponible globalement au besoin
 window.closeVerifyModal = function() {
     if (verifyModal) verifyModal.classList.remove("active");
 };
@@ -1117,6 +1120,5 @@ if (resendButton) {
     });
 }
 </script>
-    
 </body>
 </html>
