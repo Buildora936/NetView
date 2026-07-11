@@ -1558,11 +1558,9 @@ document.getElementById("countryList");
 const countryModal =
 document.getElementById("countryModal");
 
-closeCountryModal.addEventListener("click",()=>{
+  const closeCountryModal =
+document.getElementById("closeCountryModal");
 
-    countryModal.classList.remove("active");
-
-});
 // Password Buttons
 
 const togglePassword =
@@ -1587,6 +1585,10 @@ document.getElementById("verifyMessage");
 
 const resendButton =
 document.getElementById("resendButton");
+
+  closeCountryModal.addEventListener("click",()=>{
+
+    countryModal.classList.remove("active");
 
   console.log(selectedCountryBox);
 console.log(countryModal);
