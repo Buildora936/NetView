@@ -1549,21 +1549,23 @@ document.getElementById("confirmPassword");
 const selectedCountryBox =
 document.getElementById("selectedCountry");
 
-const countryDropdown =
-document.getElementById("countryDropdown");
-
 const countrySearch =
-document.getElementById("countryInput");
-
+document.getElementById("countrySearch");
+  
 const countryList =
 document.getElementById("countryList");
 
 const countryModal =
 document.getElementById("countryModal");
 
-const closeCountryModal =
+  const closeCountryModal =
 document.getElementById("closeCountryModal");
+  
+closeCountryModal.addEventListener("click",()=>{
 
+    countryModal.classList.remove("active");
+
+});
 // Password Buttons
 
 const togglePassword =
@@ -1589,6 +1591,10 @@ document.getElementById("verifyMessage");
 const resendButton =
 document.getElementById("resendButton");
 
+  console.log(selectedCountryBox);
+console.log(countryModal);
+console.log(countrySearch);
+console.log(closeCountryModal);
 
 // ==========================================
 // Error Helpers
@@ -1791,42 +1797,8 @@ document.addEventListener("keydown",(event)=>{
     }
 
 });
-        renderCountries(
-            countrySearch.value
-        );
 
-        countrySearch.focus();
 
-    }
-);
-
-countrySearch.addEventListener(
-    "input",
-    ()=>{
-
-        renderCountries(
-            countrySearch.value
-        );
-
-    }
-);
-
-document.addEventListener(
-    "click",
-    event=>{
-
-        if(
-            !event.target.closest(".country-picker")
-        ){
-
-            countryDropdown.classList.remove(
-                "active"
-            );
-
-        }
-
-    }
-);
 
 renderCountries();
 
