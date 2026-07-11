@@ -1360,21 +1360,15 @@ Renvoyer l'e-mail
 </button>
       
        
-
+    
     </div>
-
-</div>
 <script type="module">
 
 // ==========================================
 // NetView
 // Signup
-// Part 1/5
+// Part 1/4
 // Imports
-// Variables
-// DOM
-// Password Visibility
-// Error Helpers
 // ==========================================
 
 import {
@@ -1405,136 +1399,111 @@ let submitting = false;
 
 let selectedCountry = null;
 
+
 // ==========================================
-// Form Elements
+// DOM
 // ==========================================
+
+// Form
 
 const signupForm =
-document.getElementById(
-    "signupForm"
-);
+document.getElementById("signupForm");
 
 const signupButton =
-document.getElementById(
-    "signupButton"
-);
+document.getElementById("signupButton");
 
 const signupError =
-document.getElementById(
-    "signupError"
-);
+document.getElementById("signupError");
 
-// ==========================================
 // Inputs
-// ==========================================
 
 const usernameInput =
-document.getElementById(
-    "username"
-);
+document.getElementById("username");
 
 const displayNameInput =
-document.getElementById(
-    "displayName"
-);
+document.getElementById("displayName");
 
 const emailInput =
-document.getElementById(
-    "email"
-);
+document.getElementById("email");
 
 const countryInput =
-document.getElementById(
-    "country"
-);
+document.getElementById("country");
 
 const languageInput =
-document.getElementById(
-    "language"
-);
+document.getElementById("language");
 
 const passwordInput =
-document.getElementById(
-    "password"
-);
+document.getElementById("password");
 
 const confirmPasswordInput =
-document.getElementById(
-    "confirmPassword"
-);
+document.getElementById("confirmPassword");
 
-// ==========================================
 // Country Picker
-// ==========================================
 
 const selectedCountryBox =
-document.getElementById(
-    "selectedCountry"
-);
+document.getElementById("selectedCountry");
 
 const countryDropdown =
-document.getElementById(
-    "countryDropdown"
-);
+document.getElementById("countryDropdown");
 
 const countrySearch =
-document.getElementById(
-    "countryInput"
-);
+document.getElementById("countryInput");
 
 const countryList =
-document.getElementById(
-    "countryList"
-);
+document.getElementById("countryList");
 
-// ==========================================
-// Modal
-// ==========================================
-
-const verifyModal =
-document.getElementById(
-    "verifyModal"
-);
-
-const verifyTitle =
-document.getElementById(
-    "verifyTitle"
-);
-
-const verifyText =
-document.getElementById(
-    "verifyText"
-);
-
-const verifyMessage =
-document.getElementById(
-    "verifyMessage"
-);
-
-const resendButton =
-document.getElementById(
-    "resendButton"
-);
-
-// ==========================================
 // Password Buttons
-// ==========================================
 
 const togglePassword =
-document.getElementById(
-    "togglePassword"
-);
+document.getElementById("togglePassword");
 
 const toggleConfirmPassword =
-document.getElementById(
-    "toggleConfirmPassword"
-);
+document.getElementById("toggleConfirmPassword");
+
+// Verification Modal
+
+const verifyModal =
+document.getElementById("verifyModal");
+
+const verifyTitle =
+document.getElementById("verifyTitle");
+
+const verifyText =
+document.getElementById("verifyText");
+
+const verifyMessage =
+document.getElementById("verifyMessage");
+
+const resendButton =
+document.getElementById("resendButton");
+
 
 // ==========================================
-// Password Visibility
+// Error Helpers
 // ==========================================
 
-function toggleInputPassword(
+function showError(message){
+
+    signupError.textContent = message;
+
+    signupError.classList.add("show");
+
+}
+
+function clearError(){
+
+    signupError.textContent = "";
+
+    signupError.classList.remove("show");
+
+}
+
+
+// ==========================================
+// Password Toggle
+// ==========================================
+
+function togglePasswordVisibility(
     input,
     button
 ){
@@ -1549,9 +1518,7 @@ function toggleInputPassword(
 
     button.innerHTML =
     hidden
-
     ? '<i class="fa-regular fa-eye-slash"></i>'
-
     : '<i class="fa-regular fa-eye"></i>';
 
 }
@@ -1560,7 +1527,7 @@ togglePassword.addEventListener(
     "click",
     ()=>{
 
-        toggleInputPassword(
+        togglePasswordVisibility(
             passwordInput,
             togglePassword
         );
@@ -1572,7 +1539,7 @@ toggleConfirmPassword.addEventListener(
     "click",
     ()=>{
 
-        toggleInputPassword(
+        togglePasswordVisibility(
             confirmPasswordInput,
             toggleConfirmPassword
         );
@@ -1580,462 +1547,30 @@ toggleConfirmPassword.addEventListener(
     }
 );
 
-// ==========================================
-// Error Helpers
-// ==========================================
-
-function showError(message){
-
-    signupError.textContent =
-    message;
-
-    signupError.classList.add(
-        "show"
-    );
-
-}
-
-function clearError(){
-
-    signupError.textContent = "";
-
-    signupError.classList.remove(
-        "show"
-    );
-
-}
 
 // ==========================================
-// End Part 1/5
-// ==========================================
-
-
-// ==========================================
-// NetView
-// Signup
-// Part 2/5
-// Validation
-// Username
-// Signup
-// Profile
-// ==========================================
-
-// ==========================================
-// Username Exists
-// ==========================================
-
-async function usernameExists(username){
-
-    const {
-        data,
-        error
-    } = await supabase
-
-    .from("profiles")
-
-    .select("id")
-
-    .eq("username", username)
-
-    .limit(1);
-
-    if(error){
-
-        throw error;
-
-    }
-
-    return data.length > 0;
-
-}
-
-// ==========================================
-// Open Verify Modal
-// ==========================================
-
-function openVerifyModal(){
-
-    verifyTitle.textContent =
-    "Vérifiez votre adresse e-mail";
-
-    verifyText.textContent =
-    "Un e-mail de confirmation vient d'être envoyé à votre adresse. Ouvrez votre boîte de réception puis cliquez sur le lien reçu pour activer définitivement votre compte NetView.";
-
-    verifyMessage.textContent = "";
-
-    resendButton.style.display =
-    "inline-flex";
-
-    verifyModal.classList.add(
-        "active"
-    );
-
-}
-
-// ==========================================
-// Signup Submit
-// ==========================================
-
-signupForm.addEventListener(
-
-"submit",
-
-async(event)=>{
-
-event.preventDefault();
-
-if(submitting){
-
-    return;
-
-}
-
-clearError();
-
-// ==========================================
-// Values
-// ==========================================
-
-const username =
-usernameInput.value
-.trim()
-.toLowerCase();
-
-const displayName =
-displayNameInput.value
-.trim();
-
-const email =
-emailInput.value
-.trim()
-.toLowerCase();
-
-const country =
-countryInput.value;
-
-const language =
-languageInput.value;
-
-const password =
-passwordInput.value;
-
-const confirmPassword =
-confirmPasswordInput.value;
-
-// ==========================================
-// Validation
-// ==========================================
-
-if(username===""){
-
-    showError(
-        "Veuillez saisir un nom d'utilisateur."
-    );
-
-    usernameInput.focus();
-
-    return;
-
-}
-
-if(username.length<3){
-
-    showError(
-        "Le nom d'utilisateur doit contenir au moins 3 caractères."
-    );
-
-    usernameInput.focus();
-
-    return;
-
-}
-
-if(!/^[a-z0-9._]+$/.test(username)){
-
-    showError(
-        "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres, des points et des tirets bas."
-    );
-
-    usernameInput.focus();
-
-    return;
-
-}
-
-if(displayName===""){
-
-    showError(
-        "Veuillez saisir votre nom."
-    );
-
-    displayNameInput.focus();
-
-    return;
-
-}
-
-if(email===""){
-
-    showError(
-        "Veuillez saisir une adresse e-mail."
-    );
-
-    emailInput.focus();
-
-    return;
-
-}
-
-if(country===""){
-
-    showError(
-        "Veuillez sélectionner votre pays."
-    );
-
-    return;
-
-}
-
-if(language===""){
-
-    showError(
-        "Veuillez sélectionner une langue."
-    );
-
-    languageInput.focus();
-
-    return;
-
-}
-
-if(password.length<8){
-
-    showError(
-        "Le mot de passe doit contenir au moins 8 caractères."
-    );
-
-    passwordInput.focus();
-
-    return;
-
-}
-
-if(password!==confirmPassword){
-
-    showError(
-        "Les mots de passe ne correspondent pas."
-    );
-
-    confirmPasswordInput.focus();
-
-    return;
-
-}
-
-// ==========================================
-// Signup
-// ==========================================
-
-try{
-
-    submitting=true;
-
-    showLoader();
-
-    buttonLoading(
-        signupButton,
-        true
-    );
-
-    if(await usernameExists(username)){
-
-        showError(
-            "Ce nom d'utilisateur est déjà utilisé."
-        );
-
-        usernameInput.focus();
-
-        return;
-
-    }
-
-    const {
-
-        data,
-
-        error
-
-    } = await signUp(
-
-        email,
-
-        password
-
-    );
-
-    if(error){
-
-        throw error;
-
-    }
-
-    if(!data.user){
-
-        throw new Error(
-
-            "Impossible de créer le compte."
-
-        );
-
-    }
-
-// ==========================================
-// Update Profile
-// ==========================================
-
-    const {
-
-        error:profileError
-
-    } = await supabase
-
-    .from("profiles")
-
-    .update({
-
-        username,
-
-        display_name:
-        displayName,
-
-        country,
-
-        language
-
-    })
-
-    .eq(
-
-        "id",
-
-        data.user.id
-
-    );
-
-    if(profileError){
-
-        throw profileError;
-
-    }
-
-// ==========================================
-// Success
-// ==========================================
-
-    history.replaceState(
-
-        {},
-
-        "",
-
-        "signup.html?status=sent"
-
-    );
-
-    openVerifyModal();
-
-}
-
-catch(error){
-
-    console.error(error);
-
-    let message =
-    "Impossible de créer le compte.";
-
-    if(error.message){
-
-        if(
-
-            error.message.includes(
-
-                "User already registered"
-
-            )
-
-        ){
-
-            message =
-            "Cette adresse e-mail est déjà utilisée.";
-
-        }
-
-        else{
-
-            message =
-            error.message;
-
-        }
-
-    }
-
-    showError(message);
-
-}
-
-finally{
-
-    submitting=false;
-
-    hideLoader();
-
-    buttonLoading(
-
-        signupButton,
-
-        false
-
-    );
-
-}
-
-});
-
-
-// ==========================================
-// NetView
-// Signup
-// Part 3/5
 // Country Picker
 // ==========================================
 
-// COUNTRIES est déjà importé dans la partie 1/5
-
-// ==========================================
-// Render Countries
-// ==========================================
-
-function renderCountries(search=""){
+function renderCountries(search = ""){
 
     countryList.innerHTML = "";
 
     const keyword =
-    search
-    .trim()
-    .toLowerCase();
+    search.trim().toLowerCase();
 
     const results =
     COUNTRIES.filter(country=>{
 
         return country.name
-        .toLowerCase()
-        .includes(keyword);
+            .toLowerCase()
+            .includes(keyword);
 
     });
 
-    if(results.length===0){
+    if(results.length === 0){
 
-        countryList.innerHTML=
+        countryList.innerHTML =
 
         `
         <div class="country-empty">
@@ -2088,141 +1623,471 @@ function renderCountries(search=""){
 
 }
 
-// ==========================================
-// Select Country
-// ==========================================
-
 function selectCountry(country){
 
-    selectedCountry =
-    country;
+    selectedCountry = country;
 
     selectedCountryBox.innerHTML =
 
     `
-    <span>
+    <span>${country.flag}</span>
 
-        ${country.flag}
-
-    </span>
-
-    <span>
-
-        ${country.name}
-
-    </span>
+    <span>${country.name}</span>
     `;
+
+    selectedCountryBox.classList.add(
+        "selected"
+    );
 
     countryInput.value =
     country.name;
+
+    countrySearch.value = "";
 
     countryDropdown.classList.remove(
         "active"
     );
 
-    countrySearch.value="";
-
 }
 
-// ==========================================
-// Open Picker
-// ==========================================
-
 selectedCountryBox.addEventListener(
-
     "click",
-
     ()=>{
 
         countryDropdown.classList.toggle(
             "active"
         );
 
+        renderCountries(
+            countrySearch.value
+        );
+
         countrySearch.focus();
 
-        renderCountries();
-
     }
-
 );
 
-// ==========================================
-// Search
-// ==========================================
-
 countrySearch.addEventListener(
-
     "input",
-
     ()=>{
 
         renderCountries(
-
             countrySearch.value
-
         );
 
     }
-
 );
 
-// ==========================================
-// Close Picker
-// ==========================================
-
 document.addEventListener(
-
     "click",
-
     event=>{
 
         if(
-
-            !event.target.closest(
-
-                ".country-picker"
-
-            )
-
+            !event.target.closest(".country-picker")
         ){
 
             countryDropdown.classList.remove(
-
                 "active"
-
             );
 
         }
 
     }
-
 );
-
-// ==========================================
-// Initial Render
-// ==========================================
 
 renderCountries();
 
+// ==========================================
+// Fin de la première partie
+// ==========================================
 
+// ==========================================
+// Validation
+// ==========================================
+
+function validateForm(){
+
+    clearError();
+
+    const username =
+    usernameInput.value
+    .trim()
+    .toLowerCase();
+
+    const displayName =
+    displayNameInput.value
+    .trim();
+
+    const email =
+    emailInput.value
+    .trim()
+    .toLowerCase();
+
+    const country =
+    countryInput.value;
+
+    const language =
+    languageInput.value;
+
+    const password =
+    passwordInput.value;
+
+    const confirmPassword =
+    confirmPasswordInput.value;
+
+    if(username===""){
+
+        showError(
+            "Veuillez saisir un nom d'utilisateur."
+        );
+
+        usernameInput.focus();
+
+        return null;
+
+    }
+
+    if(username.length < 3){
+
+        showError(
+            "Le nom d'utilisateur doit contenir au moins 3 caractères."
+        );
+
+        usernameInput.focus();
+
+        return null;
+
+    }
+
+    if(username.length > 30){
+
+        showError(
+            "Le nom d'utilisateur est trop long."
+        );
+
+        usernameInput.focus();
+
+        return null;
+
+    }
+
+    if(!/^[a-z0-9._]+$/.test(username)){
+
+        showError(
+            "Le nom d'utilisateur contient des caractères non autorisés."
+        );
+
+        usernameInput.focus();
+
+        return null;
+
+    }
+
+    if(displayName===""){
+
+        showError(
+            "Veuillez saisir votre nom."
+        );
+
+        displayNameInput.focus();
+
+        return null;
+
+    }
+
+    if(email===""){
+
+        showError(
+            "Veuillez saisir une adresse e-mail."
+        );
+
+        emailInput.focus();
+
+        return null;
+
+    }
+
+    if(country===""){
+
+        showError(
+            "Veuillez sélectionner votre pays."
+        );
+
+        return null;
+
+    }
+
+    if(language===""){
+
+        showError(
+            "Veuillez sélectionner une langue."
+        );
+
+        languageInput.focus();
+
+        return null;
+
+    }
+
+    if(password.length < 8){
+
+        showError(
+            "Le mot de passe doit contenir au moins 8 caractères."
+        );
+
+        passwordInput.focus();
+
+        return null;
+
+    }
+
+    if(password !== confirmPassword){
+
+        showError(
+            "Les mots de passe ne correspondent pas."
+        );
+
+        confirmPasswordInput.focus();
+
+        return null;
+
+    }
+
+    return {
+        username,
+        displayName,
+        email,
+        country,
+        language,
+        password
+    };
+
+}
+
+// ==========================================
+// Username Check
+// ==========================================
+
+async function usernameExists(username){
+
+    const {
+        data,
+        error
+    } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", username)
+    .limit(1);
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data.length > 0;
+
+}
+
+// ==========================================
+// Update Profile
+// ==========================================
+
+async function updateProfile(userId, profile){
+
+    for(let i = 0; i < 5; i++){
+
+        const {
+            error
+        } = await supabase
+        .from("profiles")
+        .update({
+
+            username:
+            profile.username,
+
+            display_name:
+            profile.displayName,
+
+            country:
+            profile.country,
+
+            language:
+            profile.language
+
+        })
+        .eq("id", userId);
+
+        if(!error){
+
+            return;
+
+        }
+
+        await new Promise(resolve =>
+            setTimeout(resolve, 300)
+        );
+
+    }
+
+    throw new Error(
+        "Impossible de créer le profil."
+    );
+
+}
+
+// ==========================================
+// Signup
+// ==========================================
+
+signupForm.addEventListener(
+    "submit",
+    async(event)=>{
+
+        event.preventDefault();
+
+        if(submitting){
+
+            return;
+
+        }
+
+        const form =
+        validateForm();
+
+        if(!form){
+
+            return;
+
+        }
+
+        try{
+
+            submitting = true;
+
+            showLoader();
+
+            buttonLoading(
+                signupButton,
+                true
+            );
+
+            if(await usernameExists(form.username)){
+
+                showError(
+                    "Ce nom d'utilisateur est déjà utilisé."
+                );
+
+                usernameInput.focus();
+
+                return;
+
+            }
+
+            const {
+                data,
+                error
+            } = await signUp(
+                form.email,
+                form.password
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            if(!data.user){
+
+                throw new Error(
+                    "Impossible de créer le compte."
+                );
+
+            }
+
+            await updateProfile(
+                data.user.id,
+                form
+            );
+
+            history.replaceState(
+                {},
+                "",
+                "signup.html?status=sent"
+            );
+
+            openVerifyModal("sent");
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            let message =
+            "Impossible de créer le compte.";
+
+            if(
+                error.message?.includes(
+                    "User already registered"
+                )
+            ){
+
+                message =
+                "Cette adresse e-mail est déjà utilisée.";
+
+            }else{
+
+                message =
+                error.message;
+
+            }
+
+            showError(message);
+
+        }
+
+        finally{
+
+            submitting = false;
+
+            hideLoader();
+
+            buttonLoading(
+                signupButton,
+                false
+            );
+
+        }
+
+    }
+);
 // ==========================================
 // NetView
 // Signup
-// Part 4/5
+// Part 4/4
+// Email Verification
+// Events
+// Initialization
+// ==========================================
+
+
+// ==========================================
 // Verification Modal
 // ==========================================
 
-// ==========================================
-// Open Modal
-// ==========================================
+function openVerifyModal(status = "sent"){
 
-function openVerifyModal(status="sent"){
+    verifyMessage.textContent = "";
+
+    verifyMessage.classList.remove(
+        "show"
+    );
 
     verifyModal.classList.add(
         "active"
     );
-
-    verifyMessage.textContent="";
 
     switch(status){
 
@@ -2232,7 +2097,7 @@ function openVerifyModal(status="sent"){
             "Vérifiez votre adresse e-mail";
 
             verifyText.textContent =
-            "Un e-mail de confirmation vient d'être envoyé. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer votre compte NetView.";
+            "Un e-mail de confirmation vient d'être envoyé. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer définitivement votre compte NetView.";
 
             resendButton.style.display =
             "inline-flex";
@@ -2258,7 +2123,7 @@ function openVerifyModal(status="sent"){
             "Confirmation impossible";
 
             verifyText.textContent =
-            "Le lien de confirmation est invalide ou a déjà été utilisé.";
+            "Le lien est invalide ou a déjà été utilisé.";
 
             resendButton.style.display =
             "inline-flex";
@@ -2269,10 +2134,6 @@ function openVerifyModal(status="sent"){
 
 }
 
-// ==========================================
-// Close Modal
-// ==========================================
-
 function closeVerifyModal(){
 
     verifyModal.classList.remove(
@@ -2281,36 +2142,6 @@ function closeVerifyModal(){
 
 }
 
-// ==========================================
-// URL Status
-// signup.html?status=expired
-// signup.html?status=failed
-// signup.html?status=sent
-// ==========================================
-
-const params =
-new URLSearchParams(
-    window.location.search
-);
-
-const status =
-params.get(
-    "status"
-);
-
-if(
-
-    status==="sent" ||
-
-    status==="expired" ||
-
-    status==="failed"
-
-){
-
-    openVerifyModal(status);
-
-}
 
 // ==========================================
 // Resend Email
@@ -2318,90 +2149,66 @@ if(
 
 resendButton.addEventListener(
 
-"click",
-
-async()=>{
-
-    resendButton.disabled = true;
-
-    verifyMessage.classList.remove(
-        "show"
-    );
-
-    verifyMessage.textContent = "";
-
-    try{
-
-        const user =
-        await getUser();
-
-        if(!user){
-
-            throw new Error(
-                "Veuillez vous reconnecter."
-            );
-
-        }
-
-        const {
-            error
-        } =
-        await resendVerification(
-            user.email
-        );
-
-        if(error){
-
-            throw error;
-
-        }
-
-        verifyMessage.classList.add(
-            "show"
-        );
-
-        verifyMessage.textContent =
-        "Un nouvel e-mail de confirmation a été envoyé.";
-
-    }
-
-    catch(error){
-
-        verifyMessage.classList.add(
-            "show"
-        );
-
-        verifyMessage.textContent =
-        error.message;
-
-    }
-
-    finally{
-
-        resendButton.disabled = false;
-
-    }
-
-});
-
-// ==========================================
-// Close Modal
-// Click Outside
-// ==========================================
-
-verifyModal.addEventListener(
-
     "click",
 
-    event=>{
+    async()=>{
 
-        if(
+        resendButton.disabled = true;
 
-            event.target===verifyModal
+        verifyMessage.textContent = "";
 
-        ){
+        verifyMessage.classList.remove(
+            "show"
+        );
 
-            closeVerifyModal();
+        try{
+
+            const user =
+            await getUser();
+
+            if(!user){
+
+                throw new Error(
+                    "Reconnectez-vous pour renvoyer l'e-mail de confirmation."
+                );
+
+            }
+
+            const {
+                error
+            } = await resendVerification(
+                user.email
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            verifyMessage.classList.add(
+                "show"
+            );
+
+            verifyMessage.textContent =
+            "Un nouvel e-mail de confirmation a été envoyé.";
+
+        }
+
+        catch(error){
+
+            verifyMessage.classList.add(
+                "show"
+            );
+
+            verifyMessage.textContent =
+            error.message;
+
+        }
+
+        finally{
+
+            resendButton.disabled = false;
 
         }
 
@@ -2410,53 +2217,8 @@ verifyModal.addEventListener(
 );
 
 
-
 // ==========================================
-// NetView
-// Signup
-// Part 5/5
-// Initialization
-// Cleanup
-// Keyboard
-// Events
-// ==========================================
-
-
-// ==========================================
-// Initial State
-// ==========================================
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-()=>{
-
-
-    clearError();
-
-
-    if(countryInput.value){
-
-        selectedCountryBox.classList.add(
-            "selected"
-        );
-
-    }
-
-
-    console.log(
-        "Signup Ready"
-    );
-
-
-}
-
-);
-
-
-// ==========================================
-// Clear Errors While Typing
+// Input Events
 // ==========================================
 
 [
@@ -2465,9 +2227,7 @@ document.addEventListener(
     emailInput,
     passwordInput,
     confirmPasswordInput
-
 ].forEach(input=>{
-
 
     input.addEventListener(
 
@@ -2481,141 +2241,105 @@ document.addEventListener(
 
     );
 
-
 });
 
 
 // ==========================================
-// Keyboard Shortcuts
+// Keyboard Events
 // ==========================================
 
 document.addEventListener(
 
-"keydown",
+    "keydown",
 
-(event)=>{
+    event=>{
 
+        if(event.key==="Escape"){
 
-    // Escape closes country picker
+            countryDropdown.classList.remove(
+                "active"
+            );
 
-    if(
-        event.key==="Escape"
-    ){
+            closeVerifyModal();
 
-        countryDropdown.classList.remove(
-            "active"
-        );
+        }
 
+        if(
 
-        verifyModal.classList.remove(
-            "active"
-        );
+            event.key==="Enter" &&
 
-    }
+            document.activeElement===countrySearch
 
+        ){
 
-    // Enter inside country search
+            event.preventDefault();
 
-    if(
+            const firstCountry =
+            countryList.querySelector(
+                ".country-item"
+            );
 
-        event.key==="Enter" &&
+            if(firstCountry){
 
-        document.activeElement===countrySearch
+                firstCountry.click();
 
-    ){
-
-        event.preventDefault();
-
-
-        const firstCountry =
-        countryList.querySelector(
-            ".country-item"
-        );
-
-
-        if(firstCountry){
-
-            firstCountry.click();
+            }
 
         }
 
     }
 
-
-}
-
 );
 
 
 // ==========================================
-// Outside Country Picker Click
+// Outside Click
 // ==========================================
 
 document.addEventListener(
 
-"click",
+    "click",
 
-(event)=>{
+    event=>{
 
+        if(
 
-    const picker =
-    event.target.closest(
-        ".country-picker"
-    );
+            !event.target.closest(
+                ".country-picker"
+            )
 
+        ){
 
-    if(!picker){
+            countryDropdown.classList.remove(
+                "active"
+            );
 
-        countryDropdown.classList.remove(
-            "active"
-        );
+        }
 
     }
 
-
-}
-
 );
-
-
-// ==========================================
-// Outside Modal Click
-// ==========================================
 
 verifyModal.addEventListener(
 
-"click",
+    "click",
 
-(event)=>{
+    event=>{
 
+        if(event.target===verifyModal){
 
-    if(
+            closeVerifyModal();
 
-        event.target===verifyModal
-
-    ){
-
-        verifyModal.classList.remove(
-            "active"
-        );
+        }
 
     }
 
-
-}
-
 );
-
-
-// ==========================================
-// Prevent Modal Closing
-// ==========================================
 
 const verifyBox =
 verifyModal.querySelector(
     ".nv-modal"
 );
-
 
 if(verifyBox){
 
@@ -2635,34 +2359,54 @@ if(verifyBox){
 
 
 // ==========================================
-// Country Search Focus
+// Initialization
 // ==========================================
 
-selectedCountryBox.addEventListener(
+document.addEventListener(
 
-"focus",
+    "DOMContentLoaded",
 
-()=>{
+    ()=>{
 
-    countryDropdown.classList.add(
-        "active"
-    );
+        clearError();
 
+        renderCountries();
 
-}
+        const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+        const status =
+        params.get("status");
+
+        if(
+
+            status==="sent" ||
+
+            status==="expired" ||
+
+            status==="failed"
+
+        ){
+
+            openVerifyModal(status);
+
+        }
+
+        console.log(
+            "NetView Signup Ready"
+        );
+
+    }
 
 );
 
-
 // ==========================================
-// Final Ready
+// End Signup
 // ==========================================
-
-console.log(
-    "NetView Signup Ready"
-);
-
 
 </script>
+
 </body>
 </html>
