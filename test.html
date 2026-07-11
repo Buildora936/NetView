@@ -751,20 +751,27 @@ const resendButton = document.getElementById("resendButton");
 // ==========================================
 // Error Helpers
 // ==========================================
-function showError(message){
-    signupError.textContent = message;
-    signupError.classList.add("show");
+function showError(message) {
+    if (signupError) {
+        signupError.textContent = message;
+        signupError.classList.add("show");
+    } else {
+        console.error("Erreur app: " + message);
+    }
 }
 
-function clearError(){
-    signupError.textContent = "";
-    signupError.classList.remove("show");
+function clearError() {
+    if (signupError) {
+        signupError.textContent = "";
+        signupError.classList.remove("show");
+    }
 }
 
 // ==========================================
 // Password Toggle
 // ==========================================
-function togglePasswordVisibility(input, button){
+function togglePasswordVisibility(input, button) {
+    if (!input || !button) return;
     const hidden = input.type === "password";
     input.type = hidden ? "text" : "password";
     button.innerHTML = hidden 
@@ -772,25 +779,31 @@ function togglePasswordVisibility(input, button){
         : '<i class="fa-regular fa-eye"></i>';
 }
 
-togglePassword.addEventListener("click", () => {
-    togglePasswordVisibility(passwordInput, togglePassword);
-});
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener("click", () => {
+        togglePasswordVisibility(passwordInput, togglePassword);
+    });
+}
 
-toggleConfirmPassword.addEventListener("click", () => {
-    togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
-});
+if (toggleConfirmPassword && confirmPasswordInput) {
+    toggleConfirmPassword.addEventListener("click", () => {
+        togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+    });
+}
 
 // ==========================================
 // Country Picker
 // ==========================================
-function renderCountries(search = ""){
+function renderCountries(search = "") {
+    if (!countryList) return;
     countryList.innerHTML = "";
     const keyword = search.trim().toLowerCase();
-    const results = COUNTRIES.filter(country => {
+    
+    const results = COUNTRIES ? COUNTRIES.filter(country => {
         return country.name.toLowerCase().includes(keyword);
-    });
+    }) : [];
 
-    if(results.length === 0){
+    if (results.length === 0) {
         countryList.innerHTML = `<div class="country-empty">Aucun pays trouvé</div>`;
         return;
     }
@@ -809,54 +822,74 @@ function renderCountries(search = ""){
     });
 }
 
-function selectCountry(country){
+function selectCountry(country) {
     selectedCountry = country;
-    selectedCountryBox.innerHTML = `
-        <span>${country.flag}</span>
-        <span>${country.name}</span>
-    `;
-    selectedCountryBox.classList.add("selected");
-    countryInput.value = country.name;
-    countrySearch.value = "";
-    countryModal.classList.remove("active");
+    if (selectedCountryBox) {
+        selectedCountryBox.innerHTML = `
+            <span>${country.flag}</span>
+            <span>${country.name}</span>
+        `;
+        selectedCountryBox.classList.add("selected");
+    }
+    if (countryInput) countryInput.value = country.name;
+    if (countrySearch) countrySearch.value = "";
+    if (countryModal) countryModal.classList.remove("active");
 }
 
-selectedCountryBox.addEventListener("click", () => {
-    countryModal.classList.add("active");
-    renderCountries();
-    setTimeout(() => {
-        countrySearch.focus();
-    }, 100);
-});
+if (selectedCountryBox && countryModal) {
+    selectedCountryBox.addEventListener("click", () => {
+        countryModal.classList.add("active");
+        renderCountries();
+        if (countrySearch) {
+            setTimeout(() => {
+                countrySearch.focus();
+            }, 100);
+        }
+    });
+}
 
-countryModal.addEventListener("click", (event) => {
-    if(event.target === countryModal){
+if (countryModal) {
+    countryModal.addEventListener("click", (event) => {
+        if (event.target === countryModal) {
+            countryModal.classList.remove("active");
+        }
+    });
+}
+
+if (closeCountryModal && countryModal) {
+    closeCountryModal.addEventListener("click", () => {
         countryModal.classList.remove("active");
-    }
-});
-
-closeCountryModal.addEventListener("click", () => {
-    countryModal.classList.remove("active");
-});
+    });
+}
       
-document.addEventListener("keydown", (event) => {
-    if(event.key === "Escape"){
-        countryModal.classList.remove("active");
-    }
-});
+if (countryModal) {
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            countryModal.classList.remove("active");
+        }
+    });
+}
 
-// Écouteur pour la recherche en temps réel
-countrySearch.addEventListener("input", (e) => {
-    renderCountries(e.target.value);
-});
+if (countrySearch) {
+    countrySearch.addEventListener("input", (e) => {
+        renderCountries(e.target.value);
+    });
+}
 
+// Initialisation de la liste au chargement
 renderCountries();
 
 // ==========================================
 // Validation
 // ==========================================
-function validateForm(){
+function validateForm() {
     clearError();
+    
+    if (!usernameInput || !displayNameInput || !emailInput || !countryInput || !languageInput || !passwordInput || !confirmPasswordInput) {
+        showError("Erreur interne : Éléments du formulaire manquants.");
+        return null;
+    }
+
     const username = usernameInput.value.trim().toLowerCase();
     const displayName = displayNameInput.value.trim();
     const email = emailInput.value.trim().toLowerCase();
@@ -865,51 +898,51 @@ function validateForm(){
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
-    if(username === ""){
+    if (username === "") {
         showError("Veuillez saisir un nom d'utilisateur.");
         usernameInput.focus();
         return null;
     }
-    if(username.length < 3){
+    if (username.length < 3) {
         showError("Le nom d'utilisateur doit contenir au moins 3 caractères.");
         usernameInput.focus();
         return null;
     }
-    if(username.length > 30){
+    if (username.length > 30) {
         showError("Le nom d'utilisateur est trop long.");
         usernameInput.focus();
         return null;
     }
-    if(!/^[a-z0-9._]+$/.test(username)){
+    if (!/^[a-z0-9._]+$/.test(username)) {
         showError("Le nom d'utilisateur contient des caractères non autorisés.");
         usernameInput.focus();
         return null;
     }
-    if(displayName === ""){
+    if (displayName === "") {
         showError("Veuillez saisir votre nom.");
         displayNameInput.focus();
         return null;
     }
-    if(email === ""){
+    if (email === "") {
         showError("Veuillez saisir une adresse e-mail.");
         emailInput.focus();
         return null;
     }
-    if(country === ""){
+    if (country === "") {
         showError("Veuillez sélectionner votre pays.");
         return null;
     }
-    if(language === ""){
+    if (language === "") {
         showError("Veuillez sélectionner une langue.");
         languageInput.focus();
         return null;
     }
-    if(password.length < 8){
+    if (password.length < 8) {
         showError("Le mot de passe doit contenir au moins 8 caractères.");
         passwordInput.focus();
         return null;
     }
-    if(password !== confirmPassword){
+    if (password !== confirmPassword) {
         showError("Les mots de passe ne correspondent pas.");
         confirmPasswordInput.focus();
         return null;
@@ -921,22 +954,22 @@ function validateForm(){
 // ==========================================
 // Username Check
 // ==========================================
-async function usernameExists(username){
+async function usernameExists(username) {
     const { data, error } = await supabase
         .from("profiles")
         .select("id")
         .eq("username", username)
         .limit(1);
 
-    if(error) throw error;
-    return data.length > 0;
+    if (error) throw error;
+    return data && data.length > 0;
 }
 
 // ==========================================
 // Update Profile
 // ==========================================
-async function updateProfile(userId, profile){
-    for(let i = 0; i < 5; i++){
+async function updateProfile(userId, profile) {
+    for (let i = 0; i < 5; i++) {
         const { error } = await supabase
             .from("profiles")
             .update({
@@ -947,69 +980,80 @@ async function updateProfile(userId, profile){
             })
             .eq("id", userId);
 
-        if(!error) return;
+        if (!error) return;
         await new Promise(resolve => setTimeout(resolve, 300));
     }
-    throw new Error("Impossible de créer le profil.");
+    throw new Error("Impossible de configurer les détails du profil.");
 }
 
 // ==========================================
 // Signup Form Submission
 // ==========================================
-signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if(submitting) return;
+if (signupForm) {
+    signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (submitting) return;
 
-    const form = validateForm();
-    if(!form) return;
+        const form = validateForm();
+        if (!form) return;
 
-    try{
-        submitting = true;
-        showLoader();
-        buttonLoading(signupButton, true);
+        try {
+            submitting = true;
+            showLoader();
+            buttonLoading(signupButton, true);
 
-        if(await usernameExists(form.username)){
-            showError("Ce nom d'utilisateur est déjà utilisé.");
-            usernameInput.focus();
-            return;
+            // CORRECTION CLÉ : Arrêt immédiat si le pseudo est déjà pris
+            const exists = await usernameExists(form.username);
+            if (exists) {
+                showError("Ce nom d'utilisateur est déjà utilisé.");
+                if (usernameInput) usernameInput.focus();
+                
+                // On sort de la fonction et on rétablit l'UI dans le bloc finally
+                return; 
+            }
+
+            const { data, error } = await signUp(form.email, form.password);
+            sessionStorage.setItem("pendingVerificationEmail", form.email);
+
+            if (error) throw error;
+            if (!data || !data.user) throw new Error("Impossible de créer le compte.");
+
+            await updateProfile(data.user.id, form);
+
+            history.replaceState({}, "", "signup.html?status=sent");
+            openVerifyModal("sent");
+
+        } catch (error) {
+            console.error(error);
+            let message = "Impossible de créer le compte.";
+            if (error.message?.includes("User already registered")) {
+                message = "Cette adresse e-mail est déjà utilisée.";
+            } else {
+                message = error.message || message;
+            }
+            showError(message);
+        } finally {
+            submitting = false;
+            hideLoader();
+            buttonLoading(signupButton, false);
         }
-
-        const { data, error } = await signUp(form.email, form.password);
-        sessionStorage.setItem("pendingVerificationEmail", form.email);
-
-        if(error) throw error;
-        if(!data.user) throw new Error("Impossible de créer le compte.");
-
-        await updateProfile(data.user.id, form);
-
-        history.replaceState({}, "", "signup.html?status=sent");
-        openVerifyModal("sent");
-
-    }catch(error){
-        console.error(error);
-        let message = "Impossible de créer le compte.";
-        if(error.message?.includes("User already registered")){
-            message = "Cette adresse e-mail est déjà utilisée.";
-        }else{
-            message = error.message;
-        }
-        showError(message);
-    }finally{
-        submitting = false;
-        hideLoader();
-        buttonLoading(signupButton, false);
-    }
-});
+    });
+}
 
 // ==========================================
 // Verification Modal Control
 // ==========================================
-function openVerifyModal(status = "sent"){
-    verifyMessage.textContent = "";
-    verifyMessage.classList.remove("show");
+function openVerifyModal(status = "sent") {
+    if (!verifyModal || !verifyTitle || !verifyText || !resendButton) return;
+    
+    if (verifyMessage) {
+        verifyMessage.textContent = "";
+        verifyMessage.classList.remove("show");
+    }
+    
     verifyModal.classList.add("active");
 
-    switch(status){
+    switch (status) {
         case "sent":
             verifyTitle.textContent = "Vérifiez votre adresse e-mail";
             verifyText.textContent = "Un e-mail de confirmation vient d'être envoyé. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer définitivement votre compte NetView.";
@@ -1028,39 +1072,49 @@ function openVerifyModal(status = "sent"){
     }
 }
 
-function closeVerifyModal(){
-    verifyModal.classList.remove("active");
-}
+// Rendu disponible globalement au besoin
+window.closeVerifyModal = function() {
+    if (verifyModal) verifyModal.classList.remove("active");
+};
 
 // ==========================================
 // Resend Email Functionality
 // ==========================================
-resendButton.addEventListener("click", async () => {
-    resendButton.disabled = true;
-    verifyMessage.textContent = "";
-    verifyMessage.classList.remove("show");
-
-    try {
-        const email = sessionStorage.getItem("pendingVerificationEmail");
-        if (!email) {
-            throw new Error("Aucune adresse e-mail en attente trouvée.");
+if (resendButton) {
+    resendButton.addEventListener("click", async () => {
+        resendButton.disabled = true;
+        if (verifyMessage) {
+            verifyMessage.textContent = "";
+            verifyMessage.classList.remove("show");
         }
 
-        const { error } = await resendVerification(email);
-        if (error) throw error;
+        try {
+            const email = sessionStorage.getItem("pendingVerificationEmail");
+            if (!email) {
+                throw new Error("Aucune adresse e-mail en attente trouvée.");
+            }
 
-        verifyMessage.textContent = "Un nouveau lien a été envoyé avec succès !";
-        verifyMessage.classList.remove("error");
-        verifyMessage.classList.add("success", "show");
-    } catch (error) {
-        console.error(error);
-        verifyMessage.textContent = error.message || "Erreur lors du renvoi.";
-        verifyMessage.classList.remove("success");
-        verifyMessage.classList.add("error", "show");
-    } finally {
-        resendButton.disabled = false;
-    }
-});
+            const { error } = await resendVerification(email);
+            if (error) throw error;
+
+            if (verifyMessage) {
+                verifyMessage.textContent = "Un nouveau lien a été envoyé avec succès !";
+                verifyMessage.classList.remove("error");
+                verifyMessage.classList.add("success", "show");
+            }
+        } catch (error) {
+            console.error(error);
+            if (verifyMessage) {
+                verifyMessage.textContent = error.message || "Erreur lors du renvoi.";
+                verifyMessage.classList.remove("success");
+                verifyMessage.classList.add("error", "show");
+            }
+        } finally {
+            resendButton.disabled = false;
+        }
+    });
+}
 </script>
+    
 </body>
 </html>
