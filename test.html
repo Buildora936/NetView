@@ -576,25 +576,9 @@
     </div>
 
 
-// ==========================================
-// 9. Update NetView Profile
-// ==========================================
 
-// ==========================================
-// 10. Email Verification Modal
-// ==========================================
 
-// ==========================================
-// 11. Resend Verification Email
-// ==========================================
 
-// ==========================================
-// 12. Events
-// ==========================================
-
-// ==========================================
-// 13. Initialization
-// ==========================================
 <script>
     // ==========================================
 // 1. Imports
@@ -1115,4 +1099,419 @@ function validateForm(){
     return true;
 
 }
+// ==========================================
+// 7. Username Check
+// ==========================================
+
+async function usernameExists(username){
+
+    const {
+        data,
+        error
+    } = await supabase
+
+        .from("profiles")
+
+        .select("id")
+
+        .eq("username", username)
+
+        .limit(1);
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data.length > 0;
+
+}
+
+
+// ==========================================
+// 8. Signup (Supabase Auth)
+// ==========================================
+
+signupForm.addEventListener(
+
+    "submit",
+
+    async(event)=>{
+
+        event.preventDefault();
+
+        if(submitting){
+
+            return;
+
+        }
+
+        if(!validateForm()){
+
+            return;
+
+        }
+
+        try{
+
+            submitting = true;
+
+            showLoader();
+
+            buttonLoading(
+                signupButton,
+                true
+            );
+
+            const username =
+            usernameInput.value
+                .trim()
+                .toLowerCase();
+
+            if(await usernameExists(username)){
+
+                showError(
+                    "Ce nom d'utilisateur est déjà utilisé."
+                );
+
+                usernameInput.focus();
+
+                return;
+
+            }
+
+            const {
+                data,
+                error
+            } = await signUp(
+
+                emailInput.value
+                    .trim()
+                    .toLowerCase(),
+
+                passwordInput.value
+
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            if(!data.user){
+
+                throw new Error(
+                    "Impossible de créer le compte."
+                );
+
+            }
+
+            await updateProfile(
+                data.user.id
+            );
+
+            openVerificationModal();
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            let message =
+            "Impossible de créer le compte.";
+
+            if(
+                error.message?.includes(
+                    "User already registered"
+                )
+            ){
+
+                message =
+                "Cette adresse e-mail est déjà utilisée.";
+
+            }
+            else if(error.message){
+
+                message =
+                error.message;
+
+            }
+
+            showError(message);
+
+        }
+
+        finally{
+
+            submitting = false;
+
+            hideLoader();
+
+            buttonLoading(
+                signupButton,
+                false
+            );
+
+        }
+
+    }
+
+);
+// ==========================================
+// 9. Update NetView Profile
+// ==========================================
+
+async function updateProfile(userId){
+
+    const {
+
+        error
+
+    } = await supabase
+
+        .from("profiles")
+
+        .update({
+
+            username:
+
+                usernameInput.value
+                .trim()
+                .toLowerCase(),
+
+            display_name:
+
+                displayNameInput.value
+                .trim(),
+
+            country:
+
+                countryInput.value,
+
+            language:
+
+                languageInput.value
+
+        })
+
+        .eq(
+            "id",
+            userId
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+}
+
+
+// ==========================================
+// 10. Email Verification Modal
+// ==========================================
+
+function openVerificationModal(){
+
+    verifyTitle.textContent =
+    "Vérifiez votre adresse e-mail";
+
+    verifyText.textContent =
+
+    "Votre compte NetView a été créé avec succès.\n\nNous venons de vous envoyer un e-mail de confirmation.\n\nOuvrez votre boîte de réception puis cliquez sur le lien reçu afin d'activer définitivement votre compte.";
+
+    verifyMessage.textContent = "";
+
+    verifyMessage.classList.remove(
+        "show"
+    );
+
+    resendButton.disabled = false;
+
+    openModal(
+        "verifyModal"
+    );
+
+}
+
+function closeVerificationModal(){
+
+    closeModal(
+        "verifyModal"
+    );
+
+}
+// ==========================================
+// 11. Resend Verification Email
+// ==========================================
+
+resendButton.addEventListener(
+
+    "click",
+
+    async()=>{
+
+        resendButton.disabled = true;
+
+        verifyMessage.classList.remove(
+            "show"
+        );
+
+        verifyMessage.textContent = "";
+
+        try{
+
+            const user =
+            await getUser();
+
+            if(!user){
+
+                throw new Error(
+                    "Veuillez vous reconnecter pour renvoyer l'e-mail."
+                );
+
+            }
+
+            const {
+                error
+            } = await resendVerification(
+                user.email
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            verifyMessage.textContent =
+            "Un nouvel e-mail de confirmation a été envoyé.";
+
+            verifyMessage.classList.add(
+                "show"
+            );
+
+        }
+
+        catch(error){
+
+            verifyMessage.textContent =
+            error.message ||
+            "Impossible de renvoyer l'e-mail.";
+
+            verifyMessage.classList.add(
+                "show"
+            );
+
+        }
+
+        finally{
+
+            resendButton.disabled = false;
+
+        }
+
+    }
+
+);
+
+
+// ==========================================
+// 12. Events
+// ==========================================
+
+// Clear errors while typing
+
+[
+    usernameInput,
+    displayNameInput,
+    emailInput,
+    passwordInput,
+    confirmPasswordInput
+].forEach(input=>{
+
+    input.addEventListener(
+        "input",
+        clearError
+    );
+
+});
+
+// Close Country Modal
+
+countryModal.addEventListener(
+    "click",
+    event=>{
+
+        if(event.target===countryModal){
+
+            closeModal(
+                "countryModal"
+            );
+
+        }
+
+    }
+);
+
+// Close Verification Modal
+
+verifyModal.addEventListener(
+    "click",
+    event=>{
+
+        if(event.target===verifyModal){
+
+            closeVerificationModal();
+
+        }
+
+    }
+);
+
+// Escape
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(event.key==="Escape"){
+
+            closeModal(
+                "countryModal"
+            );
+
+            closeVerificationModal();
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// 13. Initialization
+// ==========================================
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+        renderCountries();
+
+        clearError();
+
+        console.log(
+            "NetView Signup Ready"
+        );
+
+    }
+
+);
 </script>
