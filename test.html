@@ -502,24 +502,15 @@ Accessibility
     cursor:pointer;
 }
   
-.nv-modal-overlay{
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,0,0,.7);
-    z-index:9999;
+/* Garde uniquement ceci dans le bloc <style> de ton HTML */
+.nv-modal-overlay.active {
+    display: flex !important;
 }
 
-/* CORRECTION CSS DU MODAL - Force l'apparition correcte du conteneur et du modal interne */
-.nv-modal-overlay.active{
-    display:flex !important;
+#selectedCountry * {
+    pointer-events: none;
 }
-.nv-modal-overlay.active .nv-modal{
-    display:block !important;
-}
-
+    
 #selectedCountry * {
     pointer-events: none;
 }
