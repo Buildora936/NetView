@@ -592,14 +592,15 @@ Rejoignez NetView pour publier des vidéos, créer des chaînes, regarder des li
     </div>
 
     <!-- Country Modal -->
-    <div id="countryModal" class="nv-modal-overlay">
-        <div class="nv-modal nv-country-modal">
-            <div class="nv-country-header">
+    <div id="countryModal" class="nv-dialog-modal">
+        <div class="nv-modal-content">
+            <div class="nv-modal-header">
                 <h2>Choisissez votre pays</h2>
-                <button type="button" id="closeCountryModal" class="nv-modal-close">
+                <button type="button" id="closeCountryModal" class="nv-modal-close-btn">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
+            <div class="nv-modal-body">
             <div class="nv-country-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="countrySearch" placeholder="Rechercher un pays..." autocomplete="off">
@@ -739,8 +740,9 @@ const selectedCountryName = document.getElementById("selectedCountryName");
 const countrySearch = document.getElementById("countrySearch");
 const countryList = document.getElementById("countryList");
 const countryModal = document.getElementById("countryModal");
-const closeCountryModal = document.getElementById("closeCountryModal");
-
+const openModalBtn = document.querySelector('.nv-country-selector');
+const closeModalBtn = document.getElementById('closeCountryModal');
+    
 const togglePassword = document.getElementById("togglePassword");
 const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 
@@ -837,46 +839,29 @@ function selectCountry(country) {
     if (countryModal) countryModal.classList.remove("active");
 }
 
-if (selectedCountryBox && countryModal) {
-    selectedCountryBox.addEventListener("click", () => {
-        countryModal.classList.add("active");
-        renderCountries();
-        if (countrySearch) {
-            setTimeout(() => {
-                countrySearch.focus();
-            }, 100);
-        }
-    });
-}
+// OUVERTURE (Technique Native)
+openModalBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Évite de soumettre le formulaire d'inscription par erreur
+    countryModal.showModal(); 
+});
 
-if (countryModal) {
-    countryModal.addEventListener("click", (event) => {
-        if (event.target === countryModal) {
-            countryModal.classList.remove("active");
-        }
-    });
-}
+// FERMETURE
+closeModalBtn.addEventListener('click', () => {
+    countryModal.close();
+});
 
-if (closeCountryModal && countryModal) {
-    closeCountryModal.addEventListener("click", () => {
-        countryModal.classList.remove("active");
-    });
-}
-      
-if (countryModal) {
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            countryModal.classList.remove("active");
-        }
-    });
-}
-
-if (countrySearch) {
-    countrySearch.addEventListener("input", (e) => {
-        renderCountries(e.target.value);
-    });
-}
-
+// Fermer si l'utilisateur clique à l'extérieur du contenu (sur l'arrière-plan)
+countryModal.addEventListener('click', (e) => {
+    const dialogDimensions = countryModal.getBoundingClientRect();
+    if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+    ) {
+        countryModal.close();
+    }
+});
 // Initialisation au chargement
 renderCountries();
 
