@@ -1,4 +1,4 @@
-<style>
+
 /* ==================================================
 SIGNUP PAGE
 ================================================== */
@@ -497,4 +497,45 @@ Reduced Motion
         transition-duration:.01ms !important;
     }
 }
-</style>
+/* Style du Modal Natif */
+.nv-dialog-modal {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 0;
+    width: min(90%, 500px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    
+    /* Centrage automatique natif du navigateur */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Style de l'arrière-plan flouté (géré par le navigateur) */
+.nv-dialog-modal::backdrop {
+    background: rgba(2, 6, 23, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+/* Ajustements internes rapides */
+.nv-modal-content {
+    padding: 1.75rem;
+}
+.nv-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.nv-modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--nv-text-secondary);
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+
