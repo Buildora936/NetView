@@ -1,788 +1,625 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<title>Inscription sur Netview</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="theme-color" content="#181818">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- ==========================================
+    Meta
+    ========================================== -->
 
-<link rel="icon" type="image/png" href="NetView_icone.png">
+    <meta charset="UTF-8">
 
-<!-- ==========================================
-Core CSS
-========================================== -->
-<link rel="stylesheet" href="CSS/core/variables.css">
-<link rel="stylesheet" href="CSS/core/reset.css">
-<link rel="stylesheet" href="CSS/core/typography.css">
-<link rel="stylesheet" href="CSS/core/animations.css">
-<link rel="stylesheet" href="CSS/core/utilities.css"> 
-<link rel="stylesheet" href="CSS/components/buttons.css">
-<link rel="stylesheet" href="CSS/components/forms.css">
-<link rel="stylesheet" href="CSS/components/cards.css">
-<link rel="stylesheet" href="CSS/components/modal.css">
-<link rel="stylesheet" href="CSS/components/toast.css">
-<link rel="stylesheet" href="CSS/components/loader.css">
-<link rel="stylesheet" href="CSS/components/modal-signup.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="theme-color"
+        content="#181818">
+
+    <meta
+        name="description"
+        content="Créez gratuitement votre compte NetView et commencez à publier des vidéos, regarder des lives, discuter avec votre communauté et vendre vos produits.">
+
+    <meta
+        name="robots"
+        content="index,follow">
+
+    <meta
+        name="monetag"
+        content="a2854efa46b5edd759eb56b769d02cc6">
+
+    <title>Créer un compte • NetView</title>
+
+    <!-- ==========================================
+    Favicon
+    ========================================== -->
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="NetView_icone.png">
+
+    <!-- ==========================================
+    Font Awesome
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- ==========================================
+    Core CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css">
+
+    <!-- ==========================================
+    Components
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/forms.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css">
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/loader.css">
+
+    <!-- ==========================================
+    Signup CSS
+    ========================================== -->
+
+    <style>
+
     
-<style>
-/* ==================================================
-SIGNUP PAGE
-================================================== */
-body{
-    overflow-x:hidden;
-    overflow-y:auto;
-    background: var(--nv-background);
-}
 
-/* ==================================================
-Animated Background
-================================================== */
-.nv-login-background{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    z-index:-10;
-    background: 
-    radial-gradient(circle at top left, rgba(37,99,235,.22), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(59,130,246,.18), transparent 40%),
-    linear-gradient(145deg, #020617, #071124, #0B1120, #020617);
-}
+    </style>
 
-.nv-login-background::before{
-    content:"";
-    position:absolute;
-    inset:-20%;
-    background: linear-gradient(135deg, transparent, rgba(37,99,235,.08), transparent, rgba(96,165,250,.08), transparent);
-    background-size:300% 300%;
-    animation: gradientMove 20s linear infinite;
-    filter:blur(80px);
-}
-
-.nv-login-background::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: radial-gradient(circle, white, transparent 90%);
-}
-
-/* ==================================================
-Blue Orbs
-================================================== */
-.nv-orb{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(60px);
-    animation: floatOrb 12s ease-in-out infinite;
-}
-
-.nv-orb.one{
-    width:300px;
-    height:300px;
-    top:-120px;
-    left:-120px;
-    background: rgba(37,99,235,.30);
-}
-
-.nv-orb.two{
-    width:260px;
-    height:260px;
-    right:-80px;
-    bottom:-80px;
-    background: rgba(96,165,250,.25);
-    animation-delay:2s;
-}
-
-.nv-orb.three{
-    width:180px;
-    height:180px;
-    top:45%;
-    left:55%;
-    background: rgba(59,130,246,.18);
-    animation-delay:5s;
-}
-
-/* ==================================================
-Particles
-================================================== */
-.nv-particles{
-    position:absolute;
-    inset:0;
-}
-
-.nv-particles span{
-    position:absolute;
-    width:3px;
-    height:3px;
-    border-radius:50%;
-    background: rgba(255,255,255,.55);
-    animation: particleFloat linear infinite;
-}
-
-.nv-particles span:nth-child(1){left:6%;top:14%;animation-duration:18s;}
-.nv-particles span:nth-child(2){left:20%;top:70%;animation-duration:22s;}
-.nv-particles span:nth-child(3){left:34%;top:38%;animation-duration:17s;}
-.nv-particles span:nth-child(4){left:48%;top:82%;animation-duration:20s;}
-.nv-particles span:nth-child(5){left:62%;top:22%;animation-duration:15s;}
-.nv-particles span:nth-child(6){left:74%;top:56%;animation-duration:19s;}
-.nv-particles span:nth-child(7){left:85%;top:14%;animation-duration:24s;}
-.nv-particles span:nth-child(8){left:91%;top:72%;animation-duration:21s;}
-.nv-particles span:nth-child(9){left:14%;top:46%;animation-duration:16s;}
-.nv-particles span:nth-child(10){left:55%;top:10%;animation-duration:23s;}
-.nv-particles span:nth-child(11){left:40%;top:58%;animation-duration:18s;}
-.nv-particles span:nth-child(12){left:78%;top:34%;animation-duration:20s;}
-
-/* ==================================================
-Layout
-================================================== */
-.nv-login{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding:2rem;
-}
-
-.nv-login-card{
-    width:min(100%,560px);
-    padding:2.75rem;
-    border-radius:32px;
-    position:relative;
-    overflow:hidden;
-    backdrop-filter:blur(30px);
-    background: rgba(15,23,42,.70);
-    border: 1px solid rgba(255,255,255,.08);
-    box-shadow: 0 40px 90px rgba(0,0,0,.45);
-    animation: fadeUp .8s ease;
-}
-
-.nv-login-card::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:inherit;
-    padding:1px;
-    background: linear-gradient(135deg, rgba(37,99,235,.7), rgba(96,165,250,.15), transparent);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;
-    mask-composite:exclude;
-    pointer-events:none;
-}
-
-.nv-login-logo{
-    width:240px;
-    display:block;
-    margin:auto;
-    animation: floatLogo 5s ease-in-out infinite;
-}
-
-.nv-login-title{
-    text-align:center;
-    margin-top:1.5rem;
-}
-
-.nv-login-subtitle{
-    text-align:center;
-    color:var(--nv-text-secondary);
-    margin-top:.75rem;
-    margin-bottom:2rem;
-}
-
-/* ==================================================
-Form
-================================================== */
-.nv-login-form{
-    display:flex;
-    flex-direction:column;
-    gap:1.4rem;
-}
-
-.nv-form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:1rem;
-}
-
-.nv-form-group{
-    position:relative;
-}
-
-.nv-label{
-    display:block;
-    margin-bottom:.55rem;
-}
-
-.nv-input{
-    width:100%;
-    height:60px;
-    padding-left:3.25rem;
-    padding-right:3.25rem;
-    font-size:1rem;
-}
-
-.nv-input:focus{
-    transform:translateY(-2px);
-}
-
-.nv-input-icon{
-    position:absolute;
-    left:1.1rem;
-    top:50%;
-    transform:translateY(-50%);
-    width:22px;
-    height:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--nv-text-secondary);
-    pointer-events:none;
-    transition:.3s;
-}
-
-.nv-input:focus ~ .nv-input-icon{
-    color:var(--nv-primary);
-}
-
-/* ==================================================
-Password Toggle
-================================================== */
-.nv-password-toggle{
-    position:absolute;
-    top:50%;
-    right:1rem;
-    transform:translateY(-50%);
-    border:none;
-    background:transparent;
-    color:var(--nv-text-secondary);
-    cursor:pointer;
-    font-size:1.05rem;
-    transition:.25s;
-}
-
-.nv-password-toggle:hover{
-    color:var(--nv-primary);
-    transform:translateY(-50%) scale(1.08);
-}
-
-/* ==================================================
-Button
-================================================== */
-.nv-login-button{
-    width:100%;
-    height:60px;
-    margin-top:.5rem;
-    position:relative;
-    overflow:hidden;
-}
-
-.nv-login-button::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:-120%;
-    width:60%;
-    height:100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
-    transition:.8s;
-}
-
-.nv-login-button:hover::before{
-    left:160%;
-}
-
-/* ==================================================
-Error
-================================================== */
-.error{
-    display:none;
-    margin-top:1rem;
-    padding:1rem;
-    border-radius:12px;
-    background: rgba(239,68,68,.12);
-    border: 1px solid rgba(239,68,68,.35);
-    color:#ef4444;
-    font-size:.95rem;
-    text-align:center;
-    animation: fadeUp .3s ease;
-}
-
-.error.show{
-    display:block;
-}
-
-/* ==================================================
-Success
-================================================== */
-.success{
-    display:none;
-    margin-top:1rem;
-    padding:1rem;
-    border-radius:12px;
-    background: rgba(34,197,94,.12);
-    border: 1px solid rgba(34,197,94,.35);
-    color:#22c55e;
-    font-size:.95rem;
-    text-align:center;
-    animation: fadeUp .3s ease;
-}
-
-.success.show{
-    display:block;
-}
-
-/* ==================================================
-Terms / Login Link
-================================================== */
-.nv-terms{
-    text-align:center;
-    margin-top:1rem;
-    color:var(--nv-text-secondary);
-    font-size:.85rem;
-    line-height:1.7;
-}
-
-.nv-terms a{
-    color:var(--nv-primary);
-    text-decoration:none;
-    font-weight:600;
-    transition:.3s;
-}
-
-.nv-terms a:hover{
-    color:var(--nv-primary-light);
-}
-
-/* ==================================================
-Already Account
-================================================== */
-.nv-login-link{
-    text-align:center;
-    margin-top:1.5rem;
-    color:var(--nv-text-secondary);
-    line-height:1.7;
-}
-
-.nv-login-link a{
-    color:var(--nv-primary);
-    text-decoration:none;
-    font-weight:700;
-    transition:.3s;
-}
-
-.nv-login-link a:hover{
-    color:var(--nv-primary-light);
-}
-
-/* ==================================================
-Divider
-================================================== */
-.nv-divider{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    margin:2rem 0 1.5rem;
-    color: var(--nv-text-muted);
-    font-size:.9rem;
-}
-
-.nv-divider::before,
-.nv-divider::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background: rgba(255,255,255,.08);
-}
-
-/* ==================================================
-Version
-================================================== */
-.nv-version{
-    margin-top:2rem;
-    text-align:center;
-    font-size:.8rem;
-    color: var(--nv-text-muted);
-}
-
-/* ==================================================
-Mobile Responsive
-================================================== */
-@media(max-width:768px){
-    .nv-login{
-        padding:1rem;
-        align-items:flex-start;
-    }
-
-    .nv-login-card{
-        width:100%;
-        padding:2rem 1.5rem;
-        border-radius:24px;
-    }
-
-    .nv-login-logo{
-        width:240px;
-    }
-
-    .nv-form-row{
-        grid-template-columns:1fr;
-    }
-
-    .nv-login-title{
-        font-size:1.5rem;
-    }
-
-    .nv-login-subtitle{
-        font-size:.95rem;
-    }
-}
-
-/* ==================================================
-Small Mobile
-================================================== */
-@media(max-width:420px){
-    .nv-login{
-        padding:.75rem;
-    }
-
-    .nv-login-card{
-        padding:1.5rem 1rem;
-    }
-
-    .nv-input{
-        height:55px;
-    }
-
-    .nv-login-button{
-        height:55px;
-    }
-}
-
-/* ==================================================
-Loading State
-================================================== */
-.nv-login-button.loading{
-    pointer-events:none;
-    opacity:.8;
-}
-
-.nv-login-button.loading::before{
-    display:none;
-}
-/* ==================================================
-COUNTRY DIALOG MODAL
-================================================== */
-.nv-dialog-modal {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 0;
-    width: min(90%, 460px);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    color: #ffffff;
-}
-
-/* Style de l'arrière-plan assombri natif (Backdrop) */
-.nv-dialog-modal::backdrop {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-}
-
-/* Ajustements rapides pour la liste interne */
-.nv-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.nv-modal-close-btn {
-    background: transparent;
-    border: none;
-    color: var(--nv-text-secondary, #94a3b8);
-    font-size: 1.25rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.nv-modal-close-btn:hover {
-    color: #ffffff;
-}
-
-.nv-modal-body {
-    padding: 1.5rem;
-}
-
-.nv-country-search {
-    position: relative;
-    margin-bottom: 1rem;
-}
-
-.nv-country-search input {
-    width: 100%;
-    height: 48px;
-    padding-left: 2.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    color: white;
-}
-
-.nv-country-search i {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-}
-
-.nv-country-list {
-    max-height: 250px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.country-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.country-item:hover {
-    background: rgba(37, 99, 235, 0.15);
-}
-/* ==================================================
-Accessibility
-================================================== */
-.nv-input:focus-visible,
-.nv-password-toggle:focus-visible,
-.nv-login-button:focus-visible{
-    outline: 2px solid var(--nv-primary);
-    outline-offset:3px;
-}
-
-.nv-country-selector{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.75rem;
-    width:100%;
-    border:none;
-    background:inherit;
-    cursor:pointer;
-    text-align:left;
-}
-
-.nv-country-selector span:nth-child(2){
-    flex:1;
-}
-
-.nv-country-selector:hover{
-    cursor:pointer;
-}
-  
-/* Garde uniquement ceci dans le bloc <style> de ton HTML */
-.nv-modal-overlay.active {
-    display: flex !important;
-}
-
-#selectedCountry * {
-    pointer-events: none;
-}
-    
-#selectedCountry * {
-    pointer-events: none;
-}
-/* ==================================================
-Reduced Motion
-================================================== */
-@media(prefers-reduced-motion:reduce){
-    *{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important;
-    }
-}
-</style>
 </head>
 <body>
 
-<div class="nv-login-background">
-    <div class="nv-orb one"></div>
-    <div class="nv-orb two"></div>
-    <div class="nv-orb three"></div>
-    <div class="nv-particles">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-    </div>
-</div>
+    <!-- ==========================================
+    Animated Background
+    ========================================== -->
 
-<main class="nv-login">
-<section class="nv-login-card">
+    <div class="nv-login-background">
 
-<img src="NetView.png" alt="NetView" class="nv-login-logo">
+        <div class="nv-orb one"></div>
 
-<h1 class="nv-login-title">Créer votre compte</h1>
+        <div class="nv-orb two"></div>
 
-<p class="nv-login-subtitle">
-Rejoignez NetView pour publier des vidéos, créer des chaînes, regarder des lives, discuter avec votre communauté et vendre vos produits.
-</p>
+        <div class="nv-orb three"></div>
 
-<form id="signupForm" class="nv-login-form">
+        <div class="nv-particles">
 
-    <!-- Username -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="username">Nom d'utilisateur</label>
-        <input id="username" type="text" class="nv-input" placeholder="@nomutilisateur" autocomplete="username" required>
-        <div class="nv-input-icon">
-            <i class="fa-solid fa-at"></i>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
         </div>
+
     </div>
 
-    <!-- Display Name -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="displayName">Nom affiché</label>
-        <input id="displayName" type="text" class="nv-input" placeholder="Votre nom" autocomplete="name" required>
-        <div class="nv-input-icon">
-            <i class="fa-solid fa-user"></i>
-        </div>
-    </div>
+    <!-- ==========================================
+    Signup
+    ========================================== -->
 
-    <!-- Email -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="email">Adresse e-mail</label>
-        <input id="email" type="email" class="nv-input" placeholder="exemple@email.com" autocomplete="email" required>
-        <div class="nv-input-icon">
-            <i class="fa-regular fa-envelope"></i>
-        </div>
-    </div>
+    <main class="nv-login">
 
-    <!-- Country Picker -->
-    <div class="nv-form-group">
-        <label class="nv-label">Pays</label>
-        <button type="button" id="selectedCountry" class="nv-input nv-country-selector">
-            <span id="selectedCountryFlag"><i class="fa-solid fa-earth-americas"></i></span>
-            <span id="selectedCountryName">Choisissez votre pays</span>
-            <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <input type="hidden" id="country" name="country" required>
-    </div>
+        <section class="nv-login-card">
 
-    <!-- Country Modal -->
-<dialog id="countryModal" class="nv-dialog-modal">
-        <div class="nv-modal-content">
-            <div class="nv-modal-header">
-                <h2>Choisissez votre pays</h2>
-                <button type="button" id="closeCountryModal" class="nv-modal-close-btn">
-                    <i class="fa-solid fa-xmark"></i>
+            <!-- ==========================================
+            Logo
+            ========================================== -->
+
+            <img
+                src="NetView.png"
+                alt="NetView"
+                class="nv-login-logo">
+
+            <!-- ==========================================
+            Title
+            ========================================== -->
+
+            <h1 class="nv-login-title">
+
+                Créer votre compte
+
+            </h1>
+
+            <!-- ==========================================
+            Description
+            ========================================== -->
+
+            <p class="nv-login-subtitle">
+
+                Rejoignez NetView pour publier des vidéos, créer des chaînes, lancer des lives, discuter avec votre communauté et vendre vos produits partout dans le monde.
+
+            </p>
+                        <!-- ==========================================
+            Signup Form
+            ========================================== -->
+
+            <form
+                id="signupForm"
+                class="nv-login-form"
+                autocomplete="off">
+
+                <!-- ==========================================
+                Username
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="username"
+                        class="nv-label">
+
+                        Nom d'utilisateur
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-solid fa-at nv-input-icon"></i>
+
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            class="nv-input"
+                            placeholder="@nomutilisateur"
+                            autocomplete="username"
+                            maxlength="30"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Display Name
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="displayName"
+                        class="nv-label">
+
+                        Nom affiché
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-solid fa-user nv-input-icon"></i>
+
+                        <input
+                            id="displayName"
+                            name="displayName"
+                            type="text"
+                            class="nv-input"
+                            placeholder="Votre nom"
+                            maxlength="50"
+                            autocomplete="name"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Email
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="email"
+                        class="nv-label">
+
+                        Adresse e-mail
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-regular fa-envelope nv-input-icon"></i>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            class="nv-input"
+                            placeholder="exemple@email.com"
+                            autocomplete="email"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Country
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        class="nv-label">
+
+                        Pays
+
+                    </label>
+
+                    <button
+                        type="button"
+                        id="selectedCountry"
+                        class="nv-input nv-country-selector">
+
+                        <span id="selectedCountryFlag">
+
+                            <i class="fa-solid fa-earth-americas"></i>
+
+                        </span>
+
+                        <span id="selectedCountryName">
+
+                            Choisissez votre pays
+
+                        </span>
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </button>
+
+                    <input
+                        type="hidden"
+                        id="country"
+                        name="country"
+                        required>
+
+                </div>
+
+                <!-- ==========================================
+                Language
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="language"
+                        class="nv-label">
+
+                        Langue
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-solid fa-language nv-input-icon"></i>
+
+                        <select
+                            id="language"
+                            name="language"
+                            class="nv-input"
+                            required>
+
+                            <option value="">
+
+                                Choisissez une langue
+
+                            </option>
+
+                            <option value="fr">
+
+                                Français
+
+                            </option>
+
+                            <option value="en">
+
+                                English
+
+                            </option>
+
+                            <option value="es">
+
+                                Español
+
+                            </option>
+
+                            <option value="pt">
+
+                                Português
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Password
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="password"
+                        class="nv-label">
+
+                        Mot de passe
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-solid fa-lock nv-input-icon"></i>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            class="nv-input"
+                            placeholder="Minimum 8 caractères"
+                            autocomplete="new-password"
+                            required>
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="nv-password-toggle">
+
+                            <i class="fa-regular fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Confirm Password
+                ========================================== -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="confirmPassword"
+                        class="nv-label">
+
+                        Confirmer le mot de passe
+
+                    </label>
+
+                    <div class="nv-input-wrapper">
+
+                        <i class="fa-solid fa-lock nv-input-icon"></i>
+
+                        <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            class="nv-input"
+                            placeholder="Confirmez votre mot de passe"
+                            autocomplete="new-password"
+                            required>
+
+                        <button
+                            type="button"
+                            id="toggleConfirmPassword"
+                            class="nv-password-toggle">
+
+                            <i class="fa-regular fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                Signup Button
+                ========================================== -->
+
+                <button
+                    type="submit"
+                    id="signupButton"
+                    class="nv-btn nv-btn-gradient nv-login-button">
+
+                    Créer un compte
+
                 </button>
+
+                <!-- ==========================================
+                Error
+                ========================================== -->
+
+                <div
+                    id="signupError"
+                    class="error">
+
+                </div>
+
+            </form>
+                        <!-- ==========================================
+            Terms
+            ========================================== -->
+
+            <div class="nv-terms">
+
+                En créant un compte NetView, vous acceptez nos
+
+                <a href="conditions-utilisation.html">
+
+                    Conditions d'utilisation
+
+                </a>
+
+                ainsi que notre
+
+                <a href="privacy.html">
+
+                    Politique de confidentialité
+
+                </a>.
+
             </div>
-            <div class="nv-modal-body">
-            <div class="nv-country-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="countrySearch" placeholder="Rechercher un pays..." autocomplete="off">
+
+            <!-- ==========================================
+            Divider
+            ========================================== -->
+
+            <div class="nv-divider">
+
+                <span>
+
+                    Vous avez déjà un compte ?
+
+                </span>
+
             </div>
-            <div id="countryList" class="nv-country-list">
-                <!-- Généré en JavaScript -->
+
+            <!-- ==========================================
+            Login Link
+            ========================================== -->
+
+            <div class="nv-login-link">
+
+                <a href="login.html">
+
+                    Se connecter
+
+                </a>
+
             </div>
+
+            <!-- ==========================================
+            Version
+            ========================================== -->
+
+            <div class="nv-version">
+
+                NetView v1.0 • Tous droits réservés
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+    Page Loader
+    ========================================== -->
+
+    <div
+        id="pageLoader"
+        class="nv-page-loader"
+        style="display:none;">
+
+        <div class="nv-spinner nv-spinner-lg"></div>
+
+        <div class="nv-loader-text">
+
+            Création de votre compte...
+
         </div>
-    </dialog>
 
-    <!-- Language -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="language">Langue</label>
-        <select id="language" class="nv-input" required>
-            <option value="">Choisir une langue</option>
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="pt">Português</option>
-        </select>
-        <div class="nv-input-icon">
-            <i class="fa-solid fa-language"></i>
-        </div>
     </div>
-
-    <!-- Password -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="password">Mot de passe</label>
-        <input id="password" type="password" class="nv-input" placeholder="Minimum 8 caractères" autocomplete="new-password" required>
-        <div class="nv-input-icon">
-            <i class="fa-solid fa-lock"></i>
-        </div>
-        <button type="button" id="togglePassword" class="nv-password-toggle">
-            <i class="fa-regular fa-eye"></i>
-        </button>
-    </div>
-
-    <!-- Confirm Password -->
-    <div class="nv-form-group">
-        <label class="nv-label" for="confirmPassword">Confirmer le mot de passe</label>
-        <input id="confirmPassword" type="password" class="nv-input" placeholder="Confirmez votre mot de passe" autocomplete="new-password" required>
-        <div class="nv-input-icon">
-            <i class="fa-solid fa-lock"></i>
-        </div>
-        <button type="button" id="toggleConfirmPassword" class="nv-password-toggle">
-            <i class="fa-regular fa-eye"></i>
-        </button>
-    </div>
-
-    <button type="submit" id="signupButton" class="nv-btn nv-btn-gradient nv-login-button">
-        Créer un compte
-    </button>
-
-    <div class="error" id="signupError"></div>
-</form>
-
-<div class="nv-terms">
-    En créant un compte NetView, vous acceptez nos
-    <a href="conditions-utilisation.html">Conditions d'utilisation</a> et notre
-    <a href="privacy.html">Politique de confidentialité</a>.
-</div>
-
-<div class="nv-divider">
-    <span>vous avez déjà un compte ?</span>
-</div>
-
-<div class="nv-login-link">
-    <a href="login.html">Se connecter</a>
-</div>
-
-<div class="nv-version">
-    NetView v1.0 • Tous droits réservés
-</div>
-</section>
-</main>
-
-<div class="nv-page-loader" id="pageLoader" style="display:none;">
-    <div class="nv-spinner nv-spinner-lg"></div>
-    <div class="nv-loader-text">Création du compte...</div>
-</div>
-
-<div id="verifyModal" class="nv-modal-overlay">
-    <div class="nv-modal">
-        <h2 id="verifyTitle"></h2>
-        <p id="verifyText"></p>
-        <div id="verifyMessage" class="error"></div>
-        <button id="resendButton">Renvoyer l'e-mail</button>
-    </div>
-</div>
-
-<script type="module">
 // ==========================================
-// NetView - Signup
+// 3. DOM Elements
+// ==========================================
+
+// ==========================================
+// 4. Password Toggle
+// ==========================================
+
+// ==========================================
+// 5. Country Modal
+// ==========================================
+
+// ==========================================
+// 6. Validation
+// ==========================================
+
+// ==========================================
+// 7. Username Check
+// ==========================================
+
+// ==========================================
+// 8. Signup (Supabase Auth)
+// ==========================================
+
+// ==========================================
+// 9. Update NetView Profile
+// ==========================================
+
+// ==========================================
+// 10. Email Verification Modal
+// ==========================================
+
+// ==========================================
+// 11. Resend Verification Email
+// ==========================================
+
+// ==========================================
+// 12. Events
+// ==========================================
+
+// ==========================================
+// 13. Initialization
+// ==========================================
+<script>
+    // ==========================================
+// 1. Imports
 // ==========================================
 
 import {
@@ -791,400 +628,29 @@ import {
     resendVerification
 } from "./js/core/auth.js";
 
-import { supabase } from "./js/core/supabase.js";
+import {
+    supabase
+} from "./js/core/supabase.js";
 
 import {
+    openModal,
+    closeModal,
     showLoader,
     hideLoader,
-    buttonLoading
+    buttonLoading,
+    showToast
 } from "./js/core/ui.js";
 
-import { COUNTRIES } from "./js/assets/countries.js";
+import {
+    COUNTRIES
+} from "./js/assets/countries.js";
+
 
 // ==========================================
-// Variables
+// 2. Variables
 // ==========================================
+
 let submitting = false;
+
 let selectedCountry = null;
-
-// ==========================================
-// DOM
-// ==========================================
-const signupForm = document.getElementById("signupForm");
-const signupButton = document.getElementById("signupButton");
-const signupError = document.getElementById("signupError");
-
-const usernameInput = document.getElementById("username");
-const displayNameInput = document.getElementById("displayName");
-const emailInput = document.getElementById("email");
-const countryInput = document.getElementById("country");
-const languageInput = document.getElementById("language");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirmPassword");
-
-const selectedCountryBox = document.getElementById("selectedCountry");
-const selectedCountryFlag = document.getElementById("selectedCountryFlag");
-const selectedCountryName = document.getElementById("selectedCountryName");
-
-const countrySearch = document.getElementById("countrySearch");
-const countryList = document.getElementById("countryList");
-const countryModal = document.getElementById("countryModal");
-const openModalBtn = document.querySelector('.nv-country-selector');
-const closeModalBtn = document.getElementById('closeCountryModal');
-    
-const togglePassword = document.getElementById("togglePassword");
-const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-
-const verifyModal = document.getElementById("verifyModal");
-const verifyTitle = document.getElementById("verifyTitle");
-const verifyText = document.getElementById("verifyText");
-const verifyMessage = document.getElementById("verifyMessage");
-const resendButton = document.getElementById("resendButton");
-
-// ==========================================
-// Error Helpers
-// ==========================================
-function showError(message) {
-    if (signupError) {
-        signupError.textContent = message;
-        signupError.classList.add("show");
-    } else {
-        console.error("Erreur app: " + message);
-    }
-}
-
-function clearError() {
-    if (signupError) {
-        signupError.textContent = "";
-        signupError.classList.remove("show");
-    }
-}
-
-// ==========================================
-// Password Toggle
-// ==========================================
-function togglePasswordVisibility(input, button) {
-    if (!input || !button) return;
-    const hidden = input.type === "password";
-    input.type = hidden ? "text" : "password";
-    button.innerHTML = hidden 
-        ? '<i class="fa-regular fa-eye-slash"></i>' 
-        : '<i class="fa-regular fa-eye"></i>';
-}
-
-if (togglePassword && passwordInput) {
-    togglePassword.addEventListener("click", () => {
-        togglePasswordVisibility(passwordInput, togglePassword);
-    });
-}
-
-if (toggleConfirmPassword && confirmPasswordInput) {
-    toggleConfirmPassword.addEventListener("click", () => {
-        togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
-    });
-}
-
-// ==========================================
-// Country Picker
-// ==========================================
-function renderCountries(search = "") {
-    if (!countryList) return;
-    countryList.innerHTML = "";
-    const keyword = search.trim().toLowerCase();
-    
-    const results = COUNTRIES ? COUNTRIES.filter(country => {
-        return country.name.toLowerCase().includes(keyword);
-    }) : [];
-
-    if (results.length === 0) {
-        countryList.innerHTML = `<div class="country-empty">Aucun pays trouvé</div>`;
-        return;
-    }
-
-    results.forEach(country => {
-        const item = document.createElement("div");
-        item.className = "country-item";
-        item.innerHTML = `
-            <span class="country-flag">${country.flag}</span>
-            <span class="country-name">${country.name}</span>
-        `;
-        item.addEventListener("click", () => {
-            selectCountry(country);
-        });
-        countryList.appendChild(item);
-    });
-}
-
-function selectCountry(country) {
-    selectedCountry = country;
-    
-    // CORRECTION ICI : On met à jour précisément les enfants sans écraser la flèche
-    if (selectedCountryFlag) selectedCountryFlag.innerHTML = country.flag;
-    if (selectedCountryName) selectedCountryName.textContent = country.name;
-    if (selectedCountryBox) selectedCountryBox.classList.add("selected");
-    
-    if (countryInput) countryInput.value = country.name;
-    if (countrySearch) countrySearch.value = "";
-    if (countryModal) countryModal.classList.remove("active");
-}
-
-// OUVERTURE (Technique Native)
-openModalBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Évite de soumettre le formulaire d'inscription par erreur
-    countryModal.showModal(); 
-});
-
-// FERMETURE
-closeModalBtn.addEventListener('click', () => {
-    countryModal.close();
-});
-
-// Fermer si l'utilisateur clique à l'extérieur du contenu (sur l'arrière-plan)
-countryModal.addEventListener('click', (e) => {
-    const dialogDimensions = countryModal.getBoundingClientRect();
-    if (
-        e.clientX < dialogDimensions.left ||
-        e.clientX > dialogDimensions.right ||
-        e.clientY < dialogDimensions.top ||
-        e.clientY > dialogDimensions.bottom
-    ) {
-        countryModal.close();
-    }
-});
-// Initialisation au chargement
-renderCountries();
-
-// ==========================================
-// Validation
-// ==========================================
-function validateForm() {
-    clearError();
-    
-    if (!usernameInput || !displayNameInput || !emailInput || !countryInput || !languageInput || !passwordInput || !confirmPasswordInput) {
-        showError("Erreur interne : Éléments du formulaire manquants.");
-        return null;
-    }
-
-    const username = usernameInput.value.trim().toLowerCase();
-    const displayName = displayNameInput.value.trim();
-    const email = emailInput.value.trim().toLowerCase();
-    const country = countryInput.value;
-    const language = languageInput.value;
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
-
-    if (username === "") {
-        showError("Veuillez saisir un nom d'utilisateur.");
-        usernameInput.focus();
-        return null;
-    }
-    if (username.length < 3) {
-        showError("Le nom d'utilisateur doit contenir au moins 3 caractères.");
-        usernameInput.focus();
-        return null;
-    }
-    if (username.length > 30) {
-        showError("Le nom d'utilisateur est trop long.");
-        usernameInput.focus();
-        return null;
-    }
-    if (!/^[a-z0-9._]+$/.test(username)) {
-        showError("Le nom d'utilisateur contient des caractères non autorisés.");
-        usernameInput.focus();
-        return null;
-    }
-    if (displayName === "") {
-        showError("Veuillez saisir votre nom.");
-        displayNameInput.focus();
-        return null;
-    }
-    if (email === "") {
-        showError("Veuillez saisir une adresse e-mail.");
-        emailInput.focus();
-        return null;
-    }
-    if (country === "") {
-        showError("Veuillez sélectionner votre pays.");
-        return null;
-    }
-    if (language === "") {
-        showError("Veuillez sélectionner une langue.");
-        languageInput.focus();
-        return null;
-    }
-    if (password.length < 8) {
-        showError("Le mot de passe doit contenir au moins 8 caractères.");
-        passwordInput.focus();
-        return null;
-    }
-    if (password !== confirmPassword) {
-        showError("Les mots de passe ne correspondent pas.");
-        confirmPasswordInput.focus();
-        return null;
-    }
-
-    return { username, displayName, email, country, language, password };
-}
-
-// ==========================================
-// Username Check
-// ==========================================
-async function usernameExists(username) {
-    const { data, error } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("username", username)
-        .limit(1);
-
-    if (error) throw error;
-    return data && data.length > 0;
-}
-
-// ==========================================
-// Update Profile
-// ==========================================
-async function updateProfile(userId, profile) {
-    for (let i = 0; i < 5; i++) {
-        const { error } = await supabase
-            .from("profiles")
-            .update({
-                username: profile.username,
-                display_name: profile.displayName,
-                country: profile.country,
-                language: profile.language
-            })
-            .eq("id", userId);
-
-        if (!error) return;
-        await new Promise(resolve => setTimeout(resolve, 300));
-    }
-    throw new Error("Impossible de configurer les détails du profil.");
-}
-
-// ==========================================
-// Signup Form Submission
-// ==========================================
-if (signupForm) {
-    signupForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (submitting) return;
-
-        const form = validateForm();
-        if (!form) return;
-
-        try {
-            submitting = true;
-            showLoader();
-            buttonLoading(signupButton, true);
-
-            const exists = await usernameExists(form.username);
-            if (exists) {
-                showError("Ce nom d'utilisateur est déjà utilisé.");
-                if (usernameInput) usernameInput.focus();
-                return; 
-            }
-
-            const { data, error } = await signUp(form.email, form.password);
-            sessionStorage.setItem("pendingVerificationEmail", form.email);
-
-            if (error) throw error;
-            if (!data || !data.user) throw new Error("Impossible de créer le compte.");
-
-            await updateProfile(data.user.id, form);
-
-            history.replaceState({}, "", "signup.html?status=sent");
-            openVerifyModal("sent");
-
-        } catch (error) {
-            console.error(error);
-            let message = "Impossible de créer le compte.";
-            if (error.message?.includes("User already registered")) {
-                message = "Cette adresse e-mail est déjà utilisée.";
-            } else {
-                message = error.message || message;
-            }
-            showError(message);
-        } finally {
-            submitting = false;
-            hideLoader();
-            buttonLoading(signupButton, false);
-        }
-    });
-}
-
-// ==========================================
-// Verification Modal Control
-// ==========================================
-function openVerifyModal(status = "sent") {
-    if (!verifyModal || !verifyTitle || !verifyText || !resendButton) return;
-    
-    if (verifyMessage) {
-        verifyMessage.textContent = "";
-        verifyMessage.classList.remove("show");
-    }
-    
-    verifyModal.classList.add("active");
-
-    switch (status) {
-        case "sent":
-            verifyTitle.textContent = "Vérifiez votre adresse e-mail";
-            verifyText.textContent = "Un e-mail de confirmation vient d'être envoyé. Consultez votre boîte de réception puis cliquez sur le lien reçu pour activer définitivement votre compte NetView.";
-            resendButton.style.display = "inline-flex";
-            break;
-        case "expired":
-            verifyTitle.textContent = "Lien expiré";
-            verifyText.textContent = "Votre lien de confirmation a expiré. Cliquez sur le bouton ci-dessous pour recevoir un nouveau lien.";
-            resendButton.style.display = "inline-flex";
-            break;
-        case "failed":
-            verifyTitle.textContent = "Confirmation impossible";
-            verifyText.textContent = "Le lien est invalide ou a déjà été utilisé.";
-            resendButton.style.display = "inline-flex";
-            break;
-    }
-}
-
-window.closeVerifyModal = function() {
-    if (verifyModal) verifyModal.classList.remove("active");
-};
-
-// ==========================================
-// Resend Email Functionality
-// ==========================================
-if (resendButton) {
-    resendButton.addEventListener("click", async () => {
-        resendButton.disabled = true;
-        if (verifyMessage) {
-            verifyMessage.textContent = "";
-            verifyMessage.classList.remove("show");
-        }
-
-        try {
-            const email = sessionStorage.getItem("pendingVerificationEmail");
-            if (!email) {
-                throw new Error("Aucune adresse e-mail en attente trouvée.");
-            }
-
-            const { error } = await resendVerification(email);
-            if (error) throw error;
-
-            if (verifyMessage) {
-                verifyMessage.textContent = "Un nouveau lien a été envoyé avec succès !";
-                verifyMessage.classList.remove("error");
-                verifyMessage.classList.add("success", "show");
-            }
-        } catch (error) {
-            console.error(error);
-            if (verifyMessage) {
-                verifyMessage.textContent = error.message || "Erreur lors du renvoi.";
-                verifyMessage.classList.remove("success");
-                verifyMessage.classList.add("error", "show");
-            }
-        } finally {
-            resendButton.disabled = false;
-        }
-    });
-}
 </script>
-</body>
-</html>
