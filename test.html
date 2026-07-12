@@ -574,29 +574,7 @@
         </div>
 
     </div>
-// ==========================================
-// 3. DOM Elements
-// ==========================================
 
-// ==========================================
-// 4. Password Toggle
-// ==========================================
-
-// ==========================================
-// 5. Country Modal
-// ==========================================
-
-// ==========================================
-// 6. Validation
-// ==========================================
-
-// ==========================================
-// 7. Username Check
-// ==========================================
-
-// ==========================================
-// 8. Signup (Supabase Auth)
-// ==========================================
 
 // ==========================================
 // 9. Update NetView Profile
@@ -653,4 +631,488 @@ import {
 let submitting = false;
 
 let selectedCountry = null;
+
+// ==========================================
+// 3. DOM Elements
+// ==========================================
+
+// Form
+
+const signupForm =
+document.getElementById(
+    "signupForm"
+);
+
+const signupButton =
+document.getElementById(
+    "signupButton"
+);
+
+const signupError =
+document.getElementById(
+    "signupError"
+);
+
+// Inputs
+
+const usernameInput =
+document.getElementById(
+    "username"
+);
+
+const displayNameInput =
+document.getElementById(
+    "displayName"
+);
+
+const emailInput =
+document.getElementById(
+    "email"
+);
+
+const countryInput =
+document.getElementById(
+    "country"
+);
+
+const languageInput =
+document.getElementById(
+    "language"
+);
+
+const passwordInput =
+document.getElementById(
+    "password"
+);
+
+const confirmPasswordInput =
+document.getElementById(
+    "confirmPassword"
+);
+
+// Country Modal
+
+const countryModal =
+document.getElementById(
+    "countryModal"
+);
+
+const selectedCountryButton =
+document.getElementById(
+    "selectedCountry"
+);
+
+const selectedCountryFlag =
+document.getElementById(
+    "selectedCountryFlag"
+);
+
+const selectedCountryName =
+document.getElementById(
+    "selectedCountryName"
+);
+
+const countrySearch =
+document.getElementById(
+    "countrySearch"
+);
+
+const countryList =
+document.getElementById(
+    "countryList"
+);
+
+const closeCountryModal =
+document.getElementById(
+    "closeCountryModal"
+);
+
+// Password Buttons
+
+const togglePassword =
+document.getElementById(
+    "togglePassword"
+);
+
+const toggleConfirmPassword =
+document.getElementById(
+    "toggleConfirmPassword"
+);
+
+// Verification Modal
+
+const verifyModal =
+document.getElementById(
+    "verifyModal"
+);
+
+const verifyTitle =
+document.getElementById(
+    "verifyTitle"
+);
+
+const verifyText =
+document.getElementById(
+    "verifyText"
+);
+
+const verifyMessage =
+document.getElementById(
+    "verifyMessage"
+);
+
+const resendButton =
+document.getElementById(
+    "resendButton"
+);
+
+
+// ==========================================
+// 4. Password Toggle
+// ==========================================
+
+function togglePasswordVisibility(
+    input,
+    button
+){
+
+    const hidden =
+    input.type === "password";
+
+    input.type =
+    hidden
+    ? "text"
+    : "password";
+
+    button.innerHTML =
+    hidden
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+    : '<i class="fa-regular fa-eye"></i>';
+
+}
+
+togglePassword.addEventListener(
+    "click",
+    ()=>{
+
+        togglePasswordVisibility(
+            passwordInput,
+            togglePassword
+        );
+
+    }
+);
+
+toggleConfirmPassword.addEventListener(
+    "click",
+    ()=>{
+
+        togglePasswordVisibility(
+            confirmPasswordInput,
+            toggleConfirmPassword
+        );
+
+    }
+);
+    // ==========================================
+// 5. Country Modal
+// ==========================================
+
+function renderCountries(search = ""){
+
+    countryList.innerHTML = "";
+
+    const keyword =
+    search
+    .trim()
+    .toLowerCase();
+
+    const countries =
+    COUNTRIES.filter(country=>
+
+        country.name
+        .toLowerCase()
+        .includes(keyword)
+
+    );
+
+    if(countries.length === 0){
+
+        countryList.innerHTML =
+
+        `
+        <div class="country-empty">
+
+            Aucun pays trouvé
+
+        </div>
+        `;
+
+        return;
+
+    }
+
+    countries.forEach(country=>{
+
+        const item =
+        document.createElement("button");
+
+        item.type = "button";
+
+        item.className =
+        "nv-country-item";
+
+        item.innerHTML =
+
+        `
+        <span class="nv-country-flag">
+
+            ${country.flag}
+
+        </span>
+
+        <span class="nv-country-name">
+
+            ${country.name}
+
+        </span>
+        `;
+
+        item.addEventListener(
+            "click",
+            ()=>{
+
+                selectedCountry =
+                country;
+
+                countryInput.value =
+                country.name;
+
+                selectedCountryFlag.textContent =
+                country.flag;
+
+                selectedCountryName.textContent =
+                country.name;
+
+                closeModal(
+                    "countryModal"
+                );
+
+            }
+        );
+
+        countryList.appendChild(item);
+
+    });
+
+}
+
+selectedCountryButton.addEventListener(
+    "click",
+    ()=>{
+
+        renderCountries();
+
+        countrySearch.value = "";
+
+        openModal(
+            "countryModal"
+        );
+
+        setTimeout(()=>{
+
+            countrySearch.focus();
+
+        },150);
+
+    }
+);
+
+closeCountryModal.addEventListener(
+    "click",
+    ()=>{
+
+        closeModal(
+            "countryModal"
+        );
+
+    }
+);
+
+countrySearch.addEventListener(
+    "input",
+    ()=>{
+
+        renderCountries(
+            countrySearch.value
+        );
+
+    }
+);
+
+
+// ==========================================
+// 6. Validation
+// ==========================================
+
+function showError(message){
+
+    signupError.textContent =
+    message;
+
+    signupError.classList.add(
+        "show"
+    );
+
+}
+
+function clearError(){
+
+    signupError.textContent = "";
+
+    signupError.classList.remove(
+        "show"
+    );
+
+}
+
+function validateForm(){
+
+    clearError();
+
+    const username =
+    usernameInput.value
+    .trim()
+    .toLowerCase();
+
+    const displayName =
+    displayNameInput.value
+    .trim();
+
+    const email =
+    emailInput.value
+    .trim()
+    .toLowerCase();
+
+    const country =
+    countryInput.value;
+
+    const language =
+    languageInput.value;
+
+    const password =
+    passwordInput.value;
+
+    const confirmPassword =
+    confirmPasswordInput.value;
+
+    if(username === ""){
+
+        showError(
+            "Veuillez saisir un nom d'utilisateur."
+        );
+
+        usernameInput.focus();
+
+        return false;
+
+    }
+
+    if(!/^[a-z0-9._]+$/.test(username)){
+
+        showError(
+            "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres, des points et des tirets bas."
+        );
+
+        usernameInput.focus();
+
+        return false;
+
+    }
+
+    if(username.length < 3){
+
+        showError(
+            "Le nom d'utilisateur doit contenir au moins 3 caractères."
+        );
+
+        usernameInput.focus();
+
+        return false;
+
+    }
+
+    if(displayName === ""){
+
+        showError(
+            "Veuillez saisir votre nom."
+        );
+
+        displayNameInput.focus();
+
+        return false;
+
+    }
+
+    if(email === ""){
+
+        showError(
+            "Veuillez saisir une adresse e-mail."
+        );
+
+        emailInput.focus();
+
+        return false;
+
+    }
+
+    if(country === ""){
+
+        showError(
+            "Veuillez sélectionner votre pays."
+        );
+
+        return false;
+
+    }
+
+    if(language === ""){
+
+        showError(
+            "Veuillez sélectionner une langue."
+        );
+
+        languageInput.focus();
+
+        return false;
+
+    }
+
+    if(password.length < 8){
+
+        showError(
+            "Le mot de passe doit contenir au moins 8 caractères."
+        );
+
+        passwordInput.focus();
+
+        return false;
+
+    }
+
+    if(password !== confirmPassword){
+
+        showError(
+            "Les mots de passe ne correspondent pas."
+        );
+
+        confirmPasswordInput.focus();
+
+        return false;
+
+    }
+
+    return true;
+
+}
 </script>
