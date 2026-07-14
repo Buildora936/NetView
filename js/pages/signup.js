@@ -159,67 +159,58 @@ function clearError(){
 
 }
 // ==========================================
-// 9. Password Toggle
+// Password Toggle
 // ==========================================
 
-function togglePasswordVisibility(
-    input,
-    button
-){
+const passwordInput =
+document.getElementById("password");
 
-    const isHidden =
-    input.type === "password";
+const confirmPasswordInput =
+document.getElementById("confirmPassword");
 
-    input.type =
-    isHidden
-    ? "text"
-    : "password";
+const togglePassword =
+document.getElementById("togglePassword");
 
-    button.innerHTML =
+const toggleConfirmPassword =
+document.getElementById("toggleConfirmPassword");
 
-    isHidden
+function togglePasswordVisibility(input, button){
 
-    ? '<i class="fa-regular fa-eye-slash"></i>'
+    if(input.type === "password"){
 
-    : '<i class="fa-regular fa-eye"></i>';
+        input.type = "text";
+
+        button.innerHTML =
+        '<i class="fa-solid fa-eye-slash"></i>';
+
+    }else{
+
+        input.type = "password";
+
+        button.innerHTML =
+        '<i class="fa-solid fa-eye"></i>';
+
+    }
 
 }
 
-togglePassword.addEventListener(
+togglePassword.addEventListener("click", function(){
 
-    "click",
+    togglePasswordVisibility(
+        passwordInput,
+        togglePassword
+    );
 
-    ()=>{
+});
 
-        togglePasswordVisibility(
+toggleConfirmPassword.addEventListener("click", function(){
 
-            passwordInput,
+    togglePasswordVisibility(
+        confirmPasswordInput,
+        toggleConfirmPassword
+    );
 
-            togglePassword
-
-        );
-
-    }
-
-);
-
-toggleConfirmPassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        togglePasswordVisibility(
-
-            confirmPasswordInput,
-
-            toggleConfirmPassword
-
-        );
-
-    }
-
-);
+});
 
 
 
