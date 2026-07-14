@@ -158,5 +158,73 @@ function clearError(){
     signupError.classList.remove("show");
 
 }
+// ==========================================
+// 9. Password Toggle
+// ==========================================
+
+function togglePasswordVisibility(
+    input,
+    button
+){
+
+    const isHidden =
+    input.type === "password";
+
+    input.type =
+    isHidden
+    ? "text"
+    : "password";
+
+    button.innerHTML =
+
+    isHidden
+
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+
+    : '<i class="fa-regular fa-eye"></i>';
+
+}
+
+togglePassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        togglePasswordVisibility(
+
+            passwordInput,
+
+            togglePassword
+
+        );
+
+    }
+
+);
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        togglePasswordVisibility(
+
+            confirmPasswordInput,
+
+            toggleConfirmPassword
+
+        );
+
+    }
+
+);
+
+
+
+
+
+
 
 console.log("signup.js loaded");
