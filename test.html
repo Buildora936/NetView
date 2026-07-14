@@ -172,7 +172,331 @@ Signup
 
             class="nv-signup-form">
 
-                <!-- Étape 2 -->
+               <!-- Username -->
+
+<div class="nv-form-group">
+
+    <label
+    for="username"
+    class="nv-label">
+
+        Nom d'utilisateur
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-at nv-input-icon"></i>
+
+        <input
+
+        id="username"
+
+        class="nv-input"
+
+        type="text"
+
+        placeholder="@nomutilisateur"
+
+        autocomplete="username"
+
+        required>
+
+    </div>
+
+</div>
+
+<!-- Display Name -->
+
+<div class="nv-form-group">
+
+    <label
+    for="displayName"
+    class="nv-label">
+
+        Nom affiché
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-user nv-input-icon"></i>
+
+        <input
+
+        id="displayName"
+
+        class="nv-input"
+
+        type="text"
+
+        placeholder="Votre nom"
+
+        autocomplete="name"
+
+        required>
+
+    </div>
+
+</div>
+
+<!-- Email -->
+
+<div class="nv-form-group">
+
+    <label
+    for="email"
+    class="nv-label">
+
+        Adresse e-mail
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-envelope nv-input-icon"></i>
+
+        <input
+
+        id="email"
+
+        class="nv-input"
+
+        type="email"
+
+        placeholder="exemple@email.com"
+
+        autocomplete="email"
+
+        required>
+
+    </div>
+
+</div>
+
+<!-- Country -->
+
+<div class="nv-form-group">
+
+    <label class="nv-label">
+
+        Pays
+
+    </label>
+
+    <button
+
+    type="button"
+
+    id="selectedCountry"
+
+    class="nv-country-selector">
+
+        <span class="nv-country-left">
+
+            <span id="selectedCountryFlag">
+
+                <i class="fa-solid fa-earth-americas"></i>
+
+            </span>
+
+            <span id="selectedCountryName">
+
+                Choisissez votre pays
+
+            </span>
+
+        </span>
+
+        <i class="fa-solid fa-chevron-down"></i>
+
+    </button>
+
+    <input
+
+    type="hidden"
+
+    id="country"
+
+    required>
+
+</div>
+
+<!-- Language -->
+
+<div class="nv-form-group">
+
+    <label
+    for="language"
+    class="nv-label">
+
+        Langue
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-language nv-input-icon"></i>
+
+        <select
+
+        id="language"
+
+        class="nv-select"
+
+        required>
+
+            <option value="">
+
+                Choisir une langue
+
+            </option>
+
+            <option value="fr">
+
+                Français
+
+            </option>
+
+            <option value="en">
+
+                English
+
+            </option>
+
+            <option value="es">
+
+                Español
+
+            </option>
+
+            <option value="pt">
+
+                Português
+
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<!-- Password -->
+
+<div class="nv-form-group">
+
+    <label
+    for="password"
+    class="nv-label">
+
+        Mot de passe
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-lock nv-input-icon"></i>
+
+        <input
+
+        id="password"
+
+        class="nv-input"
+
+        type="password"
+
+        placeholder="Minimum 8 caractères"
+
+        autocomplete="new-password"
+
+        required>
+
+        <button
+
+        type="button"
+
+        id="togglePassword"
+
+        class="nv-password-toggle">
+
+            <i class="fa-regular fa-eye"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Confirm Password -->
+
+<div class="nv-form-group">
+
+    <label
+    for="confirmPassword"
+    class="nv-label">
+
+        Confirmer le mot de passe
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-lock nv-input-icon"></i>
+
+        <input
+
+        id="confirmPassword"
+
+        class="nv-input"
+
+        type="password"
+
+        placeholder="Confirmez votre mot de passe"
+
+        autocomplete="new-password"
+
+        required>
+
+        <button
+
+        type="button"
+
+        id="toggleConfirmPassword"
+
+        class="nv-password-toggle">
+
+            <i class="fa-regular fa-eye"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Signup Button -->
+
+<button
+
+type="submit"
+
+id="signupButton"
+
+class="nv-btn nv-btn-gradient nv-signup-button">
+
+    Créer un compte
+
+</button>
+
+<!-- Error -->
+
+<div
+
+id="signupError"
+
+class="nv-error">
+
+</div>
 
             </form>
 
