@@ -506,6 +506,231 @@ class="nv-error">
 
 </main>
 
+<!-- ==========================================
+Terms
+========================================== -->
+
+<div class="nv-signup-terms">
+
+    En créant un compte, vous acceptez les
+
+    <a href="conditions-utilisation.html">
+
+        Conditions d'utilisation
+
+    </a>
+
+    et la
+
+    <a href="privacy.html">
+
+        Politique de confidentialité
+
+    </a>
+
+    de NetView.
+
+</div>
+
+<!-- ==========================================
+Divider
+========================================== -->
+
+<div class="nv-divider">
+
+    <span>
+
+        Vous avez déjà un compte ?
+
+    </span>
+
+</div>
+
+<!-- ==========================================
+Login Link
+========================================== -->
+
+<div class="nv-login-link">
+
+    <a
+    href="login.html">
+
+        Se connecter
+
+    </a>
+
+</div>
+
+<!-- ==========================================
+Version
+========================================== -->
+
+<div class="nv-version">
+
+    NetView v1.0
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+<!-- ==========================================
+Country Modal
+========================================== -->
+
+<div
+
+id="countryModal"
+
+class="nv-modal-overlay">
+
+    <div class="nv-modal nv-country-modal">
+
+        <!-- Header -->
+
+        <div class="nv-country-header">
+
+            <h2>
+
+                Choisissez votre pays
+
+            </h2>
+
+            <button
+
+            type="button"
+
+            id="closeCountryModal"
+
+            class="nv-modal-close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- Search -->
+
+        <div class="nv-country-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+
+            id="countrySearch"
+
+            type="text"
+
+            placeholder="Rechercher un pays..."
+
+            autocomplete="off">
+
+        </div>
+
+        <!-- Countries -->
+
+        <div
+
+        id="countryList"
+
+        class="nv-country-list">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+Email Verification Modal
+========================================== -->
+
+<div
+
+id="verifyModal"
+
+class="nv-modal-overlay">
+
+    <div class="nv-modal">
+
+        <div class="nv-modal-header">
+
+            <h2
+            id="verifyTitle"
+            class="nv-modal-title">
+
+                Vérifiez votre adresse e-mail
+
+            </h2>
+
+        </div>
+
+        <div class="nv-modal-body">
+
+            <p id="verifyText">
+
+            </p>
+
+            <div
+
+            id="verifyMessage"
+
+            class="nv-error">
+
+            </div>
+
+        </div>
+
+        <div class="nv-modal-footer">
+
+            <button
+
+            id="resendButton"
+
+            class="nv-btn nv-btn-gradient">
+
+                Renvoyer l'e-mail
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+Page Loader
+========================================== -->
+
+<div
+
+class="nv-page-loader"
+
+id="pageLoader"
+
+style="display:none;">
+
+    <div class="nv-spinner nv-spinner-lg"></div>
+
+    <div class="nv-loader-text">
+
+        Création du compte...
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+Signup Script
+========================================== -->
+
+<script type="module" src="js/pages/signup.js"></script>
+
 </body>
 
 </html>
