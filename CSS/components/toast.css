@@ -9,27 +9,22 @@
    Toast Container
 ========================================== */
 
-.nv-toast-container {
+.nv-toast-container{
 
     position:fixed;
 
-    right:20px;
-
     top:20px;
    
-    bottom:24px;
+    right:20px;
 
     display:flex;
-
+   
     flex-direction:column;
-
+   
     gap:1rem;
 
-    z-index:
+    z-index:var(--nv-z-toast);
 
-        var(--nv-z-toast);
-
-}
 
 
 /* ==========================================
