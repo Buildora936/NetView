@@ -88,9 +88,7 @@
 
     gap:1rem;
 
-    background:
-
-        var(--nv-background);
+    background: var(--nv-bg);
 
     z-index:
 
@@ -109,13 +107,7 @@
 
     height:80px;
 
-    animation:
-
-        nvPulse
-
-        2s
-
-        infinite;
+   animation: nvFloat 3s ease-in-out infinite;
 
 }
 
