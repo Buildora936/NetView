@@ -221,3 +221,34 @@
     line-height:1.7;
 
 }
+/* ==========================================
+   Particles
+========================================== */
+
+.particles{
+
+    position:absolute;
+
+    inset:0;
+
+}
+
+.particle{
+
+    position:absolute;
+
+    width:4px;
+
+    height:4px;
+
+    border-radius:50%;
+
+    background:white;
+
+    opacity:.25;
+
+    animation:
+
+        particleFloat linear infinite;
+
+}
