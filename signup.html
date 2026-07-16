@@ -1,53 +1,103 @@
-<!-- ==========================================
-     Background
-========================================== -->
+<!DOCTYPE html>
+<html lang="fr">
 
-<div class="signup-background">
+<head>
 
-    <div class="bg-gradient"></div>
+    <meta charset="UTF-8">
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <div class="particles" id="particles"></div>
+    <title>Créer un compte • NetView</title>
 
-</div>
+    <!-- Font Awesome -->
 
-<!-- ==========================================
-     Signup
-========================================== -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
 
-<main class="signup-page">
+    <!-- Design System -->
 
-    <section class="signup-card">
+    <link rel="stylesheet" href="css/core/variables.css">
+    <link rel="stylesheet" href="css/core/reset.css">
+    <link rel="stylesheet" href="css/core/typography.css">
+    <link rel="stylesheet" href="css/core/animations.css">
+    <link rel="stylesheet" href="css/core/utilities.css">
 
-        <!-- Logo -->
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/forms.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+    <link rel="stylesheet" href="css/components/loader.css">
+    <link rel="stylesheet" href="css/components/toast.css">
 
-        <img
-            src="assets/images/NetView.png"
-            alt="NetView"
-            class="signup-logo"
-        >
+    <!-- Page -->
 
-        <!-- Title -->
+    <link rel="stylesheet" href="css/pages/signup.css">
 
-        <h1 class="signup-title">
+</head>
 
-            Créer un compte
+<body>
 
-        </h1>
+    <!-- Background -->
 
-        <p class="signup-subtitle">
+    <div class="signup-background">
 
-            Rejoignez NetView et commencez à publier des vidéos,
-            suivre vos créateurs préférés et développer votre
-            communauté.
+        <div class="signup-gradient"></div>
 
-        </p>
+        <div class="signup-particles"></div>
 
-        <!-- Le formulaire sera ajouté ici -->
+        <div class="signup-orb orb-1"></div>
+        <div class="signup-orb orb-2"></div>
+        <div class="signup-orb orb-3"></div>
 
-    </section>
+    </div>
 
-</main>
+    <!-- Page -->
+
+    <main class="signup-page">
+
+        <section class="signup-card">
+
+            <img
+                src="assets/images/NetView.png"
+                alt="NetView"
+                class="signup-logo"
+            >
+
+            <h1>
+
+                Créer un compte
+
+            </h1>
+
+            <p>
+
+                Rejoignez NetView gratuitement.
+
+            </p>
+
+            <form
+                id="signupForm"
+                class="nv-form"
+                novalidate
+            >
+
+                <!-- Étapes suivantes -->
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script
+        type="module"
+        src="js/pages/signup.js"
+    ></script>
+
+</body>
+
+</html>
