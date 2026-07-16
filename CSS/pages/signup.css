@@ -132,3 +132,42 @@
     color:var(--nv-danger);
 
 }
+/* ==========================================
+   Password
+========================================== */
+
+#passwordMessage{
+
+    margin-top:6px;
+
+    transition:.2s;
+
+}
+
+.password-valid{
+
+    color:var(--nv-success);
+
+}
+
+.password-invalid{
+
+    color:var(--nv-danger);
+
+}
+
+.nv-password-toggle{
+
+    background:none;
+
+    border:none;
+
+    padding:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
