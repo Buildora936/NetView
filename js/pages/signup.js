@@ -15,6 +15,12 @@ document.getElementById("username");
 const usernameMessage =
 document.getElementById("usernameMessage");
 
+const displayNameInput =
+document.getElementById("displayName");
+
+const displayNameMessage =
+document.getElementById("displayNameMessage");
+
 
 // ==========================================
 // Username
@@ -37,6 +43,55 @@ function cleanUsername(value){
 
 }
 
+// ==========================================
+// Display Name
+// ==========================================
+
+function validateDisplayName(){
+
+    let value =
+    displayNameInput.value
+
+        .replace(/\s+/g," ")
+
+        .trim();
+
+    displayNameInput.value =
+    value;
+
+    if(value.length < 3){
+
+        displayNameMessage.textContent =
+        "Minimum 3 caractères.";
+
+        displayNameMessage.className =
+        "nv-help display-invalid";
+
+        return false;
+
+    }
+
+    if(value.length > 100){
+
+        displayNameMessage.textContent =
+        "Nom trop long.";
+
+        displayNameMessage.className =
+        "nv-help display-invalid";
+
+        return false;
+
+    }
+
+    displayNameMessage.textContent =
+    "Nom valide.";
+
+    displayNameMessage.className =
+    "nv-help display-valid";
+
+    return true;
+
+}
 
 // Vérification
 
@@ -131,3 +186,10 @@ usernameInput.addEventListener("input",()=>{
     );
 
 });
+displayNameInput.addEventListener(
+
+    "input",
+
+    validateDisplayName
+
+);
