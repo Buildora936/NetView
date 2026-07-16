@@ -4,8 +4,6 @@
 
 .signup-page{
 
-    position:relative;
-
     min-height:100vh;
 
     display:flex;
@@ -14,143 +12,11 @@
 
     align-items:center;
 
-    padding:60px 20px;
+    padding:40px 20px;
 
-    overflow:hidden;
-
-}
-
-/* ==========================================
-   Background
-========================================== */
-
-.signup-background{
-
-    position:fixed;
-
-    inset:0;
-
-    overflow:hidden;
-
-    z-index:-1;
+    position:relative;
 
 }
-
-.bg-gradient{
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-        radial-gradient(circle at top left,
-        rgba(37,99,235,.25),
-        transparent 40%),
-
-        radial-gradient(circle at bottom right,
-        rgba(29,78,216,.20),
-        transparent 45%),
-
-        var(--nv-bg);
-
-}
-
-/* ==========================================
-   Floating Orbs
-========================================== */
-
-.orb{
-
-    position:absolute;
-
-    border-radius:50%;
-
-    filter:blur(80px);
-
-    opacity:.45;
-
-    animation:orbFloat 12s ease-in-out infinite;
-
-}
-
-.orb-1{
-
-    width:320px;
-
-    height:320px;
-
-    background:#2563EB;
-
-    top:-100px;
-
-    left:-80px;
-
-}
-
-.orb-2{
-
-    width:240px;
-
-    height:240px;
-
-    background:#1D4ED8;
-
-    right:-60px;
-
-    top:120px;
-
-    animation-delay:3s;
-
-}
-
-.orb-3{
-
-    width:280px;
-
-    height:280px;
-
-    background:#3B82F6;
-
-    bottom:-120px;
-
-    left:30%;
-
-    animation-delay:6s;
-
-}
-
-@keyframes orbFloat{
-
-    0%{
-
-        transform:
-        translateY(0)
-        scale(1);
-
-    }
-
-    50%{
-
-        transform:
-        translateY(-40px)
-        scale(1.08);
-
-    }
-
-    100%{
-
-        transform:
-        translateY(0)
-        scale(1);
-
-    }
-
-}
-
-/* ==========================================
-   Signup Card
-========================================== */
 
 .signup-card{
 
@@ -158,97 +24,18 @@
 
     max-width:560px;
 
-    padding:45px;
-
-    border-radius:24px;
-
-    background:
-
-        rgba(17,24,39,.75);
-
-    backdrop-filter:blur(20px);
-
-    border:
-
-        1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-
-        0 30px 80px rgba(0,0,0,.45);
+    padding:40px;
 
     text-align:center;
 
-    animation:
-
-        nvScaleIn .6s ease;
-
 }
-
-/* ==========================================
-   Logo
-========================================== */
 
 .signup-logo{
 
-    width:220px;
+    width:240px;
 
-    margin:auto;
+    margin:0 auto 30px;
 
-    animation:
-
-        floatLogo 5s ease-in-out infinite;
-
-}
-
-/* ==========================================
-   Title
-========================================== */
-
-.signup-title{
-
-    margin-top:25px;
-
-    font-size:2.2rem;
-
-}
-
-.signup-subtitle{
-
-    margin-top:15px;
-
-    color:var(--nv-text-secondary);
-
-    line-height:1.7;
-
-}
-/* ==========================================
-   Particles
-========================================== */
-
-.particles{
-
-    position:absolute;
-
-    inset:0;
-
-}
-
-.particle{
-
-    position:absolute;
-
-    width:4px;
-
-    height:4px;
-
-    border-radius:50%;
-
-    background:white;
-
-    opacity:.25;
-
-    animation:
-
-        particleFloat linear infinite;
+    animation:floatLogo 5s ease-in-out infinite;
 
 }
