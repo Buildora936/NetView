@@ -39,3 +39,38 @@
     animation:floatLogo 5s ease-in-out infinite;
 
 }
+/* ==========================================
+   Username
+========================================== */
+
+#username{
+
+    text-transform:lowercase;
+
+}
+
+#usernameMessage{
+
+    margin-top:6px;
+
+    transition:.2s;
+
+}
+
+.username-valid{
+
+    color:var(--nv-success);
+
+}
+
+.username-invalid{
+
+    color:var(--nv-danger);
+
+}
+
+.username-check{
+
+    color:var(--nv-warning);
+
+}
