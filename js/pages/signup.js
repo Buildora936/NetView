@@ -21,6 +21,12 @@ document.getElementById("displayName");
 const displayNameMessage =
 document.getElementById("displayNameMessage");
 
+const emailInput =
+document.getElementById("email");
+
+const emailMessage =
+document.getElementById("emailMessage");
+
 
 // ==========================================
 // Username
@@ -93,6 +99,55 @@ function validateDisplayName(){
 
 }
 
+// ==========================================
+// Email
+// ==========================================
+
+function validateEmail(){
+
+    const email =
+    emailInput.value
+        .trim()
+        .toLowerCase();
+
+    emailInput.value = email;
+
+    if(email.length === 0){
+
+        emailMessage.textContent =
+        "Veuillez saisir votre adresse e-mail.";
+
+        emailMessage.className =
+        "nv-help email-invalid";
+
+        return false;
+
+    }
+
+    const emailRegex =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailRegex.test(email)){
+
+        emailMessage.textContent =
+        "Adresse e-mail invalide.";
+
+        emailMessage.className =
+        "nv-help email-invalid";
+
+        return false;
+
+    }
+
+    emailMessage.textContent =
+    "Adresse e-mail valide.";
+
+    emailMessage.className =
+    "nv-help email-valid";
+
+    return true;
+
+}
 // Vérification
 
 async function checkUsername(){
@@ -191,5 +246,12 @@ displayNameInput.addEventListener(
     "input",
 
     validateDisplayName
+
+);
+emailInput.addEventListener(
+
+    "input",
+
+    validateEmail
 
 );
