@@ -27,7 +27,17 @@ document.getElementById("email");
 const emailMessage =
 document.getElementById("emailMessage");
 
+const passwordInput =
+document.getElementById("password");
 
+const passwordMessage =
+document.getElementById("passwordMessage");
+
+const togglePassword =
+document.getElementById("togglePassword");
+
+const togglePasswordIcon =
+document.getElementById("togglePasswordIcon");
 // ==========================================
 // Username
 // ==========================================
@@ -253,5 +263,58 @@ emailInput.addEventListener(
     "input",
 
     validateEmail
+
+);
+// ==========================================
+// Password
+// ==========================================
+
+togglePassword.addEventListener("click",()=>{
+
+    const visible =
+    passwordInput.type === "text";
+
+    passwordInput.type =
+    visible ? "password" : "text";
+
+    togglePasswordIcon.className =
+    visible
+        ? "fa-regular fa-eye"
+        : "fa-regular fa-eye-slash";
+
+});
+
+function validatePassword(){
+
+    const password =
+    passwordInput.value;
+
+    if(password.length < 8){
+
+        passwordMessage.textContent =
+        "Minimum 8 caractères.";
+
+        passwordMessage.className =
+        "nv-help password-invalid";
+
+        return false;
+
+    }
+
+    passwordMessage.textContent =
+    "Mot de passe valide.";
+
+    passwordMessage.className =
+    "nv-help password-valid";
+
+    return true;
+
+}
+
+passwordInput.addEventListener(
+
+    "input",
+
+    validatePassword
 
 );
