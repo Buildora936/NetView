@@ -103,3 +103,32 @@
     color:var(--nv-danger);
 
 }
+/* ==========================================
+   Email
+========================================== */
+
+#email{
+
+    text-transform:lowercase;
+
+}
+
+#emailMessage{
+
+    margin-top:6px;
+
+    transition:.2s;
+
+}
+
+.email-valid{
+
+    color:var(--nv-success);
+
+}
+
+.email-invalid{
+
+    color:var(--nv-danger);
+
+}
