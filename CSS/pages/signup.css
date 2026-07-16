@@ -74,3 +74,32 @@
     color:var(--nv-warning);
 
 }
+/* ==========================================
+   Full Name
+========================================== */
+
+#displayName{
+
+    text-transform:none;
+
+}
+
+#displayNameMessage{
+
+    margin-top:6px;
+
+    transition:.2s;
+
+}
+
+.display-valid{
+
+    color:var(--nv-success);
+
+}
+
+.display-invalid{
+
+    color:var(--nv-danger);
+
+}
