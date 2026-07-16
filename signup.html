@@ -85,7 +85,49 @@
                 novalidate
             >
 
-                <!-- Étapes suivantes -->
+        <!-- ==========================================
+     Username
+========================================== -->
+
+<div class="nv-form-group">
+
+    <label
+        class="nv-label"
+        for="username"
+    >
+
+        Nom d'utilisateur
+
+        <span class="nv-required">*</span>
+
+    </label>
+
+    <div class="nv-input-wrapper">
+
+        <i class="fa-solid fa-at nv-input-icon"></i>
+
+        <input
+            type="text"
+            id="username"
+            class="nv-input"
+            placeholder="ex : netviewer"
+            autocomplete="username"
+            maxlength="30"
+            required
+        >
+
+    </div>
+
+    <small
+        id="usernameMessage"
+        class="nv-help"
+    >
+
+        Lettres, chiffres, _ et .
+
+    </small>
+
+</div>
 
             </form>
 
