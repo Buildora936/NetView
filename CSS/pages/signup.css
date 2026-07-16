@@ -1,65 +1,223 @@
 /* ==========================================
-Password Field
+   Signup Page
 ========================================== */
 
-.password-group{
+.signup-page{
 
     position:relative;
 
-}
+    min-height:100vh;
 
-.password-group input{
+    display:flex;
 
-    padding-right:55px;
+    justify-content:center;
+
+    align-items:center;
+
+    padding:60px 20px;
+
+    overflow:hidden;
 
 }
 
 /* ==========================================
-Password Toggle
+   Background
 ========================================== */
 
-.password-toggle{
+.signup-background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-1;
+
+}
+
+.bg-gradient{
 
     position:absolute;
 
-    top:50%;
+    inset:0;
 
-    right:16px;
+    background:
 
-    transform:translateY(-50%);
+        radial-gradient(circle at top left,
+        rgba(37,99,235,.25),
+        transparent 40%),
 
-    width:36px;
+        radial-gradient(circle at bottom right,
+        rgba(29,78,216,.20),
+        transparent 45%),
 
-    height:36px;
-
-    border:none;
-
-    background:none;
-
-    cursor:pointer;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:#9ca3af;
-
-    font-size:18px;
-
-    z-index:20;
+        var(--nv-bg);
 
 }
 
-.password-toggle:hover{
+/* ==========================================
+   Floating Orbs
+========================================== */
 
-    color:#2563eb;
+.orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(80px);
+
+    opacity:.45;
+
+    animation:orbFloat 12s ease-in-out infinite;
 
 }
 
-.password-toggle:focus{
+.orb-1{
 
-    outline:none;
+    width:320px;
+
+    height:320px;
+
+    background:#2563EB;
+
+    top:-100px;
+
+    left:-80px;
+
+}
+
+.orb-2{
+
+    width:240px;
+
+    height:240px;
+
+    background:#1D4ED8;
+
+    right:-60px;
+
+    top:120px;
+
+    animation-delay:3s;
+
+}
+
+.orb-3{
+
+    width:280px;
+
+    height:280px;
+
+    background:#3B82F6;
+
+    bottom:-120px;
+
+    left:30%;
+
+    animation-delay:6s;
+
+}
+
+@keyframes orbFloat{
+
+    0%{
+
+        transform:
+        translateY(0)
+        scale(1);
+
+    }
+
+    50%{
+
+        transform:
+        translateY(-40px)
+        scale(1.08);
+
+    }
+
+    100%{
+
+        transform:
+        translateY(0)
+        scale(1);
+
+    }
+
+}
+
+/* ==========================================
+   Signup Card
+========================================== */
+
+.signup-card{
+
+    width:100%;
+
+    max-width:560px;
+
+    padding:45px;
+
+    border-radius:24px;
+
+    background:
+
+        rgba(17,24,39,.75);
+
+    backdrop-filter:blur(20px);
+
+    border:
+
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+
+        0 30px 80px rgba(0,0,0,.45);
+
+    text-align:center;
+
+    animation:
+
+        nvScaleIn .6s ease;
+
+}
+
+/* ==========================================
+   Logo
+========================================== */
+
+.signup-logo{
+
+    width:220px;
+
+    margin:auto;
+
+    animation:
+
+        floatLogo 5s ease-in-out infinite;
+
+}
+
+/* ==========================================
+   Title
+========================================== */
+
+.signup-title{
+
+    margin-top:25px;
+
+    font-size:2.2rem;
+
+}
+
+.signup-subtitle{
+
+    margin-top:15px;
+
+    color:var(--nv-text-secondary);
+
+    line-height:1.7;
 
 }
