@@ -4,7 +4,7 @@
 
 import { supabase } from "../core/supabase.js";
 
-import { COUNTRIES } from "../assets/countries.js";
+
 // ==========================================
 // DOM
 // ==========================================
@@ -69,7 +69,58 @@ document.getElementById("countrySearch");
 const countryList =
 document.getElementById("countryList");
 
+const countries = [
 
+"Afghanistan",
+"Afrique du Sud",
+"Algérie",
+"Allemagne",
+"Angola",
+"Arabie Saoudite",
+"Argentine",
+"Australie",
+"Autriche",
+"Belgique",
+"Bénin",
+"Brésil",
+"Burkina Faso",
+"Cameroun",
+"Canada",
+"Chili",
+"Chine",
+"Colombie",
+"Corée du Sud",
+"Côte d'Ivoire",
+"Danemark",
+"Égypte",
+"Espagne",
+"États-Unis",
+"France",
+"Grèce",
+"Haïti",
+"Inde",
+"Italie",
+"Jamaïque",
+"Japon",
+"Kenya",
+"Luxembourg",
+"Madagascar",
+"Mali",
+"Maroc",
+"Mexique",
+"Niger",
+"Nigeria",
+"Norvège",
+"Portugal",
+"République Dominicaine",
+"Royaume-Uni",
+"Russie",
+"Sénégal",
+"Suisse",
+"Togo",
+"Tunisie"
+
+];
 // ==========================================
 // Username
 // ==========================================
@@ -88,45 +139,6 @@ function cleanUsername(value){
         .replace(/\s+/g,"")
 
         .replace(/[^a-z0-9._]/g,"");
-
-}
-
-function renderCountries(search = "") {
-
-    countryList.innerHTML = "";
-
-    COUNTRIES
-        .filter(country =>
-            country.name
-                .toLowerCase()
-                .includes(search.toLowerCase())
-        )
-        .forEach(country => {
-
-            const div = document.createElement("div");
-
-            div.className = "country-item";
-
-            div.innerHTML = `
-                <span class="country-flag">${country.flag}</span>
-                <span class="country-name">${country.name}</span>
-            `;
-
-            div.onclick = () => {
-
-                countryInput.value = country.name;
-
-                countryInput.dataset.countryCode = country.code;
-
-                countryInput.dataset.countryFlag = country.flag;
-
-                countryModal.classList.remove("active");
-
-            };
-
-            countryList.appendChild(div);
-
-        });
 
 }
 // ==========================================
@@ -178,7 +190,6 @@ function validateDisplayName(){
     return true;
 
 }
-
 // ==========================================
 // Email
 // ==========================================
@@ -265,6 +276,42 @@ function validateConfirmPassword(){
     "nv-help confirm-valid";
 
     return true;
+
+}
+
+function renderCountries(search=""){
+
+    countryList.innerHTML="";
+
+    countries
+
+    .filter(country=>country
+    .toLowerCase()
+    .includes(search.toLowerCase()))
+
+    .forEach(country=>{
+
+        const div =
+        document.createElement("div");
+
+        div.className =
+        "country-item";
+
+        div.textContent =
+        country;
+
+        div.onclick=()=>{
+
+            countryInput.value=
+            country;
+
+            countryModal.classList.remove("active");
+
+        };
+
+        countryList.appendChild(div);
+
+    });
 
 }
 // Vérification
@@ -359,6 +406,8 @@ usernameInput.addEventListener("input",()=>{
 
     );
 
+    
+
 });
 displayNameInput.addEventListener(
 
@@ -372,21 +421,6 @@ emailInput.addEventListener(
     "input",
 
     validateEmail
-
-);
-confirmPasswordInput.addEventListener(
-
-    "input",
-
-    validateConfirmPassword
-
-);
-
-passwordInput.addEventListener(
-
-    "input",
-
-    validateConfirmPassword
 
 );
 // ==========================================
@@ -466,6 +500,21 @@ toggleConfirmPassword.addEventListener(
         : "fa-regular fa-eye-slash";
 
     }
+
+);
+confirmPasswordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
+
+);
+
+passwordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
 
 );
 openCountryModal.onclick=()=>{
