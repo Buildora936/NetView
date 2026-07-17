@@ -171,3 +171,26 @@
     justify-content:center;
 
 }
+/* ==========================================
+   Confirm Password
+========================================== */
+
+#confirmPasswordMessage{
+
+    margin-top:6px;
+
+    transition:.2s;
+
+}
+
+.confirm-valid{
+
+    color:var(--nv-success);
+
+}
+
+.confirm-invalid{
+
+    color:var(--nv-danger);
+
+}
