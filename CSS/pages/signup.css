@@ -194,3 +194,138 @@
     color:var(--nv-danger);
 
 }
+/* ==========================================
+Country Selector
+========================================== */
+
+.country-select{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    cursor:pointer;
+
+    background:var(--nv-surface);
+
+    border:1px solid var(--nv-border);
+
+    border-radius:14px;
+
+    padding:15px;
+
+    transition:.25s;
+
+}
+
+.country-select:hover{
+
+    border-color:var(--nv-primary);
+
+}
+
+.country-select input{
+
+    width:100%;
+
+    cursor:pointer;
+
+}
+
+/* ==========================================
+Country Modal
+========================================== */
+
+.country-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999;
+
+}
+
+.country-modal.active{
+
+    display:flex;
+
+}
+
+.country-box{
+
+    width:420px;
+
+    max-height:650px;
+
+    background:var(--nv-card);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.country-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px;
+
+    border-bottom:1px solid var(--nv-border);
+
+}
+
+.country-header button{
+
+    font-size:22px;
+
+}
+
+#countrySearch{
+
+    width:100%;
+
+    padding:15px;
+
+    border-bottom:1px solid var(--nv-border);
+
+}
+
+.country-list{
+
+    max-height:450px;
+
+    overflow:auto;
+
+}
+
+.country-item{
+
+    padding:15px 20px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.country-item:hover{
+
+    background:var(--nv-hover);
+
+}
