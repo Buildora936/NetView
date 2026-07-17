@@ -38,6 +38,18 @@ document.getElementById("togglePassword");
 
 const togglePasswordIcon =
 document.getElementById("togglePasswordIcon");
+
+const confirmPasswordInput =
+document.getElementById("confirmPassword");
+
+const confirmPasswordMessage =
+document.getElementById("confirmPasswordMessage");
+
+const toggleConfirmPassword =
+document.getElementById("toggleConfirmPassword");
+
+const toggleConfirmPasswordIcon =
+document.getElementById("toggleConfirmPasswordIcon");
 // ==========================================
 // Username
 // ==========================================
@@ -158,6 +170,45 @@ function validateEmail(){
     return true;
 
 }
+// ==========================================
+// Confirm Password
+// ==========================================
+
+function validateConfirmPassword(){
+
+    if(confirmPasswordInput.value.length===0){
+
+        confirmPasswordMessage.textContent =
+        "Confirmez votre mot de passe.";
+
+        confirmPasswordMessage.className =
+        "nv-help";
+
+        return false;
+
+    }
+
+    if(passwordInput.value !== confirmPasswordInput.value){
+
+        confirmPasswordMessage.textContent =
+        "Les mots de passe sont différents.";
+
+        confirmPasswordMessage.className =
+        "nv-help confirm-invalid";
+
+        return false;
+
+    }
+
+    confirmPasswordMessage.textContent =
+    "Les mots de passe correspondent.";
+
+    confirmPasswordMessage.className =
+    "nv-help confirm-valid";
+
+    return true;
+
+}
 // Vérification
 
 async function checkUsername(){
@@ -265,6 +316,21 @@ emailInput.addEventListener(
     validateEmail
 
 );
+confirmPasswordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
+
+);
+
+passwordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
+
+);
 // ==========================================
 // Password
 // ==========================================
@@ -316,5 +382,56 @@ passwordInput.addEventListener(
     "input",
 
     validatePassword
+
+);
+// ==========================================
+// Confirm Password Toggle
+// ==========================================
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        const visible =
+        confirmPasswordInput.type === "text";
+
+        confirmPasswordInput.type =
+        visible ? "password" : "text";
+
+        toggleConfirmPasswordIcon.className =
+        visible
+
+        ? "fa-regular fa-eye"
+
+        : "fa-regular fa-eye-slash";
+
+    }
+
+);// ==========================================
+// Confirm Password Toggle
+// ==========================================
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        const visible =
+        confirmPasswordInput.type === "text";
+
+        confirmPasswordInput.type =
+        visible ? "password" : "text";
+
+        toggleConfirmPasswordIcon.className =
+        visible
+
+        ? "fa-regular fa-eye"
+
+        : "fa-regular fa-eye-slash";
+
+    }
 
 );
