@@ -4,7 +4,7 @@
 
 import { supabase } from "../core/supabase.js";
 
-
+import { COUNTRIES } from "../assets/countries.js";
 // ==========================================
 // DOM
 // ==========================================
@@ -69,58 +69,7 @@ document.getElementById("countrySearch");
 const countryList =
 document.getElementById("countryList");
 
-const countries = [
 
-"Afghanistan",
-"Afrique du Sud",
-"Algérie",
-"Allemagne",
-"Angola",
-"Arabie Saoudite",
-"Argentine",
-"Australie",
-"Autriche",
-"Belgique",
-"Bénin",
-"Brésil",
-"Burkina Faso",
-"Cameroun",
-"Canada",
-"Chili",
-"Chine",
-"Colombie",
-"Corée du Sud",
-"Côte d'Ivoire",
-"Danemark",
-"Égypte",
-"Espagne",
-"États-Unis",
-"France",
-"Grèce",
-"Haïti",
-"Inde",
-"Italie",
-"Jamaïque",
-"Japon",
-"Kenya",
-"Luxembourg",
-"Madagascar",
-"Mali",
-"Maroc",
-"Mexique",
-"Niger",
-"Nigeria",
-"Norvège",
-"Portugal",
-"République Dominicaine",
-"Royaume-Uni",
-"Russie",
-"Sénégal",
-"Suisse",
-"Togo",
-"Tunisie"
-
-];
 // ==========================================
 // Username
 // ==========================================
@@ -142,39 +91,42 @@ function cleanUsername(value){
 
 }
 
-function renderCountries(search=""){
+function renderCountries(search = "") {
 
-    countryList.innerHTML="";
+    countryList.innerHTML = "";
 
-    countries
+    COUNTRIES
+        .filter(country =>
+            country.name
+                .toLowerCase()
+                .includes(search.toLowerCase())
+        )
+        .forEach(country => {
 
-    .filter(country=>country
-    .toLowerCase()
-    .includes(search.toLowerCase()))
+            const div = document.createElement("div");
 
-    .forEach(country=>{
+            div.className = "country-item";
 
-        const div =
-        document.createElement("div");
+            div.innerHTML = `
+                <span class="country-flag">${country.flag}</span>
+                <span class="country-name">${country.name}</span>
+            `;
 
-        div.className =
-        "country-item";
+            div.onclick = () => {
 
-        div.textContent =
-        country;
+                countryInput.value = country.name;
 
-        div.onclick=()=>{
+                countryInput.dataset.countryCode = country.code;
 
-            countryInput.value=
-            country;
+                countryInput.dataset.countryFlag = country.flag;
 
-            countryModal.classList.remove("active");
+                countryModal.classList.remove("active");
 
-        };
+            };
 
-        countryList.appendChild(div);
+            countryList.appendChild(div);
 
-    });
+        });
 
 }
 // ==========================================
