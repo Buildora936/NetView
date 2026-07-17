@@ -409,29 +409,4 @@ toggleConfirmPassword.addEventListener(
 
     }
 
-);// ==========================================
-// Confirm Password Toggle
-// ==========================================
-
-toggleConfirmPassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        const visible =
-        confirmPasswordInput.type === "text";
-
-        confirmPasswordInput.type =
-        visible ? "password" : "text";
-
-        toggleConfirmPasswordIcon.className =
-        visible
-
-        ? "fa-regular fa-eye"
-
-        : "fa-regular fa-eye-slash";
-
-    }
-
 );
