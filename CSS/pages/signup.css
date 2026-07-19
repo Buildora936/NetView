@@ -386,3 +386,32 @@ Terms
     text-decoration:underline;
 
 }
+/* ==========================================
+Signup Button
+========================================== */
+
+#signupButton{
+
+    margin-top:24px;
+
+    min-height:56px;
+
+    position:relative;
+
+}
+
+#signupButton:disabled{
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+#signupButton .nv-spinner{
+
+    margin:auto;
+
+}
