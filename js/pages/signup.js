@@ -575,17 +575,6 @@ passwordInput.addEventListener(
 
 );
 
-if(!terms.checked){
-
-    alert(
-        "Vous devez accepter les Conditions d'utilisation."
-    );
-
-    terms.focus();
-
-    return;
-
-}
 function validateForm(){
 
     return (
