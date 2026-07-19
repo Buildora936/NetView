@@ -57,6 +57,15 @@ document.getElementById("terms");
 const language =
 document.getElementById("language");
 
+const signupButton =
+document.getElementById("signupButton");
+
+const signupButtonText =
+document.getElementById("signupButtonText");
+
+const signupButtonLoader =
+document.getElementById("signupButtonLoader");
+
 const countryInput =
 document.getElementById("country");
 
@@ -194,6 +203,30 @@ function validateDisplayName(){
     "nv-help display-valid";
 
     return true;
+
+}
+
+// ==========================================
+// Button Loading
+// ==========================================
+
+function startSignupLoading(){
+
+    signupButton.disabled = true;
+
+    signupButtonText.hidden = true;
+
+    signupButtonLoader.hidden = false;
+
+}
+
+function stopSignupLoading(){
+
+    signupButton.disabled = false;
+
+    signupButtonText.hidden = false;
+
+    signupButtonLoader.hidden = true;
 
 }
 // ==========================================
@@ -447,6 +480,63 @@ togglePassword.addEventListener("click",()=>{
         : "fa-regular fa-eye-slash";
 
 });
+// ==========================================
+// Signup (Supabase Auth)
+// ==========================================
+
+async function signUp(){
+
+    if(!validateForm()) return;
+
+    startSignupLoading();
+
+    try{
+
+        const {
+
+            data,
+
+            error
+
+        } = await supabase.auth.signUp({
+
+            email: email.value.trim(),
+
+            password: password.value,
+
+            options:{
+
+                emailRedirectTo:
+                `${window.location.origin}/login.html`
+
+            }
+
+        });
+
+        if(error){
+
+            throw error;
+
+        }
+
+        await createProfile(data.user);
+
+    }
+
+    catch(error){
+
+        alert(error.message);
+
+        stopSignupLoading();
+
+    }
+
+}
+async function createProfile(user){
+
+    console.log(user);
+
+}
 
 function validatePassword(){
 
@@ -516,6 +606,19 @@ toggleConfirmPassword.addEventListener(
         ? "fa-regular fa-eye"
 
         : "fa-regular fa-eye-slash";
+
+    }
+
+);
+signupForm.addEventListener(
+
+    "submit",
+
+    async(event)=>{
+
+        event.preventDefault();
+
+        await signUp();
 
     }
 
