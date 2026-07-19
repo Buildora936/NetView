@@ -8,6 +8,8 @@ import { supabase } from "../core/supabase.js";
 // ==========================================
 // DOM
 // ==========================================
+const signupForm =
+document.getElementById("signupForm");
 
 const usernameInput =
 document.getElementById("username");
@@ -500,9 +502,9 @@ async function signUp(){
 
         } = await supabase.auth.signUp({
 
-            email: email.value.trim(),
-
-            password: password.value,
+           email: emailInput.value.trim(),
+            
+           password: passwordInput.value,
 
             options:{
 
@@ -582,6 +584,37 @@ if(!terms.checked){
     terms.focus();
 
     return;
+
+}
+function validateForm(){
+
+    return (
+
+        checkTerms() &&
+
+        validateEmail() &&
+
+        validatePassword() &&
+
+        validateConfirmPassword() &&
+
+        validateDisplayName()
+
+    );
+
+}
+
+function checkTerms(){
+
+    if(!terms.checked){
+
+        alert("Vous devez accepter les conditions d'utilisation.");
+
+        return false;
+
+    }
+
+    return true;
 
 }
 // ==========================================
