@@ -51,6 +51,9 @@ document.getElementById("toggleConfirmPassword");
 const toggleConfirmPasswordIcon =
 document.getElementById("toggleConfirmPasswordIcon");
 
+const language =
+document.getElementById("language");
+
 const countryInput =
 document.getElementById("country");
 
