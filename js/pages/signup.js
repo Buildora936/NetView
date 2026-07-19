@@ -51,6 +51,9 @@ document.getElementById("toggleConfirmPassword");
 const toggleConfirmPasswordIcon =
 document.getElementById("toggleConfirmPasswordIcon");
 
+const terms =
+document.getElementById("terms");
+
 const language =
 document.getElementById("language");
 
@@ -479,6 +482,18 @@ passwordInput.addEventListener(
     validatePassword
 
 );
+
+if(!terms.checked){
+
+    alert(
+        "Vous devez accepter les Conditions d'utilisation."
+    );
+
+    terms.focus();
+
+    return;
+
+}
 // ==========================================
 // Confirm Password Toggle
 // ==========================================
