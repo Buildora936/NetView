@@ -485,14 +485,25 @@ togglePassword.addEventListener("click",()=>{
 // ==========================================
 // Signup (Supabase Auth)
 // ==========================================
+        async function signUp(){
 
-async function signUp(){
+    console.log("1 - Début signUp");
 
-    if(!validateForm()) return;
+    if(!validateForm()){
+
+        console.log("2 - Validation échouée");
+
+        return;
+
+    }
+
+    console.log("3 - Validation OK");
 
     startSignupLoading();
 
     try{
+
+        console.log("4 - Envoi à Supabase");
 
         const {
 
@@ -502,9 +513,9 @@ async function signUp(){
 
         } = await supabase.auth.signUp({
 
-           email: emailInput.value.trim(),
-            
-           password: passwordInput.value,
+            email: emailInput.value.trim(),
+
+            password: passwordInput.value,
 
             options:{
 
@@ -514,6 +525,32 @@ async function signUp(){
             }
 
         });
+
+        console.log("5 - Réponse Supabase", data, error);
+
+        if(error){
+
+            throw error;
+
+        }
+
+        console.log("6 - Compte créé");
+
+        await createProfile(data.user);
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert(error.message);
+
+        stopSignupLoading();
+
+    }
+
+}
 
         if(error){
 
