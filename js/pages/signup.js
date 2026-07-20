@@ -485,7 +485,8 @@ togglePassword.addEventListener("click",()=>{
 // ==========================================
 // Signup (Supabase Auth)
 // ==========================================
-        async function signUp(){
+
+async function signUp(){
 
     console.log("1 - Début signUp");
 
@@ -526,7 +527,7 @@ togglePassword.addEventListener("click",()=>{
 
         });
 
-        console.log("5 - Réponse Supabase", data, error);
+        console.log("5 - Réponse Supabase");
 
         if(error){
 
@@ -552,31 +553,11 @@ togglePassword.addEventListener("click",()=>{
 
 }
 
-        if(error){
-
-            throw error;
-
-        }
-
-        await createProfile(data.user);
-
-    }
-
-    catch(error){
-
-        alert(error.message);
-
-        stopSignupLoading();
-
-    }
-
-}
 async function createProfile(user){
 
-    console.log(user);
+    console.log("Utilisateur :", user);
 
 }
-
 function validatePassword(){
 
     const password =
