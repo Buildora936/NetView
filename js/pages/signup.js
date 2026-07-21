@@ -621,25 +621,21 @@ togglePassword.addEventListener("click",()=>{
 // Signup (Supabase Auth)
 // ==========================================
 
+// ==========================================
+// Signup (Supabase Auth)
+// ==========================================
+
 async function signUp(){
 
-    console.log("1 - Début signUp");
-
     if(!validateForm()){
-
-        console.log("2 - Validation échouée");
 
         return;
 
     }
 
-    console.log("3 - Validation OK");
-
     startSignupLoading();
 
     try{
-
-        console.log("4 - Envoi à Supabase");
 
         const {
 
@@ -649,20 +645,23 @@ async function signUp(){
 
         } = await supabase.auth.signUp({
 
-            email: emailInput.value.trim(),
+            email:
 
-            password: passwordInput.value,
+                emailInput.value.trim(),
+
+            password:
+
+                passwordInput.value,
 
             options:{
 
                 emailRedirectTo:
+
                 `${window.location.origin}/login.html`
 
             }
 
         });
-
-        console.log("5 - Réponse Supabase");
 
         if(error){
 
@@ -670,24 +669,47 @@ async function signUp(){
 
         }
 
-        console.log("6 - Compte créé");
+        if(!data.user){
 
-        await createProfile(data.user);
+            throw new Error(
+
+                "Impossible de créer le compte."
+
+            );
+
+        }
+
+        await createProfile(
+
+            data.user
+
+        );
+
+        openVerifyEmailModal(
+
+            emailInput.value.trim()
+
+        );
 
     }
 
     catch(error){
 
-        console.error(error);
+        alert(
 
-        alert(error.message);
+            error.message
+
+        );
+
+    }
+
+    finally{
 
         stopSignupLoading();
 
     }
 
 }
-
 // ==========================================
 // Create Profile
 // ==========================================
