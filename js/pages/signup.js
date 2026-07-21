@@ -348,6 +348,27 @@ function hideLoader(){
     document.body.style.overflow = "";
 
 }
+// ==========================================
+// Error Handler
+// ==========================================
+
+function showError(message){
+
+    console.error(message);
+
+    // Temporaire
+    alert(message);
+
+}
+
+function showSuccess(message){
+
+    console.log(message);
+
+    // Temporaire
+    console.log(message);
+
+}
 
 window.addEventListener("load",()=>{
 
@@ -568,8 +589,8 @@ async function checkUsername(){
 
     if(error){
 
-        usernameMessage.textContent =
-        "Impossible de vérifier.";
+       usernameMessage.textContent =
+"Erreur réseau.";
 
         usernameMessage.className =
         "nv-help username-invalid";
@@ -711,6 +732,13 @@ async function signUp(){
             throw error;
 
         }
+        if(!data.user){
+
+    throw new Error(
+        "Le compte n'a pas pu être créé."
+    );
+
+}
 
         if(!data.user){
 
@@ -749,9 +777,19 @@ async function signUp(){
 
    catch(error){
 
-        alert(error.message);
+    console.error(error);
 
-    }
+    stopSignupLoading();
+
+    showError(
+
+        error.message ||
+
+        "Une erreur est survenue."
+
+    );
+
+}
 
     finally{
 
@@ -803,12 +841,15 @@ async function createProfile(user){
             null
 
         });
+if(error){
 
-    if(error){
+    console.error(error);
 
-        throw error;
+    throw new Error(
+        "Impossible de créer votre profil."
+    );
 
-    }
+}
 
 }
 // ==========================================
@@ -872,7 +913,24 @@ passwordInput.addEventListener(
 );
 
 function validateForm(){
+if(usernameInput.value.length < 3){
 
+    showError(
+        "Nom d'utilisateur invalide."
+    );
+
+    return false;
+
+}
+    if(countryInput.value === ""){
+
+    showError(
+        "Veuillez sélectionner un pays."
+    );
+
+    return false;
+
+}
     return (
 
         validateUsername() &&
@@ -897,7 +955,9 @@ function checkTerms(){
 
     if(!terms.checked){
 
-        alert("Vous devez accepter les conditions d'utilisation.");
+       showError(
+    "Vous devez accepter les conditions d'utilisation."
+);
 
         return false;
 
