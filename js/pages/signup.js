@@ -243,8 +243,7 @@ function showLoader(){
 
     globalLoader.classList.add("active");
 
-    document.body.style.overflow =
-    "hidden";
+    document.body.style.overflow = "hidden";
 
 }
 
@@ -252,19 +251,17 @@ function hideLoader(){
 
     globalLoader.classList.remove("active");
 
-    document.body.style.overflow =
-    "";
+    document.body.style.overflow = "";
 
 }
-showLoader();
 
-setTimeout(
+window.addEventListener("load",()=>{
 
-    hideLoader,
+    showLoader();
 
-    3000
+    setTimeout(hideLoader,800);
 
-);
+});
 // ==========================================
 // Email
 // ==========================================
