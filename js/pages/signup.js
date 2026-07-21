@@ -277,12 +277,15 @@ function validateDisplayName(){
 }
 
 // ==========================================
-// Button Loading
+// Signup Button
 // ==========================================
 
 function startSignupLoading(){
 
     signupButton.disabled = true;
+
+    signupButton.style.pointerEvents =
+    "none";
 
     signupButtonText.hidden = true;
 
@@ -293,6 +296,9 @@ function startSignupLoading(){
 function stopSignupLoading(){
 
     signupButton.disabled = false;
+
+    signupButton.style.pointerEvents =
+    "";
 
     signupButtonText.hidden = false;
 
