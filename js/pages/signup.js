@@ -168,6 +168,7 @@ const countries = [
 
 let usernameTimer = null;
 
+let signupInProgress = false;
 
 // Nettoyage
 
@@ -333,6 +334,12 @@ window.addEventListener("load",()=>{
     setTimeout(hideLoader,800);
 
 });
+
+function validateUsername(){
+
+    return usernameInput.value.trim().length >= 3;
+
+}
 // ==========================================
 // Email
 // ==========================================
@@ -633,11 +640,19 @@ togglePassword.addEventListener("click",()=>{
 
 async function signUp(){
 
+    if(signupInProgress){
+
+        return;
+
+    }
+
     if(!validateForm()){
 
         return;
 
     }
+
+    signupInProgress = true;
 
     startSignupLoading();
 
@@ -699,17 +714,15 @@ async function signUp(){
 
     }
 
-    catch(error){
+   catch(error){
 
-        alert(
-
-            error.message
-
-        );
+        alert(error.message);
 
     }
 
     finally{
+
+        signupInProgress = false;
 
         stopSignupLoading();
 
@@ -766,6 +779,20 @@ async function createProfile(user){
 
 }
 
+function validateCountry(){
+
+    if(countryInput.value.trim() === ""){
+
+        alert("Veuillez sélectionner votre pays.");
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
 function validatePassword(){
 
     const password =
@@ -805,7 +832,9 @@ function validateForm(){
 
     return (
 
-        checkTerms() &&
+        validateUsername() &&
+
+        validateDisplayName() &&
 
         validateEmail() &&
 
@@ -813,7 +842,9 @@ function validateForm(){
 
         validateConfirmPassword() &&
 
-        validateDisplayName()
+        validateCountry() &&
+
+        checkTerms()
 
     );
 
