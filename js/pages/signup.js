@@ -4,7 +4,29 @@
 
 import { supabase } from "../core/supabase.js";
 
+// ==========================================
+// Already Logged
+// ==========================================
 
+const {
+
+    data: {
+
+        session
+
+    }
+
+} = await supabase.auth.getSession();
+
+if(session){
+
+    window.location.replace(
+
+        "index.html"
+
+    );
+
+}
 // ==========================================
 // DOM
 // ==========================================
@@ -711,6 +733,17 @@ async function signUp(){
             emailInput.value.trim()
 
         );
+        setTimeout(
+
+    ()=>{
+
+        redirectToLogin();
+
+    },
+
+    10000
+
+);
 
     }
 
@@ -776,6 +809,16 @@ async function createProfile(user){
         throw error;
 
     }
+
+}
+// ==========================================
+// Redirect
+// ==========================================
+
+function redirectToLogin(){
+
+    window.location.href =
+    "login.html";
 
 }
 
@@ -939,7 +982,13 @@ closeVerifyModal.addEventListener(
 
     "click",
 
-    closeVerifyEmailModal
+    ()=>{
+
+        closeVerifyEmailModal();
+
+        redirectToLogin();
+
+    }
 
 );
 
