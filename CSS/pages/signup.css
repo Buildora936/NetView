@@ -424,3 +424,80 @@ Signup Button
     margin:auto;
 
 }
+/* ==========================================
+Verify Email Modal
+========================================== */
+
+.verify-email-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:rgba(0,0,0,.75);
+
+    z-index:9999;
+
+}
+
+.verify-email-modal.active{
+
+    display:flex;
+
+}
+
+.verify-email-box{
+
+    width:min(92%,520px);
+
+    padding:2rem;
+
+    text-align:center;
+
+    border-radius:20px;
+
+    background:var(--nv-surface);
+
+    border:1px solid var(--nv-border);
+
+}
+
+.verify-email-icon{
+
+    font-size:4rem;
+
+    color:var(--nv-primary);
+
+    margin-bottom:1rem;
+
+}
+
+.verify-email-box h2{
+
+    margin-bottom:1rem;
+
+}
+
+.verify-email-box p{
+
+    margin:.8rem 0;
+
+}
+
+.verify-email-box strong{
+
+    display:block;
+
+    margin:1rem 0;
+
+    color:var(--nv-primary);
+
+    font-size:1.1rem;
+
+}
