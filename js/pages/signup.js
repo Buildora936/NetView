@@ -11,6 +11,18 @@ import { supabase } from "../core/supabase.js";
 const signupForm =
 document.getElementById("signupForm");
 
+const resendEmailButton =
+document.getElementById("resendEmailButton");
+
+const resendEmailText =
+document.getElementById("resendEmailText");
+
+const resendEmailLoader =
+document.getElementById("resendEmailLoader");
+
+const resendEmailMessage =
+document.getElementById("resendEmailMessage");
+
 const verifyEmailModal =
 document.getElementById("verifyEmailModal");
 
@@ -191,6 +203,26 @@ function closeVerifyEmailModal(){
     verifyEmailModal.classList.remove(
         "active"
     );
+
+}
+
+function startResendLoading(){
+
+    resendEmailButton.disabled = true;
+
+    resendEmailText.hidden = true;
+
+    resendEmailLoader.hidden = false;
+
+}
+
+function stopResendLoading(){
+
+    resendEmailButton.disabled = false;
+
+    resendEmailText.hidden = false;
+
+    resendEmailLoader.hidden = true;
 
 }
 
@@ -417,6 +449,45 @@ function renderCountries(search=""){
         countryList.appendChild(div);
 
     });
+
+}
+
+async function resendVerificationEmail(){
+
+    startResendLoading();
+
+    resendEmailMessage.textContent =
+    "";
+
+    try{
+
+        await new Promise(
+
+            resolve =>
+
+            setTimeout(resolve,1500)
+
+        );
+
+        resendEmailMessage.textContent =
+        "Un nouvel e-mail a été envoyé.";
+
+        resendEmailMessage.className =
+        "nv-help email-valid";
+
+    }
+
+    catch{
+
+        resendEmailMessage.textContent =
+        "Impossible de renvoyer l'e-mail.";
+
+        resendEmailMessage.className =
+        "nv-help email-invalid";
+
+    }
+
+    stopResendLoading();
 
 }
 // Vérification
@@ -751,6 +822,14 @@ openCountryModal.onclick=()=>{
     renderCountries();
 
 };
+
+resendEmailButton.addEventListener(
+
+    "click",
+
+    resendVerificationEmail
+
+);
 
 closeVerifyModal.addEventListener(
 
