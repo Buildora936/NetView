@@ -256,6 +256,15 @@ function hideLoader(){
     "";
 
 }
+showLoader();
+
+setTimeout(
+
+    hideLoader,
+
+    3000
+
+);
 // ==========================================
 // Email
 // ==========================================
@@ -734,12 +743,3 @@ countrySearch.oninput=()=>{
     renderCountries(countrySearch.value);
 
 };
-showLoader();
-
-setTimeout(
-
-    hideLoader,
-
-    3000
-
-);
