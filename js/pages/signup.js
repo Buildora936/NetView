@@ -4,6 +4,8 @@
 
 import { supabase } from "../core/supabase.js";
 
+import { COUNTRIES }
+from "../assets/countries.js";
 // ==========================================
 // Already Logged
 // ==========================================
@@ -132,58 +134,6 @@ document.getElementById("countrySearch");
 const countryList =
 document.getElementById("countryList");
 
-const countries = [
-
-"Afghanistan",
-"Afrique du Sud",
-"Algérie",
-"Allemagne",
-"Angola",
-"Arabie Saoudite",
-"Argentine",
-"Australie",
-"Autriche",
-"Belgique",
-"Bénin",
-"Brésil",
-"Burkina Faso",
-"Cameroun",
-"Canada",
-"Chili",
-"Chine",
-"Colombie",
-"Corée du Sud",
-"Côte d'Ivoire",
-"Danemark",
-"Égypte",
-"Espagne",
-"États-Unis",
-"France",
-"Grèce",
-"Haïti",
-"Inde",
-"Italie",
-"Jamaïque",
-"Japon",
-"Kenya",
-"Luxembourg",
-"Madagascar",
-"Mali",
-"Maroc",
-"Mexique",
-"Niger",
-"Nigeria",
-"Norvège",
-"Portugal",
-"République Dominicaine",
-"Royaume-Uni",
-"Russie",
-"Sénégal",
-"Suisse",
-"Togo",
-"Tunisie"
-
-];
 // ==========================================
 // Username
 // ==========================================
@@ -476,13 +426,17 @@ function renderCountries(search=""){
 
     countryList.innerHTML="";
 
-    countries
+   COUNTRIES
 
-    .filter(country=>country
-    .toLowerCase()
-    .includes(search.toLowerCase()))
+    .filter(country =>
 
-    .forEach(country=>{
+        country.name
+            .toLowerCase()
+            .includes(search.toLowerCase())
+
+    )
+
+    .forEach(country => {
 
         const div =
         document.createElement("div");
@@ -491,12 +445,12 @@ function renderCountries(search=""){
         "country-item";
 
         div.textContent =
-        country;
+        `${country.flag} ${country.name}`;
 
-        div.onclick=()=>{
+        div.onclick = () => {
 
-            countryInput.value=
-            country;
+            countryInput.value =
+            country.name;
 
             countryModal.classList.remove("active");
 
