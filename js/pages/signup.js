@@ -688,11 +688,56 @@ async function signUp(){
 
 }
 
+// ==========================================
+// Create Profile
+// ==========================================
+
 async function createProfile(user){
 
-    console.log("Utilisateur :", user);
+    const {
+
+        error
+
+    } = await supabase
+
+        .from("profiles")
+
+        .insert({
+
+            id:
+            user.id,
+
+            username:
+            usernameInput.value.trim(),
+
+            display_name:
+            displayNameInput.value.trim(),
+
+            email:
+            emailInput.value.trim(),
+
+            country:
+            countryInput.value.trim(),
+
+            language:
+            language.value,
+
+            avatar_url:
+            null,
+
+            banner_url:
+            null
+
+        });
+
+    if(error){
+
+        throw error;
+
+    }
 
 }
+
 function validatePassword(){
 
     const password =
