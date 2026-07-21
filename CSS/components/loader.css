@@ -107,9 +107,7 @@
 
 .nv-logo-loader {
 
-    width:80px;
-
-    height:80px;
+    width:240;
 
    animation: nvFloat 3s ease-in-out infinite;
 
