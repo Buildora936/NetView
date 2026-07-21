@@ -11,6 +11,15 @@ import { supabase } from "../core/supabase.js";
 const signupForm =
 document.getElementById("signupForm");
 
+const verifyEmailModal =
+document.getElementById("verifyEmailModal");
+
+const verifyEmailAddress =
+document.getElementById("verifyEmailAddress");
+
+const closeVerifyModal =
+document.getElementById("closeVerifyModal");
+
 const globalLoader =
 document.getElementById("globalLoader");
 
@@ -161,6 +170,30 @@ function cleanUsername(value){
         .replace(/[^a-z0-9._]/g,"");
 
 }
+
+// ==========================================
+// Verify Email Modal
+// ==========================================
+
+function openVerifyEmailModal(email){
+
+    verifyEmailAddress.textContent =
+    email;
+
+    verifyEmailModal.classList.add(
+        "active"
+    );
+
+}
+
+function closeVerifyEmailModal(){
+
+    verifyEmailModal.classList.remove(
+        "active"
+    );
+
+}
+
 // ==========================================
 // Display Name
 // ==========================================
@@ -718,6 +751,14 @@ openCountryModal.onclick=()=>{
     renderCountries();
 
 };
+
+closeVerifyModal.addEventListener(
+
+    "click",
+
+    closeVerifyEmailModal
+
+);
 
 closeCountryModal.onclick=()=>{
 
