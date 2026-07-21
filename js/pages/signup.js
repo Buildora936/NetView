@@ -357,18 +357,11 @@ function showError(message){
 
     console.error(message);
 
-    // Temporaire
-    alert(message);
-
 }
 
 function showSuccess(message){
 
     console.log(message);
-
-    // Temporaire
-    console.log(message);
-
 }
 
 window.addEventListener("load",()=>{
