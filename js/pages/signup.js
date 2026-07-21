@@ -11,6 +11,9 @@ import { supabase } from "../core/supabase.js";
 const signupForm =
 document.getElementById("signupForm");
 
+const globalLoader =
+document.getElementById("globalLoader");
+
 const usernameInput =
 document.getElementById("username");
 
@@ -229,6 +232,28 @@ function stopSignupLoading(){
     signupButtonText.hidden = false;
 
     signupButtonLoader.hidden = true;
+
+}
+
+// ==========================================
+// Global Loader
+// ==========================================
+
+function showLoader(){
+
+    globalLoader.classList.add("active");
+
+    document.body.style.overflow =
+    "hidden";
+
+}
+
+function hideLoader(){
+
+    globalLoader.classList.remove("active");
+
+    document.body.style.overflow =
+    "";
 
 }
 // ==========================================
@@ -709,3 +734,12 @@ countrySearch.oninput=()=>{
     renderCountries(countrySearch.value);
 
 };
+showLoader();
+
+setTimeout(
+
+    hideLoader,
+
+    3000
+
+);
