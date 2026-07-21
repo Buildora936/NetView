@@ -286,6 +286,15 @@ Country Modal
 
     padding:20px;
 
+   /* ==========================================
+Global Loader
+========================================== */
+
+.nv-page-loader.active{
+
+    display:flex;
+
+}
     border-bottom:1px solid var(--nv-border);
 
 }
