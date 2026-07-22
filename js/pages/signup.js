@@ -4,7 +4,6 @@
 
 import { supabase } from "../core/supabase.js";
 
-import { COUNTRIES } from "../assets/countries.js";
 // ==========================================
 // Already Logged
 // ==========================================
