@@ -734,16 +734,6 @@ async function signUp(){
 
 }
 
-        if(!data.user){
-
-            throw new Error(
-
-                "Impossible de créer le compte."
-
-            );
-
-        }
-
         await createProfile(
 
             data.user
@@ -772,8 +762,6 @@ async function signUp(){
    catch(error){
 
     console.error(error);
-
-    stopSignupLoading();
 
     showError(
 
@@ -861,7 +849,9 @@ function validateCountry(){
 
     if(countryInput.value.trim() === ""){
 
-        alert("Veuillez sélectionner votre pays.");
+       showError(
+    "Veuillez sélectionner votre pays."
+);
 
         return false;
 
