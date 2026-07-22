@@ -494,3 +494,43 @@ Verify Email Modal
     font-size:1.1rem;
 
 }
+
+#notification{
+
+    position:fixed;
+
+    top:20px;
+
+    right:20px;
+
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    color:#fff;
+
+    font-weight:600;
+
+    z-index:99999;
+
+    display:none;
+
+}
+
+#notification.show{
+
+    display:block;
+
+}
+
+#notification.error{
+
+    background:#ef4444;
+
+}
+
+#notification.success{
+
+    background:#22c55e;
+
+}
