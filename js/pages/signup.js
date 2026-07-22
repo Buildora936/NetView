@@ -133,6 +133,58 @@ document.getElementById("countrySearch");
 const countryList =
 document.getElementById("countryList");
 
+const countries = [  
+  
+"Afghanistan",  
+"Afrique du Sud",  
+"Algérie",  
+"Allemagne",  
+"Angola",  
+"Arabie Saoudite",  
+"Argentine",  
+"Australie",  
+"Autriche",  
+"Belgique",  
+"Bénin",  
+"Brésil",  
+"Burkina Faso",  
+"Cameroun",  
+"Canada",  
+"Chili",  
+"Chine",  
+"Colombie",  
+"Corée du Sud",  
+"Côte d'Ivoire",  
+"Danemark",  
+"Égypte",  
+"Espagne",  
+"États-Unis",  
+"France",  
+"Grèce",  
+"Haïti",  
+"Inde",  
+"Italie",  
+"Jamaïque",  
+"Japon",  
+"Kenya",  
+"Luxembourg",  
+"Madagascar",  
+"Mali",  
+"Maroc",  
+"Mexique",  
+"Niger",  
+"Nigeria",  
+"Norvège",  
+"Portugal",  
+"République Dominicaine",  
+"Royaume-Uni",  
+"Russie",  
+"Sénégal",  
+"Suisse",  
+"Togo",  
+"Tunisie"  
+  
+];  
 // ==========================================
 // Username
 // ==========================================
@@ -414,45 +466,39 @@ function validateConfirmPassword(){
 
 }
 
-function renderCountries(search = ""){
+function renderCountries(search=""){
 
-    countryList.innerHTML = "";
+    countryList.innerHTML="";
 
-    COUNTRIES
-
-        .filter(country =>
-            country.name
-                .toLowerCase()
-                .includes(search.toLowerCase())
-        )
-
-        .forEach(country => {
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "country-item";
-
-            div.innerHTML = `
-                <span>${country.flag}</span>
-                <span>${country.name}</span>
-            `;
-
-            div.onclick = () => {
-
-                countryInput.value =
-                    country.name;
-
-                countryModal.classList.remove(
-                    "active"
-                );
-
-            };
-
-            countryList.appendChild(div);
-
-        });
+  countries  
+  
+    .filter(country=>country  
+    .toLowerCase()  
+    .includes(search.toLowerCase()))  
+  
+    .forEach(country=>{  
+  
+        const div =  
+        document.createElement("div");  
+  
+        div.className =  
+        "country-item";  
+  
+        div.textContent =  
+        country;  
+  
+        div.onclick=()=>{  
+  
+            countryInput.value=  
+            country;  
+  
+            countryModal.classList.remove("active");  
+  
+        };  
+  
+        countryList.appendChild(div);  
+  
+    });  
 
 }
 
@@ -1021,3 +1067,4 @@ countrySearch.oninput=()=>{
     renderCountries(countrySearch.value);
 
 };
+
