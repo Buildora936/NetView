@@ -33,6 +33,9 @@ if(session){
 const signupForm =
 document.getElementById("signupForm");
 
+const notification =
+document.getElementById("notification");
+
 const resendEmailButton =
 document.getElementById("resendEmailButton");
 
@@ -352,16 +355,22 @@ function hideLoader(){
 // ==========================================
 // Error Handler
 // ==========================================
-
 function showError(message){
 
-    console.error(message);
+    notification.textContent = message;
+
+    notification.className =
+    "notification error";
 
 }
 
 function showSuccess(message){
 
-    console.log(message);
+    notification.textContent = message;
+
+    notification.className =
+    "notification success";
+
 }
 
 window.addEventListener("load",()=>{
@@ -734,29 +743,15 @@ async function signUp(){
 
 }
 
-        await createProfile(
+      await createProfile(data.user);
 
-            data.user
-
-        );
-
-        openVerifyEmailModal(
-
-            emailInput.value.trim()
-
-        );
-        setTimeout(
-
-    ()=>{
-
-        redirectToLogin();
-
-    },
-
-    10000
-
+showSuccess(
+    "Compte créé avec succès."
 );
 
+openVerifyEmailModal(
+    emailInput.value.trim()
+);
     }
 
    catch(error){
