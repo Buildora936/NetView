@@ -428,7 +428,7 @@ Signup Button
 Verify Email Modal
 ========================================== */
 
-.verify-email-modal{
+#verify-email-modal{
 
     position:fixed;
 
@@ -446,7 +446,7 @@ Verify Email Modal
 
 }
 
-.verify-email-modal.active{
+#verify-email-modal.active{
 
     display:flex;
 
