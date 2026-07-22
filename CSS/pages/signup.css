@@ -444,6 +444,7 @@ Verify Email Modal
 
     z-index:9999;
 
+    visibility:hidden;
 }
 
 #verify-email-modal.active{
