@@ -349,6 +349,156 @@ function hideLoader(){
 
 }
 // ==========================================
+// Toast
+// ==========================================
+
+const toastContainer =
+document.getElementById(
+    "toastContainer"
+);
+
+function showToast(
+    type,
+    title,
+    message
+){
+
+    const toast =
+    document.createElement("div");
+
+    toast.className =
+    `nv-toast nv-toast-${type}`;
+
+    let icon = "fa-circle-info";
+
+    if(type === "success")
+        icon = "fa-circle-check";
+
+    if(type === "error")
+        icon = "fa-circle-xmark";
+
+    if(type === "warning")
+        icon = "fa-triangle-exclamation";
+
+    toast.innerHTML = `
+
+        <div class="nv-toast-icon">
+
+            <i class="fa-solid ${icon}"></i>
+
+        </div>
+
+        <div class="nv-toast-content">
+
+            <div class="nv-toast-title">
+
+                ${title}
+
+            </div>
+
+            <div class="nv-toast-message">
+
+                ${message}
+
+            </div>
+
+        </div>
+
+        <i
+            class="fa-solid fa-xmark nv-toast-close"
+        ></i>
+
+        <div
+            class="nv-toast-progress"
+        ></div>
+
+    `;
+
+    toastContainer.appendChild(
+        toast
+    );
+
+    const removeToast = ()=>{
+
+        toast.classList.add("hide");
+
+        setTimeout(()=>{
+
+            toast.remove();
+
+        },400);
+
+    };
+
+    toast
+    .querySelector(".nv-toast-close")
+    .onclick = removeToast;
+
+    setTimeout(
+
+        removeToast,
+
+        5000
+
+    );
+
+}
+function showSuccess(message){
+
+    showToast(
+
+        "success",
+
+        "Succès",
+
+        message
+
+    );
+
+}
+
+function showError(message){
+
+    showToast(
+
+        "error",
+
+        "Erreur",
+
+        message
+
+    );
+
+}
+
+function showWarning(message){
+
+    showToast(
+
+        "warning",
+
+        "Attention",
+
+        message
+
+    );
+
+}
+
+function showInfo(message){
+
+    showToast(
+
+        "info",
+
+        "Information",
+
+        message
+
+    );
+
+}
+// ==========================================
 // Error Handler
 // ==========================================
 
