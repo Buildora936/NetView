@@ -444,6 +444,7 @@ Verify Email Modal
 
     display:flex;
 
+    visibility:visible
 }
 .verify-email-box{
 
