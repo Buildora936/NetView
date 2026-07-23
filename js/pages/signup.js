@@ -187,6 +187,7 @@ const countries = [
 "Tunisie"  
   
 ];  
+console.log(verifyEmailModal);
 // ==========================================
 // Username
 // ==========================================
@@ -215,6 +216,8 @@ function cleanUsername(value){
 
 function openVerifyEmailModal(email){
 
+    console.log("Modal ouvert");
+    
     verifyEmailAddress.textContent =
     email;
 
@@ -391,7 +394,7 @@ function validateUsername(){
 // ==========================================
 
 function validateEmail(){
-
+ console.log("Avant ouverture du modal");
     const email =
     emailInput.value
         .trim()
@@ -744,6 +747,7 @@ async function signUp(){
 }
 
       await createProfile(data.user);
+      console.log("Profil créé");
 
 showSuccess(
     "Compte créé avec succès."
