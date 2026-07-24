@@ -727,7 +727,7 @@ async function signUp(){
 
                 emailRedirectTo:
 
-                `${window.location.origin}/login.html`
+                `${window.location.origin}/create-profile.html`
 
             }
 
