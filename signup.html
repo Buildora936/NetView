@@ -94,92 +94,7 @@
                 novalidate
             >
 
-        <!-- ==========================================
-     Username
-========================================== -->
-
-<div class="nv-form-group">
-
-    <label
-        class="nv-label"
-        for="username"
-    >
-
-        Nom d'utilisateur
-
-        <span class="nv-required">*</span>
-
-    </label>
-
-    <div class="nv-input-wrapper">
-
-        <i class="fa-solid fa-at nv-input-icon"></i>
-
-        <input
-            type="text"
-            id="username"
-            class="nv-input"
-            placeholder="ex : netviewer"
-            autocomplete="username"
-            maxlength="30"
-            required
-        >
-
-    </div>
-
-    <small
-        id="usernameMessage"
-        class="nv-help"
-    >
-
-        Lettres, chiffres, _ et .
-
-    </small>
-
-</div>
-<!-- ==========================================
-     Full Name
-========================================== -->
-
-<div class="nv-form-group">
-
-    <label
-        for="displayName"
-        class="nv-label"
-    >
-
-        Nom complet
-
-        <span class="nv-required">*</span>
-
-    </label>
-
-    <div class="nv-input-wrapper">
-
-        <i class="fa-solid fa-user nv-input-icon"></i>
-
-        <input
-            type="text"
-            id="displayName"
-            class="nv-input"
-            placeholder="Votre nom complet"
-            maxlength="100"
-            autocomplete="name"
-            required
-        >
-
-    </div>
-
-    <small
-        id="displayNameMessage"
-        class="nv-help"
-    >
-
-        Votre vrai nom sera affiché sur votre profil.
-
-    </small>
-
-</div>
+      
         <!-- ==========================================
      Email
 ========================================== -->
@@ -224,66 +139,7 @@
     </small>
 
 </div>
-    <!-- ==========================================
-Pays
-========================================== -->
-
-<div class="form-group">
-
-    <label for="country">
-        Pays
-    </label>
-
-    <div class="country-select" id="openCountryModal">
-
-        <input
-            type="text"
-            id="country"
-            placeholder="Choisir votre pays"
-            readonly
-        >
-
-        <i class="fa-solid fa-chevron-down"></i>
-
-    </div>
-
-</div>
-    <!-- ==========================================
-Language
-========================================== -->
-
-<div class="form-group">
-
-    <label for="language">
-
-        Langue
-
-    </label>
-
-    <select
-        id="language"
-        class="nv-select"
-    >
-
-        <option value="fr" selected>
-            Français
-        </option>
-
-        <option value="en">
-            English
-        </option>
-
-        <option value="es">
-            Español
-        </option>
-
-        <option value="pt">
-            Português
-        </option>
-
-    </select>
-
-</div>
+    
         <!-- ==========================================
      Password
 ========================================== -->
@@ -418,50 +274,7 @@ Create Account Button
 </button>
             </form>
 
-            <!-- ==========================================
-Country Modal
-========================================== -->
-
-<div
-    class="country-modal"
-    id="countryModal"
->
-
-    <div class="country-box">
-
-        <div class="country-header">
-
-            <h3>
-
-                Choisir votre pays
-
-            </h3>
-
-            <button
-                id="closeCountryModal"
-                type="button"
-            >
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
-        </div>
-
-        <input
-            type="text"
-            id="countrySearch"
-            placeholder="Rechercher..."
-        >
-
-        <div
-            class="country-list"
-            id="countryList"
-        ></div>
-
-    </div>
-
-</div>
+        
     <!-- ==========================================
 Conditions d'utilisation
 ========================================== -->
