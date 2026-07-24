@@ -746,12 +746,7 @@ async function signUp(){
 
 }
 
-      await createProfile(data.user);
-      console.log("Profil créé");
-
-showSuccess(
-    "Compte créé avec succès."
-);
+window.location.href = "create-profile.html";
 
 openVerifyEmailModal(
     emailInput.value.trim()
@@ -781,57 +776,7 @@ openVerifyEmailModal(
     }
 
 }
-// ==========================================
-// Create Profile
-// ==========================================
 
-async function createProfile(user){
-
-    const {
-
-        error
-
-    } = await supabase
-
-        .from("profiles")
-
-        .insert({
-
-            id:
-            user.id,
-
-            username:
-            usernameInput.value.trim(),
-
-            display_name:
-            displayNameInput.value.trim(),
-
-            email:
-            emailInput.value.trim(),
-
-            country:
-            countryInput.value.trim(),
-
-            language:
-            language.value,
-
-            avatar_url:
-            null,
-
-            banner_url:
-            null
-
-        });
-if(error){
-
-    console.error("ERREUR PROFILE :", error);
-
-    alert(JSON.stringify(error));
-
-    throw error;
-
-}
-}
 // ==========================================
 // Redirect
 // ==========================================
@@ -840,22 +785,6 @@ function redirectToLogin(){
 
     window.location.href =
     "login.html";
-
-}
-
-function validateCountry(){
-
-    if(countryInput.value.trim() === ""){
-
-       showError(
-    "Veuillez sélectionner votre pays."
-);
-
-        return false;
-
-    }
-
-    return true;
 
 }
 
