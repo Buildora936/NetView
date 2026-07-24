@@ -1,7 +1,7 @@
 // ==========================================
 // Imports
 // ==========================================
-
+ 
 import { supabase } from "../core/supabase.js";
 
 // ==========================================
@@ -824,14 +824,13 @@ async function createProfile(user){
         });
 if(error){
 
-    console.error(error);
+    console.error("ERREUR PROFILE :", error);
 
-    throw new Error(
-        "Impossible de créer votre profil."
-    );
+    alert(JSON.stringify(error));
+
+    throw error;
 
 }
-
 }
 // ==========================================
 // Redirect
