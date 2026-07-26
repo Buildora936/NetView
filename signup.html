@@ -1,422 +1,136 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-    <title>Créer un compte • NetView</title>
+<meta
+    name="description"
+    content="Créez gratuitement votre compte NetView. Regardez des vidéos, des shorts, des lives, discutez avec la communauté et profitez de toutes les fonctionnalités de la plateforme.">
 
-    <link
+<meta
+    name="keywords"
+    content="NetView, inscription, créer un compte, vidéos, lives, shorts, marketplace">
+
+<meta
+    name="author"
+    content="NetView">
+
+<meta
+    name="theme-color"
+    content="#2563EB">
+
+<meta
+    name="color-scheme"
+    content="dark">
+
+<meta
+    property="og:type"
+    content="website">
+
+<meta
+    property="og:title"
+    content="Créer un compte • NetView">
+
+<meta
+    property="og:description"
+    content="Rejoignez gratuitement NetView et accédez à une plateforme moderne de vidéos, lives, messagerie et marketplace.">
+
+<meta
+    property="og:image"
+    content="NetView.png">
+
+<meta
+    property="og:locale"
+    content="fr_FR">
+
+<title>
+
+Créer un compte • NetView
+
+</title>
+
+<link
     rel="icon"
     type="image/png"
     href="NetView_icone.png">
-    
-    <!-- Font Awesome -->
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    >
+<link
+    rel="apple-touch-icon"
+    href="NetView_icone.png">
 
-    <!-- Design System -->
+<!-- ==========================================
+Font Awesome
+========================================== -->
 
-    <link rel="stylesheet" href="CSS/core/variables.css">
-    <link rel="stylesheet" href="CSS/core/reset.css">
-    <link rel="stylesheet" href="CSS/core/typography.css">
-    <link rel="stylesheet" href="CSS/core/animations.css">
-    <link rel="stylesheet" href="CSS/core/utilities.css">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="CSS/components/buttons.css">
-    <link rel="stylesheet" href="CSS/components/forms.css">
-    <link rel="stylesheet" href="CSS/components/cards.css">
-    <link rel="stylesheet" href="CSS/components/loader.css">
-    <link rel="stylesheet" href="CSS/components/toast.css">
-    <link rel="stylesheet" href="CSS/components/footer.css">
-    <link rel="stylesheet" href="CSS/components/header.css">
-    <link rel="stylesheet" href="CSS/components/sidebar.css">
-    <link rel="stylesheet" href="CSS/components/modal.css">
+<!-- ==========================================
+Core CSS
+========================================== -->
 
-    <!-- Page -->
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css">
 
-    <link rel="stylesheet" href="CSS/pages/signup.css">
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css">
+
+<!-- ==========================================
+Components
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/forms.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/cards.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/modal.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/toast.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css">
+
+<style>
+
+<link
+    rel="stylesheet"
+    href="CSS/pages/signup.css">
+
+</style>
 
 </head>
-
-<body>
-
-    <!-- Background -->
-
-    <div class="signup-background">
-
-        <div class="signup-gradient"></div>
-
-        <div class="signup-particles"></div>
-
-        <div class="signup-orb orb-1"></div>
-        <div class="signup-orb orb-2"></div>
-        <div class="signup-orb orb-3"></div>
-
-    </div>
-
-    <!-- Page -->
-
-    <main class="signup-page">
-
-        <section class="signup-card">
-
-            <img
-                src="NetView.png"
-                alt="NetView"
-                class="signup-logo"
-            >
-
-            <h1>
-
-                Créer un compte
-
-            </h1>
-
-            <p>
-
-                Rejoignez NetView gratuitement.
-
-            </p>
-
-            <form
-                id="signupForm"
-                class="nv-form"
-                novalidate
-            >
-
-      
-        <!-- ==========================================
-     Email
-========================================== -->
-
-<div class="nv-form-group">
-
-    <label
-        for="email"
-        class="nv-label"
-    >
-
-         Adresse e-mail
-
-        <span class="nv-required">*</span>
-
-    </label>
-
-    <div class="nv-input-wrapper">
-
-        <i class="fa-solid fa-envelope nv-input-icon"></i>
-
-        <input
-            type="email"
-            id="email"
-            class="nv-input"
-            placeholder="exemple@email.com"
-            autocomplete="email"
-            maxlength="255"
-            spellcheck="false"
-            required
-        >
-
-    </div>
-
-    <small
-        id="emailMessage"
-        class="nv-help"
-    >
-
-        Utilisez une adresse e-mail valide.
-
-    </small>
-
-</div>
-    
-        <!-- ==========================================
-     Password
-========================================== -->
-
-<div class="nv-form-group">
-
-    <label
-        for="password"
-        class="nv-label"
-    >
-
-        Mot de passe
-
-        <span class="nv-required">*</span>
-
-    </label>
-
-    <div class="nv-password-wrapper">
-        
-        <input
-            type="password"
-            id="password"
-            class="nv-input"
-            placeholder="Choisissez un mot de passe"
-            autocomplete="new-password"
-            required
-        >
-
-        <button
-            type="button"
-            id="togglePassword"
-            class="nv-password-toggle"
-            aria-label="Afficher le mot de passe"
-        >
-
-            <i
-                id="togglePasswordIcon"
-                class="fa-regular fa-eye"
-            ></i>
-
-        </button>
-
-    </div>
-
-    <small
-        id="passwordMessage"
-        class="nv-help"
-    >
-
-        Minimum 8 caractères.
-
-    </small>
-
-</div>
-        <!-- ==========================================
-     Confirm Password
-========================================== -->
-
-<div class="nv-form-group">
-
-    <label
-        for="confirmPassword"
-        class="nv-label"
-    >
-
-        Confirmer le mot de passe
-
-        <span class="nv-required">*</span>
-
-    </label>
-
-    <div class="nv-password-wrapper">
-        
-        <input
-            type="password"
-            id="confirmPassword"
-            class="nv-input"
-            placeholder="Confirmez votre mot de passe"
-            autocomplete="new-password"
-            required
-        >
-
-        <button
-            type="button"
-            id="toggleConfirmPassword"
-            class="nv-password-toggle"
-            aria-label="Afficher le mot de passe"
-        >
-
-            <i
-                id="toggleConfirmPasswordIcon"
-                class="fa-regular fa-eye"
-            ></i>
-
-        </button>
-
-    </div>
-
-    <small
-        id="confirmPasswordMessage"
-        class="nv-help"
-    >
-
-        Les deux mots de passe doivent être identiques.
-
-    </small>
-
-</div>
-   <div id="notification"></div>
-           <!-- ==========================================
-Create Account Button
-========================================== -->
-
-<button
-    id="signupButton"
-    class="nv-btn nv-btn-gradient nv-btn-block"
-    type="submit"
->
-
-    <span id="signupButtonText">
-
-        Créer un compte
-
-    </span>
-
-    <span
-        id="signupButtonLoader"
-        class="nv-spinner nv-spinner-sm"
-        hidden
-    ></span>
-
-</button>
-            </form>
-
-        
-    <!-- ==========================================
-Conditions d'utilisation
-========================================== -->
-
-<div class="terms-group">
-
-    <label class="terms-label">
-
-        <input
-            type="checkbox"
-            id="terms"
-        >
-
-        <span>
-
-            J'accepte les
-
-            <a
-                href="terms.html"
-                target="_blank"
-            >
-                Conditions d'utilisation
-            </a>
-
-            et la
-
-            <a
-                href="privacy.html"
-                target="_blank"
-            >
-                Politique de confidentialité
-            </a>
-
-        </span>
-
-    </label>
-
-</div>
- 
-        </section>
-
-    </main>
-<!-- ==========================================
-Global Loader
-========================================== -->
-
-<div id="globalLoader" class="nv-page-loader">
-
-    <img
-        src="NetView.png"
-        alt="NetView"
-        class="nv-logo-loader"
-    >
-
-    <div class="nv-spinner nv-spinner-lg"></div>
-
-    <p class="nv-loader-text">
-        Chargement...
-    </p>
-
-</div>
-    <!-- ==========================================
-Email Verification Modal
-========================================== -->
-
-<div
-    id="verifyEmailModal"
-    class="verifyEmailModal"
->
-
-    <div class="verify-email-box">
-
-        <div class="verify-email-icon">
-
-            <i class="fa-solid fa-envelope-circle-check"></i>
-
-        </div>
-
-        <h2>
-
-            Vérifiez votre adresse e-mail
-
-        </h2>
-
-        <p>
-
-            Un e-mail de confirmation a été envoyé à :
-
-        </p>
-
-        <strong id="verifyEmailAddress"></strong>
-
-        <p>
-
-            Cliquez sur le lien contenu dans cet e-mail
-            pour activer votre compte NetView.
-
-        </p>
-        <button
-    id="resendEmailButton"
-    type="button"
-    class="nv-btn nv-btn-secondary"
->
-
-    <span id="resendEmailText">
-
-        Renvoyer l'e-mail
-
-    </span>
-
-    <span
-        id="resendEmailLoader"
-        hidden
-    >
-
-        Envoi...
-
-    </span>
-
-</button>
-
-<p
-    id="resendEmailMessage"
-    class="nv-help"
-></p>
-        <button
-            id="closeVerifyModal"
-            class="nv-btn nv-btn-primary"
-        >
-
-            J'ai compris
-
-        </button>
-
-    </div>
-
-</div>
-    <script
-        type="module"
-        src="js/pages/signup.js"
-    ></script>
-
-</body>
-
-</html>
