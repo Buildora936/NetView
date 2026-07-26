@@ -340,79 +340,7 @@ export async function refreshUser(){
 
     return data.user;
 
-}
-// ==========================================
-// Profile Creation
-// ==========================================
 
-export async function createProfile(data){
-
-    const user =
-        await refreshUser();
-
-
-    if(!user){
-
-        throw new Error(
-            "Utilisateur non connecté"
-        );
-
-    }
-
-
-    const profile = {
-
-        id:user.id,
-
-        username:data.username,
-
-        display_name:data.display_name,
-
-        email:user.email,
-
-        language:data.language || "fr"
-
-    };
-
-
-    const { error:profileError } =
-    await supabase
-
-        .from("profiles")
-
-        .insert(profile);
-
-
-    if(profileError){
-
-        throw profileError;
-
-    }
-
-
-
-    const { error:settingsError } =
-    await supabase
-
-        .from("user_settings")
-
-        .insert({
-
-            user_id:user.id
-
-        });
-
-
-    if(settingsError){
-
-        throw settingsError;
-
-    }
-
-
-    return true;
-
-}
 export async function updateRole(role){
 
     const user =
