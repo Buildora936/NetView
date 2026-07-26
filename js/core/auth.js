@@ -100,46 +100,154 @@ export async function isAuthenticated() {
 // Profile
 // ==========================================
 
-export async function getProfile() {
+export async function createProfile({
 
-    const user = await refreshSession();
+    username,
 
-    if (!user) return null;
+    display_name,
 
+    country,
 
-    const { data, error } = await supabase
+    language = "fr"
 
-        .from("profiles")
+}) {
 
-        .select("*")
-
-        .eq("id", user.id)
-
-        .single();
+    const user = await refreshUser();
 
 
-    if (error) throw error;
+    if(!user){
 
-    return data;
+        throw new Error(
+            "Utilisateur introuvable"
+        );
+
+    }
+
+
+    // Création profil
+
+    const { error: profileError } =
+
+    await supabase
+
+    .from("profiles")
+
+    .insert({
+
+        id:user.id,
+
+        username,
+
+        display_name,
+
+        email:user.email,
+
+        country,
+
+        language
+
+    });
+
+
+    if(profileError){
+
+        throw profileError;
+
+    }
+
+
+    // Création paramètres par défaut
+
+    const { error: settingsError } =
+
+    await supabase
+
+    .from("user_settings")
+
+    .insert({
+
+        user_id:user.id
+
+    });
+
+
+    if(settingsError){
+
+        throw settingsError;
+
+    }
+
+
+    // Création rôle utilisateur
+
+    const { error: roleError } =
+
+    await supabase
+
+    .from("user_roles")
+
+    .insert({
+
+        user_id:user.id,
+
+        role:"user"
+
+    });
+
+
+    if(roleError){
+
+        throw roleError;
+
+    }
+
+
+    return true;
 
 }
-
 
 // ==========================================
 // Roles
 // ==========================================
 
-export async function getRole() {
+export async function getRole(){
 
-    const profile = await getProfile();
+    const user = await refreshUser();
 
-    if (!profile) return null;
 
-    return profile.role;
+    if(!user){
+
+        return null;
+
+    }
+
+
+    const { data, error } =
+
+    await supabase
+
+    .from("user_roles")
+
+    .select("role")
+
+    .eq(
+        "user_id",
+        user.id
+    )
+
+    .single();
+
+
+    if(error){
+
+        return "user";
+
+    }
+
+
+    return data.role;
 
 }
-
-
 export async function isUser() {
 
     return (await getRole()) === "user";
@@ -314,5 +422,27 @@ export async function createProfile(data){
 
 
     return true;
+
+}
+export async function updateRole(role){
+
+    const user =
+    await refreshUser();
+
+
+    return await supabase
+
+    .from("user_roles")
+
+    .update({
+
+        role
+
+    })
+
+    .eq(
+        "user_id",
+        user.id
+    );
 
 }
