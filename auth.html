@@ -1,313 +1,985 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
 <meta charset="UTF-8">
-<title>NetView - Auth</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="theme-color" content="#0B0F19">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<meta
+    name="description"
+    content="Portail d'accès NetView">
+
+<meta
+    name="theme-color"
+    content="#2563EB">
+
+<title>Bienvenue • NetView</title>
+
+<link
+    rel="icon"
+    type="image/png"
+    href="NetView_icone.png">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- ==========================================
+Core CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css">
+
+<!-- ==========================================
+Components
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/cards.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css">
 
 <style>
-/* =========================
-   BASE
-========================= */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, sans-serif;
+/* ==================================================
+BODY
+================================================== */
+
+body{
+
+    overflow:hidden;
+
+    background:
+    var(--nv-background);
+
 }
 
-body {
-  background: radial-gradient(circle at top, #0B0F19, #05070D);
-  color: white;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ==================================================
+BACKGROUND
+================================================== */
+
+.nv-auth-background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-10;
+
+    background:
+
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.25),
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+    rgba(96,165,250,.18),
+    transparent 45%),
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #071124,
+        #0B1120,
+        #020617
+    );
+
 }
 
-/* =========================
-   CONTAINER
-========================= */
+.nv-auth-background::before{
 
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 30px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-  animation: fadeIn 0.6s ease;
+    content:"";
+
+    position:absolute;
+
+    inset:-20%;
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        transparent,
+
+        rgba(37,99,235,.08),
+
+        transparent,
+
+        rgba(96,165,250,.10),
+
+        transparent
+
+    );
+
+    background-size:300% 300%;
+
+    animation:
+
+    gradientMove 18s linear infinite;
+
+    filter:blur(80px);
+
 }
 
-/* =========================
-   LOGO
-========================= */
+.nv-auth-background::after{
 
-.logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-  animation: float 4s ease-in-out infinite;
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(
+        rgba(255,255,255,.03) 1px,
+        transparent 1px),
+
+    linear-gradient(
+        90deg,
+        rgba(255,255,255,.03) 1px,
+        transparent 1px);
+
+    background-size:
+
+    50px 50px;
+
+    mask-image:
+
+    radial-gradient(circle,
+    white,
+    transparent 92%);
+
 }
 
-.logo img {
-  width: 90px;
-  filter: drop-shadow(0 0 12px rgba(80,120,255,0.6));
+/* ==================================================
+BLUE ORBS
+================================================== */
+
+.nv-orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(70px);
+
+    animation:
+
+    floatOrb 12s ease-in-out infinite;
+
 }
 
-.logo h1 {
-  font-size: 22px;
-  margin-top: 10px;
-  color: #7aa7ff;
-  letter-spacing: 0.5px;
+.nv-orb.one{
+
+    width:320px;
+
+    height:320px;
+
+    top:-120px;
+
+    left:-120px;
+
+    background:
+
+    rgba(37,99,235,.30);
+
 }
 
-/* =========================
-   TABS
-========================= */
+.nv-orb.two{
 
-.tabs {
-  display: flex;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
+    width:260px;
+
+    height:260px;
+
+    bottom:-80px;
+
+    right:-80px;
+
+    background:
+
+    rgba(96,165,250,.25);
+
+    animation-delay:2s;
+
 }
 
-.tabs button {
-  flex: 1;
-  padding: 10px;
-  background: transparent;
-  color: #aaa;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
+.nv-orb.three{
+
+    width:180px;
+
+    height:180px;
+
+    left:60%;
+
+    top:35%;
+
+    background:
+
+    rgba(59,130,246,.18);
+
+    animation-delay:5s;
+
 }
 
-.tabs button.active {
-  background: rgba(122,167,255,0.15);
-  color: white;
+/* ==================================================
+PARTICLES
+================================================== */
+
+.nv-particles{
+
+    position:absolute;
+
+    inset:0;
+
 }
 
-/* =========================
-   FORM
-========================= */
+.nv-particles span{
 
-form {
-  display: none;
-  flex-direction: column;
-  gap: 12px;
+    position:absolute;
+
+    width:3px;
+
+    height:3px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.55);
+
+    animation:
+
+    particleFloat linear infinite;
+
 }
 
-form.active {
-  display: flex;
+.nv-particles span:nth-child(1){left:5%;top:12%;animation-duration:20s;}
+.nv-particles span:nth-child(2){left:16%;top:72%;animation-duration:16s;}
+.nv-particles span:nth-child(3){left:27%;top:35%;animation-duration:18s;}
+.nv-particles span:nth-child(4){left:38%;top:82%;animation-duration:24s;}
+.nv-particles span:nth-child(5){left:50%;top:18%;animation-duration:15s;}
+.nv-particles span:nth-child(6){left:62%;top:60%;animation-duration:20s;}
+.nv-particles span:nth-child(7){left:73%;top:28%;animation-duration:19s;}
+.nv-particles span:nth-child(8){left:84%;top:78%;animation-duration:22s;}
+.nv-particles span:nth-child(9){left:93%;top:16%;animation-duration:17s;}
+.nv-particles span:nth-child(10){left:44%;top:48%;animation-duration:23s;}
+.nv-particles span:nth-child(11){left:12%;top:52%;animation-duration:21s;}
+.nv-particles span:nth-child(12){left:79%;top:8%;animation-duration:18s;}
+
+/* ==================================================
+LAYOUT
+================================================== */
+
+.nv-auth{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:2rem;
+
 }
 
-input {
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.3);
-  color: white;
-  outline: none;
-  transition: 0.2s;
+.nv-auth-card{
+
+    width:min(100%,540px);
+
+    padding:3rem;
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:34px;
+
+    backdrop-filter:blur(30px);
+
+    background:
+
+    rgba(15,23,42,.72);
+
+    border:
+
+    1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+
+    0 40px 90px rgba(0,0,0,.45);
+
+    animation:
+
+    fadeUp .8s ease;
+
 }
 
-input:focus {
-  border-color: #7aa7ff;
+.nv-auth-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:inherit;
+
+    padding:1px;
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        rgba(37,99,235,.7),
+
+        rgba(96,165,250,.15),
+
+        transparent
+
+    );
+
+    -webkit-mask:
+
+        linear-gradient(#fff 0 0) content-box,
+
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask-composite:exclude;
+
+    pointer-events:none;
+
 }
 
-/* =========================
-   BUTTON
-========================= */
+/* ==================================================
+LOGO
+================================================== */
 
-button.submit {
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(135deg, #2f5cff, #7aa7ff);
-  color: white;
-  font-weight: 600;
-  transition: 0.2s;
+.nv-auth-logo{
+
+    width:120px;
+
+    display:block;
+
+    margin:auto;
+
+    animation:
+
+    floatLogo 5s ease-in-out infinite;
+
 }
 
-button.submit:hover {
-  transform: translateY(-1px);
+.nv-auth-title{
+
+    margin-top:1.6rem;
+
+    text-align:center;
+
 }
 
-/* =========================
-   SMALL TEXT
-========================= */
+.nv-auth-subtitle{
 
-small {
-  color: #888;
-  font-size: 12px;
-  text-align: center;
+    margin-top:.9rem;
+
+    margin-bottom:2.5rem;
+
+    text-align:center;
+
+    color:var(--nv-text-secondary);
+
+    line-height:1.8;
+
 }
 
-/* =========================
-   ANIMATIONS
-========================= */
+/* ==================================================
+BUTTONS
+================================================== */
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.nv-auth-actions{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1rem;
+
 }
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+.nv-auth-btn{
+
+    width:100%;
+
+    height:62px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.9rem;
+
+    font-size:1rem;
+
+    text-decoration:none;
+
+    position:relative;
+
+    overflow:hidden;
+
 }
 
-/* =========================
-   ERROR
-========================= */
+.nv-auth-btn i{
 
-.error {
-  color: #ff4d4d;
-  font-size: 12px;
+    font-size:1.1rem;
+
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+.nv-auth-btn::before{
 
-@media(max-width: 500px) {
-  .container {
-    margin: 20px;
-  }
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:55%;
+
+    height:100%;
+
+    background:
+
+    linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255,255,255,.35),
+
+        transparent
+
+    );
+
+    transition:.8s;
+
 }
+
+.nv-auth-btn:hover::before{
+
+    left:170%;
+
+}
+
+.nv-auth-btn-secondary{
+
+    background:
+
+    rgba(255,255,255,.06);
+
+    color:#fff;
+
+    border:
+
+    1px solid rgba(255,255,255,.08);
+
+}
+
+.nv-auth-btn-secondary:hover{
+
+    background:
+
+    rgba(255,255,255,.10);
+
+}
+
+.nv-auth-btn-outline{
+
+    background:transparent;
+
+    color:#fff;
+
+    border:
+
+    1px solid rgba(255,255,255,.10);
+
+}
+
+.nv-auth-btn-outline:hover{
+
+    border-color:
+
+    rgba(37,99,235,.5);
+
+    background:
+
+    rgba(37,99,235,.08);
+
+}
+
+/* ==================================================
+FOOTER
+================================================== */
+
+.nv-auth-footer{
+
+    margin-top:2rem;
+
+    text-align:center;
+
+    color:var(--nv-text-muted);
+
+    font-size:.85rem;
+
+}
+
+/* ==================================================
+RESPONSIVE
+================================================== */
+
+@media(max-width:768px){
+
+    .nv-auth{
+
+        padding:1rem;
+
+    }
+
+    .nv-auth-card{
+
+        padding:2rem 1.5rem;
+
+        border-radius:24px;
+
+    }
+
+    .nv-auth-logo{
+
+        width:220px;
+
+    }
+
+    .nv-auth-title{
+
+        font-size:2rem;
+
+    }
+
+    .nv-auth-subtitle{
+
+        font-size:.95rem;
+
+    }
+
+}
+
 </style>
 
 </head>
-
 <body>
 
-<div class="container">
 
-  <!-- LOGO -->
-  <div class="logo">
-    <img src="NetView.png" alt="NetView Logo">
-    <h1>NetView</h1>
-  </div>
+<div class="nv-auth-background">
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="active" onclick="showTab('login')">Connexion</button>
-    <button onclick="showTab('signup')">Créer un compte</button>
-  </div>
+    <div class="nv-orb one"></div>
 
-  <!-- LOGIN -->
-  <form id="loginForm" class="active">
-    <input type="email" id="loginEmail" placeholder="Email ou username">
-    <input type="password" id="loginPassword" placeholder="Mot de passe">
-    <button type="button" class="submit" onclick="login()">Se connecter</button>
-    <div class="error" id="loginError"></div>
-    <small>Mot de passe oublié bientôt disponible</small>
-  </form>
+    <div class="nv-orb two"></div>
 
-  <!-- SIGNUP -->
-  <form id="signupForm">
-    <input type="text" id="username" placeholder="Nom d'utilisateur">
-    <input type="text" id="displayName" placeholder="Nom affiché">
-    <input type="email" id="signupEmail" placeholder="Email">
-    <input type="password" id="signupPassword" placeholder="Mot de passe">
-    <input type="password" id="confirmPassword" placeholder="Confirmer mot de passe">
+    <div class="nv-orb three"></div>
 
-    <button type="button" class="submit" onclick="signup()">
-      Créer mon compte
-    </button>
 
-    <div class="error" id="signupError"></div>
+    <div class="nv-particles">
 
-    <small>
-      En créant un compte, vous acceptez les conditions NetView
-    </small>
-  </form>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
 
 </div>
 
+
+<main class="nv-auth">
+
+
+<section class="nv-auth-card">
+
+
+<img
+
+    src="NetView.png"
+
+    alt="NetView"
+
+    class="nv-auth-logo">
+
+
+<h1 class="nv-auth-title">
+
+    Bienvenue sur NetView
+
+</h1>
+
+
+<p class="nv-auth-subtitle">
+
+    La plateforme qui réunit vidéos, shorts, lives,
+    communautés, messagerie et marketplace.
+
+</p>
+
+
+
+<div class="nv-auth-actions">
+
+
+<a
+
+href="login.html"
+
+class="nv-btn nv-btn-gradient nv-auth-btn">
+
+<i class="fa-solid fa-right-to-bracket"></i>
+
+<span>
+
+    Se connecter
+
+</span>
+
+</a>
+
+
+
+<a
+
+href="signup.html"
+
+class="nv-btn nv-btn-gradient nv-auth-btn">
+
+<i class="fa-solid fa-user-plus"></i>
+
+<span>
+
+    Créer un compte
+
+</span>
+
+</a>
+
+
+
+<a
+
+href="index.html"
+
+class="nv-auth-btn nv-auth-btn-secondary">
+
+<i class="fa-solid fa-user-secret"></i>
+
+<span>
+
+    Continuer en tant que visiteur
+
+</span>
+
+</a>
+
+
+
+</div>
+
+
+
+<div class="nv-auth-footer">
+
+    NetView v1.0 • Tous droits réservés
+
+</div>
+
+
+
+</section>
+
+
+</main>
+
+
+
+<div
+
+class="nv-page-loader"
+
+id="pageLoader"
+
+style="display:none;">
+
+
+<div class="nv-spinner nv-spinner-lg"></div>
+
+
+<div class="nv-loader-text">
+
+Chargement...
+
+</div>
+
+
+</div>
 <script type="module">
 
-import { signIn, signUp } from "./auth.js";
 
-/* =========================
-   TAB SYSTEM
-========================= */
+// ==========================================
+// Imports
+// ==========================================
 
-window.showTab = (tab) => {
+import {
 
-  document.getElementById("loginForm").classList.remove("active");
-  document.getElementById("signupForm").classList.remove("active");
+    getSession
 
-  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+} from "./js/core/auth.js";
 
-  if(tab === "login") {
-    document.getElementById("loginForm").classList.add("active");
-    document.querySelectorAll(".tabs button")[0].classList.add("active");
-  } else {
-    document.getElementById("signupForm").classList.add("active");
-    document.querySelectorAll(".tabs button")[1].classList.add("active");
-  }
 
-};
+import {
 
-/* =========================
-   LOGIN
-========================= */
+    navigate
 
-window.login = async () => {
+} from "./js/core/navigation.js";
 
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
 
-  const res = await signIn(email, password);
 
-  if(res.error) {
-    document.getElementById("loginError").textContent = res.error.message;
-    return;
-  }
+// ==========================================
+// Check Existing Session
+// ==========================================
 
-  window.location.href = "index.html";
-};
+(async()=>{
 
-/* =========================
-   SIGNUP
-========================= */
 
-window.signup = async () => {
+    try{
 
-  const username = document.getElementById("username").value;
-  const displayName = document.getElementById("displayName").value;
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
-  const confirm = document.getElementById("confirmPassword").value;
 
-  if(password !== confirm) {
-    document.getElementById("signupError").textContent = "Les mots de passe ne correspondent pas";
-    return;
-  }
+        const session =
 
-  const res = await signUp(email, password);
+            await getSession();
 
-  if(res.error) {
-    document.getElementById("signupError").textContent = res.error.message;
-    return;
-  }
 
-  window.location.href = "index.html";
-};
+
+        if(session){
+
+
+            navigate(
+
+                "index.html"
+
+            );
+
+
+        }
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+
+            "Auth check error:",
+
+            error
+
+        );
+
+
+    }
+
+
+})();
+
+
+
+// ==========================================
+// Button Animation Protection
+// ==========================================
+
+const buttons =
+
+document.querySelectorAll(
+
+    ".nv-auth-btn"
+
+);
+
+
+
+buttons.forEach(button=>{
+
+
+    button.addEventListener(
+
+        "click",
+
+        ()=>{
+
+
+            button.style.transform =
+
+            "scale(.97)";
+
+
+
+            setTimeout(()=>{
+
+
+                button.style.transform =
+
+                "";
+
+
+            },150);
+
+
+
+        }
+
+    );
+
+
+});
+
+
+
+// ==========================================
+// Save Last Page
+// ==========================================
+
+document.addEventListener(
+
+    "click",
+
+    event=>{
+
+
+        const link =
+
+        event.target.closest("a");
+
+
+
+        if(!link){
+
+            return;
+
+        }
+
+
+
+        const href =
+
+        link.getAttribute("href");
+
+
+
+        if(
+
+            href &&
+
+            href.endsWith(".html") &&
+
+            ![
+
+                "auth.html",
+
+                "login.html",
+
+                "signup.html"
+
+            ].includes(href)
+
+        ){
+
+
+            sessionStorage.setItem(
+
+                "netview_last_page",
+
+                href
+
+            );
+
+
+        }
+
+
+    }
+
+);
+
+
+
+// ==========================================
+// Ready
+// ==========================================
+
+console.log(
+
+    "NetView Auth Portal Ready"
+
+);
+
 
 </script>
 
+
 </body>
+
 </html>
