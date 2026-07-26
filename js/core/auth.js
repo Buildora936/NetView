@@ -31,17 +31,6 @@ export async function signUp(email, password) {
 
 }
 
-export async function refreshSession(){
-
-    await supabase.auth.refreshSession();
-
-    const { data } =
-    await supabase.auth.getUser();
-
-    return data.user;
-
-}
-
 export async function signIn(email, password) {
 
     return await supabase.auth.signInWithPassword({
