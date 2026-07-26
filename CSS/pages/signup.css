@@ -279,25 +279,14 @@ Country Modal
 .country-header{
 
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     padding:20px;
-
-   /* ==========================================
-Global Loader
-========================================== */
-
-.nv-page-loader.active{
-
-    display:flex;
-
-}
     border-bottom:1px solid var(--nv-border);
 
 }
+
+
 
 .country-header button{
 
@@ -533,5 +522,250 @@ Verify Email Modal
 #notification.success{
 
     background:#22c55e;
+
+}
+  /* ==========================================
+Global Loader
+========================================== */
+
+.nv-page-loader.active{
+
+    display:flex;
+
+}
+.signup-error{
+
+    display:none;
+
+}
+
+.signup-error.show{
+
+    display:block;
+
+}
+.signup-success{
+
+    display:none;
+
+}
+
+.signup-success.show{
+
+    display:block;
+
+}
+/* ==========================================
+Responsive
+========================================== */
+
+@media (max-width:992px){
+
+    .signup-card{
+
+        max-width:520px;
+
+        padding:36px;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .signup-page{
+
+        padding:20px 16px;
+
+        align-items:flex-start;
+
+    }
+
+    .signup-card{
+
+        max-width:100%;
+
+        padding:28px 22px;
+
+        border-radius:24px;
+
+    }
+
+    .signup-logo{
+
+        width:200px;
+
+        margin-bottom:24px;
+
+    }
+
+    .country-box{
+
+        width:95%;
+
+        max-height:85vh;
+
+        border-radius:16px;
+
+    }
+
+    .verify-email-box{
+
+        width:95%;
+
+        padding:1.6rem;
+
+    }
+
+    #notification{
+
+        left:16px;
+
+        right:16px;
+
+        top:16px;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .signup-page{
+
+        padding:16px 12px;
+
+    }
+
+    .signup-card{
+
+        padding:22px 18px;
+
+    }
+
+    .signup-logo{
+
+        width:170px;
+
+    }
+
+    .terms-label{
+
+        font-size:.9rem;
+
+    }
+
+    .country-item{
+
+        padding:14px 16px;
+
+    }
+
+}
+/* ==========================================
+Animations
+========================================== */
+
+.signup-card{
+
+    animation:fadeUp .7s ease;
+
+}
+
+.signup-logo{
+
+    animation:floatLogo 5s ease-in-out infinite;
+
+}
+
+#signupButton{
+
+    overflow:hidden;
+
+}
+
+#signupButton::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.35),
+        transparent
+    );
+
+    transition:.8s;
+
+}
+
+#signupButton:hover::before{
+
+    left:160%;
+
+}
+
+.country-box{
+
+    animation:fadeUp .25s ease;
+
+}
+
+.verify-email-box{
+
+    animation:fadeUp .35s ease;
+
+}
+
+.country-item{
+
+    transition:
+    background .2s,
+    padding-left .2s;
+
+}
+
+.country-item:hover{
+
+    padding-left:26px;
+
+}
+
+#notification{
+
+    animation:fadeUp .3s ease;
+
+}
+
+#username,
+#displayName,
+#email,
+#password,
+#confirmPassword{
+
+    transition:
+    border-color .25s,
+    box-shadow .25s,
+    transform .2s;
+
+}
+
+#username:focus,
+#displayName:focus,
+#email:focus,
+#password:focus,
+#confirmPassword:focus{
+
+    transform:translateY(-2px);
 
 }
