@@ -111,10 +111,6 @@ document.getElementById("countryList");
 const languageSelect =
 document.getElementById("language");
 
-// Terms
-
-const termsCheckbox =
-document.getElementById("terms");
 
 // Signup Button
 
@@ -164,12 +160,6 @@ document.getElementById("notification");
 // Country
 // ==========================================
 
-const countryInput =
-document.getElementById("country");
-
-const countryModal =
-document.getElementById("countryModal");
-
 const openCountryModal =
 document.getElementById("openCountryModal");
 
@@ -190,62 +180,6 @@ document.getElementById("countryList");
 const terms =
 document.getElementById("terms");
 
-// ==========================================
-// Countries Data
-// ==========================================
-
-const countries = [
-
-    "Afghanistan",
-    "Afrique du Sud",
-    "Algérie",
-    "Allemagne",
-    "Angola",
-    "Arabie Saoudite",
-    "Argentine",
-    "Australie",
-    "Autriche",
-    "Belgique",
-    "Bénin",
-    "Brésil",
-    "Burkina Faso",
-    "Cameroun",
-    "Canada",
-    "Chili",
-    "Chine",
-    "Colombie",
-    "Corée du Sud",
-    "Côte d'Ivoire",
-    "Danemark",
-    "Égypte",
-    "Espagne",
-    "États-Unis",
-    "France",
-    "Grèce",
-    "Haïti",
-    "Inde",
-    "Italie",
-    "Jamaïque",
-    "Japon",
-    "Kenya",
-    "Luxembourg",
-    "Madagascar",
-    "Mali",
-    "Maroc",
-    "Mexique",
-    "Niger",
-    "Nigeria",
-    "Norvège",
-    "Portugal",
-    "République Dominicaine",
-    "Royaume-Uni",
-    "Russie",
-    "Sénégal",
-    "Suisse",
-    "Togo",
-    "Tunisie"
-
-];
 // ==========================================
 // Variables
 // ==========================================
@@ -602,9 +536,9 @@ function validateCountry(){
 
 function checkTerms(){
 
-    if(!terms.checked){
+    if(!termsCheckbox.checked){
 
-        showError(
+        showNotification(
             "Vous devez accepter les conditions d'utilisation."
         );
 
@@ -891,65 +825,6 @@ confirmPasswordInput.addEventListener(
     validateConfirmPassword
 
 );
-// ==========================================
-// Country Events
-// ==========================================
-
-openCountryModal.onclick = ()=>{
-
-
-    countryModal.classList.add(
-        "active"
-    );
-
-
-    countrySearch.value =
-    "";
-
-
-    renderCountries();
-
-
-};
-
-
-closeCountryModal.onclick = ()=>{
-
-
-    countryModal.classList.remove(
-        "active"
-    );
-
-
-};
-
-
-countryModal.onclick = (event)=>{
-
-
-    if(
-        event.target === countryModal
-    ){
-
-        countryModal.classList.remove(
-            "active"
-        );
-
-    }
-
-
-};
-
-
-countrySearch.oninput = ()=>{
-
-
-    renderCountries(
-        countrySearch.value
-    );
-
-
-};
 // ==========================================
 // Country Events
 // ==========================================
