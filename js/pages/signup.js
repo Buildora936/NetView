@@ -1,64 +1,40 @@
 // ==========================================
 // Imports
 // ==========================================
- 
+
 import { supabase } from "../core/supabase.js";
 
-// ==========================================
-// Already Logged
-// ==========================================
+import {
 
-const {
+    signUp,
+    resendVerification
 
-    data: {
+} from "../core/auth.js";
 
-        session
+import {
 
-    }
+    showLoader,
+    hideLoader,
+    buttonLoading,
+    showNotification
 
-} = await supabase.auth.getSession();
+} from "../core/ui.js";
 
-if(session){
+import {
 
-    window.location.replace(
+    countries
 
-        "index.html"
-
-    );
-
-}
+} from "../assets/countries.js";
 // ==========================================
 // DOM
 // ==========================================
+
+// Form
+
 const signupForm =
 document.getElementById("signupForm");
 
-const notification =
-document.getElementById("notification");
-
-const resendEmailButton =
-document.getElementById("resendEmailButton");
-
-const resendEmailText =
-document.getElementById("resendEmailText");
-
-const resendEmailLoader =
-document.getElementById("resendEmailLoader");
-
-const resendEmailMessage =
-document.getElementById("resendEmailMessage");
-
-const verifyEmailModal =
-document.getElementById("verifyEmailModal");
-
-const verifyEmailAddress =
-document.getElementById("verifyEmailAddress");
-
-const closeVerifyModal =
-document.getElementById("closeVerifyModal");
-
-const globalLoader =
-document.getElementById("globalLoader");
+// Username
 
 const usernameInput =
 document.getElementById("username");
@@ -66,17 +42,23 @@ document.getElementById("username");
 const usernameMessage =
 document.getElementById("usernameMessage");
 
+// Display Name
+
 const displayNameInput =
 document.getElementById("displayName");
 
 const displayNameMessage =
 document.getElementById("displayNameMessage");
 
+// Email
+
 const emailInput =
 document.getElementById("email");
 
 const emailMessage =
 document.getElementById("emailMessage");
+
+// Password
 
 const passwordInput =
 document.getElementById("password");
@@ -90,6 +72,8 @@ document.getElementById("togglePassword");
 const togglePasswordIcon =
 document.getElementById("togglePasswordIcon");
 
+// Confirm Password
+
 const confirmPasswordInput =
 document.getElementById("confirmPassword");
 
@@ -102,11 +86,37 @@ document.getElementById("toggleConfirmPassword");
 const toggleConfirmPasswordIcon =
 document.getElementById("toggleConfirmPasswordIcon");
 
-const terms =
+// Country
+
+const countryInput =
+document.getElementById("country");
+
+const openCountryModal =
+document.getElementById("openCountryModal");
+
+const countryModal =
+document.getElementById("countryModal");
+
+const closeCountryModal =
+document.getElementById("closeCountryModal");
+
+const countrySearch =
+document.getElementById("countrySearch");
+
+const countryList =
+document.getElementById("countryList");
+
+// Language
+
+const languageSelect =
+document.getElementById("language");
+
+// Terms
+
+const termsCheckbox =
 document.getElementById("terms");
 
-const language =
-document.getElementById("language");
+// Signup Button
 
 const signupButton =
 document.getElementById("signupButton");
@@ -116,6 +126,43 @@ document.getElementById("signupButtonText");
 
 const signupButtonLoader =
 document.getElementById("signupButtonLoader");
+
+// Verify Email Modal
+
+const verifyEmailModal =
+document.getElementById("verifyEmailModal");
+
+const verifyEmailAddress =
+document.getElementById("verifyEmailAddress");
+
+const closeVerifyModal =
+document.getElementById("closeVerifyModal");
+
+const resendEmailButton =
+document.getElementById("resendEmailButton");
+
+const resendEmailText =
+document.getElementById("resendEmailText");
+
+const resendEmailLoader =
+document.getElementById("resendEmailLoader");
+
+const resendEmailMessage =
+document.getElementById("resendEmailMessage");
+
+// Loader
+
+const globalLoader =
+document.getElementById("globalLoader");
+
+// Notification
+
+const notification =
+document.getElementById("notification");
+
+// ==========================================
+// Country
+// ==========================================
 
 const countryInput =
 document.getElementById("country");
@@ -135,66 +182,84 @@ document.getElementById("countrySearch");
 const countryList =
 document.getElementById("countryList");
 
-const countries = [  
-  
-"Afghanistan",  
-"Afrique du Sud",  
-"Algérie",  
-"Allemagne",  
-"Angola",  
-"Arabie Saoudite",  
-"Argentine",  
-"Australie",  
-"Autriche",  
-"Belgique",  
-"Bénin",  
-"Brésil",  
-"Burkina Faso",  
-"Cameroun",  
-"Canada",  
-"Chili",  
-"Chine",  
-"Colombie",  
-"Corée du Sud",  
-"Côte d'Ivoire",  
-"Danemark",  
-"Égypte",  
-"Espagne",  
-"États-Unis",  
-"France",  
-"Grèce",  
-"Haïti",  
-"Inde",  
-"Italie",  
-"Jamaïque",  
-"Japon",  
-"Kenya",  
-"Luxembourg",  
-"Madagascar",  
-"Mali",  
-"Maroc",  
-"Mexique",  
-"Niger",  
-"Nigeria",  
-"Norvège",  
-"Portugal",  
-"République Dominicaine",  
-"Royaume-Uni",  
-"Russie",  
-"Sénégal",  
-"Suisse",  
-"Togo",  
-"Tunisie"  
-  
-];  
-console.log(verifyEmailModal);
+
 // ==========================================
-// Username
+// Terms
 // ==========================================
+
+const terms =
+document.getElementById("terms");
+
+// ==========================================
+// Countries Data
+// ==========================================
+
+const countries = [
+
+    "Afghanistan",
+    "Afrique du Sud",
+    "Algérie",
+    "Allemagne",
+    "Angola",
+    "Arabie Saoudite",
+    "Argentine",
+    "Australie",
+    "Autriche",
+    "Belgique",
+    "Bénin",
+    "Brésil",
+    "Burkina Faso",
+    "Cameroun",
+    "Canada",
+    "Chili",
+    "Chine",
+    "Colombie",
+    "Corée du Sud",
+    "Côte d'Ivoire",
+    "Danemark",
+    "Égypte",
+    "Espagne",
+    "États-Unis",
+    "France",
+    "Grèce",
+    "Haïti",
+    "Inde",
+    "Italie",
+    "Jamaïque",
+    "Japon",
+    "Kenya",
+    "Luxembourg",
+    "Madagascar",
+    "Mali",
+    "Maroc",
+    "Mexique",
+    "Niger",
+    "Nigeria",
+    "Norvège",
+    "Portugal",
+    "République Dominicaine",
+    "Royaume-Uni",
+    "Russie",
+    "Sénégal",
+    "Suisse",
+    "Togo",
+    "Tunisie"
+
+];
+// ==========================================
+// Variables
+// ==========================================
+
+let signupInProgress = false;
 
 let usernameTimer = null;
 
-let signupInProgress = false;
+let lastUsername = "";
+
+let usernameAvailable = false;
+// ==========================================
+// Username
+// ==========================================
 
 // Nettoyage
 
@@ -204,360 +269,39 @@ function cleanUsername(value){
 
         .toLowerCase()
 
+        .trim()
+
         .replace(/\s+/g,"")
 
         .replace(/[^a-z0-9._]/g,"");
 
 }
 
-// ==========================================
-// Verify Email Modal
-// ==========================================
-
-function openVerifyEmailModal(email){
-
-    console.log("Modal ouvert");
-    
-    verifyEmailAddress.textContent =
-    email;
-
-    verifyEmailModal.classList.add(
-        "active"
-    );
-
-}
-
-function closeVerifyEmailModal(){
-
-    verifyEmailModal.classList.remove(
-        "active"
-    );
-
-}
-
-function startResendLoading(){
-
-    resendEmailButton.disabled = true;
-
-    resendEmailText.hidden = true;
-
-    resendEmailLoader.hidden = false;
-
-}
-
-function stopResendLoading(){
-
-    resendEmailButton.disabled = false;
-
-    resendEmailText.hidden = false;
-
-    resendEmailLoader.hidden = true;
-
-}
-
-// ==========================================
-// Display Name
-// ==========================================
-
-function validateDisplayName(){
-
-    let value =
-    displayNameInput.value
-
-        .replace(/\s+/g," ")
-
-        .trim();
-
-    displayNameInput.value =
-    value;
-
-    if(value.length < 3){
-
-        displayNameMessage.textContent =
-        "Minimum 3 caractères.";
-
-        displayNameMessage.className =
-        "nv-help display-invalid";
-
-        return false;
-
-    }
-
-    if(value.length > 100){
-
-        displayNameMessage.textContent =
-        "Nom trop long.";
-
-        displayNameMessage.className =
-        "nv-help display-invalid";
-
-        return false;
-
-    }
-
-    displayNameMessage.textContent =
-    "Nom valide.";
-
-    displayNameMessage.className =
-    "nv-help display-valid";
-
-    return true;
-
-}
-
-// ==========================================
-// Signup Button
-// ==========================================
-
-function startSignupLoading(){
-
-    signupButton.disabled = true;
-
-    signupButton.style.pointerEvents =
-    "none";
-
-    signupButtonText.hidden = true;
-
-    signupButtonLoader.hidden = false;
-
-}
-
-function stopSignupLoading(){
-
-    signupButton.disabled = false;
-
-    signupButton.style.pointerEvents =
-    "";
-
-    signupButtonText.hidden = false;
-
-    signupButtonLoader.hidden = true;
-
-}
-
-// ==========================================
-// Global Loader
-// ==========================================
-
-function showLoader(){
-
-    globalLoader.classList.add("active");
-
-    document.body.style.overflow = "hidden";
-
-}
-
-function hideLoader(){
-
-    globalLoader.classList.remove("active");
-
-    document.body.style.overflow = "";
-
-}
-
-// ==========================================
-// Error Handler
-// ==========================================
-function showError(message){
-
-    notification.textContent = message;
-
-    notification.className =
-    "notification error";
-
-}
-
-function showSuccess(message){
-
-    notification.textContent = message;
-
-    notification.className =
-    "notification success";
-
-}
-
-window.addEventListener("load",()=>{
-
-    showLoader();
-
-    setTimeout(hideLoader,800);
-
-});
+// Vérification locale
 
 function validateUsername(){
 
-    return usernameInput.value.trim().length >= 3;
+    const username =
+    cleanUsername(
+        usernameInput.value
+    );
 
-}
-// ==========================================
-// Email
-// ==========================================
+    usernameInput.value =
+    username;
 
-function validateEmail(){
- console.log("Avant ouverture du modal");
-    const email =
-    emailInput.value
-        .trim()
-        .toLowerCase();
+    if(username.length === 0){
 
-    emailInput.value = email;
+        usernameMessage.textContent =
+        "Choisissez un nom d'utilisateur.";
 
-    if(email.length === 0){
-
-        emailMessage.textContent =
-        "Veuillez saisir votre adresse e-mail.";
-
-        emailMessage.className =
-        "nv-help email-invalid";
-
-        return false;
-
-    }
-
-    const emailRegex =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!emailRegex.test(email)){
-
-        emailMessage.textContent =
-        "Adresse e-mail invalide.";
-
-        emailMessage.className =
-        "nv-help email-invalid";
-
-        return false;
-
-    }
-
-    emailMessage.textContent =
-    "Adresse e-mail valide.";
-
-    emailMessage.className =
-    "nv-help email-valid";
-
-    return true;
-
-}
-// ==========================================
-// Confirm Password
-// ==========================================
-
-function validateConfirmPassword(){
-
-    if(confirmPasswordInput.value.length===0){
-
-        confirmPasswordMessage.textContent =
-        "Confirmez votre mot de passe.";
-
-        confirmPasswordMessage.className =
+        usernameMessage.className =
         "nv-help";
 
-        return false;
-
-    }
-
-    if(passwordInput.value !== confirmPasswordInput.value){
-
-        confirmPasswordMessage.textContent =
-        "Les mots de passe sont différents.";
-
-        confirmPasswordMessage.className =
-        "nv-help confirm-invalid";
+        usernameAvailable = false;
 
         return false;
 
     }
-
-    confirmPasswordMessage.textContent =
-    "Les mots de passe correspondent.";
-
-    confirmPasswordMessage.className =
-    "nv-help confirm-valid";
-
-    return true;
-
-}
-
-function renderCountries(search=""){
-
-    countryList.innerHTML="";
-
-  countries  
-  
-    .filter(country=>country  
-    .toLowerCase()  
-    .includes(search.toLowerCase()))  
-  
-    .forEach(country=>{  
-  
-        const div =  
-        document.createElement("div");  
-  
-        div.className =  
-        "country-item";  
-  
-        div.textContent =  
-        country;  
-  
-        div.onclick=()=>{  
-  
-            countryInput.value=  
-            country;  
-  
-            countryModal.classList.remove("active");  
-  
-        };  
-  
-        countryList.appendChild(div);  
-  
-    });  
-
-}
-
-async function resendVerificationEmail(){
-
-    startResendLoading();
-
-    resendEmailMessage.textContent =
-    "";
-
-    try{
-
-        await new Promise(
-
-            resolve =>
-
-            setTimeout(resolve,1500)
-
-        );
-
-        resendEmailMessage.textContent =
-        "Un nouvel e-mail a été envoyé.";
-
-        resendEmailMessage.className =
-        "nv-help email-valid";
-
-    }
-
-    catch{
-
-        resendEmailMessage.textContent =
-        "Impossible de renvoyer l'e-mail.";
-
-        resendEmailMessage.className =
-        "nv-help email-invalid";
-
-    }
-
-    stopResendLoading();
-
-}
-// Vérification
-
-async function checkUsername(){
-
-    const username =
-    usernameInput.value;
 
     if(username.length < 3){
 
@@ -567,9 +311,51 @@ async function checkUsername(){
         usernameMessage.className =
         "nv-help username-invalid";
 
+        usernameAvailable = false;
+
+        return false;
+
+    }
+
+    if(username.length > 30){
+
+        usernameMessage.textContent =
+        "Maximum 30 caractères.";
+
+        usernameMessage.className =
+        "nv-help username-invalid";
+
+        usernameAvailable = false;
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+// Vérification Supabase
+
+async function checkUsername(){
+
+    if(!validateUsername()){
+
         return;
 
     }
+
+    const username =
+    usernameInput.value;
+
+    if(username === lastUsername){
+
+        return;
+
+    }
+
+    lastUsername =
+    username;
 
     usernameMessage.textContent =
     "Vérification...";
@@ -595,8 +381,10 @@ async function checkUsername(){
 
     if(error){
 
-       usernameMessage.textContent =
-"Erreur réseau.";
+        usernameAvailable = false;
+
+        usernameMessage.textContent =
+        "Erreur de vérification.";
 
         usernameMessage.className =
         "nv-help username-invalid";
@@ -607,8 +395,10 @@ async function checkUsername(){
 
     if(data){
 
+        usernameAvailable = false;
+
         usernameMessage.textContent =
-        "Nom déjà utilisé.";
+        "Nom d'utilisateur déjà utilisé.";
 
         usernameMessage.className =
         "nv-help username-invalid";
@@ -617,36 +407,109 @@ async function checkUsername(){
 
     }
 
+    usernameAvailable = true;
+
     usernameMessage.textContent =
-    "Nom disponible.";
+    "Nom d'utilisateur disponible.";
 
     usernameMessage.className =
     "nv-help username-valid";
 
 }
 
+// Évènement
 
-// Event
+usernameInput.addEventListener(
 
-usernameInput.addEventListener("input",()=>{
+    "input",
 
-    usernameInput.value =
-    cleanUsername(usernameInput.value);
+    ()=>{
 
-    clearTimeout(usernameTimer);
+        usernameInput.value =
+        cleanUsername(
+            usernameInput.value
+        );
 
-    usernameTimer =
-    setTimeout(
+        usernameAvailable = false;
 
-        checkUsername,
+        clearTimeout(
+            usernameTimer
+        );
 
-        500
+        usernameTimer =
+        setTimeout(
 
-    );
+            checkUsername,
 
-    
+            500
 
-});
+        );
+
+    }
+
+);
+// ==========================================
+// Display Name
+// ==========================================
+
+function validateDisplayName(){
+
+    const value =
+
+    displayNameInput.value
+
+        .replace(/\s+/g," ")
+
+        .trim();
+
+    displayNameInput.value = value;
+
+    if(value.length === 0){
+
+        displayNameMessage.textContent =
+        "Saisissez un nom affiché.";
+
+        displayNameMessage.className =
+        "nv-help";
+
+        return false;
+
+    }
+
+    if(value.length < 3){
+
+        displayNameMessage.textContent =
+        "Minimum 3 caractères.";
+
+        displayNameMessage.className =
+        "nv-help display-invalid";
+
+        return false;
+
+    }
+
+    if(value.length > 100){
+
+        displayNameMessage.textContent =
+        "Maximum 100 caractères.";
+
+        displayNameMessage.className =
+        "nv-help display-invalid";
+
+        return false;
+
+    }
+
+    displayNameMessage.textContent =
+    "Nom affiché valide.";
+
+    displayNameMessage.className =
+    "nv-help display-valid";
+
+    return true;
+
+}
+
 displayNameInput.addEventListener(
 
     "input",
@@ -654,6 +517,60 @@ displayNameInput.addEventListener(
     validateDisplayName
 
 );
+// ==========================================
+// Email
+// ==========================================
+
+function validateEmail(){
+
+    const email =
+
+    emailInput.value
+
+        .trim()
+
+        .toLowerCase();
+
+    emailInput.value = email;
+
+    if(email.length === 0){
+
+        emailMessage.textContent =
+        "Saisissez votre adresse e-mail.";
+
+        emailMessage.className =
+        "nv-help";
+
+        return false;
+
+    }
+
+    const emailRegex =
+
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailRegex.test(email)){
+
+        emailMessage.textContent =
+        "Adresse e-mail invalide.";
+
+        emailMessage.className =
+        "nv-help email-invalid";
+
+        return false;
+
+    }
+
+    emailMessage.textContent =
+    "Adresse e-mail valide.";
+
+    emailMessage.className =
+    "nv-help email-valid";
+
+    return true;
+
+}
+
 emailInput.addEventListener(
 
     "input",
@@ -661,137 +578,125 @@ emailInput.addEventListener(
     validateEmail
 
 );
+
+// ==========================================
+// Country Validation
+// ==========================================
+
+function validateCountry(){
+
+    if(
+        countryInput.value.trim() === ""
+    ){
+
+        return false;
+
+    }
+
+    return true;
+
+}
+// ==========================================
+// Terms Validation
+// ==========================================
+
+function checkTerms(){
+
+    if(!terms.checked){
+
+        showError(
+            "Vous devez accepter les conditions d'utilisation."
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+// ==========================================
+// Render Countries
+// ==========================================
+
+function renderCountries(search=""){
+
+    countryList.innerHTML="";
+
+
+    countries
+
+    .filter(country =>
+
+        country
+
+        .toLowerCase()
+
+        .includes(
+            search.toLowerCase()
+        )
+
+    )
+
+    .forEach(country=>{
+
+
+        const item =
+        document.createElement("div");
+
+
+        item.className =
+        "country-item";
+
+
+        item.textContent =
+        country;
+
+
+        item.onclick = ()=>{
+
+
+            countryInput.value =
+            country;
+
+
+            countryModal.classList.remove(
+                "active"
+            );
+
+
+        };
+
+
+        countryList.appendChild(item);
+
+
+    });
+
+
+}
 // ==========================================
 // Password
 // ==========================================
-
-togglePassword.addEventListener("click",()=>{
-
-    const visible =
-    passwordInput.type === "text";
-
-    passwordInput.type =
-    visible ? "password" : "text";
-
-    togglePasswordIcon.className =
-    visible
-        ? "fa-regular fa-eye"
-        : "fa-regular fa-eye-slash";
-
-});
-// ==========================================
-// Signup (Supabase Auth)
-// ==========================================
-
-// ==========================================
-// Signup (Supabase Auth)
-// ==========================================
-
-async function signUp(){
-
-    if(signupInProgress){
-
-        return;
-
-    }
-
-    if(!validateForm()){
-
-        return;
-
-    }
-
-    signupInProgress = true;
-
-    startSignupLoading();
-
-    try{
-
-        const {
-
-            data,
-
-            error
-
-        } = await supabase.auth.signUp({
-
-            email:
-
-                emailInput.value.trim(),
-
-            password:
-
-                passwordInput.value,
-
-            options:{
-
-                emailRedirectTo:
-
-                `${window.location.origin}/create-profile.html`
-
-            }
-
-        });
-
-        if(error){
-
-            throw error;
-
-        }
-        if(!data.user){
-
-    throw new Error(
-        "Le compte n'a pas pu être créé."
-    );
-
-}
-
-window.location.href = "create-profile.html";
-
-openVerifyEmailModal(
-    emailInput.value.trim()
-);
-    }
-
-   catch(error){
-
-    console.error(error);
-
-    showError(
-
-        error.message ||
-
-        "Une erreur est survenue."
-
-    );
-
-}
-
-    finally{
-
-        signupInProgress = false;
-
-        stopSignupLoading();
-
-    }
-
-}
-
-// ==========================================
-// Redirect
-// ==========================================
-
-function redirectToLogin(){
-
-    window.location.href =
-    "login.html";
-
-}
 
 function validatePassword(){
 
     const password =
     passwordInput.value;
+
+
+    if(password.length === 0){
+
+        passwordMessage.textContent =
+        "Saisissez un mot de passe.";
+
+        passwordMessage.className =
+        "nv-help";
+
+        return false;
+
+    }
+
 
     if(password.length < 8){
 
@@ -805,95 +710,69 @@ function validatePassword(){
 
     }
 
-    passwordMessage.textContent =
-    "Mot de passe valide.";
 
-    passwordMessage.className =
-    "nv-help password-valid";
+    if(!/[A-Z]/.test(password)){
 
-    return true;
+        passwordMessage.textContent =
+        "Ajoutez au moins une majuscule.";
 
-}
-
-passwordInput.addEventListener(
-
-    "input",
-
-    validatePassword
-
-);
-
-function validateForm(){
-if(usernameInput.value.length < 3){
-
-    showError(
-        "Nom d'utilisateur invalide."
-    );
-
-    return false;
-
-}
-    if(countryInput.value === ""){
-
-    showError(
-        "Veuillez sélectionner un pays."
-    );
-
-    return false;
-
-}
-    return (
-
-        validateUsername() &&
-
-        validateDisplayName() &&
-
-        validateEmail() &&
-
-        validatePassword() &&
-
-        validateConfirmPassword() &&
-
-        validateCountry() &&
-
-        checkTerms()
-
-    );
-
-}
-
-function checkTerms(){
-
-    if(!terms.checked){
-
-       showError(
-    "Vous devez accepter les conditions d'utilisation."
-);
+        passwordMessage.className =
+        "nv-help password-invalid";
 
         return false;
 
     }
 
+
+    if(!/[0-9]/.test(password)){
+
+        passwordMessage.textContent =
+        "Ajoutez au moins un chiffre.";
+
+        passwordMessage.className =
+        "nv-help password-invalid";
+
+        return false;
+
+    }
+
+
+    passwordMessage.textContent =
+    "Mot de passe sécurisé.";
+
+    passwordMessage.className =
+    "nv-help password-valid";
+
+
     return true;
 
 }
-// ==========================================
-// Confirm Password Toggle
-// ==========================================
 
-toggleConfirmPassword.addEventListener(
+
+// Afficher / masquer mot de passe
+
+togglePassword.addEventListener(
 
     "click",
 
     ()=>{
 
         const visible =
-        confirmPasswordInput.type === "text";
 
-        confirmPasswordInput.type =
-        visible ? "password" : "text";
+        passwordInput.type === "text";
 
-        toggleConfirmPasswordIcon.className =
+
+        passwordInput.type =
+
+        visible
+
+        ? "password"
+
+        : "text";
+
+
+        togglePasswordIcon.className =
+
         visible
 
         ? "fa-regular fa-eye"
@@ -903,19 +782,108 @@ toggleConfirmPassword.addEventListener(
     }
 
 );
-signupForm.addEventListener(
 
-    "submit",
 
-    async(event)=>{
+passwordInput.addEventListener(
 
-        event.preventDefault();
+    "input",
 
-        await signUp();
+    ()=>{
+
+        validatePassword();
+
+        validateConfirmPassword();
 
     }
 
 );
+// ==========================================
+// Confirm Password
+// ==========================================
+
+function validateConfirmPassword(){
+
+    const password =
+    passwordInput.value;
+
+
+    const confirmPassword =
+    confirmPasswordInput.value;
+
+
+    if(confirmPassword.length === 0){
+
+        confirmPasswordMessage.textContent =
+        "Confirmez votre mot de passe.";
+
+        confirmPasswordMessage.className =
+        "nv-help";
+
+        return false;
+
+    }
+
+
+    if(password !== confirmPassword){
+
+        confirmPasswordMessage.textContent =
+        "Les mots de passe sont différents.";
+
+        confirmPasswordMessage.className =
+        "nv-help confirm-invalid";
+
+        return false;
+
+    }
+
+
+    confirmPasswordMessage.textContent =
+    "Les mots de passe correspondent.";
+
+    confirmPasswordMessage.className =
+    "nv-help confirm-valid";
+
+
+    return true;
+
+}
+
+
+// Afficher / masquer confirmation
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        const visible =
+
+        confirmPasswordInput.type === "text";
+
+
+        confirmPasswordInput.type =
+
+        visible
+
+        ? "password"
+
+        : "text";
+
+
+        toggleConfirmPasswordIcon.className =
+
+        visible
+
+        ? "fa-regular fa-eye"
+
+        : "fa-regular fa-eye-slash";
+
+    }
+
+);
+
+
 confirmPasswordInput.addEventListener(
 
     "input",
@@ -923,65 +891,121 @@ confirmPasswordInput.addEventListener(
     validateConfirmPassword
 
 );
+// ==========================================
+// Country Events
+// ==========================================
 
-passwordInput.addEventListener(
+openCountryModal.onclick = ()=>{
 
-    "input",
 
-    validateConfirmPassword
+    countryModal.classList.add(
+        "active"
+    );
 
-);
-openCountryModal.onclick=()=>{
 
-    countryModal.classList.add("active");
+    countrySearch.value =
+    "";
 
-    countrySearch.value="";
 
     renderCountries();
 
+
 };
 
-resendEmailButton.addEventListener(
 
-    "click",
+closeCountryModal.onclick = ()=>{
 
-    resendVerificationEmail
 
-);
+    countryModal.classList.remove(
+        "active"
+    );
 
-closeVerifyModal.addEventListener(
 
-    "click",
+};
 
-    ()=>{
 
-        closeVerifyEmailModal();
+countryModal.onclick = (event)=>{
 
-        redirectToLogin();
+
+    if(
+        event.target === countryModal
+    ){
+
+        countryModal.classList.remove(
+            "active"
+        );
 
     }
 
-);
-
-closeCountryModal.onclick=()=>{
-
-    countryModal.classList.remove("active");
 
 };
 
-countryModal.onclick=(e)=>{
 
-    if(e.target===countryModal){
+countrySearch.oninput = ()=>{
 
-        countryModal.classList.remove("active");
+
+    renderCountries(
+        countrySearch.value
+    );
+
+
+};
+// ==========================================
+// Country Events
+// ==========================================
+
+openCountryModal.onclick = ()=>{
+
+
+    countryModal.classList.add(
+        "active"
+    );
+
+
+    countrySearch.value =
+    "";
+
+
+    renderCountries();
+
+
+};
+
+
+closeCountryModal.onclick = ()=>{
+
+
+    countryModal.classList.remove(
+        "active"
+    );
+
+
+};
+
+
+countryModal.onclick = (event)=>{
+
+
+    if(
+        event.target === countryModal
+    ){
+
+        countryModal.classList.remove(
+            "active"
+        );
 
     }
 
-};
-
-countrySearch.oninput=()=>{
-
-    renderCountries(countrySearch.value);
 
 };
 
+
+countrySearch.oninput = ()=>{
+
+
+    renderCountries(
+        countrySearch.value
+    );
+
+
+};
