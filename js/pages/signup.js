@@ -845,6 +845,105 @@ openCountryModal.onclick = ()=>{
 
 
 };
+// ==========================================
+// Loader
+// ==========================================
+
+function startSignupLoading(){
+
+    signupButton.disabled = true;
+
+    buttonLoading(
+        signupButton,
+        true
+    );
+
+}
+
+
+function stopSignupLoading(){
+
+    signupButton.disabled = false;
+
+    buttonLoading(
+        signupButton,
+        false
+    );
+
+}
+
+
+function startGlobalLoader(){
+
+    showLoader();
+
+}
+
+
+function stopGlobalLoader(){
+
+    hideLoader();
+
+}
+// ==========================================
+// Verify Email Modal
+// ==========================================
+
+function openVerifyEmailModal(email){
+
+    verifyEmailAddress.textContent =
+    email;
+
+    resendEmailMessage.textContent =
+    "";
+
+    verifyEmailModal.classList.add(
+        "active"
+    );
+
+}
+
+
+function closeVerifyEmailModal(){
+
+    verifyEmailModal.classList.remove(
+        "active"
+    );
+
+    resendEmailMessage.textContent =
+    "";
+
+}
+// ==========================================
+// Resend Email Loader
+// ==========================================
+
+function startResendLoading(){
+
+    resendEmailButton.disabled =
+    true;
+
+    resendEmailText.hidden =
+    true;
+
+    resendEmailLoader.hidden =
+    false;
+
+}
+
+
+function stopResendLoading(){
+
+    resendEmailButton.disabled =
+    false;
+
+    resendEmailText.hidden =
+    false;
+
+    resendEmailLoader.hidden =
+    true;
+
+}
 
 
 closeCountryModal.onclick = ()=>{
@@ -884,3 +983,45 @@ countrySearch.oninput = ()=>{
 
 
 };
+
+// ==========================================
+// Initialisation
+// ==========================================
+
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        startGlobalLoader();
+
+        setTimeout(
+
+            stopGlobalLoader,
+
+            500
+
+        );
+
+    }
+
+);
+// ==========================================
+// Verify Email Events
+// ==========================================
+
+closeVerifyModal.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        closeVerifyEmailModal();
+
+        window.location.href =
+        "login.html";
+
+    }
+
+);
