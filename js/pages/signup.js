@@ -1093,3 +1093,243 @@ resendEmailButton.addEventListener(
     resendVerificationEmail
 
 );
+// ==========================================
+// Form Validation
+// ==========================================
+
+function validateForm(){
+
+    if(!validateUsername()){
+
+        showNotification(
+
+            "Nom d'utilisateur invalide.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!usernameAvailable){
+
+        showNotification(
+
+            "Ce nom d'utilisateur n'est pas disponible.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!validateDisplayName()){
+
+        showNotification(
+
+            "Nom affiché invalide.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!validateEmail()){
+
+        showNotification(
+
+            "Adresse e-mail invalide.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!validatePassword()){
+
+        showNotification(
+
+            "Mot de passe invalide.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!validateConfirmPassword()){
+
+        showNotification(
+
+            "Les mots de passe ne correspondent pas.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!validateCountry()){
+
+        showNotification(
+
+            "Veuillez sélectionner votre pays.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    if(!termsCheckbox.checked){
+
+        showNotification(
+
+            "Vous devez accepter les conditions d'utilisation.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+// ==========================================
+// Create Account
+// ==========================================
+
+async function createAccount(){
+
+    if(signupInProgress){
+
+        return;
+
+    }
+
+    if(!validateForm()){
+
+        return;
+
+    }
+
+    signupInProgress = true;
+
+    startSignupLoading();
+
+    try{
+
+        const {
+
+            data,
+
+            error
+
+        } = await signUp(
+
+            emailInput.value.trim(),
+
+            passwordInput.value
+
+        );
+
+        if(error){
+
+            throw error;
+
+        }
+
+        if(!data.user){
+
+            throw new Error(
+                "Impossible de créer le compte."
+            );
+
+        }
+
+        openVerifyEmailModal(
+
+            emailInput.value.trim()
+
+        );
+
+        showNotification(
+
+            "Compte créé avec succès.",
+
+            "success"
+
+        );
+
+        signupForm.reset();
+
+        usernameMessage.textContent = "";
+        displayNameMessage.textContent = "";
+        emailMessage.textContent = "";
+        passwordMessage.textContent = "";
+        confirmPasswordMessage.textContent = "";
+
+        usernameAvailable = false;
+        lastUsername = "";
+
+    }
+
+    catch(error){
+
+        showNotification(
+
+            error.message ||
+
+            "Une erreur est survenue.",
+
+            "error"
+
+        );
+
+    }
+
+    finally{
+
+        signupInProgress = false;
+
+        stopSignupLoading();
+
+    }
+    // ==========================================
+// Signup Event
+// ==========================================
+
+signupForm.addEventListener(
+
+    "submit",
+
+    async(event)=>{
+
+        event.preventDefault();
+
+        await createAccount();
+
+    }
+
+);
+
+}
