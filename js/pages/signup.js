@@ -915,6 +915,63 @@ function closeVerifyEmailModal(){
 
 }
 // ==========================================
+// Resend Verification Email
+// ==========================================
+
+async function resendVerificationEmail(){
+
+    startResendLoading();
+
+    resendEmailMessage.textContent =
+    "";
+
+    try{
+
+        const {
+
+            error
+
+        } = await resendVerification(
+
+            emailInput.value.trim()
+
+        );
+
+        if(error){
+
+            throw error;
+
+        }
+
+        resendEmailMessage.textContent =
+        "Un nouvel e-mail de confirmation a été envoyé.";
+
+        resendEmailMessage.className =
+        "nv-help email-valid";
+
+    }
+
+    catch(error){
+
+        resendEmailMessage.textContent =
+
+        error.message ||
+
+        "Impossible de renvoyer l'e-mail.";
+
+        resendEmailMessage.className =
+        "nv-help email-invalid";
+
+    }
+
+    finally{
+
+        stopResendLoading();
+
+    }
+
+}
+// ==========================================
 // Resend Email Loader
 // ==========================================
 
@@ -1023,5 +1080,16 @@ closeVerifyModal.addEventListener(
         "login.html";
 
     }
+
+);
+// ==========================================
+// Resend Email Event
+// ==========================================
+
+resendEmailButton.addEventListener(
+
+    "click",
+
+    resendVerificationEmail
 
 );
