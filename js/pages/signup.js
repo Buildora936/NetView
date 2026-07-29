@@ -2,14 +2,7 @@
 // Imports
 // ==========================================
 
-import { supabase } from "../core/supabase.js";
-
-import {
-
-    signUp,
-    resendVerification
-
-} from "../core/auth.js";
+import { signUp, resendVerification } from "../core/auth.js";
 
 import {
 
@@ -20,11 +13,6 @@ import {
 
 } from "../core/ui.js";
 
-import {
-
-    countries
-
-} from "../assets/countries.js";
 // ==========================================
 // DOM
 // ==========================================
@@ -33,22 +21,6 @@ import {
 
 const signupForm =
 document.getElementById("signupForm");
-
-// Username
-
-const usernameInput =
-document.getElementById("username");
-
-const usernameMessage =
-document.getElementById("usernameMessage");
-
-// Display Name
-
-const displayNameInput =
-document.getElementById("displayName");
-
-const displayNameMessage =
-document.getElementById("displayNameMessage");
 
 // Email
 
@@ -86,31 +58,10 @@ document.getElementById("toggleConfirmPassword");
 const toggleConfirmPasswordIcon =
 document.getElementById("toggleConfirmPasswordIcon");
 
-// Country
+// Terms
 
-const countryInput =
-document.getElementById("country");
-
-const openCountryModal =
-document.getElementById("openCountryModal");
-
-const countryModal =
-document.getElementById("countryModal");
-
-const closeCountryModal =
-document.getElementById("closeCountryModal");
-
-const countrySearch =
-document.getElementById("countrySearch");
-
-const countryList =
-document.getElementById("countryList");
-
-// Language
-
-const languageSelect =
-document.getElementById("language");
-
+const termsCheckbox =
+document.getElementById("terms");
 
 // Signup Button
 
@@ -157,302 +108,15 @@ const notification =
 document.getElementById("notification");
 
 // ==========================================
-// Country
-// ==========================================
-
-const openCountryModal =
-document.getElementById("openCountryModal");
-
-const closeCountryModal =
-document.getElementById("closeCountryModal");
-
-const countrySearch =
-document.getElementById("countrySearch");
-
-const countryList =
-document.getElementById("countryList");
-
-
-// ==========================================
-// Terms
-// ==========================================
-
-const terms =
-document.getElementById("terms");
-
-// ==========================================
 // Variables
 // ==========================================
 
 let signupInProgress = false;
 
-let usernameTimer = null;
+let resendInProgress = false;
 
-let lastUsername = "";
-
-let usernameAvailable = false;
 // ==========================================
-// Username
-// ==========================================
-
-// Nettoyage
-
-function cleanUsername(value){
-
-    return value
-
-        .toLowerCase()
-
-        .trim()
-
-        .replace(/\s+/g,"")
-
-        .replace(/[^a-z0-9._]/g,"");
-
-}
-
-// Vérification locale
-
-function validateUsername(){
-
-    const username =
-    cleanUsername(
-        usernameInput.value
-    );
-
-    usernameInput.value =
-    username;
-
-    if(username.length === 0){
-
-        usernameMessage.textContent =
-        "Choisissez un nom d'utilisateur.";
-
-        usernameMessage.className =
-        "nv-help";
-
-        usernameAvailable = false;
-
-        return false;
-
-    }
-
-    if(username.length < 3){
-
-        usernameMessage.textContent =
-        "Minimum 3 caractères.";
-
-        usernameMessage.className =
-        "nv-help username-invalid";
-
-        usernameAvailable = false;
-
-        return false;
-
-    }
-
-    if(username.length > 30){
-
-        usernameMessage.textContent =
-        "Maximum 30 caractères.";
-
-        usernameMessage.className =
-        "nv-help username-invalid";
-
-        usernameAvailable = false;
-
-        return false;
-
-    }
-
-    return true;
-
-}
-
-// Vérification Supabase
-
-async function checkUsername(){
-
-    if(!validateUsername()){
-
-        return;
-
-    }
-
-    const username =
-    usernameInput.value;
-
-    if(username === lastUsername){
-
-        return;
-
-    }
-
-    lastUsername =
-    username;
-
-    usernameMessage.textContent =
-    "Vérification...";
-
-    usernameMessage.className =
-    "nv-help username-check";
-
-    const {
-
-        data,
-
-        error
-
-    } = await supabase
-
-        .from("profiles")
-
-        .select("username")
-
-        .eq("username",username)
-
-        .maybeSingle();
-
-    if(error){
-
-        usernameAvailable = false;
-
-        usernameMessage.textContent =
-        "Erreur de vérification.";
-
-        usernameMessage.className =
-        "nv-help username-invalid";
-
-        return;
-
-    }
-
-    if(data){
-
-        usernameAvailable = false;
-
-        usernameMessage.textContent =
-        "Nom d'utilisateur déjà utilisé.";
-
-        usernameMessage.className =
-        "nv-help username-invalid";
-
-        return;
-
-    }
-
-    usernameAvailable = true;
-
-    usernameMessage.textContent =
-    "Nom d'utilisateur disponible.";
-
-    usernameMessage.className =
-    "nv-help username-valid";
-
-}
-
-// Évènement
-
-usernameInput.addEventListener(
-
-    "input",
-
-    ()=>{
-
-        usernameInput.value =
-        cleanUsername(
-            usernameInput.value
-        );
-
-        usernameAvailable = false;
-
-        clearTimeout(
-            usernameTimer
-        );
-
-        usernameTimer =
-        setTimeout(
-
-            checkUsername,
-
-            500
-
-        );
-
-    }
-
-);
-// ==========================================
-// Display Name
-// ==========================================
-
-function validateDisplayName(){
-
-    const value =
-
-    displayNameInput.value
-
-        .replace(/\s+/g," ")
-
-        .trim();
-
-    displayNameInput.value = value;
-
-    if(value.length === 0){
-
-        displayNameMessage.textContent =
-        "Saisissez un nom affiché.";
-
-        displayNameMessage.className =
-        "nv-help";
-
-        return false;
-
-    }
-
-    if(value.length < 3){
-
-        displayNameMessage.textContent =
-        "Minimum 3 caractères.";
-
-        displayNameMessage.className =
-        "nv-help display-invalid";
-
-        return false;
-
-    }
-
-    if(value.length > 100){
-
-        displayNameMessage.textContent =
-        "Maximum 100 caractères.";
-
-        displayNameMessage.className =
-        "nv-help display-invalid";
-
-        return false;
-
-    }
-
-    displayNameMessage.textContent =
-    "Nom affiché valide.";
-
-    displayNameMessage.className =
-    "nv-help display-valid";
-
-    return true;
-
-}
-
-displayNameInput.addEventListener(
-
-    "input",
-
-    validateDisplayName
-
-);
-// ==========================================
-// Email
+// Email Validation
 // ==========================================
 
 function validateEmail(){
@@ -505,119 +169,14 @@ function validateEmail(){
 
 }
 
-emailInput.addEventListener(
-
-    "input",
-
-    validateEmail
-
-);
-
 // ==========================================
-// Country Validation
-// ==========================================
-
-function validateCountry(){
-
-    if(
-        countryInput.value.trim() === ""
-    ){
-
-        return false;
-
-    }
-
-    return true;
-
-}
-// ==========================================
-// Terms Validation
-// ==========================================
-
-function checkTerms(){
-
-    if(!termsCheckbox.checked){
-
-        showNotification(
-            "Vous devez accepter les conditions d'utilisation."
-        );
-
-        return false;
-
-    }
-
-    return true;
-
-}
-// ==========================================
-// Render Countries
-// ==========================================
-
-function renderCountries(search=""){
-
-    countryList.innerHTML="";
-
-
-    countries
-
-    .filter(country =>
-
-        country
-
-        .toLowerCase()
-
-        .includes(
-            search.toLowerCase()
-        )
-
-    )
-
-    .forEach(country=>{
-
-
-        const item =
-        document.createElement("div");
-
-
-        item.className =
-        "country-item";
-
-
-        item.textContent =
-        country;
-
-
-        item.onclick = ()=>{
-
-
-            countryInput.value =
-            country;
-
-
-            countryModal.classList.remove(
-                "active"
-            );
-
-
-        };
-
-
-        countryList.appendChild(item);
-
-
-    });
-
-
-}
-// ==========================================
-// Password
+// Password Validation
 // ==========================================
 
 function validatePassword(){
 
     const password =
     passwordInput.value;
-
 
     if(password.length === 0){
 
@@ -631,7 +190,6 @@ function validatePassword(){
 
     }
 
-
     if(password.length < 8){
 
         passwordMessage.textContent =
@@ -643,7 +201,6 @@ function validatePassword(){
         return false;
 
     }
-
 
     if(!/[A-Z]/.test(password)){
 
@@ -657,7 +214,6 @@ function validatePassword(){
 
     }
 
-
     if(!/[0-9]/.test(password)){
 
         passwordMessage.textContent =
@@ -670,69 +226,18 @@ function validatePassword(){
 
     }
 
-
     passwordMessage.textContent =
     "Mot de passe sécurisé.";
 
     passwordMessage.className =
     "nv-help password-valid";
 
-
     return true;
 
 }
 
-
-// Afficher / masquer mot de passe
-
-togglePassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        const visible =
-
-        passwordInput.type === "text";
-
-
-        passwordInput.type =
-
-        visible
-
-        ? "password"
-
-        : "text";
-
-
-        togglePasswordIcon.className =
-
-        visible
-
-        ? "fa-regular fa-eye"
-
-        : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-
-passwordInput.addEventListener(
-
-    "input",
-
-    ()=>{
-
-        validatePassword();
-
-        validateConfirmPassword();
-
-    }
-
-);
 // ==========================================
-// Confirm Password
+// Confirm Password Validation
 // ==========================================
 
 function validateConfirmPassword(){
@@ -740,10 +245,8 @@ function validateConfirmPassword(){
     const password =
     passwordInput.value;
 
-
     const confirmPassword =
     confirmPasswordInput.value;
-
 
     if(confirmPassword.length === 0){
 
@@ -757,7 +260,6 @@ function validateConfirmPassword(){
 
     }
 
-
     if(password !== confirmPassword){
 
         confirmPasswordMessage.textContent =
@@ -770,376 +272,45 @@ function validateConfirmPassword(){
 
     }
 
-
     confirmPasswordMessage.textContent =
     "Les mots de passe correspondent.";
 
     confirmPasswordMessage.className =
     "nv-help confirm-valid";
 
+    return true;
+
+}
+
+// ==========================================
+// Terms Validation
+// ==========================================
+
+function validateTerms(){
+
+    if(!termsCheckbox.checked){
+
+        showNotification(
+
+            "Vous devez accepter les conditions d'utilisation.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
 
     return true;
 
 }
 
-
-// Afficher / masquer confirmation
-
-toggleConfirmPassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        const visible =
-
-        confirmPasswordInput.type === "text";
-
-
-        confirmPasswordInput.type =
-
-        visible
-
-        ? "password"
-
-        : "text";
-
-
-        toggleConfirmPasswordIcon.className =
-
-        visible
-
-        ? "fa-regular fa-eye"
-
-        : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-
-confirmPasswordInput.addEventListener(
-
-    "input",
-
-    validateConfirmPassword
-
-);
-// ==========================================
-// Country Events
-// ==========================================
-
-openCountryModal.onclick = ()=>{
-
-
-    countryModal.classList.add(
-        "active"
-    );
-
-
-    countrySearch.value =
-    "";
-
-
-    renderCountries();
-
-
-};
-// ==========================================
-// Loader
-// ==========================================
-
-function startSignupLoading(){
-
-    signupButton.disabled = true;
-
-    buttonLoading(
-        signupButton,
-        true
-    );
-
-}
-
-
-function stopSignupLoading(){
-
-    signupButton.disabled = false;
-
-    buttonLoading(
-        signupButton,
-        false
-    );
-
-}
-
-
-function startGlobalLoader(){
-
-    showLoader();
-
-}
-
-
-function stopGlobalLoader(){
-
-    hideLoader();
-
-}
-// ==========================================
-// Verify Email Modal
-// ==========================================
-
-function openVerifyEmailModal(email){
-
-    verifyEmailAddress.textContent =
-    email;
-
-    resendEmailMessage.textContent =
-    "";
-
-    verifyEmailModal.classList.add(
-        "active"
-    );
-
-}
-
-
-function closeVerifyEmailModal(){
-
-    verifyEmailModal.classList.remove(
-        "active"
-    );
-
-    resendEmailMessage.textContent =
-    "";
-
-}
-// ==========================================
-// Resend Verification Email
-// ==========================================
-
-async function resendVerificationEmail(){
-
-    startResendLoading();
-
-    resendEmailMessage.textContent =
-    "";
-
-    try{
-
-        const {
-
-            error
-
-        } = await resendVerification(
-
-            emailInput.value.trim()
-
-        );
-
-        if(error){
-
-            throw error;
-
-        }
-
-        resendEmailMessage.textContent =
-        "Un nouvel e-mail de confirmation a été envoyé.";
-
-        resendEmailMessage.className =
-        "nv-help email-valid";
-
-    }
-
-    catch(error){
-
-        resendEmailMessage.textContent =
-
-        error.message ||
-
-        "Impossible de renvoyer l'e-mail.";
-
-        resendEmailMessage.className =
-        "nv-help email-invalid";
-
-    }
-
-    finally{
-
-        stopResendLoading();
-
-    }
-
-}
-// ==========================================
-// Resend Email Loader
-// ==========================================
-
-function startResendLoading(){
-
-    resendEmailButton.disabled =
-    true;
-
-    resendEmailText.hidden =
-    true;
-
-    resendEmailLoader.hidden =
-    false;
-
-}
-
-
-function stopResendLoading(){
-
-    resendEmailButton.disabled =
-    false;
-
-    resendEmailText.hidden =
-    false;
-
-    resendEmailLoader.hidden =
-    true;
-
-}
-
-
-closeCountryModal.onclick = ()=>{
-
-
-    countryModal.classList.remove(
-        "active"
-    );
-
-
-};
-
-
-countryModal.onclick = (event)=>{
-
-
-    if(
-        event.target === countryModal
-    ){
-
-        countryModal.classList.remove(
-            "active"
-        );
-
-    }
-
-
-};
-
-
-countrySearch.oninput = ()=>{
-
-
-    renderCountries(
-        countrySearch.value
-    );
-
-
-};
-
-// ==========================================
-// Initialisation
-// ==========================================
-
-window.addEventListener(
-
-    "load",
-
-    ()=>{
-
-        startGlobalLoader();
-
-        setTimeout(
-
-            stopGlobalLoader,
-
-            500
-
-        );
-
-    }
-
-);
-// ==========================================
-// Verify Email Events
-// ==========================================
-
-closeVerifyModal.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        closeVerifyEmailModal();
-
-        window.location.href =
-        "login.html";
-
-    }
-
-);
-// ==========================================
-// Resend Email Event
-// ==========================================
-
-resendEmailButton.addEventListener(
-
-    "click",
-
-    resendVerificationEmail
-
-);
 // ==========================================
 // Form Validation
 // ==========================================
 
 function validateForm(){
-
-    if(!validateUsername()){
-
-        showNotification(
-
-            "Nom d'utilisateur invalide.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!usernameAvailable){
-
-        showNotification(
-
-            "Ce nom d'utilisateur n'est pas disponible.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!validateDisplayName()){
-
-        showNotification(
-
-            "Nom affiché invalide.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
 
     if(!validateEmail()){
 
@@ -1183,29 +354,7 @@ function validateForm(){
 
     }
 
-    if(!validateCountry()){
-
-        showNotification(
-
-            "Veuillez sélectionner votre pays.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!termsCheckbox.checked){
-
-        showNotification(
-
-            "Vous devez accepter les conditions d'utilisation.",
-
-            "error"
-
-        );
+    if(!validateTerms()){
 
         return false;
 
@@ -1214,27 +363,194 @@ function validateForm(){
     return true;
 
 }
+
 // ==========================================
-// Create Account
+// Sécurité
 // ==========================================
+
+// Validation du mot de passe
+
+function validatePassword() {
+
+    const password =
+    passwordInput.value;
+
+    if (password.length === 0) {
+
+        passwordMessage.textContent =
+        "Saisissez un mot de passe.";
+
+        passwordMessage.className =
+        "nv-help password-invalid";
+
+        return false;
+
+    }
+
+    if (password.length < 8) {
+
+        passwordMessage.textContent =
+        "Minimum 8 caractères.";
+
+        passwordMessage.className =
+        "nv-help password-invalid";
+
+        return false;
+
+    }
+
+    passwordMessage.textContent =
+    "Mot de passe valide.";
+
+    passwordMessage.className =
+    "nv-help password-valid";
+
+    return true;
+
+}
+
+// Validation de la confirmation
+
+function validateConfirmPassword() {
+
+    if (
+        confirmPasswordInput.value.length === 0
+    ) {
+
+        confirmPasswordMessage.textContent =
+        "Confirmez votre mot de passe.";
+
+        confirmPasswordMessage.className =
+        "nv-help confirm-invalid";
+
+        return false;
+
+    }
+
+    if (
+        confirmPasswordInput.value !==
+        passwordInput.value
+    ) {
+
+        confirmPasswordMessage.textContent =
+        "Les mots de passe ne correspondent pas.";
+
+        confirmPasswordMessage.className =
+        "nv-help confirm-invalid";
+
+        return false;
+
+    }
+
+    confirmPasswordMessage.textContent =
+    "Les mots de passe correspondent.";
+
+    confirmPasswordMessage.className =
+    "nv-help confirm-valid";
+
+    return true;
+
+}
+
+// Afficher / masquer le mot de passe
+
+togglePassword.addEventListener(
+
+    "click",
+
+    () => {
+
+        const visible =
+        passwordInput.type === "text";
+
+        passwordInput.type =
+        visible
+            ? "password"
+            : "text";
+
+        togglePasswordIcon.className =
+        visible
+            ? "fa-regular fa-eye"
+            : "fa-regular fa-eye-slash";
+
+    }
+
+);
+
+// Afficher / masquer la confirmation
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    () => {
+
+        const visible =
+        confirmPasswordInput.type === "text";
+
+        confirmPasswordInput.type =
+        visible
+            ? "password"
+            : "text";
+
+        toggleConfirmPasswordIcon.className =
+        visible
+            ? "fa-regular fa-eye"
+            : "fa-regular fa-eye-slash";
+
+    }
+
+);
+
+// Évènements
+
+passwordInput.addEventListener(
+
+    "input",
+
+    () => {
+
+        validatePassword();
+
+        validateConfirmPassword();
+
+    }
+
+);
+
+confirmPasswordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
+
+);
+// ==========================================
+// Authentification Supabase
+// ==========================================
+
+// Création du compte
 
 async function createAccount(){
 
-    if(signupInProgress){
+    if(signupLoading){
 
         return;
 
     }
 
-    if(!validateForm()){
 
-        return;
+    signupLoading = true;
 
-    }
 
-    signupInProgress = true;
+    signupButton.disabled = true;
 
-    startSignupLoading();
+
+    buttonLoading(
+        signupButton,
+        true
+    );
+
 
     try{
 
@@ -1252,48 +568,35 @@ async function createAccount(){
 
         );
 
+
         if(error){
 
             throw error;
 
         }
 
+
         if(!data.user){
 
             throw new Error(
-                "Impossible de créer le compte."
+                "Création du compte impossible."
             );
 
         }
 
-        openVerifyEmailModal(
+
+        openVerifyModal(
 
             emailInput.value.trim()
 
         );
 
-        showNotification(
-
-            "Compte créé avec succès.",
-
-            "success"
-
-        );
-
-        signupForm.reset();
-
-        usernameMessage.textContent = "";
-        displayNameMessage.textContent = "";
-        emailMessage.textContent = "";
-        passwordMessage.textContent = "";
-        confirmPasswordMessage.textContent = "";
-
-        usernameAvailable = false;
-        lastUsername = "";
 
     }
 
+
     catch(error){
+
 
         showNotification(
 
@@ -1305,18 +608,122 @@ async function createAccount(){
 
         );
 
+
     }
+
 
     finally{
 
-        signupInProgress = false;
 
-        stopSignupLoading();
+        signupLoading = false;
+
+
+        signupButton.disabled = false;
+
+
+        buttonLoading(
+
+            signupButton,
+
+            false
+
+        );
+
 
     }
-    // ==========================================
-// Signup Event
+
+}
+
+
+
 // ==========================================
+// Renvoi de l'e-mail de confirmation
+// ==========================================
+
+async function resendVerificationEmail(){
+
+    resendEmailButton.disabled = true;
+
+
+    try{
+
+
+        const {
+
+            error
+
+        } = await resendVerification(
+
+            emailInput.value.trim()
+
+        );
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        resendEmailMessage.textContent =
+
+        "E-mail de confirmation renvoyé.";
+
+
+    }
+
+
+    catch(error){
+
+
+        resendEmailMessage.textContent =
+
+        error.message ||
+
+        "Impossible de renvoyer l'e-mail.";
+
+
+    }
+
+
+    finally{
+
+
+        resendEmailButton.disabled = false;
+
+
+    }
+
+}
+
+
+
+// ==========================================
+// Réinitialisation du formulaire
+// ==========================================
+
+function resetSignupForm(){
+
+
+    signupForm.reset();
+
+
+    emailMessage.textContent = "";
+
+    passwordMessage.textContent = "";
+
+    confirmPasswordMessage.textContent = "";
+
+
+}
+
+
+// ==========================================
+// Initialisation et Événements
+// ==========================================
+
+// Submit du formulaire
 
 signupForm.addEventListener(
 
@@ -1332,4 +739,152 @@ signupForm.addEventListener(
 
 );
 
-}
+
+// Événements des champs
+
+emailInput.addEventListener(
+
+    "input",
+
+    validateEmail
+
+);
+
+
+passwordInput.addEventListener(
+
+    "input",
+
+    ()=>{
+
+        validatePassword();
+
+        validateConfirmPassword();
+
+    }
+
+);
+
+
+confirmPasswordInput.addEventListener(
+
+    "input",
+
+    validateConfirmPassword
+
+);
+
+
+// Bouton afficher / masquer mot de passe
+
+togglePassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        const visible =
+
+        passwordInput.type === "text";
+
+
+        passwordInput.type =
+
+        visible
+
+        ? "password"
+
+        : "text";
+
+
+        togglePasswordIcon.className =
+
+        visible
+
+        ? "fa-regular fa-eye"
+
+        : "fa-regular fa-eye-slash";
+
+    }
+
+);
+
+
+// Bouton afficher / masquer confirmation
+
+toggleConfirmPassword.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        const visible =
+
+        confirmPasswordInput.type === "text";
+
+
+        confirmPasswordInput.type =
+
+        visible
+
+        ? "password"
+
+        : "text";
+
+
+        toggleConfirmPasswordIcon.className =
+
+        visible
+
+        ? "fa-regular fa-eye"
+
+        : "fa-regular fa-eye-slash";
+
+    }
+
+);
+
+
+// Bouton renvoyer l'e-mail
+
+resendEmailButton.addEventListener(
+
+    "click",
+
+    resendVerificationEmail
+
+);
+
+
+// Bouton fermer le modal
+
+closeVerifyModal.addEventListener(
+
+    "click",
+
+    ()=>{
+
+        verifyEmailModal.classList.remove(
+            "active"
+        );
+
+    }
+
+);
+
+
+// Initialisation au chargement
+
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        console.log(
+            "Signup Ready"
+        );
+
+    }
+
+);
