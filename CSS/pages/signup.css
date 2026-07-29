@@ -510,6 +510,7 @@ Verify Email Modal
 #notification.show{
 
     display:block;
+    animation:fadeUp .3s ease;
 
 }
 
@@ -608,7 +609,12 @@ Responsive
         border-radius:16px;
 
     }
+   .country-box{
 
+    animation:fadeUp .25s ease;
+    width:min(420px,95%);
+
+}
     .verify-email-box{
 
         width:95%;
@@ -672,11 +678,6 @@ Animations
 
 }
 
-.signup-logo{
-
-    animation:floatLogo 5s ease-in-out infinite;
-
-}
 
 #signupButton{
 
@@ -767,5 +768,32 @@ Animations
 #confirmPassword:focus{
 
     transform:translateY(-2px);
+border-color:var(--nv-primary);
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+}
+@media(max-width:360px){
+
+    .signup-card{
+
+        padding:18px 14px;
+
+    }
+
+
+    .signup-logo{
+
+        width:150px;
+
+    }
+
+
+    h1{
+
+        font-size:1.5rem;
+
+    }
 
 }
