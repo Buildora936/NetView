@@ -500,7 +500,9 @@ Informations utilisateur
         <input
 
             id="country"
-
+            
+            autocomplete="country-name"
+            
             name="country"
 
             type="text"
@@ -642,6 +644,8 @@ Informations utilisateur
     </p>
 
 </div>
+     </form>
+    </section>
     <!-- ==========================================
 Verify Email Modal
 ========================================== -->
@@ -729,7 +733,44 @@ Notification
 <!-- ==========================================
 Global Loader
 ========================================== -->
+<div
+    id="countryModal"
+    class="country-modal">
 
+    <div class="country-box">
+
+        <div class="country-header">
+
+            <h3>
+                Sélectionner un pays
+            </h3>
+
+            <button
+                type="button"
+                id="closeCountryModal">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <input
+            id="countrySearch"
+            class="nv-input"
+            placeholder="Rechercher un pays">
+
+
+        <div
+            id="countryList"
+            class="country-list">
+
+        </div>
+
+    </div>
+
+</div>
 <div
     id="globalLoader"
     class="nv-page-loader">
@@ -737,8 +778,7 @@ Global Loader
     <div class="nv-loader"></div>
 
 </div>
-    </form>
-
+    
 </main>
 
 
