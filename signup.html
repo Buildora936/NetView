@@ -181,13 +181,10 @@ Signup Page
 <section class="signup-card nv-card">
 
 <img
-
-    src="NetView.png"
-
-    alt="NetView"
-
-    class="signup-logo">
-
+src="NetView.png"
+alt="Logo NetView"
+class="signup-logo">
+    
 <h1>
 
 Créer votre compte
@@ -646,6 +643,51 @@ Informations utilisateur
 </div>
      </form>
     </section>
+    </main>
+
+    <!-- ==========================================
+Country Modal
+========================================== -->
+<div
+    id="countryModal"
+    class="country-modal">
+
+    <div class="country-box">
+
+        <div class="country-header">
+
+            <h3>
+                Sélectionner un pays
+            </h3>
+
+           <button
+    type="button"
+    id="closeCountryModal"
+    class="modal-close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <input
+    id="countrySearch"
+    class="nv-input"
+    autocomplete="off"
+    placeholder="Rechercher un pays">
+
+        <div
+            id="countryList"
+            class="country-list">
+
+        </div>
+
+    </div>
+
+</div>
+    
     <!-- ==========================================
 Verify Email Modal
 ========================================== -->
@@ -720,7 +762,7 @@ Verify Email Modal
     </div>
 
 </div>
-
+    
 <!-- ==========================================
 Notification
 ========================================== -->
@@ -730,47 +772,10 @@ Notification
 
 </div>
 
+    
 <!-- ==========================================
 Global Loader
 ========================================== -->
-<div
-    id="countryModal"
-    class="country-modal">
-
-    <div class="country-box">
-
-        <div class="country-header">
-
-            <h3>
-                Sélectionner un pays
-            </h3>
-
-            <button
-                type="button"
-                id="closeCountryModal">
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
-        </div>
-
-
-        <input
-            id="countrySearch"
-            class="nv-input"
-            placeholder="Rechercher un pays">
-
-
-        <div
-            id="countryList"
-            class="country-list">
-
-        </div>
-
-    </div>
-
-</div>
 <div
     id="globalLoader"
     class="nv-page-loader">
@@ -779,8 +784,6 @@ Global Loader
 
 </div>
     
-</main>
-
 
 <script
     type="module"
