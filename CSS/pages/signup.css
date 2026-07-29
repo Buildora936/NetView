@@ -392,10 +392,6 @@ Signup Button
 
     margin-top:24px;
 
-    min-height:56px;
-
-    position:relative;
-
 }
 
 #signupButton:disabled{
