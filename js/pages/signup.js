@@ -6,8 +6,6 @@ import { signUp, resendVerification } from "../core/auth.js";
 
 import {
 
-    showLoader,
-    hideLoader,
     buttonLoading,
     showNotification
 
@@ -67,12 +65,6 @@ document.getElementById("terms");
 
 const signupButton =
 document.getElementById("signupButton");
-
-const signupButtonText =
-document.getElementById("signupButtonText");
-
-const signupButtonLoader =
-document.getElementById("signupButtonLoader");
 
 // Verify Email Modal
 
