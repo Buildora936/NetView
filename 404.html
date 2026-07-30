@@ -151,12 +151,249 @@ button:hover{
         width:240px;
 
     }
+
+    .nv-login-logo{
+
+    width:110px;
+
+    margin:auto;
+
+    display:block;
+
+    animation:
+
+    floatLogo 5s ease-in-out infinite;
+
+}
+    /* ==================================================
+Animated Background
+================================================== */
+
+.nv-login-background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-10;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.22),
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+    rgba(59,130,246,.18),
+    transparent 40%),
+
+    linear-gradient(
+    145deg,
+    #020617,
+    #071124,
+    #0B1120,
+    #020617);
+
+}
+
+.nv-login-background::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-20%;
+
+    background:
+
+    linear-gradient(
+    135deg,
+    transparent,
+    rgba(37,99,235,.08),
+    transparent,
+    rgba(96,165,250,.08),
+    transparent);
+
+    background-size:300% 300%;
+
+    animation:
+
+    gradientMove 20s linear infinite;
+
+    filter:blur(80px);
+
+}
+
+.nv-login-background::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+    background-size:
+
+    50px 50px;
+
+    mask-image:
+
+    radial-gradient(circle, white, transparent 90%);
+
+}
+
+/* ==================================================
+Blue Orbs
+================================================== */
+
+.nv-orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(60px);
+
+    animation:
+
+    floatOrb 12s ease-in-out infinite;
+
+}
+
+.nv-orb.one{
+
+    width:300px;
+
+    height:300px;
+
+    top:-120px;
+
+    left:-120px;
+
+    background:
+
+    rgba(37,99,235,.30);
+
+}
+
+.nv-orb.two{
+
+    width:260px;
+
+    height:260px;
+
+    right:-80px;
+
+    bottom:-80px;
+
+    background:
+
+    rgba(96,165,250,.25);
+
+    animation-delay:2s;
+
+}
+
+.nv-orb.three{
+
+    width:180px;
+
+    height:180px;
+
+    top:45%;
+
+    left:55%;
+
+    background:
+
+    rgba(59,130,246,.18);
+
+    animation-delay:5s;
+
+}
+
+/* ==================================================
+Particles
+================================================== */
+
+.nv-particles{
+
+    position:absolute;
+
+    inset:0;
+
+}
+
+.nv-particles span{
+
+    position:absolute;
+
+    width:3px;
+
+    height:3px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.55);
+
+    animation:
+
+    particleFloat linear infinite;
+
+}
+
+.nv-particles span:nth-child(1){left:6%;top:14%;animation-duration:18s;}
+.nv-particles span:nth-child(2){left:20%;top:70%;animation-duration:22s;}
+.nv-particles span:nth-child(3){left:34%;top:38%;animation-duration:17s;}
+.nv-particles span:nth-child(4){left:48%;top:82%;animation-duration:20s;}
+.nv-particles span:nth-child(5){left:62%;top:22%;animation-duration:15s;}
+.nv-particles span:nth-child(6){left:74%;top:56%;animation-duration:19s;}
+.nv-particles span:nth-child(7){left:85%;top:14%;animation-duration:24s;}
+.nv-particles span:nth-child(8){left:91%;top:72%;animation-duration:21s;}
+.nv-particles span:nth-child(9){left:14%;top:46%;animation-duration:16s;}
+.nv-particles span:nth-child(10){left:55%;top:10%;animation-duration:23s;}
+.nv-particles span:nth-child(11){left:40%;top:58%;animation-duration:18s;}
+.nv-particles span:nth-child(12){left:78%;top:34%;animation-duration:20s;}
 </style>
     
 </head>
 
 <body>
+<div class="nv-login-background">
 
+    <div class="nv-orb one"></div>
+
+    <div class="nv-orb two"></div>
+
+    <div class="nv-orb three"></div>
+
+    <div class="nv-particles">
+
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+</div>
 <div class="container">
 <img
     src="NetView.png"
