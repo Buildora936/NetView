@@ -1,796 +1,214 @@
-// ==========================================
-// Imports
-// ==========================================
-
-import { signUp, resendVerification } from "../core/auth.js";
+import {
+    signUp,
+    getSession
+} from "../core/auth.js";
 
 import {
+    navigate
+} from "../core/navigation.js";
 
-    buttonLoading,
-    showNotification
-
+import {
+    showLoader,
+    hideLoader,
+    buttonLoading
 } from "../core/ui.js";
 
 // ==========================================
-// DOM
+// Elements
 // ==========================================
+const signupForm = document.getElementById("signupForm");
+const displayName = document.getElementById("displayName");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const confirmPassword = document.getElementById("confirmPassword");
+const acceptTerms = document.getElementById("acceptTerms");
+const newsletter = document.getElementById("newsletter");
+const signupButton = document.getElementById("signupButton");
+const signupError = document.getElementById("signupError");
 
-// Form
+const togglePassword = document.getElementById("togglePassword");
+const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 
-const signupForm =
-document.getElementById("signupForm");
-
-// Email
-
-const emailInput =
-document.getElementById("email");
-
-const emailMessage =
-document.getElementById("emailMessage");
-
-// Password
-
-const passwordInput =
-document.getElementById("password");
-
-const passwordMessage =
-document.getElementById("passwordMessage");
-
-const togglePassword =
-document.getElementById("togglePassword");
-
-const togglePasswordIcon =
-document.getElementById("togglePasswordIcon");
-
-// Confirm Password
-
-const confirmPasswordInput =
-document.getElementById("confirmPassword");
-
-const confirmPasswordMessage =
-document.getElementById("confirmPasswordMessage");
-
-const toggleConfirmPassword =
-document.getElementById("toggleConfirmPassword");
-
-const toggleConfirmPasswordIcon =
-document.getElementById("toggleConfirmPasswordIcon");
-
-// Terms
-
-const termsCheckbox =
-document.getElementById("terms");
-
-// Signup Button
-
-const signupButton =
-document.getElementById("signupButton");
-
-// Verify Email Modal
-
-const verifyEmailModal =
-document.getElementById("verifyEmailModal");
-
-const verifyEmailAddress =
-document.getElementById("verifyEmailAddress");
-
-const closeVerifyModal =
-document.getElementById("closeVerifyModal");
-
-const resendEmailButton =
-document.getElementById("resendEmailButton");
-
-const resendEmailText =
-document.getElementById("resendEmailText");
-
-const resendEmailLoader =
-document.getElementById("resendEmailLoader");
-
-const resendEmailMessage =
-document.getElementById("resendEmailMessage");
-
-// Loader
-
-const globalLoader =
-document.getElementById("globalLoader");
-
-// Notification
-
-const notification =
-document.getElementById("notification");
+const passwordStrengthBar = document.getElementById("passwordStrengthBar");
+const passwordStrengthText = document.getElementById("passwordStrengthText");
+const passwordMatch = document.getElementById("passwordMatch");
 
 // ==========================================
-// Variables
+// Existing Session Check
 // ==========================================
-
-let signupInProgress = false;
-
-let resendInProgress = false;
-
-// ==========================================
-// Email Validation
-// ==========================================
-
-function validateEmail(){
-
-    const email =
-
-    emailInput.value
-
-        .trim()
-
-        .toLowerCase();
-
-    emailInput.value = email;
-
-    if(email.length === 0){
-
-        emailMessage.textContent =
-        "Saisissez votre adresse e-mail.";
-
-        emailMessage.className =
-        "nv-help";
-
-        return false;
-
+(async () => {
+    try {
+        const session = await getSession();
+        if (session) {
+            navigate("profile.html");
+        }
+    } catch (error) {
+        console.error("Erreur de vérification de session :", error);
     }
-
-    const emailRegex =
-
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!emailRegex.test(email)){
-
-        emailMessage.textContent =
-        "Adresse e-mail invalide.";
-
-        emailMessage.className =
-        "nv-help email-invalid";
-
-        return false;
-
-    }
-
-    emailMessage.textContent =
-    "Adresse e-mail valide.";
-
-    emailMessage.className =
-    "nv-help email-valid";
-
-    return true;
-
-}
+})();
 
 // ==========================================
-// Password Validation
+// Password Visibility Toggles
 // ==========================================
+togglePassword.addEventListener("click", () => {
+    const visible = password.type === "text";
+    password.type = visible ? "password" : "text";
+    togglePassword.innerHTML = visible 
+        ? '<i class="fa-regular fa-eye"></i>' 
+        : '<i class="fa-regular fa-eye-slash"></i>';
+    togglePassword.setAttribute("aria-label", visible ? "Afficher le mot de passe" : "Masquer le mot de passe");
+});
 
-function validatePassword(){
-
-    const password =
-    passwordInput.value;
-
-    if(password.length === 0){
-
-        passwordMessage.textContent =
-        "Saisissez un mot de passe.";
-
-        passwordMessage.className =
-        "nv-help";
-
-        return false;
-
-    }
-
-    if(password.length < 8){
-
-        passwordMessage.textContent =
-        "Minimum 8 caractères.";
-
-        passwordMessage.className =
-        "nv-help password-invalid";
-
-        return false;
-
-    }
-
-    if(!/[A-Z]/.test(password)){
-
-        passwordMessage.textContent =
-        "Ajoutez au moins une majuscule.";
-
-        passwordMessage.className =
-        "nv-help password-invalid";
-
-        return false;
-
-    }
-
-    if(!/[0-9]/.test(password)){
-
-        passwordMessage.textContent =
-        "Ajoutez au moins un chiffre.";
-
-        passwordMessage.className =
-        "nv-help password-invalid";
-
-        return false;
-
-    }
-
-    passwordMessage.textContent =
-    "Mot de passe sécurisé.";
-
-    passwordMessage.className =
-    "nv-help password-valid";
-
-    return true;
-
-}
+toggleConfirmPassword.addEventListener("click", () => {
+    const visible = confirmPassword.type === "text";
+    confirmPassword.type = visible ? "password" : "text";
+    toggleConfirmPassword.innerHTML = visible 
+        ? '<i class="fa-regular fa-eye"></i>' 
+        : '<i class="fa-regular fa-eye-slash"></i>';
+    toggleConfirmPassword.setAttribute("aria-label", visible ? "Afficher le mot de passe" : "Masquer le mot de passe");
+});
 
 // ==========================================
-// Confirm Password Validation
+// Password Strength Evaluator
 // ==========================================
-
-function validateConfirmPassword(){
-
-    const password =
-    passwordInput.value;
-
-    const confirmPassword =
-    confirmPasswordInput.value;
-
-    if(confirmPassword.length === 0){
-
-        confirmPasswordMessage.textContent =
-        "Confirmez votre mot de passe.";
-
-        confirmPasswordMessage.className =
-        "nv-help";
-
-        return false;
-
-    }
-
-    if(password !== confirmPassword){
-
-        confirmPasswordMessage.textContent =
-        "Les mots de passe sont différents.";
-
-        confirmPasswordMessage.className =
-        "nv-help confirm-invalid";
-
-        return false;
-
-    }
-
-    confirmPasswordMessage.textContent =
-    "Les mots de passe correspondent.";
-
-    confirmPasswordMessage.className =
-    "nv-help confirm-valid";
-
-    return true;
-
-}
-
-// ==========================================
-// Terms Validation
-// ==========================================
-
-function validateTerms(){
-
-    if(!termsCheckbox.checked){
-
-        showNotification(
-
-            "Vous devez accepter les conditions d'utilisation.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    return true;
-
-}
-
-// ==========================================
-// Form Validation
-// ==========================================
-
-function validateForm(){
-
-    if(!validateEmail()){
-
-        showNotification(
-
-            "Adresse e-mail invalide.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!validatePassword()){
-
-        showNotification(
-
-            "Mot de passe invalide.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!validateConfirmPassword()){
-
-        showNotification(
-
-            "Les mots de passe ne correspondent pas.",
-
-            "error"
-
-        );
-
-        return false;
-
-    }
-
-    if(!validateTerms()){
-
-        return false;
-
-    }
-
-    return true;
-
-}
-
-
-
-// Afficher / masquer le mot de passe
-
-togglePassword.addEventListener(
-
-    "click",
-
-    () => {
-
-        const visible =
-        passwordInput.type === "text";
-
-        passwordInput.type =
-        visible
-            ? "password"
-            : "text";
-
-        togglePasswordIcon.className =
-        visible
-            ? "fa-regular fa-eye"
-            : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-// Afficher / masquer la confirmation
-
-toggleConfirmPassword.addEventListener(
-
-    "click",
-
-    () => {
-
-        const visible =
-        confirmPasswordInput.type === "text";
-
-        confirmPasswordInput.type =
-        visible
-            ? "password"
-            : "text";
-
-        toggleConfirmPasswordIcon.className =
-        visible
-            ? "fa-regular fa-eye"
-            : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-// Évènements
-
-passwordInput.addEventListener(
-
-    "input",
-
-    () => {
-
-        validatePassword();
-
-        validateConfirmPassword();
-
-    }
-
-);
-
-confirmPasswordInput.addEventListener(
-
-    "input",
-
-    validateConfirmPassword
-
-);
-// ==========================================
-// Authentification Supabase
-// ==========================================
-
-// Création du compte
-
-async function createAccount(){
-
-    if(signupLoading){
-
+password.addEventListener("input", () => {
+    const val = password.value;
+    let strength = 0;
+    let message = "Choisissez un mot de passe sécurisé.";
+    let color = "#ef4444"; // Rouge par défaut
+
+    if (val.length >= 8) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+    if (val.length === 0) {
+        passwordStrengthBar.style.width = "0%";
+        passwordStrengthText.textContent = "Choisissez un mot de passe sécurisé.";
+        passwordStrengthText.style.color = "var(--nv-text-secondary)";
         return;
-
     }
 
-
-    signupLoading = true;
-
-
-    signupButton.disabled = true;
-
-
-    buttonLoading(
-        signupButton,
-        true
-    );
-
-
-    try{
-
-        const {
-
-            data,
-
-            error
-
-        } = await signUp(
-
-            emailInput.value.trim(),
-
-            passwordInput.value
-
-        );
-
-
-        if(error){
-
-            throw error;
-
-        }
-
-
-        if(!data.user){
-
-            throw new Error(
-                "Création du compte impossible."
-            );
-
-        }
-
-
-        openVerifyModal(
-
-            emailInput.value.trim()
-
-        );
-
-
+    if (strength <= 1) {
+        passwordStrengthBar.style.width = "25%";
+        passwordStrengthBar.style.backgroundColor = "#ef4444";
+        message = "Mot de passe trop faible";
+        color = "#ef4444";
+    } else if (strength === 2 || strength === 3) {
+        passwordStrengthBar.style.width = "65%";
+        passwordStrengthBar.style.backgroundColor = "#f59e0b";
+        message = "Mot de passe moyen";
+        color = "#f59e0b";
+    } else {
+        passwordStrengthBar.style.width = "100%";
+        passwordStrengthBar.style.backgroundColor = "#10b981";
+        message = "Mot de passe sécurisé !";
+        color = "#10b981";
     }
 
+    passwordStrengthText.textContent = message;
+    passwordStrengthText.style.color = color;
 
-    catch(error){
+    // Vérifier également la correspondance si le champ de confirmation n'est pas vide
+    if (confirmPassword.value) {
+        checkPasswordMatch();
+    }
+});
 
-
-        showNotification(
-
-            error.message ||
-
-            "Une erreur est survenue.",
-
-            "error"
-
-        );
-
-
+// ==========================================
+// Password Match Evaluator
+// ==========================================
+function checkPasswordMatch() {
+    if (!confirmPassword.value) {
+        passwordMatch.textContent = "";
+        return;
     }
 
-
-    finally{
-
-
-        signupLoading = false;
-
-
-        signupButton.disabled = false;
-
-
-        buttonLoading(
-
-            signupButton,
-
-            false
-
-        );
-
-
+    if (password.value === confirmPassword.value) {
+        passwordMatch.textContent = "Les mots de passe correspondent.";
+        passwordMatch.style.color = "#10b981";
+    } else {
+        passwordMatch.textContent = "Les mots de passe ne correspondent pas.";
+        passwordMatch.style.color = "#ef4444";
     }
-
 }
 
-
+confirmPassword.addEventListener("input", checkPasswordMatch);
 
 // ==========================================
-// Renvoi de l'e-mail de confirmation
+// Remove Error While Typing
 // ==========================================
+[displayName, email, password, confirmPassword].forEach(input => {
+    input.addEventListener("input", () => {
+        signupError.textContent = "";
+        signupError.classList.remove("show");
+    });
+});
 
-async function resendVerificationEmail(){
+// ==========================================
+// Signup Form Submission
+// ==========================================
+signupForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    signupError.textContent = "";
+    signupError.classList.remove("show");
 
-    resendEmailButton.disabled = true;
+    // Validation de la correspondance des mots de passe côté JS avant l'envoi
+    if (password.value !== confirmPassword.value) {
+        signupError.textContent = "Les mots de passe ne correspondent pas.";
+        signupError.classList.add("show");
+        confirmPassword.focus();
+        return;
+    }
 
+    if (password.value.length < 8) {
+        signupError.textContent = "Le mot de passe doit contenir au moins 8 caractères.";
+        signupError.classList.add("show");
+        password.focus();
+        return;
+    }
 
-    try{
+    buttonLoading(signupButton, true);
+    showLoader();
 
-
-        const {
-
-            error
-
-        } = await resendVerification(
-
-            emailInput.value.trim()
-
+    try {
+        // Appel de la fonction signUp (qui intègre Supabase dans votre auth.js)
+        // On peut passer des données additionnelles dans 'options.data' (comme le nom affiché)
+        const res = await signUp(
+            email.value.trim(),
+            password.value,
+            {
+                data: {
+                    display_name: displayName.value.trim(),
+                    newsletter: newsletter.checked
+                }
+            }
         );
 
+        hideLoader();
+        buttonLoading(signupButton, false);
 
-        if(error){
-
-            throw error;
-
+        if (res && res.error) {
+            signupError.textContent = res.error.message;
+            signupError.classList.add("show");
+            return;
         }
 
+        // Redirection vers profile.html après succès de l'inscription
+        navigate("profile.html");
 
-        resendEmailMessage.textContent =
-
-        "E-mail de confirmation renvoyé.";
-
-
+    } catch (err) {
+        hideLoader();
+        buttonLoading(signupButton, false);
+        console.error("Erreur lors de l'inscription :", err);
+        signupError.textContent = "Une erreur inattendue est survenue. Veuillez réessayer.";
+        signupError.classList.add("show");
     }
-
-
-    catch(error){
-
-
-        resendEmailMessage.textContent =
-
-        error.message ||
-
-        "Impossible de renvoyer l'e-mail.";
-
-
-    }
-
-
-    finally{
-
-
-        resendEmailButton.disabled = false;
-
-
-    }
-
-}
-
-
+});
 
 // ==========================================
-// Réinitialisation du formulaire
+// Initial Focus
 // ==========================================
-
-function resetSignupForm(){
-
-
-    signupForm.reset();
-
-
-    emailMessage.textContent = "";
-
-    passwordMessage.textContent = "";
-
-    confirmPasswordMessage.textContent = "";
-
-
-}
-
-
-// ==========================================
-// Initialisation et Événements
-// ==========================================
-
-// Submit du formulaire
-
-signupForm.addEventListener(
-
-    "submit",
-
-    async(event)=>{
-
-        event.preventDefault();
-
-        await createAccount();
-
-    }
-
-);
-
-
-// Événements des champs
-
-emailInput.addEventListener(
-
-    "input",
-
-    validateEmail
-
-);
-
-
-passwordInput.addEventListener(
-
-    "input",
-
-    ()=>{
-
-        validatePassword();
-
-        validateConfirmPassword();
-
-    }
-
-);
-
-
-confirmPasswordInput.addEventListener(
-
-    "input",
-
-    validateConfirmPassword
-
-);
-
-
-// Bouton afficher / masquer mot de passe
-
-togglePassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        const visible =
-
-        passwordInput.type === "text";
-
-
-        passwordInput.type =
-
-        visible
-
-        ? "password"
-
-        : "text";
-
-
-        togglePasswordIcon.className =
-
-        visible
-
-        ? "fa-regular fa-eye"
-
-        : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-
-// Bouton afficher / masquer confirmation
-
-toggleConfirmPassword.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        const visible =
-
-        confirmPasswordInput.type === "text";
-
-
-        confirmPasswordInput.type =
-
-        visible
-
-        ? "password"
-
-        : "text";
-
-
-        toggleConfirmPasswordIcon.className =
-
-        visible
-
-        ? "fa-regular fa-eye"
-
-        : "fa-regular fa-eye-slash";
-
-    }
-
-);
-
-
-// Bouton renvoyer l'e-mail
-
-resendEmailButton.addEventListener(
-
-    "click",
-
-    resendVerificationEmail
-
-);
-
-
-// Bouton fermer le modal
-
-closeVerifyModal.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        verifyEmailModal.classList.remove(
-            "active"
-        );
-
-    }
-
-);
-
-
-// Initialisation au chargement
-
-window.addEventListener(
-
-    "load",
-
-    ()=>{
-
-        console.log(
-            "Signup Ready"
-        );
-
-    }
-
-);
+window.addEventListener("load", () => {
+    displayName.focus();
+});
