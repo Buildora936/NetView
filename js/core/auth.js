@@ -340,6 +340,7 @@ export async function refreshUser(){
 
     return data.user;
 
+}
 
 export async function updateRole(role){
 
