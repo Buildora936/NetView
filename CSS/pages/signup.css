@@ -1,578 +1,471 @@
-/* ==========================================
-   Signup Page
-========================================== */
+/* ==================================================
+SIGNUP PAGE
+================================================== */
 
-.signup-page{
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:40px 20px;
-
-    position:relative;
-
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--nv-background);
 }
 
-.signup-card{
+/* ==================================================
+Animated Background
+================================================== */
 
-    width:100%;
-
-    max-width:560px;
-
-    padding:40px;
-
-    text-align:center;
-
+.nv-signup-background {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: -10;
+    background: 
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.22),
+    transparent 35%),
+    radial-gradient(circle at bottom right,
+    rgba(59,130,246,.18),
+    transparent 40%),
+    linear-gradient(
+    145deg,
+    #020617,
+    #071124,
+    #0B1120,
+    #020617);
 }
 
-.signup-logo{
-
-    width:240px;
-
-    margin:0 auto 30px;
-
-    animation:floatLogo 5s ease-in-out infinite;
-
+.nv-signup-background::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background: 
+    linear-gradient(
+    135deg,
+    transparent,
+    rgba(37,99,235,.08),
+    transparent,
+    rgba(96,165,250,.08),
+    transparent);
+    background-size: 300% 300%;
+    animation: gradientMove 20s linear infinite;
+    filter: blur(80px);
 }
 
-/* ==========================================
-   Email
-========================================== */
-
-#email{
-
-    text-transform:lowercase;
-
+.nv-signup-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(circle, white, transparent 90%);
 }
 
-#emailMessage{
+/* ==================================================
+Blue Orbs
+================================================== */
 
-    margin-top:6px;
-
-    transition:.2s;
-
+.nv-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: floatOrb 12s ease-in-out infinite;
 }
 
-.email-valid{
-
-    color:var(--nv-success);
-
+.nv-orb.one {
+    width: 300px;
+    height: 300px;
+    top: -120px;
+    left: -120px;
+    background: rgba(37,99,235,.30);
 }
 
-.email-invalid{
-
-    color:var(--nv-danger);
-
-}
-/* ==========================================
-   Password
-========================================== */
-
-#passwordMessage{
-
-    margin-top:6px;
-
-    transition:.2s;
-
+.nv-orb.two {
+    width: 260px;
+    height: 260px;
+    right: -80px;
+    bottom: -80px;
+    background: rgba(96,165,250,.25);
+    animation-delay: 2s;
 }
 
-.password-valid{
-
-    color:var(--nv-success);
-
+.nv-orb.three {
+    width: 180px;
+    height: 180px;
+    top: 45%;
+    left: 55%;
+    background: rgba(59,130,246,.18);
+    animation-delay: 5s;
 }
 
-.password-invalid{
+/* ==================================================
+Particles
+================================================== */
 
-    color:var(--nv-danger);
-
+.nv-particles {
+    position: absolute;
+    inset: 0;
 }
 
-.nv-password-toggle{
-
-    background:none;
-
-    border:none;
-
-    padding:0;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-}
-/* ==========================================
-   Confirm Password
-========================================== */
-
-#confirmPasswordMessage{
-
-    margin-top:6px;
-
-    transition:.2s;
-
+.nv-particles span {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.55);
+    animation: particleFloat linear infinite;
 }
 
-.confirm-valid{
+.nv-particles span:nth-child(1){left:6%;top:14%;animation-duration:18s;}
+.nv-particles span:nth-child(2){left:20%;top:70%;animation-duration:22s;}
+.nv-particles span:nth-child(3){left:34%;top:38%;animation-duration:17s;}
+.nv-particles span:nth-child(4){left:48%;top:82%;animation-duration:20s;}
+.nv-particles span:nth-child(5){left:62%;top:22%;animation-duration:15s;}
+.nv-particles span:nth-child(6){left:74%;top:56%;animation-duration:19s;}
+.nv-particles span:nth-child(7){left:85%;top:14%;animation-duration:24s;}
+.nv-particles span:nth-child(8){left:91%;top:72%;animation-duration:21s;}
+.nv-particles span:nth-child(9){left:14%;top:46%;animation-duration:16s;}
+.nv-particles span:nth-child(10){left:55%;top:10%;animation-duration:23s;}
+.nv-particles span:nth-child(11){left:40%;top:58%;animation-duration:18s;}
+.nv-particles span:nth-child(12){left:78%;top:34%;animation-duration:20s;}
 
-    color:var(--nv-success);
+/* ==================================================
+Layout & Card
+================================================== */
 
+.nv-signup {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
 }
 
-.confirm-invalid{
-
-    color:var(--nv-danger);
-
-}
-/* ==========================================
-Terms
-========================================== */
-
-.terms-group{
-
-    margin-top:18px;
-
+.nv-signup-card {
+    width: min(100%, 520px);
+    padding: 2.75rem;
+    border-radius: 32px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(30px);
+    background: rgba(15,23,42,.70);
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 40px 90px rgba(0,0,0,.45);
+    animation: fadeUp .8s ease;
 }
 
-.terms-label{
-
-    display:flex;
-
-    align-items:flex-start;
-
-    gap:12px;
-
-    cursor:pointer;
-
-    color:var(--nv-text-secondary);
-
-    font-size:.95rem;
-
-    line-height:1.6;
-
+.nv-signup-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+        135deg,
+        rgba(37,99,235,.7),
+        rgba(96,165,250,.15),
+        transparent
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
-.terms-label input{
-
-    margin-top:3px;
-
-    width:18px;
-
-    height:18px;
-
-    accent-color:var(--nv-primary);
-
-    cursor:pointer;
-
+.nv-signup-logo {
+    width: 110px;
+    margin: auto;
+    display: block;
+    animation: floatLogo 5s ease-in-out infinite;
 }
 
-.terms-label a{
-
-    color:var(--nv-primary);
-
-    font-weight:600;
-
-    text-decoration:none;
-
+.nv-signup-title {
+    text-align: center;
+    margin-top: 1.5rem;
 }
 
-.terms-label a:hover{
-
-    text-decoration:underline;
-
-}
-/* ==========================================
-Signup Button
-========================================== */
-
-#signupButton{
-
-    margin-top:24px;
-
+.nv-signup-subtitle {
+    text-align: center;
+    color: var(--nv-text-secondary);
+    margin-top: .75rem;
+    margin-bottom: 2rem;
 }
 
-#signupButton:disabled{
-
-    opacity:.7;
-
-    cursor:not-allowed;
-
-    transform:none;
-
+.nv-signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
 }
 
-#signupButton .nv-spinner{
-
-    margin:auto;
-
-}
-/* ==========================================
-Verify Email Modal
-========================================== */
-
-#verifyEmailModal{
-
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,0,0,.75);
-    z-index:9999;
-
+.nv-form-group {
+    position: relative;
 }
 
-#verifyEmailModal.active{
-
-    display:flex;
-
-    visibility:visible
-}
-.verify-email-box{
-
-    width:min(92%,520px);
-
-    padding:2rem;
-
-    text-align:center;
-
-    border-radius:20px;
-
-    background:var(--nv-surface);
-
-    border:1px solid var(--nv-border);
-
+.nv-input {
+    padding-left: 3.25rem;
+    height: 60px;
+    font-size: 1rem;
 }
 
-.verify-email-icon{
-
-    font-size:4rem;
-
-    color:var(--nv-primary);
-
-    margin-bottom:1rem;
-
+.nv-input:focus {
+    transform: translateY(-2px);
 }
 
-.verify-email-box h2{
-
-    margin-bottom:1rem;
-
+.nv-input-icon {
+    position: absolute;
+    top: 50%;
+    left: 1.1rem;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    color: var(--nv-text-secondary);
+    pointer-events: none;
+    transition: .3s;
 }
 
-.verify-email-box p{
-
-    margin:.8rem 0;
-
+.nv-input:focus + .nv-input-icon {
+    color: var(--nv-primary);
 }
 
-.verify-email-box strong{
-
-    display:block;
-
-    margin:1rem 0;
-
-    color:var(--nv-primary);
-
-    font-size:1.1rem;
-
+.nv-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--nv-text-secondary);
+    font-size: 1.1rem;
+    transition: .25s;
 }
 
-#notification{
-
-    position:fixed;
-
-    top:20px;
-
-    right:20px;
-
-    padding:14px 18px;
-
-    border-radius:12px;
-
-    color:#fff;
-
-    font-weight:600;
-
-    z-index:99999;
-
-    display:none;
-
+.nv-password-toggle:hover {
+    color: var(--nv-primary);
+    transform: translateY(-50%) scale(1.08);
 }
 
-#notification.show{
+/* ==================================================
+Password Strength & Match indicators
+================================================== */
 
-    display:block;
-    animation:fadeUp .3s ease;
-
+.nv-password-strength {
+    height: 4px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
 }
 
-#notification.error{
-
-    background:#ef4444;
-
+.nv-password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-#notification.success{
-
-    background:#22c55e;
-
-}
-  /* ==========================================
-Global Loader
-========================================== */
-
-.nv-page-loader.active{
-
-    display:flex;
-
-}
-.signup-error{
-
-    display:none;
-
+.nv-password-strength-text {
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary);
+    margin-top: 0.35rem;
 }
 
-.signup-error.show{
-
-    display:block;
-
-}
-.signup-success{
-
-    display:none;
-
+.nv-password-match {
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
 }
 
-.signup-success.show{
+/* ==================================================
+Account Preview & Benefits Cards
+================================================== */
 
-    display:block;
-
-}
-/* ==========================================
-Responsive
-========================================== */
-
-@media (max-width:992px){
-
-    .signup-card{
-
-        max-width:520px;
-
-        padding:36px;
-
-    }
-
+.nv-account-preview {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 14px;
+    background: rgba(37, 99, 235, 0.06);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    margin: 0.5rem 0;
 }
 
-@media (max-width:768px){
-
-    .signup-page{
-
-        padding:20px 16px;
-
-        align-items:flex-start;
-
-    }
-
-    .signup-card{
-
-        max-width:100%;
-
-        padding:28px 22px;
-
-        border-radius:24px;
-
-    }
-
-    .signup-logo{
-
-        width:200px;
-
-        margin-bottom:24px;
-
-    }
-
-    .country-box{
-
-        width:95%;
-
-        max-height:85vh;
-
-        border-radius:16px;
-
-    }
-   .country-box{
-
-    animation:fadeUp .25s ease;
-    width:min(420px,95%);
-
-}
-    .verify-email-box{
-
-        width:95%;
-
-        padding:1.6rem;
-
-    }
-
-    #notification{
-
-        left:16px;
-
-        right:16px;
-
-        top:16px;
-
-    }
-
+.nv-account-preview-icon {
+    font-size: 1.25rem;
+    color: var(--nv-primary);
+    margin-top: 0.1rem;
 }
 
-@media (max-width:480px){
-
-    .signup-page{
-
-        padding:16px 12px;
-
-    }
-
-    .signup-card{
-
-        padding:22px 18px;
-
-    }
-
-    .signup-logo{
-
-        width:170px;
-
-    }
-
-    .terms-label{
-
-        font-size:.9rem;
-
-    }
-
-   
-/* ==========================================
-Animations
-========================================== */
-
-.signup-card{
-
-    animation:fadeUp .7s ease;
-
+.nv-account-preview-content h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--nv-text-primary);
+    margin-bottom: 0.25rem;
 }
 
-
-#signupButton{
-
-    overflow:hidden;
-
+.nv-account-preview-content p {
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary);
+    line-height: 1.4;
 }
 
-#signupButton::before{
+.nv-benefits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+}
 
-    content:"";
+.nv-benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary);
+}
 
-    position:absolute;
+.nv-benefit i {
+    color: #10b981;
+}
 
-    top:0;
+/* ==================================================
+Checkboxes & Links
+================================================== */
 
-    left:-120%;
+.nv-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    cursor: pointer;
+    user-select: none;
+    color: var(--nv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
 
-    width:60%;
+.nv-checkbox input {
+    margin-top: 0.2rem;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--nv-primary);
+}
 
-    height:100%;
- 
-    background:linear-gradient(
+.nv-checkbox a {
+    color: var(--nv-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nv-checkbox a:hover {
+    color: var(--nv-primary-light);
+    text-decoration: underline;
+}
+
+.nv-signup-button {
+    width: 100%;
+    height: 60px;
+    margin-top: .5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.nv-signup-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
         90deg,
         transparent,
         rgba(255,255,255,.35),
         transparent
     );
-
-    transition:.8s;
-
+    transition: .8s;
 }
 
-#signupButton:hover::before{
-
-    left:160%;
-
+.nv-signup-button:hover::before {
+    left: 160%;
 }
 
-.country-box{
-
-    animation:fadeUp .25s ease;
-
+.error {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(239,68,68,.12);
+    border: 1px solid rgba(239,68,68,.35);
+    color: #ef4444;
+    font-size: .95rem;
+    text-align: center;
+    animation: fadeUp .3s ease;
 }
 
-.verify-email-box{
-
-    animation:fadeUp .35s ease;
-
+.error.show {
+    display: block;
 }
 
-
-#notification{
-
-    animation:fadeUp .3s ease;
-
+.nv-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem;
+    color: var(--nv-text-muted);
+    font-size: .9rem;
 }
 
-
-#email,
-#password,
-#confirmPassword{
-
-    transition:
-    border-color .25s,
-    box-shadow .25s,
-    transform .2s;
-
+.nv-divider::before,
+.nv-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,.08);
 }
 
-
-#email:focus,
-#password:focus,
-#confirmPassword:focus{
-
-    transform:translateY(-2px);
-border-color:var(--nv-primary);
-
-    box-shadow:
-    0 0 0 3px rgba(37,99,235,.15);
-
+.nv-login-link {
+    text-align: center;
+    color: var(--nv-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
-@media(max-width:360px){
 
-    .signup-card{
+.nv-login-link a {
+    color: var(--nv-primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: .3s;
+}
 
-        padding:18px 14px;
+.nv-login-link a:hover {
+    color: var(--nv-primary-light);
+}
 
+.nv-version {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: .8rem;
+    color: var(--nv-text-muted);
+}
+
+/* ==========================================
+Responsive
+========================================== */
+
+@media (max-width: 768px) {
+    .nv-signup {
+        padding: 1rem;
     }
 
-
-    .signup-logo{
-
-        width:150px;
-
+    .nv-signup-card {
+        padding: 2rem 1.5rem;
+        border-radius: 24px;
     }
 
-
-    h1{
-
-        font-size:1.5rem;
-
+    .nv-benefits {
+        grid-template-columns: 1fr;
     }
 
+    .nv-signup-logo {
+        width: 90px;
+    }
 }
