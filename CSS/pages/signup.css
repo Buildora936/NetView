@@ -273,7 +273,63 @@ Password Strength & Match indicators
     font-size: 0.85rem;
     margin-top: 0.35rem;
 }
+/* ==================================================
+Password States
+================================================== */
 
+.nv-password-strength-bar.weak{
+
+    background:#EF4444;
+
+}
+
+.nv-password-strength-bar.medium{
+
+    background:#F97316;
+
+}
+
+.nv-password-strength-bar.good{
+
+    background:#FACC15;
+
+}
+
+.nv-password-strength-bar.strong{
+
+    background:#22C55E;
+
+}
+
+.nv-password-strength-bar.very-strong{
+
+    background:linear-gradient(
+        90deg,
+        #22C55E,
+        #10B981
+    );
+
+}
+
+/* ==========================================
+Password Match
+========================================== */
+
+.nv-password-match.success{
+
+    color:#22C55E;
+
+    font-weight:600;
+
+}
+
+.nv-password-match.error{
+
+    color:#EF4444;
+
+    font-weight:600;
+
+}
 /* ==================================================
 Account Preview & Benefits Cards
 ================================================== */
