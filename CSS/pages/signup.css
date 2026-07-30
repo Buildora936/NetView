@@ -469,3 +469,85 @@ Responsive
         width: 240px;
     }
 }
+/* ==================================================
+Custom Checkbox & Mark
+================================================== */
+
+.nv-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    color: var(--nv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 0; /* On gère l'espace via le flex gap */
+}
+
+/* Masquer le checkbox natif mais le garder accessible */
+.nv-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Le carré personnalisé de la checkbox */
+.nv-checkbox-mark {
+    position: relative;
+    top: 2px; /* Petit ajustement vertical pour l'aligner avec la première ligne de texte */
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    transition: all 0.25s ease;
+}
+
+/* Effet au survol */
+.nv-checkbox:hover .nv-checkbox-mark {
+    border-color: var(--nv-primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* État coché (Checked) */
+.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark {
+    background: var(--nv-primary);
+    border-color: var(--nv-primary);
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+/* Dessiner la petite coche (Check icon) à l'intérieur */
+.nv-checkbox-mark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark::after {
+    display: block;
+}
+
+/* Style des liens à l'intérieur des labels */
+.nv-checkbox a {
+    color: var(--nv-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.nv-checkbox a:hover {
+    color: var(--nv-primary-light);
+    text-decoration: underline;
+}
