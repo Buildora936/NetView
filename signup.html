@@ -535,7 +535,113 @@ Création du compte...
 </div>
 
 </div>
+<!-- ==========================================
+Confirmation e-mail
+========================================== -->
 
+<div
+    id="emailVerificationModal"
+    class="nv-modal">
+
+<div class="nv-modal-overlay"></div>
+
+<div class="nv-modal-content">
+
+<div class="nv-email-icon">
+
+<i class="fa-solid fa-envelope-circle-check"></i>
+
+</div>
+
+<h2>
+
+Vérifiez votre adresse e-mail
+
+</h2>
+
+<p class="nv-email-description">
+
+Nous avons envoyé un lien de confirmation à :
+
+</p>
+
+<div
+    id="verificationEmail"
+    class="nv-email-address">
+
+utilisateur@email.com
+
+</div>
+
+<p class="nv-email-note">
+
+Cliquez sur le lien reçu dans votre boîte de réception pour activer votre compte NetView.
+
+</p>
+
+<div class="nv-email-edit">
+
+<label
+    for="newVerificationEmail"
+    class="nv-label">
+
+Modifier l'adresse e-mail
+
+</label>
+
+<input
+    id="newVerificationEmail"
+    type="email"
+    class="nv-input"
+    placeholder="Nouvelle adresse e-mail">
+
+</div>
+
+<div
+    id="verificationMessage"
+    class="nv-email-message">
+
+</div>
+
+<div class="nv-modal-actions">
+
+<button
+    id="changeEmailButton"
+    class="nv-btn nv-btn-secondary">
+
+Mettre à jour l'e-mail
+
+</button>
+
+<button
+    id="resendEmailButton"
+    class="nv-btn nv-btn-outline">
+
+Renvoyer l'e-mail
+
+</button>
+
+<button
+    id="emailVerifiedButton"
+    class="nv-btn nv-btn-gradient">
+
+J'ai confirmé mon adresse
+
+</button>
+
+</div>
+
+<div
+    id="resendCountdown"
+    class="nv-email-countdown">
+
+Vous pourrez renvoyer un e-mail dans 60 s.
+
+</div>
+
+</div>
+
+</div>
 <script
     type="module"
     src="js/pages/signup.js">
