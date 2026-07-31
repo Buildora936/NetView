@@ -1075,7 +1075,7 @@ window.addEventListener(
 // Modal Email Sync
 // ==========================================
 
-emailInput.addEventListener(
+email.addEventListener(
 
     "input",
 
@@ -1239,9 +1239,3 @@ console.info(
 
 display_name:
 pendingSignup.displayName
-
-displayNameInput
-emailInput
-passwordInput
-confirmPasswordInput
-
