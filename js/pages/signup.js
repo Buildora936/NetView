@@ -8,7 +8,9 @@ import {
     signUp,
     resendVerification,
     updateUser,
-    getSession
+    getSession,
+    refreshUser,
+    createProfile
 
 } from "../core/auth.js";
 
