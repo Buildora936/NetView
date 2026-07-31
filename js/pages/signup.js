@@ -32,6 +32,9 @@ const signupForm = document.getElementById("signupForm");
 const signupButton = document.getElementById("signupButton");
 const signupError = document.getElementById("signupError");
 
+// Notification flottante
+const notification = document.getElementById("notification");
+
 // Champs
 const inputDisplayName = document.getElementById("displayName");
 const inputEmail = document.getElementById("email");
@@ -82,6 +85,24 @@ let resendTimer = null;
 let verificationInterval = null;
 let isSubmitting = false;
 let isResending = false;
+
+
+// ==========================================
+// Notification Helper
+// ==========================================
+
+function showNotification(message, isError = false) {
+    if (!notification) return;
+    
+    notification.textContent = message;
+    notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
+    notification.style.color = isError ? "#ef4444" : "#22c55e";
+    notification.classList.add("show");
+
+    setTimeout(() => {
+        notification.classList.remove("show");
+    }, 4000);
+}
 
 
 // ==========================================
@@ -209,37 +230,47 @@ signupForm.addEventListener("submit", async (event) => {
     const confirmPasswordVal = inputConfirmPassword.value;
 
     if (displayNameVal.length < 3) {
-        signupError.textContent = "Le nom affiché doit contenir au moins 3 caractères.";
+        const msg = "Le nom affiché doit contenir au moins 3 caractères.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
         inputDisplayName.focus();
         return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailVal)) {
-        signupError.textContent = "Adresse e-mail invalide.";
+        const msg = "Adresse e-mail invalide.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
         inputEmail.focus();
         return;
     }
 
     if (passwordVal.length < 8) {
-        signupError.textContent = "Le mot de passe doit contenir au moins 8 caractères.";
+        const msg = "Le mot de passe doit contenir au moins 8 caractères.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
         inputPassword.focus();
         return;
     }
 
     if (passwordVal !== confirmPasswordVal) {
-        signupError.textContent = "Les mots de passe ne correspondent pas.";
+        const msg = "Les mots de passe ne correspondent pas.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
         inputConfirmPassword.focus();
         return;
     }
 
     if (!acceptTerms.checked) {
-        signupError.textContent = "Vous devez accepter les Conditions d'utilisation.";
+        const msg = "Vous devez accepter les Conditions d'utilisation.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
         acceptTerms.focus();
         return;
     }
@@ -268,14 +299,17 @@ signupForm.addEventListener("submit", async (event) => {
         hideLoader();
         buttonLoading(signupButton, false);
 
+        showNotification("Compte créé avec succès ! Vérifiez vos e-mails.");
         emailVerificationModal.classList.add("show");
 
     } catch (error) {
         hideLoader();
         buttonLoading(signupButton, false);
 
-        signupError.textContent = error.message || "Impossible de créer le compte.";
+        const msg = error.message || "Impossible de créer le compte.";
+        signupError.textContent = msg;
         signupError.classList.add("show");
+        showNotification(msg, true);
     }
 });
 
@@ -318,11 +352,13 @@ changeEmailButton.addEventListener("click", async () => {
 
     if (!newEmail) {
         verificationMessage.textContent = "Veuillez saisir une adresse e-mail.";
+        showNotification("Veuillez saisir une adresse e-mail.", true);
         return;
     }
 
     if (newEmail === currentEmail) {
         verificationMessage.textContent = "Cette adresse e-mail est déjà utilisée.";
+        showNotification("Cette adresse e-mail est déjà utilisée.", true);
         return;
     }
 
@@ -337,12 +373,15 @@ changeEmailButton.addEventListener("click", async () => {
         signupData.email = newEmail;
         verificationEmail.textContent = newEmail;
         verificationMessage.textContent = "Adresse e-mail mise à jour. Un nouvel e-mail de confirmation a été envoyé.";
+        showNotification("Adresse e-mail mise à jour avec succès.");
 
         await resendVerification(newEmail);
         startResendCountdown();
 
     } catch (error) {
-        verificationMessage.textContent = error.message || "Impossible de modifier l'adresse e-mail.";
+        const msg = error.message || "Impossible de modifier l'adresse e-mail.";
+        verificationMessage.textContent = msg;
+        showNotification(msg, true);
     }
 
     changeEmailButton.disabled = false;
@@ -363,11 +402,14 @@ resendEmailButton.addEventListener("click", async () => {
         if (error) throw error;
 
         verificationMessage.textContent = "Un nouvel e-mail de confirmation a été envoyé.";
+        showNotification("E-mail de confirmation renvoyé.");
         startResendCountdown();
 
     } catch (error) {
         resendEmailButton.disabled = false;
-        verificationMessage.textContent = error.message || "Impossible de renvoyer l'e-mail.";
+        const msg = error.message || "Impossible de renvoyer l'e-mail.";
+        verificationMessage.textContent = msg;
+        showNotification(msg, true);
     }
 });
 
@@ -408,6 +450,7 @@ async function checkEmailConfirmation() {
             language: "fr"
         });
 
+        showNotification("E-mail confirmé avec succès !");
         navigate("profile.html");
         return true;
 
@@ -423,7 +466,9 @@ emailVerifiedButton.addEventListener("click", async () => {
     const confirmed = await checkEmailConfirmation();
 
     if (!confirmed) {
-        verificationMessage.textContent = "Votre adresse e-mail n'est pas encore confirmée.";
+        const msg = "Votre adresse e-mail n'est pas encore confirmée.";
+        verificationMessage.textContent = msg;
+        showNotification(msg, true);
     }
 });
 
@@ -517,7 +562,7 @@ newVerificationEmail.addEventListener("blur", () => {
 
 
 // ==========================================
-// Final Initialization (Fixed function names)
+// Final Initialization
 // ==========================================
 
 updatePasswordStrength();
