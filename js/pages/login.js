@@ -3,158 +3,158 @@
 // login.js
 // ==========================================
 
-import {
-    signIn,
-    getSession
-} from "../core/auth.js";
-
-import {
-    navigate
-} from "../core/navigation.js";
-
-import {
-    showLoader,
-    hideLoader,
-    buttonLoading
-} from "../core/ui.js";
+import { supabase } from "../core/supabase.js";
 
 // ==========================================
 // Elements
 // ==========================================
 
 const loginForm = document.getElementById("loginForm");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const rememberMe = document.getElementById("rememberMe");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const rememberMeCheckbox = document.getElementById("rememberMe");
 const loginButton = document.getElementById("loginButton");
 const loginError = document.getElementById("loginError");
-const togglePassword = document.getElementById("togglePassword");
+const togglePasswordButton = document.getElementById("togglePassword");
+const pageLoader = document.getElementById("pageLoader");
 
 // ==========================================
-// Existing Session Check
+// Vérification Session Existante
 // ==========================================
 
 (async () => {
     try {
-        const session = await getSession();
+        const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-            navigate("index.html");
+            window.location.replace("index.html");
         }
-    } catch (error) {
-        console.error("Erreur de vérification de session :", error);
+    } catch (err) {
+        console.error("Erreur de session :", err);
     }
 })();
 
 // ==========================================
-// Remember Me - Load saved email
+// Se souvenir de moi (Email sauvegardé)
 // ==========================================
 
 const savedEmail = localStorage.getItem("netview_saved_email");
 if (savedEmail) {
-    email.value = savedEmail;
-    rememberMe.checked = true;
+    emailInput.value = savedEmail;
+    rememberMeCheckbox.checked = true;
 }
 
 // ==========================================
-// Password Visibility Toggle
+// Afficher / Masquer le mot de passe
 // ==========================================
 
-if (togglePassword) {
-    togglePassword.addEventListener("click", () => {
-        const visible = password.type === "text";
-        password.type = visible ? "password" : "text";
+if (togglePasswordButton) {
+    togglePasswordButton.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
 
-        togglePassword.innerHTML = visible
-            ? '<i class="fa-regular fa-eye"></i>'
-            : '<i class="fa-regular fa-eye-slash"></i>';
+        togglePasswordButton.innerHTML = isPassword
+            ? '<i class="fa-regular fa-eye-slash"></i>'
+            : '<i class="fa-regular fa-eye"></i>';
 
-        togglePassword.setAttribute(
+        togglePasswordButton.setAttribute(
             "aria-label",
-            visible ? "Afficher le mot de passe" : "Masquer le mot de passe"
+            isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
         );
     });
 }
 
 // ==========================================
-// Login Form Submission
+// Soumission du Formulaire de Connexion
 // ==========================================
 
-loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
+    // Réinitialisation des erreurs
     loginError.textContent = "";
     loginError.classList.remove("show");
 
-    buttonLoading(loginButton, true);
-    showLoader();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        loginError.textContent = "Veuillez remplir tous les champs.";
+        loginError.classList.add("show");
+        return;
+    }
+
+    // Activation du loader visuel
+    loginButton.disabled = true;
+    loginButton.style.opacity = "0.7";
+    if (pageLoader) pageLoader.style.display = "flex";
 
     try {
-        const res = await signIn(
-            email.value.trim(),
-            password.value
-        );
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
 
-        hideLoader();
-        buttonLoading(loginButton, false);
+        if (error) throw error;
 
-        if (res && res.error) {
-            loginError.textContent = res.error.message || "Identifiants incorrects.";
-            loginError.classList.add("show");
-            return;
-        }
-
-        // ==========================
-        // Remember Me - Save/Remove
-        // ==========================
-
-        if (rememberMe.checked) {
-            localStorage.setItem("netview_saved_email", email.value.trim());
+        // Gestion "Se souvenir de moi"
+        if (rememberMeCheckbox.checked) {
+            localStorage.setItem("netview_saved_email", email);
         } else {
             localStorage.removeItem("netview_saved_email");
         }
 
-        // ==========================
-        // Intelligent Redirect
-        // ==========================
-
+        // Redirection intelligente ou vers l'accueil
         const lastPage = sessionStorage.getItem("netview_last_page");
-
         if (
             lastPage &&
-            ![
-                "auth.html",
-                "login.html",
-                "signup.html",
-                "forgot-password.html",
-                "confirm-email.html"
-            ].includes(lastPage)
+            !["login.html", "signup.html", "forgot-password.html", "confirm-email.html"].includes(lastPage)
         ) {
             sessionStorage.removeItem("netview_last_page");
-            navigate(lastPage);
-            return;
+            window.location.replace(lastPage);
+        } else {
+            window.location.replace("index.html");
         }
 
-        // Redirection par défaut vers l'accueil
-        navigate("index.html");
-
     } catch (err) {
-        console.error("Erreur lors de la connexion :", err);
-        hideLoader();
-        buttonLoading(loginButton, false);
+        console.error("Erreur de connexion :", err);
+        
+        let message = "Identifiants incorrects ou erreur de connexion.";
+        if (err.message.includes("Invalid login credentials")) {
+            message = "E-mail ou mot de passe incorrect.";
+        } else if (err.message.includes("Email not confirmed")) {
+            message = "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
+        }
 
-        loginError.textContent = "Une erreur est survenue. Veuillez réessayer.";
+        loginError.textContent = message;
         loginError.classList.add("show");
+
+        // Désactivation du loader en cas d'erreur
+        loginButton.disabled = false;
+        loginButton.style.opacity = "1";
+        if (pageLoader) pageLoader.style.display = "none";
     }
 });
 
 // ==========================================
-// Save Last Page on Click
+// Effacer l'erreur lors de la frappe
 // ==========================================
 
-document.addEventListener("click", (event) => {
-    const link = event.target.closest("a");
-    if (!link) return;
+[emailInput, passwordInput].forEach((input) => {
+    input.addEventListener("input", () => {
+        if (loginError.classList.contains("show")) {
+            loginError.textContent = "";
+            loginError.classList.remove("show");
+        }
+    });
+});
 
+// ==========================================
+// Sauvegarde de la dernière page visitée
+// ==========================================
+
+document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
     const href = link.getAttribute("href");
     if (href && href.endsWith(".html")) {
         sessionStorage.setItem("netview_last_page", href);
@@ -162,24 +162,13 @@ document.addEventListener("click", (event) => {
 });
 
 // ==========================================
-// Remove Error While Typing
-// ==========================================
-
-[email, password].forEach((input) => {
-    input.addEventListener("input", () => {
-        loginError.textContent = "";
-        loginError.classList.remove("show");
-    });
-});
-
-// ==========================================
-// Autofocus Management
+// Focus automatique initial
 // ==========================================
 
 window.addEventListener("load", () => {
-    if (email.value) {
-        password.focus();
+    if (emailInput.value) {
+        passwordInput.focus();
     } else {
-        email.focus();
+        emailInput.focus();
     }
 });
