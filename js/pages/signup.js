@@ -441,16 +441,16 @@ signupForm.addEventListener(
         // ==========================
 
         const displayName =
-            displayNameInput.value.trim();
+            displayName.value.trim();
 
         const email =
-            emailInput.value.trim().toLowerCase();
+            email.value.trim().toLowerCase();
 
         const password =
             passwordInput.value;
 
         const confirmPassword =
-            confirmPasswordInput.value;
+            confirmPassword.value;
 
         if(displayName.length < 3){
 
@@ -461,7 +461,7 @@ signupForm.addEventListener(
                 "show"
             );
 
-            displayNameInput.focus();
+            displayName.focus();
 
             return;
 
@@ -484,7 +484,7 @@ signupForm.addEventListener(
                 "show"
             );
 
-            emailInput.focus();
+            email.focus();
 
             return;
 
@@ -499,7 +499,7 @@ signupForm.addEventListener(
                 "show"
             );
 
-            passwordInput.focus();
+            password.focus();
 
             return;
 
@@ -514,7 +514,7 @@ signupForm.addEventListener(
                 "show"
             );
 
-            confirmPasswordInput.focus();
+            confirmPassword.focus();
 
             return;
 
