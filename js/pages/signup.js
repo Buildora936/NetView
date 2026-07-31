@@ -739,7 +739,7 @@ changeEmailButton.addEventListener(
 
             currentEmail = newEmail;
 
-            pendingSignup.email =
+            signupData.email =
                 newEmail;
 
             verificationEmail.textContent =
@@ -883,7 +883,7 @@ async function checkEmailConfirmation(){
         await createProfile({
 
             display_name:
-                pendingSignup.displayName,
+             signupData.displayName,
 
             username:null,
 
