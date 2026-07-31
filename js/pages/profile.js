@@ -3,19 +3,7 @@
 // profile.js
 // ==========================================
 
-import {
-    getSession,
-    getUserProfile,
-    updateUserProfile,
-    uploadAvatar,
-    uploadBanner,
-    logout,
-    refreshUser
-} from "../core/auth.js";
-
-import {
-    navigate
-} from "../core/navigation.js";
+import { supabase } from "../core/supabase.js";
 
 // ==========================================
 // DOM Elements
@@ -30,7 +18,6 @@ const avatarButton = document.getElementById("avatarButton");
 const avatarInput = document.getElementById("avatarInput");
 
 // Banner
-const bannerPreview = document.getElementById("bannerPreview");
 const bannerImage = document.getElementById("bannerImage");
 const bannerButton = document.getElementById("bannerButton");
 const bannerInput = document.getElementById("bannerInput");
@@ -69,7 +56,6 @@ const countryList = document.getElementById("countryList");
 // ==========================================
 
 let currentUser = null;
-let currentSession = null;
 let selectedAvatarFile = null;
 let selectedBannerFile = null;
 
@@ -112,22 +98,32 @@ async function initProfile() {
     showPageLoader(true);
 
     try {
-        currentSession = await getSession();
-        if (!currentSession) {
-            navigate("login.html");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            window.location.replace("login.html");
             return;
         }
 
-        const user = await refreshUser();
-        currentUser = user;
+        currentUser = session.user;
 
-        if (user && user.email) {
-            emailAddress.textContent = user.email;
-            verifiedBadge.textContent = user.email_confirmed_at ? "Vérifié" : "Non vérifié";
-            verifiedBadge.style.color = user.email_confirmed_at ? "#22c55e" : "#ef4444";
+        if (currentUser && currentUser.email) {
+            emailAddress.textContent = currentUser.email;
+            const isConfirmed = !!currentUser.email_confirmed_at;
+            verifiedBadge.textContent = isConfirmed ? "Vérifié" : "Non vérifié";
+            verifiedBadge.style.color = isConfirmed ? "#22c55e" : "#ef4444";
         }
 
-        const profile = await getUserProfile(user.id);
+        // Fetch user profile from database table 'profiles'
+        const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", currentUser.id)
+            .single();
+
+        if (profileError && profileError.code !== "PGRST116") {
+            console.error(profileError);
+        }
 
         if (profile) {
             usernameInput.value = profile.username || "";
@@ -143,6 +139,7 @@ async function initProfile() {
 
             if (profile.banner_url) {
                 bannerImage.src = profile.banner_url;
+                bannerImage.style.display = "block";
             } else {
                 bannerImage.style.display = "none";
             }
@@ -260,6 +257,29 @@ countryModal.addEventListener("click", (e) => {
 
 
 // ==========================================
+// Storage Upload Helpers
+// ==========================================
+
+async function uploadFileToStorage(userId, file, bucketName, folderName) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}-${Date.now()}.${fileExt}`;
+    const filePath = `${folderName}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(filePath, file, { upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}
+
+
+// ==========================================
 // Form Submission & Save Profile
 // ==========================================
 
@@ -300,14 +320,15 @@ profileForm.addEventListener("submit", async (e) => {
         let bannerUrl = null;
 
         if (selectedAvatarFile) {
-            avatarUrl = await uploadAvatar(currentUser.id, selectedAvatarFile);
+            avatarUrl = await uploadFileToStorage(currentUser.id, selectedAvatarFile, "avatars", "avatars");
         }
 
         if (selectedBannerFile) {
-            bannerUrl = await uploadBanner(currentUser.id, selectedBannerFile);
+            bannerUrl = await uploadFileToStorage(currentUser.id, selectedBannerFile, "banners", "banners");
         }
 
         const updates = {
+            id: currentUser.id,
             username: usernameVal || null,
             display_name: displayNameVal,
             bio: bioVal || null,
@@ -319,14 +340,16 @@ profileForm.addEventListener("submit", async (e) => {
         if (avatarUrl) updates.avatar_url = avatarUrl;
         if (bannerUrl) updates.banner_url = bannerUrl;
 
-        const { error } = await updateUserProfile(currentUser.id, updates);
+        const { error: upsertError } = await supabase
+            .from("profiles")
+            .upsert(updates);
 
-        if (error) throw error;
+        if (upsertError) throw upsertError;
 
         showNotification("Profil enregistré avec succès !");
         
         setTimeout(() => {
-            navigate("index.html");
+            window.location.replace("index.html");
         }, 1200);
 
     } catch (error) {
@@ -348,8 +371,8 @@ profileForm.addEventListener("submit", async (e) => {
 logoutButton.addEventListener("click", async () => {
     try {
         showPageLoader(true);
-        await logout();
-        navigate("login.html");
+        await supabase.auth.signOut();
+        window.location.replace("login.html");
     } catch (error) {
         console.error(error);
         showNotification("Erreur lors de la déconnexion.", true);
