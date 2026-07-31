@@ -447,7 +447,7 @@ signupForm.addEventListener(
             email.value.trim().toLowerCase();
 
         const password =
-            passwordInput.value;
+            password.value;
 
         const confirmPassword =
             confirmPassword.value;
@@ -579,7 +579,7 @@ signupForm.addEventListener(
             // Sauvegarde des infos
             // jusqu'à la confirmation
 
-            pendingSignup = {
+            signupData = {
 
                 displayName,
 
@@ -1047,10 +1047,10 @@ window.addEventListener(
 // ==========================================
 
 [
-    displayNameInput,
-    emailInput,
-    passwordInput,
-    confirmPasswordInput
+    displayName,
+    email,
+    password,
+    confirmPassword
 ].forEach(input=>{
 
     input.addEventListener(
@@ -1094,7 +1094,7 @@ emailInput.addEventListener(
         }
 
         const value =
-            emailInput.value
+            email.value
             .trim()
             .toLowerCase();
 
@@ -1143,7 +1143,7 @@ window.addEventListener(
 
     ()=>{
 
-        displayNameInput.focus();
+        displayName.focus();
 
     }
 
@@ -1193,14 +1193,14 @@ newVerificationEmail.addEventListener(
 // Disable Copy/Paste Spaces
 // ==========================================
 
-emailInput.addEventListener(
+email.addEventListener(
 
     "blur",
 
     ()=>{
 
-        emailInput.value =
-            emailInput.value
+        email.value =
+            email.value
             .trim()
             .toLowerCase();
 
