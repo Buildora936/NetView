@@ -12,7 +12,7 @@ content="width=device-width, initial-scale=1.0">
 <title>Confirmation du compte</title>
 
 <style>
-    /* ==================================================
+/* ==================================================
 CONFIRM EMAIL PAGE
 ================================================== */
 
@@ -82,71 +82,45 @@ import { supabase } from "./js/core/supabase.js";
 
 (async()=>{
 
+    const hash = window.location.hash;
+    const searchParams = new URLSearchParams(window.location.search);
+    const type = searchParams.get("type");
+
     // -------------------------
     // Cas erreur envoyé par Supabase
     // -------------------------
-
-    const hash =
-        window.location.hash;
-
     if(hash.includes("error=")){
+        const params = new URLSearchParams(hash.substring(1));
+        const code = params.get("error_code");
 
-        const params =
-            new URLSearchParams(
-                hash.substring(1)
-            );
-
-        const code =
-            params.get("error_code");
-
-        if(code==="otp_expired"){
-
-            location.replace(
-                "signup.html?status=expired"
-            );
-
+        if(code === "otp_expired"){
+            location.replace("signup.html?status=expired");
             return;
-
         }
 
-        location.replace(
-            "signup.html?status=failed"
-        );
-
+        location.replace("signup.html?status=failed");
         return;
-
     }
 
     // -------------------------
-    // Demande à Supabase
+    // Cas Récupération de mot de passe (Recovery)
     // -------------------------
-
-    const {
-
-        data
-
-    } =
-    await supabase.auth.getUser();
-
-    if(
-
-        data.user &&
-
-        data.user.email_confirmed_at
-
-    ){
-
-        location.replace(
-            "profile.html"
-        );
-
+    if(type === "recovery" || hash.includes("type=recovery")){
+        location.replace("change-password.html" + hash);
         return;
-
     }
 
-    location.replace(
-        "signup.html?status=failed"
-    );
+    // -------------------------
+    // Vérification session / compte standard
+    // -------------------------
+    const { data } = await supabase.auth.getUser();
+
+    if(data.user && data.user.email_confirmed_at){
+        location.replace("profile.html");
+        return;
+    }
+
+    location.replace("signup.html?status=failed");
 
 })();
 
@@ -156,7 +130,10 @@ import { supabase } from "./js/core/supabase.js";
 
 <body>
 
-Patientez...
+<div class="confirm-container">
+    <div class="confirm-spinner"></div>
+    <p>Patientez pendant la vérification...</p>
+</div>
 
 </body>
 
