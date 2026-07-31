@@ -418,3 +418,819 @@ confirmPassword.addEventListener(
     checkPasswordMatch
 
 );
+// ==========================================
+// Signup Form
+// ==========================================
+
+signupForm.addEventListener(
+
+    "submit",
+
+    async(event)=>{
+
+        event.preventDefault();
+
+        signupError.textContent = "";
+
+        signupError.classList.remove(
+            "show"
+        );
+
+        // ==========================
+        // Validation
+        // ==========================
+
+        const displayName =
+            displayNameInput.value.trim();
+
+        const email =
+            emailInput.value.trim().toLowerCase();
+
+        const password =
+            passwordInput.value;
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+        if(displayName.length < 3){
+
+            signupError.textContent =
+                "Le nom affiché doit contenir au moins 3 caractères.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+            displayNameInput.focus();
+
+            return;
+
+        }
+
+        const emailRegex =
+
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(
+
+            !emailRegex.test(email)
+
+        ){
+
+            signupError.textContent =
+                "Adresse e-mail invalide.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+            emailInput.focus();
+
+            return;
+
+        }
+
+        if(password.length < 8){
+
+            signupError.textContent =
+                "Le mot de passe doit contenir au moins 8 caractères.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+        if(password !== confirmPassword){
+
+            signupError.textContent =
+                "Les mots de passe ne correspondent pas.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+            confirmPasswordInput.focus();
+
+            return;
+
+        }
+
+        if(
+
+            !acceptTerms.checked
+
+        ){
+
+            signupError.textContent =
+                "Vous devez accepter les Conditions d'utilisation.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+            acceptTerms.focus();
+
+            return;
+
+        }
+
+        // ==========================
+        // Loader
+        // ==========================
+
+        buttonLoading(
+            signupButton,
+            true
+        );
+
+        showLoader();
+
+        // ==========================
+        // Signup
+        // ==========================
+
+        try{
+
+            const {
+
+                data,
+
+                error
+
+            } = await signUp(
+
+                email,
+
+                password
+
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            // Sauvegarde des infos
+            // jusqu'à la confirmation
+
+            pendingSignup = {
+
+                displayName,
+
+                email,
+
+                password,
+
+                newsletter:
+
+                    newsletter.checked
+
+            };
+
+            currentEmail =
+                email;
+
+            verificationEmail.textContent =
+                email;
+
+            newVerificationEmail.value =
+                email;
+
+            hideLoader();
+
+            buttonLoading(
+                signupButton,
+                false
+            );
+
+            emailVerificationModal.classList.add(
+                "show"
+            );
+
+        }
+
+        catch(error){
+
+            hideLoader();
+
+            buttonLoading(
+                signupButton,
+                false
+            );
+
+            signupError.textContent =
+
+                error.message ||
+
+                "Impossible de créer le compte.";
+
+            signupError.classList.add(
+                "show"
+            );
+
+        }
+
+    }
+
+);
+// ==========================================
+// Email Verification Modal
+// ==========================================
+
+let resendTimer = null;
+
+function startResendCountdown(){
+
+    resendSeconds = 60;
+
+    resendEmailButton.disabled = true;
+
+    resendCountdown.textContent =
+        `Vous pourrez renvoyer un e-mail dans ${resendSeconds} s.`;
+
+    clearInterval(resendTimer);
+
+    resendTimer = setInterval(()=>{
+
+        resendSeconds--;
+
+        if(resendSeconds<=0){
+
+            clearInterval(
+                resendTimer
+            );
+
+            resendEmailButton.disabled = false;
+
+            resendCountdown.textContent =
+                "Vous pouvez maintenant renvoyer un e-mail.";
+
+            return;
+
+        }
+
+        resendCountdown.textContent =
+            `Vous pourrez renvoyer un e-mail dans ${resendSeconds} s.`;
+
+    },1000);
+
+}
+
+// ==========================================
+// Change Email
+// ==========================================
+
+changeEmailButton.addEventListener(
+
+    "click",
+
+    async()=>{
+
+        verificationMessage.textContent="";
+
+        const newEmail =
+            newVerificationEmail.value
+            .trim()
+            .toLowerCase();
+
+        if(!newEmail){
+
+            verificationMessage.textContent =
+                "Veuillez saisir une adresse e-mail.";
+
+            return;
+
+        }
+
+        if(newEmail===currentEmail){
+
+            verificationMessage.textContent =
+                "Cette adresse e-mail est déjà utilisée.";
+
+            return;
+
+        }
+
+        changeEmailButton.disabled = true;
+
+        try{
+
+            const {
+
+                error
+
+            } = await updateUser({
+
+                email:newEmail
+
+            });
+
+            if(error){
+
+                throw error;
+
+            }
+
+            currentEmail = newEmail;
+
+            pendingSignup.email =
+                newEmail;
+
+            verificationEmail.textContent =
+                newEmail;
+
+            verificationMessage.textContent =
+                "Adresse e-mail mise à jour. Un nouvel e-mail de confirmation a été envoyé.";
+
+            await resendVerification(
+                newEmail
+            );
+
+            startResendCountdown();
+
+        }
+
+        catch(error){
+
+            verificationMessage.textContent =
+
+                error.message ||
+
+                "Impossible de modifier l'adresse e-mail.";
+
+        }
+
+        changeEmailButton.disabled = false;
+
+    }
+
+);
+
+// ==========================================
+// Resend Verification Email
+// ==========================================
+
+resendEmailButton.addEventListener(
+
+    "click",
+
+    async()=>{
+
+        verificationMessage.textContent="";
+
+        resendEmailButton.disabled = true;
+
+        try{
+
+            const {
+
+                error
+
+            } = await resendVerification(
+                currentEmail
+            );
+
+            if(error){
+
+                throw error;
+
+            }
+
+            verificationMessage.textContent =
+                "Un nouvel e-mail de confirmation a été envoyé.";
+
+            startResendCountdown();
+
+        }
+
+        catch(error){
+
+            resendEmailButton.disabled = false;
+
+            verificationMessage.textContent =
+
+                error.message ||
+
+                "Impossible de renvoyer l'e-mail.";
+
+        }
+
+    }
+
+);
+
+// ==========================================
+// Prevent Closing
+// ==========================================
+
+emailVerificationModal
+
+.querySelector(".nv-modal-overlay")
+
+.addEventListener(
+
+    "click",
+
+    event=>{
+
+        event.stopPropagation();
+
+    }
+
+);
+// ==========================================
+// Email Confirmation
+// ==========================================
+
+let verificationInterval = null;
+
+// Vérification de l'état du compte
+async function checkEmailConfirmation(){
+
+    try{
+
+        const user =
+            await refreshUser();
+
+        if(
+
+            !user ||
+
+            !user.email_confirmed_at
+
+        ){
+
+            return false;
+
+        }
+
+        clearInterval(
+            verificationInterval
+        );
+
+        emailVerifiedButton.disabled =
+            true;
+
+        emailVerifiedButton.textContent =
+            "Confirmation détectée...";
+
+        await createProfile({
+
+            display_name:
+                pendingSignup.displayName,
+
+            username:null,
+
+            country:null,
+
+            language:"fr"
+
+        });
+
+        navigate(
+            "profile.html"
+        );
+
+        return true;
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        return false;
+
+    }
+
+}
+
+// ==========================================
+// Button
+// ==========================================
+
+emailVerifiedButton.addEventListener(
+
+    "click",
+
+    async()=>{
+
+        verificationMessage.textContent =
+            "Vérification en cours...";
+
+        const confirmed =
+            await checkEmailConfirmation();
+
+        if(!confirmed){
+
+            verificationMessage.textContent =
+                "Votre adresse e-mail n'est pas encore confirmée.";
+
+        }
+
+    }
+
+);
+
+// ==========================================
+// Automatic Verification
+// ==========================================
+
+function startVerificationWatcher(){
+
+    clearInterval(
+        verificationInterval
+    );
+
+    verificationInterval = setInterval(
+   
+        checkEmailConfirmation,
+              
+        10000
+  
+    );
+
+}
+
+// ==========================================
+// Start Watcher
+// ==========================================
+
+const observer = new MutationObserver(()=>{
+
+    if(
+
+        emailVerificationModal.classList.contains(
+            "show"
+        )
+
+    ){
+
+        startVerificationWatcher();
+
+    }
+
+});
+
+observer.observe(
+
+    emailVerificationModal,
+
+    {
+
+        attributes:true,
+
+        attributeFilter:["class"]
+
+    }
+
+);
+
+// ==========================================
+// Cleanup
+// ==========================================
+
+window.addEventListener(
+
+    "beforeunload",
+
+    ()=>{
+
+        clearInterval(
+            verificationInterval
+        );
+
+        clearInterval(
+            resendTimer
+        );
+
+    }
+
+);
+// ==========================================
+// Existing Session
+// ==========================================
+
+(async()=>{
+
+    try{
+
+        const session =
+            await getSession();
+
+        if(session){
+
+            navigate(
+                "index.html"
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+})();
+
+// ==========================================
+// Clear Errors While Typing
+// ==========================================
+
+[
+    displayNameInput,
+    emailInput,
+    passwordInput,
+    confirmPasswordInput
+].forEach(input=>{
+
+    input.addEventListener(
+
+        "input",
+
+        ()=>{
+
+            signupError.textContent="";
+
+            signupError.classList.remove(
+                "show"
+            );
+
+        }
+
+    );
+
+});
+
+// ==========================================
+// Modal Email Sync
+// ==========================================
+
+emailInput.addEventListener(
+
+    "input",
+
+    ()=>{
+
+        if(
+
+            !emailVerificationModal.classList.contains(
+                "show"
+            )
+
+        ){
+
+            return;
+
+        }
+
+        const value =
+            emailInput.value
+            .trim()
+            .toLowerCase();
+
+        currentEmail =
+            value;
+
+        verificationEmail.textContent =
+            value;
+
+        newVerificationEmail.value =
+            value;
+
+    }
+
+);
+
+// ==========================================
+// Prevent Enter
+// ==========================================
+
+newVerificationEmail.addEventListener(
+
+    "keydown",
+
+    event=>{
+
+        if(event.key==="Enter"){
+
+            event.preventDefault();
+
+            changeEmailButton.click();
+
+        }
+
+    }
+
+);
+
+// ==========================================
+// Focus
+// ==========================================
+
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        displayNameInput.focus();
+
+    }
+
+);
+
+// ==========================================
+// Cleanup
+// ==========================================
+
+window.addEventListener(
+
+    "beforeunload",
+
+    ()=>{
+
+        clearInterval(
+            resendTimer
+        );
+
+        clearInterval(
+            verificationInterval
+        );
+
+    }
+
+);
+
+// ==========================================
+// Reset Modal Message
+// ==========================================
+
+function resetVerificationMessage(){
+
+    verificationMessage.textContent="";
+
+}
+
+newVerificationEmail.addEventListener(
+
+    "input",
+
+    resetVerificationMessage
+
+);
+
+// ==========================================
+// Disable Copy/Paste Spaces
+// ==========================================
+
+emailInput.addEventListener(
+
+    "blur",
+
+    ()=>{
+
+        emailInput.value =
+            emailInput.value
+            .trim()
+            .toLowerCase();
+
+    }
+
+);
+
+newVerificationEmail.addEventListener(
+
+    "blur",
+
+    ()=>{
+
+        newVerificationEmail.value =
+            newVerificationEmail.value
+            .trim()
+            .toLowerCase();
+
+    }
+
+);
+
+// ==========================================
+// Final Initialization
+// ==========================================
+
+passwordStrength();
+
+updatePasswordMatch();
+
+console.info(
+    "NetView Signup Ready."
+);
