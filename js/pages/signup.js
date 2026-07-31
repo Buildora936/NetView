@@ -1234,3 +1234,14 @@ updatePasswordMatch();
 console.info(
     "NetView Signup Ready."
 );
+
+
+
+display_name:
+pendingSignup.displayName
+
+displayNameInput
+emailInput
+passwordInput
+confirmPasswordInput
+
