@@ -387,16 +387,7 @@ Account Preview & Benefits Cards
 Checkboxes & Links
 ================================================== */
 
-.nv-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--nv-text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
+
 
 .nv-checkbox input {
     margin-top: 0.2rem;
