@@ -68,26 +68,28 @@
                     <h2>Compte</h2>
                 </div>
                 <div class="nv-settings-info">
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Adresse e-mail</span>
-                        <span id="currentEmail" class="nv-settings-value">Chargement...</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Nom affiché</span>
-                        <span id="displayName">Chargement...</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Nom d'utilisateur</span>
-                        <span id="username">@...</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Type de compte</span>
-                        <span id="accountType">Utilisateur</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Compte créé le</span>
-                        <span id="createdAt">--</span>
-                    </div>
+    <div class="nv-settings-item">
+        <span class="nv-settings-label">Adresse e-mail</span>
+        <span id="currentEmail" class="nv-settings-value">--</span>
+    </div>
+    <div class="nv-settings-item">
+        <span class="nv-settings-label">Nom affiché</span>
+        <span id="displayName" class="nv-settings-value">--</span>
+    </div>
+    <div class="nv-settings-item">
+        <span class="nv-settings-label">Nom d'utilisateur</span>
+        <span id="username" class="nv-settings-value">--</span>
+    </div>
+    <div class="nv-settings-item">
+        <span class="nv-settings-label">Type de compte</span>
+        <span id="accountType" class="nv-settings-value">--</span>
+    </div>
+    <div class="nv-settings-item">
+        <span class="nv-settings-label">Compte créé le</span>
+        <span id="createdAt" class="nv-settings-value">--</span>
+    </div>
+</div>
+                
                 </div>
                 <a href="profile.html" class="nv-btn nv-btn-gradient">Modifier le profil</a>
             </section>
@@ -168,11 +170,9 @@
                         <div class="nv-device-main">
                             <div class="nv-device-icon">
                                 <i class="fa-solid fa-desktop"></i>
-                            </div>
-                            <div class="nv-device-details">
-                                <h3>PC Windows <span class="nv-current-device">Appareil actuel</span></h3>
-                                <p>Google Chrome • Windows 11</p>
-                                <span>Dernière activité : <strong>À l'instant</strong></span>
+                                </div>
+                               <div id="devicesList" class="nv-devices-list">
+    <!-- Les vrais appareils de Supabase seront injectés ici par JavaScript -->
                             </div>
                         </div>
                         <button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="">Déconnecter</button>
