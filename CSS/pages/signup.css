@@ -599,7 +599,7 @@ Email Verification Modal
 
 .nv-modal.show{
 
-    display:flex;
+    display:flex !important;
 
 }
 
