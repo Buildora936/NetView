@@ -1,936 +1,124 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="fr" class="dark">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetView — Paramètres & Sécurité</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-<meta
-    name="description"
-    content="Gérez votre compte NetView, votre sécurité, vos préférences et vos paramètres.">
-
-<meta
-    name="theme-color"
-    content="#2563EB">
-
-<title>
-
-Paramètres • NetView
-
-</title>
-
-<link
-    rel="icon"
-    type="image/png"
-    href="NetView_icone.png">
-
-<link
-    rel="preconnect"
-    href="https://fonts.googleapis.com">
-
-<link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin>
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<!-- ==========================================
-Core CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/core/variables.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/reset.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/typography.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/animations.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<!-- ==========================================
-Components
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/components/buttons.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/forms.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/cards.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/modal.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/toast.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/loader.css">
-
-<!-- ==========================================
-Page CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/pages/settings.css">
-
+    <!-- Styles NetView -->
+    <link rel="stylesheet" href="../assets/css/netview.css">
 </head>
-
-<body>
-
-<div class="nv-settings-background">
-
-<div class="nv-orb one"></div>
-
-<div class="nv-orb two"></div>
-
-<div class="nv-orb three"></div>
-
-</div>
-
-<main class="nv-settings">
-
-<section class="nv-settings-card">
-
-<div class="nv-settings-header">
-
-<a
-    href="index.html"
-    class="nv-back-button">
-
-<i class="fa-solid fa-arrow-left"></i>
-
-</a>
-
-<img
-    src="NetView.png"
-    alt="NetView"
-    class="nv-settings-logo">
-
-<h1>
-
-Paramètres
-
-</h1>
-
-<p>
-
-Personnalisez votre expérience NetView et gérez votre compte.
-
-</p>
-
-</div>
-
-<!-- ==========================================
-Profil
-========================================== -->
-
-<section class="nv-settings-section">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-user"></i>
-
-<h2>
-
-Profil
-
-</h2>
-
-</div>
-
-<div class="nv-profile-banner">
-
-<img
-    id="bannerPreview"
-    src="images/default-banner.jpg"
-    alt="Bannière">
-
-<label
-    for="bannerInput"
-    class="nv-banner-edit">
-
-<i class="fa-solid fa-camera"></i>
-
-</label>
-
-<input
-    id="bannerInput"
-    type="file"
-    accept="image/*"
-    hidden>
-
-</div>
-
-<div class="nv-profile-avatar">
-
-<img
-    id="avatarPreview"
-    src="images/default-avatar.png"
-    alt="Avatar">
-
-<label
-    for="avatarInput"
-    class="nv-avatar-edit">
-
-<i class="fa-solid fa-camera"></i>
-
-</label>
-
-<input
-    id="avatarInput"
-    type="file"
-    accept="image/*"
-    hidden>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="displayName"
-    class="nv-label">
-
-Nom affiché
-
-</label>
-
-<input
-    id="displayName"
-    type="text"
-    class="nv-input"
-    maxlength="50"
-    placeholder="Votre nom affiché">
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="username"
-    class="nv-label">
-
-Nom d'utilisateur
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<span class="nv-prefix">
-
-@
-
-</span>
-
-<input
-    id="username"
-    type="text"
-    class="nv-input"
-    maxlength="30"
-    placeholder="nomutilisateur">
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="bio"
-    class="nv-label">
-
-Biographie
-
-</label>
-
-<textarea
-    id="bio"
-    class="nv-textarea"
-    maxlength="250"
-    placeholder="Parlez un peu de vous..."></textarea>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="website"
-    class="nv-label">
-
-Site web
-
-</label>
-
-<input
-    id="website"
-    type="url"
-    class="nv-input"
-    placeholder="https://">
-
-</div>
-
-<div class="nv-form-row">
-
-<div class="nv-form-group">
-
-<label
-    for="country"
-    class="nv-label">
-
-Pays
-
-</label>
-
-<select
-    id="country"
-    class="nv-select">
-
-<option value="">
-
-Sélectionner
-
-</option>
-
-</select>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="language"
-    class="nv-label">
-
-Langue
-
-</label>
-
-<select
-    id="language"
-    class="nv-select">
-
-<option value="fr">
-
-Français
-
-</option>
-
-<option value="en">
-
-English
-
-</option>
-
-<option value="es">
-
-Español
-
-</option>
-
-<option value="ht">
-
-Kreyòl Ayisyen
-
-</option>
-
-</select>
-
-</div>
-
-</div>
-
-<div class="nv-profile-info">
-
-<div>
-
-<strong>
-
-Adresse e-mail
-
-</strong>
-
-<span id="currentEmail">
-
-Chargement...
-
-</span>
-
-</div>
-
-<div>
-
-<strong>
-
-Compte créé le
-
-</strong>
-
-<span id="createdAt">
-
---
-
-</span>
-
-</div>
-
-<div>
-
-<strong>
-
-Type de compte
-
-</strong>
-
-<span id="accountType">
-
-Utilisateur
-
-</span>
-
-</div>
-
-</div>
-
-<button
-    id="saveProfileButton"
-    class="nv-btn nv-btn-gradient">
-
-Enregistrer les modifications
-
-</button>
-
-</section>
-<!-- ==========================================
-Sécurité
-========================================== -->
-
-<section class="nv-settings-section">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-shield-halved"></i>
-
-<h2>
-
-Sécurité
-
-</h2>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="currentPassword"
-    class="nv-label">
-
-Mot de passe actuel
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="currentPassword"
-    type="password"
-    class="nv-input"
-    autocomplete="current-password"
-    placeholder="Mot de passe actuel">
-
-<button
-    type="button"
-    id="toggleCurrentPassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-
-<i class="fa-regular fa-eye"></i>
-
-</button>
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="newPassword"
-    class="nv-label">
-
-Nouveau mot de passe
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="newPassword"
-    type="password"
-    class="nv-input"
-    autocomplete="new-password"
-    placeholder="Nouveau mot de passe">
-
-<button
-    type="button"
-    id="toggleNewPassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-
-<i class="fa-regular fa-eye"></i>
-
-</button>
-
-</div>
-
-<div class="nv-password-strength">
-
-<div
-    id="passwordStrengthBar"
-    class="nv-password-strength-bar">
-
-</div>
-
-</div>
-
-<div
-    id="passwordStrengthText"
-    class="nv-password-strength-text">
-
-Choisissez un mot de passe sécurisé.
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="confirmPassword"
-    class="nv-label">
-
-Confirmer le nouveau mot de passe
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="confirmPassword"
-    type="password"
-    class="nv-input"
-    autocomplete="new-password"
-    placeholder="Confirmez le nouveau mot de passe">
-
-<button
-    type="button"
-    id="toggleConfirmPassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-
-<i class="fa-regular fa-eye"></i>
-
-</button>
-
-</div>
-
-<div
-    id="passwordMatch"
-    class="nv-password-match">
-
-</div>
-
-</div>
-
-<div class="nv-security-options">
-
-<label class="nv-checkbox">
-
-<input
-    id="twoFactorAuth"
-    type="checkbox">
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Activer la vérification en deux étapes (2FA)
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="loginNotifications"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Recevoir une notification lors des nouvelles connexions
-
-</span>
-
-</label>
-
-</div>
-
-<button
-    id="updatePasswordButton"
-    class="nv-btn nv-btn-gradient">
-
-Mettre à jour le mot de passe
-
-</button>
-
-</section>
-<!-- ==========================================
-Préférences
-========================================== -->
-
-<section class="nv-settings-section">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-sliders"></i>
-
-<h2>
-
-Préférences
-
-</h2>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="theme"
-    class="nv-label">
-
-Thème
-
-</label>
-
-<select
-    id="theme"
-    class="nv-select">
-
-<option value="system">
-
-Suivre le système
-
-</option>
-
-<option value="light">
-
-Clair
-
-</option>
-
-<option value="dark">
-
-Sombre
-
-</option>
-
-</select>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="languagePreference"
-    class="nv-label">
-
-Langue de l'interface
-
-</label>
-
-<select
-    id="languagePreference"
-    class="nv-select">
-
-<option value="fr">
-
-Français
-
-</option>
-
-<option value="en">
-
-English
-
-</option>
-
-<option value="es">
-
-Español
-
-</option>
-
-<option value="ht">
-
-Kreyòl Ayisyen
-
-</option>
-
-</select>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="videoQuality"
-    class="nv-label">
-
-Qualité vidéo par défaut
-
-</label>
-
-<select
-    id="videoQuality"
-    class="nv-select">
-
-<option value="auto">
-
-Automatique
-
-</option>
-
-<option value="2160">
-
-4K (2160p)
-
-</option>
-
-<option value="1440">
-
-1440p
-
-</option>
-
-<option value="1080">
-
-1080p
-
-</option>
-
-<option value="720">
-
-720p
-
-</option>
-
-<option value="480">
-
-480p
-
-</option>
-
-<option value="360">
-
-360p
-
-</option>
-
-</select>
-
-</div>
-
-<div class="nv-preferences-list">
-
-<label class="nv-checkbox">
-
-<input
-    id="autoplayVideos"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Lecture automatique des vidéos
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="autoplayShorts"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Lecture automatique des Shorts
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="safeMode"
-    type="checkbox">
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Activer le mode restreint
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="emailNotifications"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Recevoir les notifications par e-mail
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="pushNotifications"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Recevoir les notifications push
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="marketingEmails"
-    type="checkbox">
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Recevoir les nouveautés et offres NetView
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="showOnlineStatus"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Afficher mon statut en ligne
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="allowMessages"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Autoriser les messages privés
-
-</span>
-
-</label>
-
-<label class="nv-checkbox">
-
-<input
-    id="playSounds"
-    type="checkbox"
-    checked>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Activer les sons des notifications
-
-</span>
-
-</label>
-
-</div>
-
-<button
-    id="savePreferencesButton"
-    class="nv-btn nv-btn-gradient">
-
-Enregistrer les préférences
-
-</button>
-
-</section>
+<body class="nv-body">
+
+    <!-- Global Loader -->
+    <div id="globalLoader" class="nv-global-loader">
+        <div class="nv-spinner"></div>
+    </div>
+
+    <!-- Notification Flottante -->
+    <div id="notification" class="nv-notification"></div>
+
+    <div class="nv-layout">
+        <!-- Sidebar / Navigation (Optionnel selon votre structure globale) -->
+
+        <!-- Contenu Principal -->
+        <main class="nv-main-content">
+            <div class="nv-container" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+                
+                <!-- En-tête -->
+                <div class="nv-page-header" style="margin-bottom: 2rem;">
+                    <h1 style="color: #FFFFFF; font-size: 1.75rem; font-weight: 700;">Paramètres du compte</h1>
+                    <p style="color: #94A3B8; font-size: 0.95rem;">Gérez la sécurité de votre compte, vos mots de passe et vos préférences.</p>
+                </div>
+
+                <!-- SECTION 1 : SÉCURITÉ & MOT DE PASSE -->
+                <section class="nv-card" style="background: #192131; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+                    <h2 style="color: #FFFFFF; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fa-solid fa-lock" style="color: #2563EB;"></i> Mot de passe et Sécurité
+                    </h2>
+
+                    <form id="passwordForm" style="display: flex; flexDirection: column; gap: 1.25rem;">
+                        <div class="nv-input-group">
+                            <label for="currentPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Mot de passe actuel</label>
+                            <input type="password" id="currentPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
+                        </div>
+
+                        <div class="nv-input-group">
+                            <label for="newPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Nouveau mot de passe</label>
+                            <input type="password" id="newPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
+                        </div>
+
+                        <div class="nv-input-group">
+                            <label for="confirmNewPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Confirmer le nouveau mot de passe</label>
+                            <input type="password" id="confirmNewPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
+                        </div>
+
+                        <div id="passwordMessage" style="font-size: 0.9rem; min-height: 20px;"></div>
+
+                        <button type="submit" id="updatePasswordButton" class="nv-btn nv-btn-primary" style="align-self: flex-start; background: #2563EB; color: #FFFFFF; border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer;">
+                            <span id="updatePasswordText">Mettre à jour le mot de passe</span>
+                            <span id="updatePasswordLoader" hidden><i class="fa-solid fa-spinner fa-spin"></i></span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- SECTION 2 : PRÉFÉRENCES -->
+                <section class="nv-card" style="background: #192131; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+                    <h2 style="color: #FFFFFF; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fa-solid fa-sliders" style="color: #2563EB;"></i> Préférences de l'application
+                    </h2>
+
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: #FFFFFF; font-size: 1rem; font-weight: 500;">Notifications push</h3>
+                                <p style="color: #94A3B8; font-size: 0.85rem;">Recevoir des alertes pour les abonnements et les lives.</p>
+                            </div>
+                            <label class="nv-switch">
+                                <input type="checkbox" id="notifToggle" checked>
+                                <span class="nv-slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: #FFFFFF; font-size: 1rem; font-weight: 500;">Lecture automatique</h3>
+                                <p style="color: #94A3B8; font-size: 0.85rem;">Lancer automatiquement les vidéos suivantes sur le fil.</p>
+                            </div>
+                            <label class="nv-switch">
+                                <input type="checkbox" id="autoplayToggle" checked>
+                                <span class="nv-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3 : ZONE DE DANGER / SUPPRESSION DU COMPTE -->
+                <section class="nv-card" style="background: #192131; border: 1px solid rgba(239,68,68,0.3); border-radius: 20px; padding: 2rem;">
+                    <h2 style="color: #EF4444; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Zone de danger
+                    </h2>
+                    <p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">
+                        La suppression de votre compte est définitive. Toutes vos données, vos chaînes, vos vidéos et votre historique seront effacés de manière irréversible.
+                    </p>
+                    <button id="deleteAccountButton" class="nv-btn" style="background: rgba(239,68,68,0.12); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer;">
+                        Supprimer mon compte
+                    </button>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script JS des Paramètres -->
+    <script type="module" src="settings.js"></script>
+</body>
+</html>
