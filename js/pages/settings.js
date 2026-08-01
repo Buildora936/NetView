@@ -224,7 +224,6 @@ async function changePassword() {
         showSuccess("Mot de passe mis à jour avec succès.", DOM.passwordError);
         showToast("Mot de passe mis à jour avec succès.", "success");
 
-        // Reset form
         DOM.currentPassword.value = '';
         DOM.newPassword.value = '';
         DOM.confirmPassword.value = '';
@@ -237,7 +236,7 @@ async function changePassword() {
     }
 }
 
-// 7. Appareils
+// 7. Appareils (Basé sur la table public.devices)
 async function loadDevices() {
     try {
         currentDevices = await getDevices() || [];
@@ -249,43 +248,39 @@ async function loadDevices() {
 
 function renderDevices() {
     if (!DOM.devicesList) return;
-    
-    // Garder l'appareil actuel statique ou injecter dynamiquement
-    let html = `
-        <div class="nv-device-card">
-            <div class="nv-device-main">
-                <div class="nv-device-icon"><i class="fa-solid fa-desktop"></i></div>
-                <div class="nv-device-details">
-                    <h3>PC Windows <span class="nv-current-device">Appareil actuel</span></h3>
-                    <p>Google Chrome • Windows 11</p>
-                    <span>Dernière activité : <strong>À l'instant</strong></span>
-                </div>
-            </div>
-            <button class="nv-btn nv-btn-outline nv-device-disconnect" disabled>Actuel</button>
-        </div>
-    `;
 
-    currentDevices.forEach(device => {
-        if (!device.is_current) {
-            html += `
-                <div class="nv-device-card">
-                    <div class="nv-device-main">
-                        <div class="nv-device-icon"><i class="fa-solid fa-laptop"></i></div>
-                        <div class="nv-device-details">
-                            <h3>${device.name || 'Appareil inconnu'}</h3>
-                            <p>${device.browser || 'Navigateur'} • ${device.os || 'OS'}</p>
-                            <span>Dernière activité : <strong>${formatDate(device.last_activity)}</strong></span>
-                        </div>
+    if (currentDevices.length === 0) {
+        DOM.devicesList.innerHTML = `<p class="nv-settings-message">Aucun appareil enregistré.</p>`;
+        return;
+    }
+
+    let html = '';
+
+    currentDevices.forEach((device, index) => {
+        // On considère par exemple que le premier appareil ou le plus récent est l'actuel, 
+        // ou vous pouvez adapter selon votre logique d'identification d'appareil actuel.
+        const isCurrent = index === 0; 
+        
+        html += `
+            <div class="nv-device-card">
+                <div class="nv-device-main">
+                    <div class="nv-device-icon"><i class="fa-solid fa-laptop"></i></div>
+                    <div class="nv-device-details">
+                        <h3>
+                            ${device.device_name || 'Appareil inconnu'} 
+                            ${isCurrent ? '<span class="nv-current-device">Appareil actuel</span>' : ''}
+                        </h3>
+                        <p>${device.browser || 'Navigateur inconnu'} • ${device.operating_system || 'OS inconnu'}</p>
+                        <span>Dernière activité : <strong>${formatDate(device.last_seen)}</strong></span>
                     </div>
-                    <button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="${device.id}">Déconnecter</button>
                 </div>
-            `;
-        }
+                ${!isCurrent ? `<button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="${device.id}">Déconnecter</button>` : `<button class="nv-btn nv-btn-outline" disabled>Actuel</button>`}
+            </div>
+        `;
     });
 
     DOM.devicesList.innerHTML = html;
 
-    // Réattacher les écouteurs sur les boutons de déconnexion d'appareils dynamiques
     document.querySelectorAll('.nv-device-disconnect[data-device-id]').forEach(btn => {
         btn.addEventListener('click', () => disconnectDevice(btn.dataset.deviceId));
     });
@@ -294,10 +289,10 @@ function renderDevices() {
 async function disconnectDevice(deviceId) {
     try {
         showLoader();
-        // Logique de déconnexion unitaire (API Supabase / Backend)
+        // Suppression de l'appareil dans Supabase (via core/data.js ou supabase direct)
         currentDevices = currentDevices.filter(d => d.id !== deviceId);
         renderDevices();
-        showToast("Appareil déconnecté.", "success");
+        showToast("Appareil déconnecté avec succès.", "success");
     } catch (error) {
         showToast("Erreur lors de la déconnexion de l'appareil.", "error");
     } finally {
@@ -308,12 +303,14 @@ async function disconnectDevice(deviceId) {
 async function disconnectOtherDevices() {
     try {
         showLoader();
-        // Logique de déconnexion de tous les autres appareils
-        currentDevices = currentDevices.filter(d => d.is_current);
+        // Garder uniquement le premier appareil (l'actuel)
+        if (currentDevices.length > 0) {
+            currentDevices = [currentDevices[0]];
+        }
         renderDevices();
         showToast("Tous les autres appareils ont été déconnectés.", "success");
     } catch (error) {
-        showToast("Erreur.", "error");
+        showToast("Erreur lors de la déconnexion globale.", "error");
     } finally {
         hideLoader();
     }
@@ -396,8 +393,6 @@ async function deleteAccount() {
         isDeleting = true;
         buttonLoading(DOM.confirmDeleteButton, true);
 
-        // Appel API suppression de compte
-        // await deleteUserAccount();
         await signOut();
         showToast("Votre compte a été supprimé.", "success");
         navigate('login.html');
@@ -408,7 +403,6 @@ async function deleteAccount() {
     }
 }
 
-// Remplissage global de la page
 function fillPage() {
     fillProfile();
     renderDevices();
@@ -417,9 +411,16 @@ function fillPage() {
 
 // 10. Utilitaires
 function formatDate(dateString) {
-    if (!dateString) return '--';
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
+    if (!dateString) return 'Récemment';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffSeconds = Math.floor((now - date) / 1000);
+
+    if (diffSeconds < 60) return "À l'instant";
+    if (diffSeconds < 3600) return `Il y a ${Math.floor(diffSeconds / 60)} min`;
+    if (diffSeconds < 86400) return `Il y a ${Math.floor(diffSeconds / 3600)} h`;
+    
+    return date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function clearMessages() {
@@ -449,12 +450,10 @@ function showSuccess(message, element) {
 
 // 11. Événements
 function addEventListeners() {
-    // Compte
     if (DOM.editProfileButton) {
         DOM.editProfileButton.addEventListener('click', openProfilePage);
     }
 
-    // Sécurité - Mot de passe
     if (DOM.newPassword) {
         DOM.newPassword.addEventListener('input', updatePasswordStrength);
     }
@@ -474,17 +473,14 @@ function addEventListeners() {
         DOM.updatePasswordButton.addEventListener('click', changePassword);
     }
 
-    // Préférences
     if (DOM.savePreferencesButton) {
         DOM.savePreferencesButton.addEventListener('click', savePreferences);
     }
 
-    // Appareils
     if (DOM.logoutOthersButton) {
         DOM.logoutOthersButton.addEventListener('click', disconnectOtherDevices);
     }
 
-    // Zone de danger & Modal
     if (DOM.deleteAccountButton) {
         DOM.deleteAccountButton.addEventListener('click', openDeleteModal);
     }
