@@ -1,34 +1,340 @@
-/* ==========================================
-Settings Page Styles
+/* ==================================================
+SETTINGS PAGE
+================================================== */
+
+.nv-settings-background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.nv-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+}
+
+.nv-orb.one {
+    width: 350px;
+    height: 350px;
+    background: var(--nv-primary, #2563eb);
+    top: -100px;
+    left: -100px;
+}
+
+.nv-orb.two {
+    width: 400px;
+    height: 400px;
+    background: #60a5fa;
+    bottom: -150px;
+    right: -100px;
+}
+
+.nv-orb.three {
+    width: 300px;
+    height: 300px;
+    background: #1d4ed8;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nv-settings {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2.5rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.nv-settings-card {
+    width: min(100%, 720px);
+    padding: 2.75rem;
+    border-radius: 32px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(30px);
+    background: rgba(15, 23, 42, 0.70);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+    animation: fadeUp .8s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.nv-settings-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+        135deg,
+        rgba(37, 99, 235, 0.7),
+        rgba(96, 165, 250, 0.15),
+        transparent
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* ==================================================
+Header
 ========================================== */
 
-/* Ajustements spécifiques pour la disposition des paramètres si nécessaire */
-.profile-card {
+.nv-settings-header {
+    text-align: center;
+    position: relative;
+}
+
+.nv-back-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--nv-text-primary, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+.nv-back-button:hover {
+    background: rgba(37, 99, 235, 0.2);
+    border-color: var(--nv-primary, #2563eb);
+}
+
+.nv-settings-logo {
+    width: 140px;
+    margin: 0 auto 1.25rem auto;
+    display: block;
+    height: auto;
+}
+
+.nv-settings-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-settings-header p {
+    color: var(--nv-text-secondary, #94a3b8);
+    margin-top: .4rem;
+    font-size: .95rem;
+}
+
+/* ==================================================
+Sections & Blocks
+========================================== */
+
+.nv-settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nv-settings-section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.nv-section-title,
+.nv-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nv-section-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    color: var(--nv-primary, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.nv-section-header h2,
+.nv-section-title h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-section-header p {
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary, #94a3b8);
+    margin-top: 0.2rem;
+}
+
+/* ==================================================
+Compte Info Box
+========================================== */
+
+.nv-settings-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: rgba(37, 99, 235, 0.04);
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    border-radius: 14px;
+}
+
+.nv-settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.nv-settings-label {
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-settings-value {
+    color: var(--nv-text-primary, #fff);
+    font-weight: 500;
+}
+
+/* ==================================================
+Formulaires & Inputs
+========================================== */
+
+.nv-form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.nv-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nv-input,
+.nv-select {
     width: 100%;
-    max-width: 600px;
-    margin: 2rem auto;
-    background: var(--nv-surface, #111827);
-    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.08));
-    border-radius: var(--nv-radius-lg, 16px);
-    padding: 2.5rem;
-    box-shadow: var(--nv-shadow, 0 10px 25px -5px rgba(0, 0, 0, 0.3));
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    color: var(--nv-text-primary, #fff);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all .3s ease;
+    outline: none;
 }
 
-/* Bouton d'accès rapide au profil */
-#quickProfileBtn {
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+.nv-input-wrapper .nv-input {
+    padding-right: 3rem;
 }
 
-#quickProfileBtn:hover {
-    transform: scale(1.05);
+.nv-select {
+    appearance: none;
+    cursor: pointer;
 }
 
-/* Style des switches (basculeurs de préférences) */
+.nv-input:focus,
+.nv-select:focus {
+    border-color: var(--nv-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    transform: translateY(-1px);
+}
+
+.nv-password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--nv-text-secondary, #94a3b8);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color .2s;
+}
+
+.nv-password-toggle:hover {
+    color: #fff;
+}
+
+/* Indicateur de force du mot de passe */
+.nv-password-strength {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.25rem;
+}
+
+.nv-password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width .3s ease, background-color .3s ease;
+}
+
+.nv-password-strength-text,
+.nv-password-match {
+    font-size: 0.8rem;
+    color: var(--nv-text-muted, #64748b);
+}
+
+/* ==================================================
+Toggles (Interrupteurs)
+========================================== */
+
+.nv-settings-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.nv-settings-toggle h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-settings-toggle p {
+    font-size: 0.8rem;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
 .nv-switch {
     position: relative;
     display: inline-block;
     width: 48px;
     height: 26px;
+    flex-shrink: 0;
 }
 
 .nv-switch input {
@@ -39,15 +345,12 @@ Settings Page Styles
 
 .nv-slider {
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--nv-surface-secondary, #1F2937);
-    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.08));
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 26px;
     transition: .3s;
-    border-radius: 34px;
+    cursor: pointer;
 }
 
 .nv-slider:before {
@@ -58,18 +361,411 @@ Settings Page Styles
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: .3s;
     border-radius: 50%;
+    transition: .3s;
 }
 
 .nv-switch input:checked + .nv-slider {
-    background-color: var(--nv-primary, #2563EB);
-}
-
-.nv-switch input:focus + .nv-slider {
-    box-shadow: 0 0 1px var(--nv-primary, #2563EB);
+    background-color: var(--nv-primary, #2563eb);
+    border-color: var(--nv-primary, #2563eb);
 }
 
 .nv-switch input:checked + .nv-slider:before {
     transform: translateX(22px);
+}
+
+/* ==================================================
+Appareils connectés & Cards désactivées
+========================================== */
+
+.nv-devices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nv-device-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    gap: 1rem;
+}
+
+.nv-device-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nv-device-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--nv-text-primary, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nv-device-details h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--nv-text-primary, #fff);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nv-current-device {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    background: rgba(37, 99, 235, 0.2);
+    color: #60a5fa;
+    border-radius: 20px;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.nv-device-details p,
+.nv-device-details span {
+    font-size: 0.8rem;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-settings-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.nv-settings-card-disabled {
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    opacity: 0.7;
+}
+
+.nv-settings-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--nv-text-secondary, #94a3b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nv-settings-card-content h3 {
+    font-size: 0.95rem;
+    color: var(--nv-text-primary, #fff);
+    font-weight: 500;
+}
+
+.nv-settings-card-content p {
+    font-size: 0.8rem;
+    color: var(--nv-text-secondary, #94a3b8);
+    margin-top: 0.2rem;
+}
+
+.nv-coming-soon {
+    font-size: 0.75rem;
+    color: var(--nv-text-muted, #64748b);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ==================================================
+Zone de danger
+========================================== */
+
+.nv-danger-section {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.nv-danger-icon {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+    color: #ef4444 !important;
+}
+
+.nv-danger-card {
+    padding: 1.5rem;
+    background: rgba(239, 68, 68, 0.03);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nv-danger-card h3 {
+    font-size: 1rem;
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-danger-card > p {
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-danger-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-danger-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nv-danger-list i {
+    color: #ef4444;
+    font-size: 0.8rem;
+}
+
+.nv-danger-warning {
+    font-size: 0.8rem;
+    color: #ef4444;
+    font-weight: 500;
+}
+
+/* ==================================================
+Boutons Standards & Spécifiques
+========================================== */
+
+.nv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .25s ease;
+    text-decoration: none;
+    width: 100%;
+}
+
+.nv-btn-gradient {
+    background: linear-gradient(135deg, var(--nv-primary, #2563eb), #1d4ed8);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+}
+
+.nv-btn-gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+}
+
+.nv-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nv-btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--nv-text-primary, #fff);
+    width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.nv-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nv-btn-danger {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+}
+
+.nv-btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.nv-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ==================================================
+Modales & Loader (Partagés)
+========================================== */
+
+.nv-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    z-index: 5000;
+}
+
+.nv-modal.show {
+    display: flex;
+}
+
+.nv-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+}
+
+.nv-modal-content {
+    position: relative;
+    width: min(100%, 460px);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: fadeUp .3s ease;
+    text-align: center;
+}
+
+.nv-danger-modal-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin: 0 auto;
+}
+
+.nv-modal-content h2 {
+    font-size: 1.25rem;
+    color: var(--nv-text-primary, #fff);
+}
+
+.nv-modal-content p {
+    font-size: 0.9rem;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+.nv-warning-box {
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.nv-warning-box h3 {
+    color: #ef4444;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    margin-top: 0.25rem;
+}
+
+.nv-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.nv-page-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 9999;
+}
+
+.nv-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(37, 99, 235, 0.2);
+    border-top-color: var(--nv-primary, #2563eb);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.nv-loader-text {
+    color: var(--nv-text-secondary, #94a3b8);
+    font-size: 0.9rem;
+}
+
+/* ==================================================
+Animations & Responsive
+========================================== */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .nv-settings {
+        padding: 1rem;
+    }
+
+    .nv-settings-card {
+        padding: 2rem 1.5rem;
+        border-radius: 24px;
+    }
+
+    .nv-settings-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .nv-device-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nv-device-card .nv-btn {
+        width: 100%;
+    }
 }
