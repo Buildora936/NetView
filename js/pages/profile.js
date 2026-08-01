@@ -255,15 +255,16 @@ countryModal.addEventListener("click", (e) => {
     }
 });
 
-
 // ==========================================
 // Storage Upload Helpers
 // ==========================================
 
-async function uploadFileToStorage(userId, file, bucketName, folderName) {
+async function uploadFileToStorage(userId, file, bucketName) {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}-${Date.now()}.${fileExt}`;
-    const filePath = `${folderName}/${fileName}`;
+    // Crée un chemin du type : userId/avatar-123456789.png ou userId/banner.png
+    // Pour un nom fixe comme banner.png à chaque fois : `${userId}/banner.${fileExt}`
+    const fileName = `banner_${Date.now()}.${fileExt}`;
+    const filePath = `${userId}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
         .from(bucketName)
