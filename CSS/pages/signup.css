@@ -383,38 +383,6 @@ Account Preview & Benefits Cards
     color: #10b981;
 }
 
-/* ==================================================
-Checkboxes & Links
-================================================== */
-
-.nv-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--nv-text-secondary);
-    font-size: 0.9rem;
-    line-height: 4;
-}
-
-.nv-checkbox input {
-    margin-top: 0.2rem;
-    width: 16px;
-    height: 16px;
-    accent-color: var(--nv-primary);
-}
-
-.nv-checkbox a {
-    color: var(--nv-primary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.nv-checkbox a:hover {
-    color: var(--nv-primary-light);
-    text-decoration: underline;
-}
 
 .nv-signup-button {
     width: 100%;
