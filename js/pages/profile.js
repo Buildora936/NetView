@@ -107,13 +107,14 @@ async function initProfile() {
 
         currentUser = session.user;
 
-        if (currentUser && currentUser.email) {
-            emailAddress.textContent = currentUser.email;
-            const isConfirmed = !!currentUser.email_confirmed_at;
-            verifiedBadge.textContent = isConfirmed ? "Vérifié" : "Non vérifié";
-            verifiedBadge.style.color = isConfirmed ? "#22c55e" : "#ef4444";
+        if (profile) {
+            // --- GESTION DU BADGE KYC (verified) ---
+            // On vérifie le champ 'verified' de votre table profiles (boolean: true/false)
+            const isKycVerified = !!profile.verified; 
+            verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
+            verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
         }
-
+            
         // Fetch user profile from database table 'profiles'
         const { data: profile, error: profileError } = await supabase
             .from("profiles")
