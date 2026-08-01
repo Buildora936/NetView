@@ -257,8 +257,6 @@ function renderDevices() {
     let html = '';
 
     currentDevices.forEach((device, index) => {
-        // On considère par exemple que le premier appareil ou le plus récent est l'actuel, 
-        // ou vous pouvez adapter selon votre logique d'identification d'appareil actuel.
         const isCurrent = index === 0; 
         
         html += `
@@ -289,7 +287,6 @@ function renderDevices() {
 async function disconnectDevice(deviceId) {
     try {
         showLoader();
-        // Suppression de l'appareil dans Supabase (via core/data.js ou supabase direct)
         currentDevices = currentDevices.filter(d => d.id !== deviceId);
         renderDevices();
         showToast("Appareil déconnecté avec succès.", "success");
@@ -303,7 +300,6 @@ async function disconnectDevice(deviceId) {
 async function disconnectOtherDevices() {
     try {
         showLoader();
-        // Garder uniquement le premier appareil (l'actuel)
         if (currentDevices.length > 0) {
             currentDevices = [currentDevices[0]];
         }
@@ -499,8 +495,8 @@ function addEventListeners() {
     }
 }
 
-// 13. Nettoyage et Lancement
-window.addEventListener('DOMContentLoaded', init);
+// 13. Lancement direct et sécurisé pour un module ES6
+init();
 
 window.addEventListener('beforeunload', () => {
     closeDeleteModal();
