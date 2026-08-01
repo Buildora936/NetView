@@ -383,6 +383,38 @@ Account Preview & Benefits Cards
     color: #10b981;
 }
 
+/* ==================================================
+Checkboxes & Links
+================================================== */
+
+.nv-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    cursor: pointer;
+    user-select: none;
+    color: var(--nv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 4;
+}
+
+.nv-checkbox input {
+    margin-top: 0.2rem;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--nv-primary);
+}
+
+.nv-checkbox a {
+    color: var(--nv-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nv-checkbox a:hover {
+    color: var(--nv-primary-light);
+    text-decoration: underline;
+}
 
 .nv-signup-button {
     width: 100%;
@@ -493,94 +525,7 @@ Responsive
         width: 240px;
     }
 }
-/* ==================================================
-Custom Checkbox & Mark (Corrigé pour alignement droit)
-================================================== */
 
-.nv-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--nv-text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    position: relative;
-    text-align: left; /* Force un texte aligné à gauche */
-}
-
-/* Masquer le checkbox natif */
-.nv-checkbox input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-/* Le carré personnalisé de la checkbox */
-.nv-checkbox-mark {
-    position: relative;
-    top: 3px; /* Ajustement précis pour aligner avec la 1ère ligne */
-    flex-shrink: 0; /* Empêche le carré de se déformer */
-    width: 20px;
-    height: 20px;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    transition: all 0.25s ease;
-}
-
-/* Effet au survol */
-.nv-checkbox:hover .nv-checkbox-mark {
-    border-color: var(--nv-primary);
-    background: rgba(37, 99, 235, 0.1);
-}
-
-/* État coché (Checked) */
-.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark {
-    background: var(--nv-primary);
-    border-color: var(--nv-primary);
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
-}
-
-/* Dessiner la petite coche */
-.nv-checkbox-mark::after {
-    content: "";
-    position: absolute;
-    display: none;
-    left: 6px;
-    top: 2px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark::after {
-    display: block;
-}
-
-/* Style du texte conteneur pour qu'il prenne le reste de l'espace proprement */
-.nv-checkbox > span:last-child {
-    flex: 1;
-    display: inline-block;
-}
-
-/* Style des liens à l'intérieur */
-.nv-checkbox a {
-    color: var(--nv-primary);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-}
-
-.nv-checkbox a:hover {
-    color: var(--nv-primary-light);
-    text-decoration: underline;
-}
 /* ==========================================
 Email Verification Modal
 ========================================== */
