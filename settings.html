@@ -12,18 +12,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <!-- ==========================================
-    Core CSS
-    ========================================== -->
+    <!-- Core CSS -->
     <link rel="stylesheet" href="CSS/core/variables.css">
     <link rel="stylesheet" href="CSS/core/reset.css">
     <link rel="stylesheet" href="CSS/core/typography.css">
     <link rel="stylesheet" href="CSS/core/animations.css">
     <link rel="stylesheet" href="CSS/core/utilities.css">
 
-    <!-- ==========================================
-    Components
-    ========================================== -->
+    <!-- Components -->
     <link rel="stylesheet" href="CSS/components/buttons.css">
     <link rel="stylesheet" href="CSS/components/forms.css">
     <link rel="stylesheet" href="CSS/components/cards.css">
@@ -31,9 +27,7 @@
     <link rel="stylesheet" href="CSS/components/toast.css">
     <link rel="stylesheet" href="CSS/components/loader.css">
 
-    <!-- ==========================================
-    Page CSS
-    ========================================== -->
+    <!-- Page CSS -->
     <link rel="stylesheet" href="CSS/pages/settings.css">
 </head>
 <body>
@@ -47,9 +41,7 @@
     <main class="nv-settings">
         <section class="nv-settings-card">
 
-            <!-- ==========================================
-            Header
-            ========================================== -->
+            <!-- Header -->
             <div class="nv-settings-header">
                 <a href="index.html" class="nv-back-button" aria-label="Retour">
                     <i class="fa-solid fa-arrow-left"></i>
@@ -59,44 +51,38 @@
                 <p>Gérez votre compte, votre sécurité et vos préférences.</p>
             </div>
 
-            <!-- ==========================================
-            1. Compte
-            ========================================== -->
+            <!-- 1. Compte -->
             <section class="nv-settings-section">
                 <div class="nv-section-title">
                     <i class="fa-solid fa-user-gear"></i>
                     <h2>Compte</h2>
                 </div>
                 <div class="nv-settings-info">
-    <div class="nv-settings-item">
-        <span class="nv-settings-label">Adresse e-mail</span>
-        <span id="currentEmail" class="nv-settings-value">--</span>
-    </div>
-    <div class="nv-settings-item">
-        <span class="nv-settings-label">Nom affiché</span>
-        <span id="displayName" class="nv-settings-value">--</span>
-    </div>
-    <div class="nv-settings-item">
-        <span class="nv-settings-label">Nom d'utilisateur</span>
-        <span id="username" class="nv-settings-value">--</span>
-    </div>
-    <div class="nv-settings-item">
-        <span class="nv-settings-label">Type de compte</span>
-        <span id="accountType" class="nv-settings-value">--</span>
-    </div>
-    <div class="nv-settings-item">
-        <span class="nv-settings-label">Compte créé le</span>
-        <span id="createdAt" class="nv-settings-value">--</span>
-    </div>
-</div>
-                
+                    <div class="nv-settings-item">
+                        <span class="nv-settings-label">Adresse e-mail</span>
+                        <span id="currentEmail" class="nv-settings-value">--</span>
+                    </div>
+                    <div class="nv-settings-item">
+                        <span class="nv-settings-label">Nom affiché</span>
+                        <span id="displayName" class="nv-settings-value">--</span>
+                    </div>
+                    <div class="nv-settings-item">
+                        <span class="nv-settings-label">Nom d'utilisateur</span>
+                        <span id="username" class="nv-settings-value">--</span>
+                    </div>
+                    <div class="nv-settings-item">
+                        <span class="nv-settings-label">Type de compte</span>
+                        <span id="accountType" class="nv-settings-value">--</span>
+                    </div>
+                    <div class="nv-settings-item">
+                        <span class="nv-settings-label">Compte créé le</span>
+                        <span id="createdAt" class="nv-settings-value">--</span>
+                    </div>
                 </div>
-                <a href="profile.html" class="nv-btn nv-btn-gradient">Modifier le profil</a>
+                <a href="profile.html" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">Modifier le profil</a>
             </section>
 
-            <!-- ==========================================
-            2. Sécurité
-            ========================================== -->
+            <!-- 2. Sécurité -->
             <section class="nv-settings-section">
                 <div class="nv-section-header">
                     <div class="nv-section-icon">
@@ -143,7 +129,7 @@
                     <div id="passwordMatch" class="nv-password-match"></div>
                 </div>
 
-                <div id="passwordError" class="error"></div>
+                <div id="passwordError" class="error" style="margin-bottom: 1rem;"></div>
 
                 <button id="updatePasswordButton" type="button" class="nv-btn nv-btn-gradient">
                     <i class="fa-solid fa-key"></i>
@@ -151,9 +137,7 @@
                 </button>
             </section>
 
-            <!-- ==========================================
-            3. Appareils connectés
-            ========================================== -->
+            <!-- 3. Appareils connectés -->
             <section class="nv-settings-section">
                 <div class="nv-section-header">
                     <div class="nv-section-icon">
@@ -165,21 +149,12 @@
                     </div>
                 </div>
 
+                <!-- Conteneur propre pour recevoir les données dynamiques de Supabase -->
                 <div id="devicesList" class="nv-devices-list">
-                    <div class="nv-device-card">
-                        <div class="nv-device-main">
-                            <div class="nv-device-icon">
-                                <i class="fa-solid fa-desktop"></i>
-                                </div>
-                               <div id="devicesList" class="nv-devices-list">
-    <!-- Les vrais appareils de Supabase seront injectés ici par JavaScript -->
-                            </div>
-                        </div>
-                        <button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="">Déconnecter</button>
-                    </div>
+                    <!-- Injecté dynamiquement par JavaScript -->
                 </div>
 
-                <div class="nv-device-actions">
+                <div class="nv-device-actions" style="margin-top: 1rem;">
                     <button id="logoutOthersButton" type="button" class="nv-btn nv-btn-secondary">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Déconnecter tous les autres appareils</span>
@@ -189,9 +164,7 @@
                 <div id="devicesMessage" class="nv-settings-message"></div>
             </section>
 
-            <!-- ==========================================
-            4. Préférences
-            ========================================== -->
+            <!-- 4. Préférences -->
             <section class="nv-settings-section">
                 <div class="nv-section-header">
                     <div class="nv-section-icon">
@@ -247,15 +220,13 @@
 
                 <div id="preferencesMessage" class="nv-settings-message"></div>
 
-                <button id="savePreferencesButton" type="button" class="nv-btn nv-btn-gradient">
+                <button id="savePreferencesButton" type="button" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">
                     <i class="fa-solid fa-floppy-disk"></i>
                     <span>Enregistrer les préférences</span>
                 </button>
             </section>
 
-            <!-- ==========================================
-            5. Données du compte
-            ========================================== -->
+            <!-- 5. Données du compte -->
             <section class="nv-settings-section">
                 <div class="nv-section-header">
                     <div class="nv-section-icon">
@@ -292,9 +263,7 @@
                 </div>
             </section>
 
-            <!-- ==========================================
-            6. Zone de danger
-            ========================================== -->
+            <!-- 6. Zone de danger -->
             <section class="nv-settings-section nv-danger-section">
                 <div class="nv-section-header">
                     <div class="nv-section-icon nv-danger-icon">
@@ -330,17 +299,13 @@
         </section>
     </main>
 
-    <!-- ==========================================
-    Loader Global
-    ========================================== -->
+    <!-- Loader Global -->
     <div id="pageLoader" class="nv-page-loader" style="display:none;">
         <div class="nv-spinner nv-spinner-lg"></div>
         <div class="nv-loader-text">Veuillez patienter...</div>
     </div>
 
-    <!-- ==========================================
-    Modal de suppression de compte
-    ========================================== -->
+    <!-- Modal de suppression de compte -->
     <div id="deleteAccountModal" class="nv-modal" style="display:none;">
         <div class="nv-modal-overlay"></div>
         <div class="nv-modal-content">
@@ -370,6 +335,7 @@
         </div>
     </div>
 
+    <!-- Import JavaScript avec le bon chemin et le module -->
     <script type="module" src="js/pages/settings.js"></script>
 </body>
 </html>
