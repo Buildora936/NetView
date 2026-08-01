@@ -112,16 +112,34 @@ Settings Container
 
 
 <!-- ==========================================
-Logo
+Logo & Quick Profile Access Button
 ========================================== -->
 
-<div class="profile-logo">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div class="profile-logo" style="margin-bottom: 0;">
+        <img
+            src="NetView.png"
+            alt="NetView"
+        >
+    </div>
 
-    <img
-        src="NetView.png"
-        alt="NetView"
+    <!-- Bouton Modifier mon profil avec avatar et icône crayon -->
+    <a 
+        href="profile.html" 
+        id="quickProfileBtn"
+        title="Modifier mon profil"
+        style="position: relative; display: inline-block; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--nv-primary, #2563EB); text-decoration: none; transition: transform 0.2s;"
     >
-
+        <img 
+            id="quickAvatarImg" 
+            src="assets/images/default-avatar.png" 
+            alt="Mon Profil" 
+            style="width: 100%; height: 100%; object-fit: cover;"
+        >
+        <span style="position: absolute; bottom: 0; right: 0; background: var(--nv-primary, #2563EB); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; border: 1px solid #111827;">
+            <i class="fa-solid fa-pen"></i>
+        </span>
+    </a>
 </div>
 
 
@@ -284,7 +302,7 @@ Danger Zone Section
     type="button"
     id="deleteAccountButton"
     class="nv-btn"
-    style="background: rgba(239, 68, 68, 0.12); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); width: 100%;"
+    style="background: rgba(239, 68, 68, 0.12); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); width: 100%; cursor: pointer;"
 >
     Supprimer mon compte
 </button>
