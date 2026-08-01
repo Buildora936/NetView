@@ -107,15 +107,11 @@ async function initProfile() {
 
         currentUser = session.user;
 
-        if (profile) {
-            // --- GESTION DU BADGE KYC (verified) ---
-            // On vérifie le champ 'verified' de votre table profiles (boolean: true/false)
-            const isKycVerified = !!profile.verified; 
-            verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
-            verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
+        if (currentUser && currentUser.email) {
+            emailAddress.textContent = currentUser.email;
         }
-            
-        // Fetch user profile from database table 'profiles'
+
+        // 1. Fetch user profile from database table 'profiles' FIRST
         const { data: profile, error: profileError } = await supabase
             .from("profiles")
             .select("*")
@@ -126,7 +122,14 @@ async function initProfile() {
             console.error(profileError);
         }
 
+        // 2. Then use 'profile' safely once it is fetched
         if (profile) {
+            // --- GESTION DU BADGE KYC (verified) ---
+            const isKycVerified = !!profile.verified; 
+            verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
+            verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
+            // ----------------------------------------
+
             usernameInput.value = profile.username || "";
             displayNameInput.value = profile.display_name || "";
             bioInput.value = profile.bio || "";
@@ -149,6 +152,10 @@ async function initProfile() {
                 companyVerifiedBadge.textContent = "Vérifiée";
                 companyVerifiedBadge.style.color = "#22c55e";
             }
+        } else {
+            // Si le profil n'existe pas encore en base, on met une valeur par défaut pour le KYC
+            verifiedBadge.textContent = "Non vérifié";
+            verifiedBadge.style.color = "#ef4444";
         }
 
     } catch (error) {
@@ -158,7 +165,6 @@ async function initProfile() {
         showPageLoader(false);
     }
 }
-
 
 // ==========================================
 // Avatar & Banner Management
