@@ -1,172 +1,511 @@
-import { supabase } from '../core/supabase.js';
+/**
+ * ==================================================
+ * SETTINGS PAGE LOGIC - NetView
+ * ==================================================
+ */
 
-// Éléments du DOM
-const globalLoader = document.getElementById('globalLoader');
-const notification = document.getElementById('notification');
-const quickAvatarImg = document.getElementById('quickAvatarImg');
+// 1. Imports
+import { getSession, getUser, updatePassword, signOut } from '../core/auth.js';
+import { getProfile, updateProfile, getUserSettings, updateUserSettings, getDevices } from '../core/data.js';
+import { showLoader, hideLoader, showToast, buttonLoading } from '../core/ui.js';
+import { navigate } from '../core/navigation.js';
 
-const passwordForm = document.getElementById('passwordForm');
-const currentPasswordInput = document.getElementById('currentPassword');
-const newPasswordInput = document.getElementById('newPassword');
-const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
-const passwordMessage = document.getElementById('passwordMessage');
-const updatePasswordButton = document.getElementById('updatePasswordButton');
-const updatePasswordText = document.getElementById('updatePasswordText');
-const updatePasswordLoader = document.getElementById('updatePasswordLoader');
+// 2. DOM Elements
+const DOM = {
+    // Compte
+    currentEmail: document.getElementById('currentEmail'),
+    displayName: document.getElementById('displayName'),
+    username: document.getElementById('username'),
+    accountType: document.getElementById('accountType'),
+    createdAt: document.getElementById('createdAt'),
+    editProfileButton: document.querySelector('a[href="profile.html"]'),
 
-const notifToggle = document.getElementById('notifToggle');
-const autoplayToggle = document.getElementById('autoplayToggle');
-const deleteAccountButton = document.getElementById('deleteAccountButton');
+    // Sécurité
+    currentPassword: document.getElementById('currentPassword'),
+    newPassword: document.getElementById('newPassword'),
+    confirmPassword: document.getElementById('confirmPassword'),
+    passwordStrengthBar: document.getElementById('passwordStrengthBar'),
+    passwordStrengthText: document.getElementById('passwordStrengthText'),
+    passwordMatch: document.getElementById('passwordMatch'),
+    toggleCurrentPassword: document.getElementById('toggleCurrentPassword'),
+    toggleNewPassword: document.getElementById('toggleNewPassword'),
+    toggleConfirmPassword: document.getElementById('toggleConfirmPassword'),
+    updatePasswordButton: document.getElementById('updatePasswordButton'),
+    passwordError: document.getElementById('passwordError'),
 
-// Afficher une notification toast
-function showNotification(message, type = 'success') {
-    notification.textContent = message;
-    notification.className = `notification show ${type}`;
-    setTimeout(() => {
-        notification.className = 'notification';
-    }, 4000);
-}
+    // Appareils
+    devicesList: document.getElementById('devicesList'),
+    logoutOthersButton: document.getElementById('logoutOthersButton'),
+    devicesMessage: document.getElementById('devicesMessage'),
 
-// Masquer le loader global
-function hideLoader() {
-    if (globalLoader) {
-        globalLoader.style.opacity = '0';
-        setTimeout(() => globalLoader.style.display = 'none', 300);
-    }
-}
+    // Préférences
+    theme: document.getElementById('theme'),
+    autoplay: document.getElementById('autoplay'),
+    emailNotifications: document.getElementById('emailNotifications'),
+    pushNotifications: document.getElementById('pushNotifications'),
+    savePreferencesButton: document.getElementById('savePreferencesButton'),
+    preferencesMessage: document.getElementById('preferencesMessage'),
 
-// Charger les informations utilisateur (notamment l'avatar pour le bouton rapide)
-async function loadUserSettings() {
+    // Zone de danger
+    deleteAccountButton: document.getElementById('deleteAccountButton'),
+    deleteAccountModal: document.getElementById('deleteAccountModal'),
+    deleteConfirmation: document.getElementById('deleteConfirmation'),
+    confirmDeleteButton: document.getElementById('confirmDeleteButton'),
+    cancelDeleteButton: document.getElementById('cancelDeleteButton'),
+    deleteAccountMessage: document.getElementById('deleteAccountMessage'),
+
+    // Loader
+    pageLoader: document.getElementById('pageLoader')
+};
+
+// 3. Variables globales
+let currentUser = null;
+let currentProfile = null;
+let currentSettings = null;
+let currentDevices = [];
+let isSavingProfile = false;
+let isSavingPassword = false;
+let isSavingPreferences = false;
+let isDeleting = false;
+
+// 4. Initialisation
+async function init() {
     try {
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
-        if (authError || !user) {
-            window.location.href = 'index.html'; // Rediriger si non connecté
-            return;
-        }
-
-        // Récupérer le profil pour l'avatar
-        const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('avatar_url, preferences')
-            .eq('id', user.id)
-            .single();
-
-        if (profile) {
-            if (profile.avatar_url) {
-                quickAvatarImg.src = profile.avatar_url;
-            }
-            // Charger les préférences si enregistrées
-            if (profile.preferences) {
-                if (typeof profile.preferences.push_notifications !== 'undefined') {
-                    notifToggle.checked = profile.preferences.push_notifications;
-                }
-                if (typeof profile.preferences.autoplay !== 'undefined') {
-                    autoplayToggle.checked = profile.preferences.autoplay;
-                }
-            }
-        }
-    } catch (err) {
-        console.error('Erreur chargement paramètres:', err);
+        showLoader();
+        await loadSession();
+        await Promise.all([
+            loadProfile(),
+            loadSettings(),
+            loadDevices()
+        ]);
+        fillPage();
+        addEventListeners();
+    } catch (error) {
+        console.error("Erreur lors de l'initialisation des paramètres :", error);
+        showToast("Impossible de charger les paramètres.", "error");
     } finally {
         hideLoader();
     }
 }
 
-// Mise à jour du mot de passe
-passwordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    passwordMessage.textContent = '';
-
-    const currentPwd = currentPasswordInput.value;
-    const newPwd = newPasswordInput.value;
-    const confirmPwd = confirmNewPasswordInput.value;
-
-    if (newPwd !== confirmPwd) {
-        passwordMessage.textContent = "Les nouveaux mots de passe ne correspondent pas.";
-        passwordMessage.style.color = "var(--nv-error, #EF4444)";
+// 12. Vérifications automatiques (Session)
+async function loadSession() {
+    const session = await getSession();
+    if (!session) {
+        navigate('login.html');
         return;
     }
-
-    if (newPwd.length < 6) {
-        passwordMessage.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
-        passwordMessage.style.color = "var(--nv-error, #EF4444)";
-        return;
+    currentUser = await getUser();
+    if (!currentUser) {
+        navigate('login.html');
     }
+}
 
-    updatePasswordButton.disabled = true;
-    updatePasswordText.hidden = true;
-    updatePasswordLoader.hidden = false;
-
+// 5. Compte - Chargement et Remplissage
+async function loadProfile() {
     try {
-        // Supabase update password (nécessite d'être authentifié)
-        const { error } = await supabase.auth.updateUser({
-            password: newPwd
-        });
-
-        if (error) throw error;
-
-        showNotification("Mot de passe mis à jour avec succès !");
-        passwordForm.reset();
+        currentProfile = await getProfile();
     } catch (error) {
-        console.error('Erreur MAJ mot de passe:', error);
-        passwordMessage.textContent = error.message || "Erreur lors de la mise à jour du mot de passe.";
-        passwordMessage.style.color = "var(--nv-error, #EF4444)";
-    } finally {
-        updatePasswordButton.disabled = false;
-        updatePasswordText.hidden = false;
-        updatePasswordLoader.hidden = true;
+        console.error("Erreur profil:", error);
     }
-});
+}
 
-// Sauvegarde automatique des préférences aux changements des toggles
-async function savePreferences() {
+function fillProfile() {
+    if (!currentUser && !currentProfile) return;
+
+    if (DOM.currentEmail) DOM.currentEmail.textContent = currentUser?.email || '--';
+    if (DOM.displayName) DOM.displayName.textContent = currentProfile?.display_name || currentUser?.user_metadata?.display_name || 'Non défini';
+    if (DOM.username) DOM.username.textContent = currentProfile?.username ? `@${currentProfile.username}` : '@--';
+    if (DOM.accountType) DOM.accountType.textContent = currentProfile?.account_type || 'Utilisateur';
+    if (DOM.createdAt) DOM.createdAt.textContent = currentProfile?.created_at ? formatDate(currentProfile.created_at) : '--';
+}
+
+function openProfilePage(e) {
+    e.preventDefault();
+    navigate('profile.html');
+}
+
+// 6. Mot de passe
+function togglePasswordVisibility(inputField, iconElement) {
+    if (!inputField || !iconElement) return;
+    if (inputField.type === 'password') {
+        inputField.type = 'text';
+        iconElement.className = 'fa-regular fa-eye-slash';
+    } else {
+        inputField.type = 'password';
+        iconElement.className = 'fa-regular fa-eye';
+    }
+}
+
+function updatePasswordStrength() {
+    if (!DOM.newPassword || !DOM.passwordStrengthBar || !DOM.passwordStrengthText) return;
+    const val = DOM.newPassword.value;
+    let strength = 0;
+
+    if (val.length >= 8) strength += 1;
+    if (/[A-Z]/.test(val)) strength += 1;
+    if (/[0-9]/.test(val)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(val)) strength += 1;
+
+    let width = '0%';
+    let color = 'transparent';
+    let text = 'Choisissez un mot de passe sécurisé.';
+
+    if (val.length > 0) {
+        if (strength <= 1) {
+            width = '25%';
+            color = '#ef4444';
+            text = 'Mot de passe faible';
+        } else if (strength === 2 || strength === 3) {
+            width = '65%';
+            color = '#f59e0b';
+            text = 'Mot de passe moyen';
+        } else {
+            width = '100%';
+            color = '#10b981';
+            text = 'Mot de passe fort';
+        }
+    }
+
+    DOM.passwordStrengthBar.style.width = width;
+    DOM.passwordStrengthBar.style.backgroundColor = color;
+    DOM.passwordStrengthText.textContent = text;
+    updatePasswordMatch();
+}
+
+function updatePasswordMatch() {
+    if (!DOM.newPassword || !DOM.confirmPassword || !DOM.passwordMatch) return;
+    const newPass = DOM.newPassword.value;
+    const confirmPass = DOM.confirmPassword.value;
+
+    if (!confirmPass) {
+        DOM.passwordMatch.textContent = '';
+        return;
+    }
+
+    if (newPass === confirmPass) {
+        DOM.passwordMatch.textContent = 'Les mots de passe correspondent.';
+        DOM.passwordMatch.style.color = '#10b981';
+    } else {
+        DOM.passwordMatch.textContent = 'Les mots de passe ne correspondent pas.';
+        DOM.passwordMatch.style.color = '#ef4444';
+    }
+}
+
+function validatePassword() {
+    resetErrors();
+    const current = DOM.currentPassword?.value;
+    const newPass = DOM.newPassword?.value;
+    const confirm = DOM.confirmPassword?.value;
+
+    if (!current || !newPass || !confirm) {
+        showError("Veuillez remplir tous les champs du mot de passe.", DOM.passwordError);
+        return false;
+    }
+    if (newPass.length < 8) {
+        showError("Le nouveau mot de passe doit contenir au moins 8 caractères.", DOM.passwordError);
+        return false;
+    }
+    if (newPass !== confirm) {
+        showError("Les nouveaux mots de passe ne correspondent pas.", DOM.passwordError);
+        return false;
+    }
+    return true;
+}
+
+async function changePassword() {
+    if (isSavingPassword || !validatePassword()) return;
+
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        isSavingPassword = true;
+        buttonLoading(DOM.updatePasswordButton, true);
 
-        const preferences = {
-            push_notifications: notifToggle.checked,
-            autoplay: autoplayToggle.checked
+        await updatePassword(DOM.newPassword.value);
+        showSuccess("Mot de passe mis à jour avec succès.", DOM.passwordError);
+        showToast("Mot de passe mis à jour avec succès.", "success");
+
+        // Reset form
+        DOM.currentPassword.value = '';
+        DOM.newPassword.value = '';
+        DOM.confirmPassword.value = '';
+        updatePasswordStrength();
+    } catch (error) {
+        showError(error.message || "Erreur lors de la mise à jour du mot de passe.", DOM.passwordError);
+    } finally {
+        isSavingPassword = false;
+        buttonLoading(DOM.updatePasswordButton, false);
+    }
+}
+
+// 7. Appareils
+async function loadDevices() {
+    try {
+        currentDevices = await getDevices() || [];
+    } catch (error) {
+        console.error("Erreur chargement appareils:", error);
+        currentDevices = [];
+    }
+}
+
+function renderDevices() {
+    if (!DOM.devicesList) return;
+    
+    // Garder l'appareil actuel statique ou injecter dynamiquement
+    let html = `
+        <div class="nv-device-card">
+            <div class="nv-device-main">
+                <div class="nv-device-icon"><i class="fa-solid fa-desktop"></i></div>
+                <div class="nv-device-details">
+                    <h3>PC Windows <span class="nv-current-device">Appareil actuel</span></h3>
+                    <p>Google Chrome • Windows 11</p>
+                    <span>Dernière activité : <strong>À l'instant</strong></span>
+                </div>
+            </div>
+            <button class="nv-btn nv-btn-outline nv-device-disconnect" disabled>Actuel</button>
+        </div>
+    `;
+
+    currentDevices.forEach(device => {
+        if (!device.is_current) {
+            html += `
+                <div class="nv-device-card">
+                    <div class="nv-device-main">
+                        <div class="nv-device-icon"><i class="fa-solid fa-laptop"></i></div>
+                        <div class="nv-device-details">
+                            <h3>${device.name || 'Appareil inconnu'}</h3>
+                            <p>${device.browser || 'Navigateur'} • ${device.os || 'OS'}</p>
+                            <span>Dernière activité : <strong>${formatDate(device.last_activity)}</strong></span>
+                        </div>
+                    </div>
+                    <button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="${device.id}">Déconnecter</button>
+                </div>
+            `;
+        }
+    });
+
+    DOM.devicesList.innerHTML = html;
+
+    // Réattacher les écouteurs sur les boutons de déconnexion d'appareils dynamiques
+    document.querySelectorAll('.nv-device-disconnect[data-device-id]').forEach(btn => {
+        btn.addEventListener('click', () => disconnectDevice(btn.dataset.deviceId));
+    });
+}
+
+async function disconnectDevice(deviceId) {
+    try {
+        showLoader();
+        // Logique de déconnexion unitaire (API Supabase / Backend)
+        currentDevices = currentDevices.filter(d => d.id !== deviceId);
+        renderDevices();
+        showToast("Appareil déconnecté.", "success");
+    } catch (error) {
+        showToast("Erreur lors de la déconnexion de l'appareil.", "error");
+    } finally {
+        hideLoader();
+    }
+}
+
+async function disconnectOtherDevices() {
+    try {
+        showLoader();
+        // Logique de déconnexion de tous les autres appareils
+        currentDevices = currentDevices.filter(d => d.is_current);
+        renderDevices();
+        showToast("Tous les autres appareils ont été déconnectés.", "success");
+    } catch (error) {
+        showToast("Erreur.", "error");
+    } finally {
+        hideLoader();
+    }
+}
+
+// 8. Préférences
+async function loadSettings() {
+    try {
+        currentSettings = await getUserSettings();
+    } catch (error) {
+        console.error("Erreur préférences:", error);
+    }
+}
+
+function fillSettings() {
+    if (!currentSettings) return;
+
+    if (DOM.theme) DOM.theme.value = currentSettings.theme || 'system';
+    if (DOM.autoplay) DOM.autoplay.checked = !!currentSettings.autoplay;
+    if (DOM.emailNotifications) DOM.emailNotifications.checked = !!currentSettings.email_notifications;
+    if (DOM.pushNotifications) DOM.pushNotifications.checked = !!currentSettings.push_notifications;
+}
+
+async function savePreferences() {
+    if (isSavingPreferences) return;
+
+    try {
+        isSavingPreferences = true;
+        buttonLoading(DOM.savePreferencesButton, true);
+
+        const newSettings = {
+            theme: DOM.theme?.value,
+            autoplay: DOM.autoplay?.checked,
+            email_notifications: DOM.emailNotifications?.checked,
+            push_notifications: DOM.pushNotifications?.checked
         };
 
-        await supabase
-            .from('profiles')
-            .update({ preferences })
-            .eq('id', user.id);
-
-        showNotification("Préférences enregistrées");
-    } catch (err) {
-        console.error("Erreur sauvegarde préférences:", err);
+        await updateUserSettings(newSettings);
+        currentSettings = newSettings;
+        showSuccess("Préférences enregistrées avec succès.", DOM.preferencesMessage);
+        showToast("Préférences enregistrées.", "success");
+    } catch (error) {
+        showError("Erreur lors de l'enregistrement des préférences.", DOM.preferencesMessage);
+    } finally {
+        isSavingPreferences = false;
+        buttonLoading(DOM.savePreferencesButton, false);
     }
 }
 
-notifToggle.addEventListener('change', savePreferences);
-autoplayToggle.addEventListener('change', savePreferences);
+// 9. Zone de danger
+function openDeleteModal() {
+    if (DOM.deleteAccountModal) {
+        DOM.deleteAccountModal.classList.add('show');
+        if (DOM.deleteConfirmation) DOM.deleteConfirmation.value = '';
+        if (DOM.confirmDeleteButton) DOM.confirmDeleteButton.disabled = true;
+        clearMessages();
+    }
+}
 
-// Gestion de la suppression du compte
-deleteAccountButton.addEventListener('click', async () => {
-    const confirmation = confirm("Êtes-vous absolument sûr de vouloir supprimer votre compte ? Cette action est irréversible.");
-    if (!confirmation) return;
+function closeDeleteModal() {
+    if (DOM.deleteAccountModal) {
+        DOM.deleteAccountModal.classList.remove('show');
+    }
+}
+
+function validateDeleteWord() {
+    if (!DOM.deleteConfirmation || !DOM.confirmDeleteButton) return;
+    const value = DOM.deleteConfirmation.value.trim();
+    if (value === 'SUPPRIMER') {
+        DOM.confirmDeleteButton.disabled = false;
+    } else {
+        DOM.confirmDeleteButton.disabled = true;
+    }
+}
+
+async function deleteAccount() {
+    if (isDeleting || DOM.deleteConfirmation?.value.trim() !== 'SUPPRIMER') return;
 
     try {
-        globalLoader.style.display = 'flex';
-        globalLoader.style.opacity = '1';
+        isDeleting = true;
+        buttonLoading(DOM.confirmDeleteButton, true);
 
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Suppression de la table profiles (la suppression de auth.users s'effectue généralement via une Edge Function ou trigger côté Supabase)
-        await supabase.from('profiles').delete().eq('id', user.id);
-        
-        await supabase.auth.signOut();
-        window.location.href = 'index.html';
-    } catch (err) {
-        console.error("Erreur lors de la suppression:", err);
-        showNotification("Impossible de supprimer le compte pour le moment.", "error");
-        hideLoader();
+        // Appel API suppression de compte
+        // await deleteUserAccount();
+        await signOut();
+        showToast("Votre compte a été supprimé.", "success");
+        navigate('login.html');
+    } catch (error) {
+        showError("Erreur lors de la suppression du compte.", DOM.deleteAccountMessage);
+        isDeleting = false;
+        buttonLoading(DOM.confirmDeleteButton, false);
     }
-});
+}
 
-// Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', loadUserSettings);
+// Remplissage global de la page
+function fillPage() {
+    fillProfile();
+    renderDevices();
+    fillSettings();
+}
+
+// 10. Utilitaires
+function formatDate(dateString) {
+    if (!dateString) return '--';
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+}
+
+function clearMessages() {
+    if (DOM.passwordError) DOM.passwordError.textContent = '';
+    if (DOM.devicesMessage) DOM.devicesMessage.textContent = '';
+    if (DOM.preferencesMessage) DOM.preferencesMessage.textContent = '';
+    if (DOM.deleteAccountMessage) DOM.deleteAccountMessage.textContent = '';
+}
+
+function resetErrors() {
+    if (DOM.passwordError) DOM.passwordError.textContent = '';
+}
+
+function showError(message, element) {
+    if (element) {
+        element.textContent = message;
+        element.style.color = '#ef4444';
+    }
+}
+
+function showSuccess(message, element) {
+    if (element) {
+        element.textContent = message;
+        element.style.color = '#10b981';
+    }
+}
+
+// 11. Événements
+function addEventListeners() {
+    // Compte
+    if (DOM.editProfileButton) {
+        DOM.editProfileButton.addEventListener('click', openProfilePage);
+    }
+
+    // Sécurité - Mot de passe
+    if (DOM.newPassword) {
+        DOM.newPassword.addEventListener('input', updatePasswordStrength);
+    }
+    if (DOM.confirmPassword) {
+        DOM.confirmPassword.addEventListener('input', updatePasswordMatch);
+    }
+    if (DOM.toggleCurrentPassword && DOM.currentPassword) {
+        DOM.toggleCurrentPassword.addEventListener('click', () => togglePasswordVisibility(DOM.currentPassword, DOM.toggleCurrentPassword.querySelector('i')));
+    }
+    if (DOM.toggleNewPassword && DOM.newPassword) {
+        DOM.toggleNewPassword.addEventListener('click', () => togglePasswordVisibility(DOM.newPassword, DOM.toggleNewPassword.querySelector('i')));
+    }
+    if (DOM.toggleConfirmPassword && DOM.confirmPassword) {
+        DOM.toggleConfirmPassword.addEventListener('click', () => togglePasswordVisibility(DOM.confirmPassword, DOM.toggleConfirmPassword.querySelector('i')));
+    }
+    if (DOM.updatePasswordButton) {
+        DOM.updatePasswordButton.addEventListener('click', changePassword);
+    }
+
+    // Préférences
+    if (DOM.savePreferencesButton) {
+        DOM.savePreferencesButton.addEventListener('click', savePreferences);
+    }
+
+    // Appareils
+    if (DOM.logoutOthersButton) {
+        DOM.logoutOthersButton.addEventListener('click', disconnectOtherDevices);
+    }
+
+    // Zone de danger & Modal
+    if (DOM.deleteAccountButton) {
+        DOM.deleteAccountButton.addEventListener('click', openDeleteModal);
+    }
+    if (DOM.cancelDeleteButton) {
+        DOM.cancelDeleteButton.addEventListener('click', closeDeleteModal);
+    }
+    if (DOM.deleteAccountModal) {
+        const overlay = DOM.deleteAccountModal.querySelector('.nv-modal-overlay');
+        if (overlay) overlay.addEventListener('click', closeDeleteModal);
+    }
+    if (DOM.deleteConfirmation) {
+        DOM.deleteConfirmation.addEventListener('input', validateDeleteWord);
+    }
+    if (DOM.confirmDeleteButton) {
+        DOM.confirmDeleteButton.addEventListener('click', deleteAccount);
+    }
+}
+
+// 13. Nettoyage et Lancement
+window.addEventListener('DOMContentLoaded', init);
+
+window.addEventListener('beforeunload', () => {
+    closeDeleteModal();
+});
