@@ -111,7 +111,7 @@ async function initProfile() {
             emailAddress.textContent = currentUser.email;
         }
 
-        // 1. Fetch user profile from database table 'profiles' FIRST
+        // Fetch profile
         const { data: profile, error: profileError } = await supabase
             .from("profiles")
             .select("*")
@@ -122,20 +122,26 @@ async function initProfile() {
             console.error(profileError);
         }
 
-        // 2. Then use 'profile' safely once it is fetched
         if (profile) {
-            // --- GESTION DU BADGE KYC (verified) ---
+            // Badge KYC
             const isKycVerified = !!profile.verified; 
             verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
             verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
-            // ----------------------------------------
 
             usernameInput.value = profile.username || "";
             displayNameInput.value = profile.display_name || "";
             bioInput.value = profile.bio || "";
             bioCounter.textContent = (profile.bio || "").length;
-            countryInput.value = profile.country || "France";
             languageSelect.value = profile.language || "fr";
+
+            // Détection du pays : Priorité au pays sauvegardé dans la BDD
+            if (profile.country) {
+                countryInput.value = profile.country;
+            } else {
+                // Sinon détection automatique par IP
+                const autoDetectedCountry = await detectUserCountry();
+                countryInput.value = autoDetectedCountry || "France";
+            }
 
             if (profile.avatar_url) {
                 avatarPreview.src = profile.avatar_url;
@@ -153,9 +159,12 @@ async function initProfile() {
                 companyVerifiedBadge.style.color = "#22c55e";
             }
         } else {
-            // Si le profil n'existe pas encore en base, on met une valeur par défaut pour le KYC
+            // Nouveau profil : Détection auto par IP ou valeur par défaut
             verifiedBadge.textContent = "Non vérifié";
             verifiedBadge.style.color = "#ef4444";
+
+            const autoDetectedCountry = await detectUserCountry();
+            countryInput.value = autoDetectedCountry || "France";
         }
 
     } catch (error) {
@@ -286,7 +295,23 @@ async function uploadFileToStorage(userId, file, bucketName) {
     return data.publicUrl;
 }
 
+// ==========================================
+// GeoIP Helper
+// ==========================================
 
+async function detectUserCountry() {
+    try {
+        const response = await fetch("https://ipapi.co/json/");
+        if (!response.ok) return null;
+        
+        const data = await response.json();
+        // data.country_name renvoie le nom du pays en anglais (ex: "Haiti", "France", "Canada")
+        return data.country_name || null;
+    } catch (error) {
+        console.warn("Impossible de détecter le pays par IP :", error);
+        return null;
+    }
+}
 // ==========================================
 // Form Submission & Save Profile
 // ==========================================
@@ -387,7 +412,6 @@ logoutButton.addEventListener("click", async () => {
         showPageLoader(false);
     }
 });
-
 
 // ==========================================
 // Run Initialization
