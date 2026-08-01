@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetView — Paramètres & Sécurité</title>
+    <title>NetView — Paramètres</title>
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,93 +26,103 @@
     <!-- Notification Flottante -->
     <div id="notification" class="nv-notification"></div>
 
-    <div class="nv-layout">
-        <!-- Sidebar / Navigation (Optionnel selon votre structure globale) -->
-
-        <!-- Contenu Principal -->
-        <main class="nv-main-content">
-            <div class="nv-container" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div class="nv-app-layout">
+        
+        <!-- Main Container -->
+        <main class="nv-main-container">
+            <div class="nv-content-wrapper" style="max-width: 768px; margin: 0 auto; padding: 2rem 1rem;">
                 
-                <!-- En-tête -->
+                <!-- Header de la page -->
                 <div class="nv-page-header" style="margin-bottom: 2rem;">
-                    <h1 style="color: #FFFFFF; font-size: 1.75rem; font-weight: 700;">Paramètres du compte</h1>
-                    <p style="color: #94A3B8; font-size: 0.95rem;">Gérez la sécurité de votre compte, vos mots de passe et vos préférences.</p>
+                    <h1 class="nv-page-title">Paramètres et Sécurité</h1>
+                    <p class="nv-page-subtitle">Gérez la sécurité de votre compte, votre mot de passe et vos préférences.</p>
                 </div>
 
-                <!-- SECTION 1 : SÉCURITÉ & MOT DE PASSE -->
-                <section class="nv-card" style="background: #192131; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
-                    <h2 style="color: #FFFFFF; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="fa-solid fa-lock" style="color: #2563EB;"></i> Mot de passe et Sécurité
-                    </h2>
+                <!-- FORMULAIRE / SECTIONS -->
+                <div class="nv-settings-sections" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-                    <form id="passwordForm" style="display: flex; flexDirection: column; gap: 1.25rem;">
-                        <div class="nv-input-group">
-                            <label for="currentPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Mot de passe actuel</label>
-                            <input type="password" id="currentPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
+                    <!-- SECTION 1 : SÉCURITÉ / MOT DE PASSE -->
+                    <div class="nv-card">
+                        <div class="nv-card-header" style="margin-bottom: 1.5rem;">
+                            <h2 style="font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; color: var(--nv-text-primary);">
+                                <i class="fa-solid fa-lock" style="color: var(--nv-primary);"></i> Mot de passe
+                            </h2>
                         </div>
 
-                        <div class="nv-input-group">
-                            <label for="newPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Nouveau mot de passe</label>
-                            <input type="password" id="newPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
-                        </div>
-
-                        <div class="nv-input-group">
-                            <label for="confirmNewPassword" style="display: block; color: #C5CEDB; font-size: 0.9rem; margin-bottom: 0.5rem;">Confirmer le nouveau mot de passe</label>
-                            <input type="password" id="confirmNewPassword" class="nv-input" placeholder="••••••••" style="width: 100%; background: #111827; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0.75rem 1rem; color: #FFFFFF;">
-                        </div>
-
-                        <div id="passwordMessage" style="font-size: 0.9rem; min-height: 20px;"></div>
-
-                        <button type="submit" id="updatePasswordButton" class="nv-btn nv-btn-primary" style="align-self: flex-start; background: #2563EB; color: #FFFFFF; border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer;">
-                            <span id="updatePasswordText">Mettre à jour le mot de passe</span>
-                            <span id="updatePasswordLoader" hidden><i class="fa-solid fa-spinner fa-spin"></i></span>
-                        </button>
-                    </form>
-                </section>
-
-                <!-- SECTION 2 : PRÉFÉRENCES -->
-                <section class="nv-card" style="background: #192131; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
-                    <h2 style="color: #FFFFFF; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="fa-solid fa-sliders" style="color: #2563EB;"></i> Préférences de l'application
-                    </h2>
-
-                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h3 style="color: #FFFFFF; font-size: 1rem; font-weight: 500;">Notifications push</h3>
-                                <p style="color: #94A3B8; font-size: 0.85rem;">Recevoir des alertes pour les abonnements et les lives.</p>
+                        <form id="passwordForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div class="nv-input-group">
+                                <label for="currentPassword" class="nv-label">Mot de passe actuel</label>
+                                <input type="password" id="currentPassword" class="nv-input" placeholder="••••••••" required>
                             </div>
-                            <label class="nv-switch">
-                                <input type="checkbox" id="notifToggle" checked>
-                                <span class="nv-slider"></span>
-                            </label>
+
+                            <div class="nv-input-group">
+                                <label for="newPassword" class="nv-label">Nouveau mot de passe</label>
+                                <input type="password" id="newPassword" class="nv-input" placeholder="••••••••" required>
+                            </div>
+
+                            <div class="nv-input-group">
+                                <label for="confirmNewPassword" class="nv-label">Confirmer le nouveau mot de passe</label>
+                                <input type="password" id="confirmNewPassword" class="nv-input" placeholder="••••••••" required>
+                            </div>
+
+                            <div id="passwordMessage" class="nv-input-message"></div>
+
+                            <button type="submit" id="updatePasswordButton" class="nv-btn nv-btn-primary">
+                                <span id="updatePasswordText">Mettre à jour le mot de passe</span>
+                                <span id="updatePasswordLoader" hidden><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- SECTION 2 : PRÉFÉRENCES -->
+                    <div class="nv-card">
+                        <div class="nv-card-header" style="margin-bottom: 1.5rem;">
+                            <h2 style="font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; color: var(--nv-text-primary);">
+                                <i class="fa-solid fa-sliders" style="color: var(--nv-primary);"></i> Préférences
+                            </h2>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h3 style="color: #FFFFFF; font-size: 1rem; font-weight: 500;">Lecture automatique</h3>
-                                <p style="color: #94A3B8; font-size: 0.85rem;">Lancer automatiquement les vidéos suivantes sur le fil.</p>
+                        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: 0.95rem; font-weight: 500; color: var(--nv-text-primary);">Notifications push</h3>
+                                    <p style="font-size: 0.85rem; color: var(--nv-text-secondary);">Recevoir des alertes sur vos abonnements et actus.</p>
+                                </div>
+                                <label class="nv-switch">
+                                    <input type="checkbox" id="notifToggle" checked>
+                                    <span class="nv-slider"></span>
+                                </label>
                             </div>
-                            <label class="nv-switch">
-                                <input type="checkbox" id="autoplayToggle" checked>
-                                <span class="nv-slider"></span>
-                            </label>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: 0.95rem; font-weight: 500; color: var(--nv-text-primary);">Lecture automatique</h3>
+                                    <p style="font-size: 0.85rem; color: var(--nv-text-secondary);">Lancer la lecture des vidéos automatiquement.</p>
+                                </div>
+                                <label class="nv-switch">
+                                    <input type="checkbox" id="autoplayToggle" checked>
+                                    <span class="nv-slider"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- SECTION 3 : ZONE DE DANGER / SUPPRESSION DU COMPTE -->
-                <section class="nv-card" style="background: #192131; border: 1px solid rgba(239,68,68,0.3); border-radius: 20px; padding: 2rem;">
-                    <h2 style="color: #EF4444; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Zone de danger
-                    </h2>
-                    <p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">
-                        La suppression de votre compte est définitive. Toutes vos données, vos chaînes, vos vidéos et votre historique seront effacés de manière irréversible.
-                    </p>
-                    <button id="deleteAccountButton" class="nv-btn" style="background: rgba(239,68,68,0.12); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; cursor: pointer;">
-                        Supprimer mon compte
-                    </button>
-                </section>
+                    <!-- SECTION 3 : ZONE DE DANGER -->
+                    <div class="nv-card" style="border-color: rgba(239, 68, 68, 0.3);">
+                        <div class="nv-card-header" style="margin-bottom: 1rem;">
+                            <h2 style="font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; color: #EF4444;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Zone de danger
+                            </h2>
+                        </div>
+                        <p style="font-size: 0.9rem; color: var(--nv-text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">
+                            La suppression de votre compte est irréversible. Toutes vos données, vos chaînes et vos contenus seront définitivement effacés.
+                        </p>
+                        <button id="deleteAccountButton" class="nv-btn" style="background: rgba(239, 68, 68, 0.12); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3);">
+                            Supprimer mon compte
+                        </button>
+                    </div>
+
+                </div>
 
             </div>
         </main>
