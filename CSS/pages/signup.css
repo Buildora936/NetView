@@ -526,7 +526,7 @@ Responsive
     }
 }
 /* ==================================================
-Custom Checkbox & Mark
+Custom Checkbox & Mark (Corrigé pour alignement droit)
 ================================================== */
 
 .nv-checkbox {
@@ -539,10 +539,10 @@ Custom Checkbox & Mark
     font-size: 0.9rem;
     line-height: 1.5;
     position: relative;
-    padding-left: 0; /* On gère l'espace via le flex gap */
+    text-align: left; /* Force un texte aligné à gauche */
 }
 
-/* Masquer le checkbox natif mais le garder accessible */
+/* Masquer le checkbox natif */
 .nv-checkbox input[type="checkbox"] {
     position: absolute;
     opacity: 0;
@@ -554,8 +554,8 @@ Custom Checkbox & Mark
 /* Le carré personnalisé de la checkbox */
 .nv-checkbox-mark {
     position: relative;
-    top: 2px; /* Petit ajustement vertical pour l'aligner avec la première ligne de texte */
-    flex-shrink: 0;
+    top: 3px; /* Ajustement précis pour aligner avec la 1ère ligne */
+    flex-shrink: 0; /* Empêche le carré de se déformer */
     width: 20px;
     height: 20px;
     background: rgba(15, 23, 42, 0.6);
@@ -577,7 +577,7 @@ Custom Checkbox & Mark
     box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
 }
 
-/* Dessiner la petite coche (Check icon) à l'intérieur */
+/* Dessiner la petite coche */
 .nv-checkbox-mark::after {
     content: "";
     position: absolute;
@@ -595,7 +595,13 @@ Custom Checkbox & Mark
     display: block;
 }
 
-/* Style des liens à l'intérieur des labels */
+/* Style du texte conteneur pour qu'il prenne le reste de l'espace proprement */
+.nv-checkbox > span:last-child {
+    flex: 1;
+    display: inline-block;
+}
+
+/* Style des liens à l'intérieur */
 .nv-checkbox a {
     color: var(--nv-primary);
     text-decoration: none;
