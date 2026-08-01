@@ -296,11 +296,22 @@ signupForm.addEventListener("submit", async (event) => {
         verificationEmail.textContent = emailVal;
         newVerificationEmail.value = emailVal;
 
-        hideLoader();
+        // 1. Réinitialiser les états des boutons
         buttonLoading(signupButton, false);
+        
+        // 2. S'assurer que le loader global disparaît
+        if (typeof hideLoader === "function") {
+            hideLoader();
+        } else if (pageLoader) {
+            pageLoader.classList.remove("show"); // ou style.display = "none" selon votre UI
+        }
 
+        // 3. Afficher la notification et FORCER l'ouverture du modal
         showNotification("Compte créé avec succès ! Vérifiez vos e-mails.");
+        
+        // On s'assure que le modal s'affiche bien en forçant le display si nécessaire
         emailVerificationModal.classList.add("show");
+        emailVerificationModal.style.display = "flex";
 
     } catch (error) {
         hideLoader();
