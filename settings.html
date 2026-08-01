@@ -1,352 +1,1236 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta 
-        name="viewport" 
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Paramètres et Sécurité - NetView
-    </title>
+<meta
+    name="description"
+    content="Gérez les paramètres de votre compte NetView.">
 
+<meta
+    name="theme-color"
+    content="#2563EB">
 
-    <!-- Font Awesome -->
+<title>
 
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    >
+Paramètres • NetView
 
+</title>
 
-    <!-- Core CSS -->
+<link
+    rel="icon"
+    type="image/png"
+    href="NetView_icone.png">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/core/variables.css"
-    >
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/core/reset.css"
-    >
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin>
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/core/typography.css"
-    >
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/core/animations.css"
-    >
+<!-- ==========================================
+Core CSS
+========================================== -->
 
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css">
 
-    <!-- Components -->
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/components/buttons.css"
-    >
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/components/forms.css"
-    >
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/components/toast.css"
-    >
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css">
 
+<!-- ==========================================
+Components
+========================================== -->
 
-    <!-- Page CSS -->
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css">
 
-    <link 
-        rel="stylesheet" 
-        href="CSS/pages/settings.css"
-    >
+<link
+    rel="stylesheet"
+    href="CSS/components/forms.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/cards.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/modal.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/toast.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css">
+
+<!-- ==========================================
+Page CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/pages/settings.css">
 
 </head>
 
-
 <body>
 
+<div class="nv-settings-background">
 
-<!-- ==========================================
-Background Animated
-========================================== -->
+<div class="nv-orb one"></div>
 
-<div class="netview-background"></div>
+<div class="nv-orb two"></div>
 
-
-
-<!-- ==========================================
-Global Loader
-========================================== -->
-
-<div 
-    id="globalLoader"
-    class="global-loader"
->
-
-    <div class="loader-circle"></div>
+<div class="nv-orb three"></div>
 
 </div>
 
+<main class="nv-settings">
 
-
-<!-- ==========================================
-Settings Container
-========================================== -->
-
-<main class="profile-page">
-
-
-<section class="profile-card">
-
-
+<section class="nv-settings-card">
 
 <!-- ==========================================
-Logo & Quick Profile Access Button
+Header
 ========================================== -->
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <div class="profile-logo" style="margin-bottom: 0;">
-        <img
-            src="NetView.png"
-            alt="NetView"
-        >
-    </div>
+<div class="nv-settings-header">
 
-    <!-- Bouton Modifier mon profil avec avatar et icône crayon -->
-    <a 
-        href="profile.html" 
-        id="quickProfileBtn"
-        title="Modifier mon profil"
-        style="position: relative; display: inline-block; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--nv-primary, #2563EB); text-decoration: none; transition: transform 0.2s;"
-    >
-        <img 
-            id="quickAvatarImg" 
-            src="assets/images/default-avatar.png" 
-            alt="Mon Profil" 
-            style="width: 100%; height: 100%; object-fit: cover;"
-        >
-        <span style="position: absolute; bottom: 0; right: 0; background: var(--nv-primary, #2563EB); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; border: 1px solid #111827;">
-            <i class="fa-solid fa-pen"></i>
-        </span>
-    </a>
-</div>
+<a
+    href="index.html"
+    class="nv-back-button"
+    aria-label="Retour">
 
+<i class="fa-solid fa-arrow-left"></i>
 
+</a>
 
-<!-- ==========================================
-Title
-========================================== -->
+<img
+    src="NetView.png"
+    alt="NetView"
+    class="nv-settings-logo">
 
 <h1>
 
-    Paramètres et Sécurité
+Paramètres
 
 </h1>
 
+<p>
 
-<p class="profile-description">
-
-    Gérez la sécurité de votre compte et vos préférences.
+Gérez votre compte, votre sécurité et vos préférences.
 
 </p>
 
-
+</div>
 
 <!-- ==========================================
-Password Form Section
+Compte
+Tables :
+profiles
+user_roles
 ========================================== -->
 
-<form 
-    id="passwordForm"
-    class="profile-form"
->
+<section class="nv-settings-section">
 
-<h2 style="font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-    <i class="fa-solid fa-lock" style="color: var(--nv-primary, #2563EB);"></i> Mot de passe
+<div class="nv-section-title">
+
+<i class="fa-solid fa-user-gear"></i>
+
+<h2>
+
+Compte
+
 </h2>
 
-<!-- Current Password -->
-<div class="form-group">
-    <label for="currentPassword">
-        Mot de passe actuel
-    </label>
-    <div class="input-container">
-        <i class="fa-solid fa-key"></i>
-        <input
-            type="password"
-            id="currentPassword"
-            name="currentPassword"
-            placeholder="••••••••"
-            required
-        >
-    </div>
 </div>
 
-<!-- New Password -->
-<div class="form-group">
-    <label for="newPassword">
-        Nouveau mot de passe
-    </label>
-    <div class="input-container">
-        <i class="fa-solid fa-lock"></i>
-        <input
-            type="password"
-            id="newPassword"
-            name="newPassword"
-            placeholder="••••••••"
-            required
-        >
-    </div>
+<div class="nv-settings-info">
+
+<div class="nv-settings-item">
+
+<span class="nv-settings-label">
+
+Adresse e-mail
+
+</span>
+
+<span
+    id="currentEmail"
+    class="nv-settings-value">
+
+Chargement...
+
+</span>
+
 </div>
 
-<!-- Confirm New Password -->
-<div class="form-group">
-    <label for="confirmNewPassword">
-        Confirmer le nouveau mot de passe
-    </label>
-    <div class="input-container">
-        <i class="fa-solid fa-lock"></i>
-        <input
-            type="password"
-            id="confirmNewPassword"
-            name="confirmNewPassword"
-            placeholder="••••••••"
-            required
-        >
-    </div>
+<div class="nv-settings-item">
+
+<span class="nv-settings-label">
+
+Nom affiché
+
+</span>
+
+<span
+    id="displayName">
+
+Chargement...
+
+</span>
+
 </div>
 
-<p id="passwordMessage" class="nv-help"></p>
+<div class="nv-settings-item">
 
-<div class="profile-buttons" style="margin-top: 1rem;">
-    <button
-        type="submit"
-        id="updatePasswordButton"
-        class="nv-btn nv-btn-primary"
-    >
-        <span id="updatePasswordText">
-            Mettre à jour le mot de passe
-        </span>
-        <span id="updatePasswordLoader" hidden>
-            Mise à jour...
-        </span>
-    </button>
+<span class="nv-settings-label">
+
+Nom d'utilisateur
+
+</span>
+
+<span
+    id="username">
+
+@...
+
+</span>
+
 </div>
 
-</form>
+<div class="nv-settings-item">
 
+<span class="nv-settings-label">
 
+Type de compte
 
+</span>
+
+<span
+    id="accountType">
+
+Utilisateur
+
+</span>
+
+</div>
+
+<div class="nv-settings-item">
+
+<span class="nv-settings-label">
+
+Compte créé le
+
+</span>
+
+<span
+    id="createdAt">
+
+--
+
+</span>
+
+</div>
+
+</div>
+
+<a
+    href="profile.html"
+    class="nv-btn nv-btn-gradient">
+
+Modifier le profil
+
+</a>
+
+</section>
 <!-- ==========================================
-Preferences Section
+2. Sécurité
+Tables : auth.users (Supabase Auth)
 ========================================== -->
 
-<div class="profile-form" style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;">
+<section class="nv-settings-section">
 
-<h2 style="font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-    <i class="fa-solid fa-sliders" style="color: var(--nv-primary, #2563EB);"></i> Préférences
+<div class="nv-section-header">
+
+<div class="nv-section-icon">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+</div>
+
+<div>
+
+<h2>
+
+Sécurité
+
 </h2>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-    <div>
-        <span style="color: #fff; display: block; font-weight: 500;">Notifications push</span>
-        <span style="color: #94A3B8; font-size: 0.85rem;">Recevoir des alertes sur vos abonnements.</span>
-    </div>
-    <label class="nv-switch">
-        <input type="checkbox" id="notifToggle" checked>
-        <span class="nv-slider"></span>
-    </label>
-</div>
+<p>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <span style="color: #fff; display: block; font-weight: 500;">Lecture automatique</span>
-        <span style="color: #94A3B8; font-size: 0.85rem;">Lancer la lecture des vidéos automatiquement.</span>
-    </div>
-    <label class="nv-switch">
-        <input type="checkbox" id="autoplayToggle" checked>
-        <span class="nv-slider"></span>
-    </label>
-</div>
+Modifiez votre mot de passe afin de protéger votre compte NetView.
 
-</div>
-
-
-
-<!-- ==========================================
-Danger Zone Section
-========================================== -->
-
-<div class="profile-form" style="margin-top: 2rem; border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 1.5rem;">
-
-<h2 style="font-size: 1.1rem; font-weight: 600; color: #EF4444; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-    <i class="fa-solid fa-triangle-exclamation"></i> Zone de danger
-</h2>
-
-<p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 1.25rem; line-height: 1.4;">
-    La suppression de votre compte est irréversible. Toutes vos données, vos chaînes et vos contenus seront définitivement effacés.
 </p>
+
+</div>
+
+</div>
+
+<div class="nv-form-group">
+
+<label
+    for="currentPassword"
+    class="nv-label">
+
+Mot de passe actuel
+
+</label>
+
+<div class="nv-input-wrapper">
+
+<input
+    id="currentPassword"
+    type="password"
+    class="nv-input"
+    autocomplete="current-password"
+    placeholder="Votre mot de passe actuel">
 
 <button
+    id="toggleCurrentPassword"
     type="button"
-    id="deleteAccountButton"
-    class="nv-btn"
-    style="background: rgba(239, 68, 68, 0.12); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); width: 100%; cursor: pointer;"
->
-    Supprimer mon compte
+    class="nv-password-toggle"
+    aria-label="Afficher le mot de passe">
+
+<i class="fa-regular fa-eye"></i>
+
 </button>
 
 </div>
 
+</div>
+
+<div class="nv-form-group">
+
+<label
+    for="newPassword"
+    class="nv-label">
+
+Nouveau mot de passe
+
+</label>
+
+<div class="nv-input-wrapper">
+
+<input
+    id="newPassword"
+    type="password"
+    class="nv-input"
+    autocomplete="new-password"
+    placeholder="Minimum 8 caractères">
+
+<button
+    id="toggleNewPassword"
+    type="button"
+    class="nv-password-toggle"
+    aria-label="Afficher le mot de passe">
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+<div class="nv-password-strength">
+
+<div
+    id="passwordStrengthBar"
+    class="nv-password-strength-bar">
+
+</div>
+
+</div>
+
+<div
+    id="passwordStrengthText"
+    class="nv-password-strength-text">
+
+Choisissez un mot de passe sécurisé.
+
+</div>
+
+</div>
+
+<div class="nv-form-group">
+
+<label
+    for="confirmPassword"
+    class="nv-label">
+
+Confirmer le nouveau mot de passe
+
+</label>
+
+<div class="nv-input-wrapper">
+
+<input
+    id="confirmPassword"
+    type="password"
+    class="nv-input"
+    autocomplete="new-password"
+    placeholder="Confirmez votre nouveau mot de passe">
+
+<button
+    id="toggleConfirmPassword"
+    type="button"
+    class="nv-password-toggle"
+    aria-label="Afficher le mot de passe">
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+<div
+    id="passwordMatch"
+    class="nv-password-match">
+
+</div>
+
+</div>
+
+<div
+    id="passwordError"
+    class="error">
+
+</div>
+
+<button
+    id="updatePasswordButton"
+    type="button"
+    class="nv-btn nv-btn-gradient">
+
+<i class="fa-solid fa-key"></i>
+
+<span>
+
+Mettre à jour le mot de passe
+
+</span>
+
+</button>
+
+</section>
+<!-- ==========================================
+3. Appareils connectés
+Table : devices
+========================================== -->
+
+<section class="nv-settings-section">
+
+<div class="nv-section-header">
+
+<div class="nv-section-icon">
+
+<i class="fa-solid fa-laptop"></i>
+
+</div>
+
+<div>
+
+<h2>
+
+Appareils connectés
+
+</h2>
+
+<p>
+
+Consultez les appareils connectés à votre compte NetView et gérez vos sessions actives.
+
+</p>
+
+</div>
+
+</div>
+
+<div
+    id="devicesList"
+    class="nv-devices-list">
+
+<!-- Appareil -->
+
+<div class="nv-device-card">
+
+<div class="nv-device-main">
+
+<div class="nv-device-icon">
+
+<i class="fa-solid fa-desktop"></i>
+
+</div>
+
+<div class="nv-device-details">
+
+<h3>
+
+PC Windows
+
+<span class="nv-current-device">
+
+Appareil actuel
+
+</span>
+
+</h3>
+
+<p>
+
+Google Chrome • Windows 11
+
+</p>
+
+<span>
+
+Dernière activité :
+<strong>
+
+À l'instant
+
+</strong>
+
+</span>
+
+</div>
+
+</div>
+
+<button
+    class="nv-btn nv-btn-outline nv-device-disconnect"
+    data-device-id="">
+
+Déconnecter
+
+</button>
+
+</div>
+
+<!-- Les autres appareils seront ajoutés par JavaScript -->
+
+</div>
+
+<div class="nv-device-actions">
+
+<button
+    id="logoutOthersButton"
+    type="button"
+    class="nv-btn nv-btn-secondary">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+<span>
+
+Déconnecter tous les autres appareils
+
+</span>
+
+</button>
+
+</div>
+
+<div
+    id="devicesMessage"
+    class="nv-settings-message">
+
+</div>
+
+</section>
+<!-- ==========================================
+4. Préférences
+Table : user_settings
+========================================== -->
+
+<section class="nv-settings-section">
+
+<div class="nv-section-header">
+
+<div class="nv-section-icon">
+
+<i class="fa-solid fa-sliders"></i>
+
+</div>
+
+<div>
+
+<h2>
+
+Préférences
+
+</h2>
+
+<p>
+
+Personnalisez votre expérience sur NetView.
+
+</p>
+
+</div>
+
+</div>
+
+<!-- Thème -->
+
+<div class="nv-form-group">
+
+<label
+    for="theme"
+    class="nv-label">
+
+Thème
+
+</label>
+
+<select
+    id="theme"
+    class="nv-select">
+
+<option value="system">
+
+Système
+
+</option>
+
+<option value="light">
+
+Clair
+
+</option>
+
+<option value="dark">
+
+Sombre
+
+</option>
+
+</select>
+
+</div>
+
+<!-- Lecture automatique -->
+
+<div class="nv-settings-toggle">
+
+<div>
+
+<h3>
+
+Lecture automatique
+
+</h3>
+
+<p>
+
+Lancer automatiquement la vidéo suivante.
+
+</p>
+
+</div>
+
+<label class="nv-switch">
+
+<input
+    id="autoplay"
+    type="checkbox">
+
+<span class="nv-slider"></span>
+
+</label>
+
+</div>
+
+<!-- Notifications e-mail -->
+
+<div class="nv-settings-toggle">
+
+<div>
+
+<h3>
+
+Notifications par e-mail
+
+</h3>
+
+<p>
+
+Recevoir les notifications importantes par e-mail.
+
+</p>
+
+</div>
+
+<label class="nv-switch">
+
+<input
+    id="emailNotifications"
+    type="checkbox">
+
+<span class="nv-slider"></span>
+
+</label>
+
+</div>
+
+<!-- Notifications Push -->
+
+<div class="nv-settings-toggle">
+
+<div>
+
+<h3>
+
+Notifications Push
+
+</h3>
+
+<p>
+
+Recevoir les notifications directement sur vos appareils.
+
+</p>
+
+</div>
+
+<label class="nv-switch">
+
+<input
+    id="pushNotifications"
+    type="checkbox">
+
+<span class="nv-slider"></span>
+
+</label>
+
+</div>
+
+<div
+    id="preferencesMessage"
+    class="nv-settings-message">
+
+</div>
+
+<button
+    id="savePreferencesButton"
+    type="button"
+    class="nv-btn nv-btn-gradient">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+<span>
+
+Enregistrer les préférences
+
+</span>
+
+</button>
+
+</section>
+<!-- ==========================================
+5. Données du compte
+========================================== -->
+
+<section class="nv-settings-section">
+
+<div class="nv-section-header">
+
+<div class="nv-section-icon">
+
+<i class="fa-solid fa-database"></i>
+
+</div>
+
+<div>
+
+<h2>
+
+Données du compte
+
+</h2>
+
+<p>
+
+Gérez vos données personnelles. Certaines fonctionnalités seront disponibles dans une prochaine mise à jour.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="nv-settings-cards">
+
+<div class="nv-settings-card-disabled">
+
+<div class="nv-settings-card-icon">
+
+<i class="fa-solid fa-download"></i>
+
+</div>
+
+<div class="nv-settings-card-content">
+
+<h3>
+
+Télécharger mes données
+
+</h3>
+
+<p>
+
+Téléchargez une copie de vos données NetView dans un format sécurisé.
+
+</p>
+
+</div>
+
+<div class="nv-coming-soon">
+
+Bientôt disponible
+
+</div>
+
+</div>
+
+<div class="nv-settings-card-disabled">
+
+<div class="nv-settings-card-icon">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+</div>
+
+<div class="nv-settings-card-content">
+
+<h3>
+
+Historique de connexion
+
+</h3>
+
+<p>
+
+Consultez l'historique des connexions et des appareils utilisés pour accéder à votre compte.
+
+</p>
+
+</div>
+
+<div class="nv-coming-soon">
+
+Bientôt disponible
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!-- ==========================================
+6. Zone de danger
+Tables :
+profiles
+user_roles
+user_settings
+devices
+auth.users
+========================================== -->
+
+<section class="nv-settings-section nv-danger-section">
+
+<div class="nv-section-header">
+
+<div class="nv-section-icon nv-danger-icon">
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+
+</div>
+
+<div>
+
+<h2>
+
+Zone de danger
+
+</h2>
+
+<p>
+
+Les actions ci-dessous sont irréversibles.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="nv-danger-card">
+
+<h3>
+
+Supprimer définitivement votre compte
+
+</h3>
+
+<p>
+
+La suppression de votre compte effacera définitivement votre profil NetView ainsi que toutes les données associées.
+
+</p>
+
+<ul class="nv-danger-list">
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Profil
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Paramètres
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Rôles
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Appareils enregistrés
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Toutes les autres données liées à votre compte via <strong>ON DELETE CASCADE</strong>
+
+</li>
+
+</ul>
+
+<p class="nv-danger-warning">
+
+Cette opération est définitive et ne pourra pas être annulée.
+
+</p>
+
+<button
+    id="deleteAccountButton"
+    type="button"
+    class="nv-btn nv-btn-danger">
+
+<i class="fa-solid fa-trash-can"></i>
+
+<span>
+
+Supprimer définitivement mon compte
+
+</span>
+
+</button>
+
+</div>
 
 </section>
 
-
-</main>
-
-
-
-
-
 <!-- ==========================================
-Notification
+Modal de suppression du compte
 ========================================== -->
 
 <div
-    id="notification"
-    class="notification"
-></div>
+    id="deleteAccountModal"
+    class="nv-modal">
 
+<div class="nv-modal-overlay"></div>
 
+<div class="nv-modal-content">
 
+<div class="nv-email-icon nv-danger-icon">
 
+<i class="fa-solid fa-trash-can"></i>
+
+</div>
+
+<h2>
+
+Supprimer le compte ?
+
+</h2>
+
+<p>
+
+Cette action supprimera définitivement votre compte NetView ainsi que toutes les données associées.
+
+</p>
+
+<p class="nv-danger-warning">
+
+Cette opération est irréversible.
+
+</p>
+
+<div class="nv-form-group">
+
+<label
+    for="deletePassword"
+    class="nv-label">
+
+Confirmez votre mot de passe
+
+</label>
+
+<div class="nv-input-wrapper">
+
+<input
+    id="deletePassword"
+    type="password"
+    class="nv-input"
+    autocomplete="current-password"
+    placeholder="Votre mot de passe">
+
+<button
+    id="toggleDeletePassword"
+    type="button"
+    class="nv-password-toggle"
+    aria-label="Afficher le mot de passe">
+
+<i class="fa-regular fa-eye"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div
+    id="deleteAccountError"
+    class="error">
+
+</div>
+
+<div class="nv-modal-actions">
+
+<button
+    id="cancelDeleteButton"
+    type="button"
+    class="nv-btn nv-btn-secondary">
+
+Annuler
+
+</button>
+
+<button
+    id="confirmDeleteButton"
+    type="button"
+    class="nv-btn nv-btn-danger">
+
+Oui, supprimer définitivement
+
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <!-- ==========================================
-Scripts
+Loader
 ========================================== -->
 
+<div
+    id="pageLoader"
+    class="nv-page-loader"
+    style="display:none;">
+
+<div class="nv-spinner nv-spinner-lg"></div>
+
+<div class="nv-loader-text">
+
+Traitement en cours...
+
+</div>
+
+</div>
+</section>
+</main>
+<!-- ==========================================
+7. Loader
+========================================== -->
+
+<div
+    id="pageLoader"
+    class="nv-page-loader"
+    style="display:none;">
+
+<div class="nv-spinner nv-spinner-lg"></div>
+
+<div class="nv-loader-text">
+
+Veuillez patienter...
+
+</div>
+
+</div>
+
+<!-- ==========================================
+8. Modal de suppression
+========================================== -->
+
+<div
+    id="deleteAccountModal"
+    class="nv-modal">
+
+<div class="nv-modal-overlay"></div>
+
+<div class="nv-modal-content">
+
+<div class="nv-danger-modal-icon">
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+
+</div>
+
+<h2>
+
+Supprimer définitivement votre compte ?
+
+</h2>
+
+<p>
+
+Cette action est <strong>irréversible</strong>. Votre compte NetView ainsi que toutes les données associées seront définitivement supprimés.
+
+</p>
+
+<div class="nv-warning-box">
+
+<p>
+
+Pour confirmer cette action, saisissez le mot :
+
+</p>
+
+<h3>
+
+SUPPRIMER
+
+</h3>
+
+</div>
+
+<div class="nv-form-group">
+
+<label
+    for="deleteConfirmation"
+    class="nv-label">
+
+Confirmation
+
+</label>
+
+<input
+    id="deleteConfirmation"
+    type="text"
+    class="nv-input"
+    autocomplete="off"
+    spellcheck="false"
+    placeholder="Tapez SUPPRIMER">
+
+</div>
+
+<div
+    id="deleteAccountMessage"
+    class="nv-settings-message">
+
+</div>
+
+<div class="nv-modal-actions">
+
+<button
+    id="cancelDeleteButton"
+    type="button"
+    class="nv-btn nv-btn-secondary">
+
+Annuler
+
+</button>
+
+<button
+    id="confirmDeleteButton"
+    type="button"
+    class="nv-btn nv-btn-danger"
+    disabled>
+
+Supprimer définitivement
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+    
 <script
     type="module"
-    src="js/core/supabase.js"
-></script>
+    src="js/pages/settings.js">
 
-<script
-    type="module"
-    src="js/pages/settings.js"
-></script>
-
-
+</script>
 </body>
-
 </html>
