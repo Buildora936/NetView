@@ -386,13 +386,83 @@ Account Preview & Benefits Cards
 /* ==================================================
 Checkboxes & Links
 ================================================== */
+/* ==================================================
+Custom Checkbox & Mark (Correction stricte horizontale)
+================================================== */
 
-
-.nv-checkbox a {
-    color: var(--nv-primary);
-    text-decoration: none;
-    font-weight: 600;
+.nv-checkbox {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    cursor: pointer;
+    user-select: none;
+    color: var(--nv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: left !important;
+    width: 100%;
 }
+
+/* Masquer le checkbox natif sans perturber le flux */
+.nv-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Le carré personnalisé */
+.nv-checkbox-mark {
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    flex: 0 0 20px !important; /* Force la taille fixe à 20px, interdit de grandir ou rétrécir */
+    width: 20px !important;
+    height: 20px !important;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    transition: all 0.25s ease;
+}
+
+/* Effet au survol */
+.nv-checkbox:hover .nv-checkbox-mark {
+    border-color: var(--nv-primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* État coché */
+.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark {
+    background: var(--nv-primary);
+    border-color: var(--nv-primary);
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+/* La coche blanche à l'intérieur */
+.nv-checkbox-mark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.nv-checkbox input[type="checkbox"]:checked ~ .nv-checkbox-mark::after {
+    display: block;
+}
+
+/* Le bloc de texte qui prend tout l'espace restant proprement à droite */
+.nv-checkbox > span:last-child {
+    display: block !important;
+    flex: 1 1 auto !important;
+    text-align: left !important;
+}
+
 
 
 .nv-signup-button {
