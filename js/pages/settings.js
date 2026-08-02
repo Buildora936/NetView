@@ -1,14 +1,41 @@
-/**
- * ==================================================
- * SETTINGS PAGE LOGIC - NetView
- * ==================================================
- */
+// ==========================================
+// NetView
+// settings.js
+// ==========================================
 
-// 1. Imports
-import { getSession, getUser, updatePassword, signOut } from '../core/auth.js';
-import { getProfile, updateProfile, getUserSettings, updateUserSettings, getDevices } from '../core/data.js';
-import { showLoader, hideLoader, showToast, buttonLoading } from '../core/ui.js';
-import { navigate } from '../core/navigation.js';
+import {
+
+    getSession,
+    getUser,
+    updatePassword,
+    signOut
+
+} from "../core/auth.js";
+
+import {
+
+    getProfile,
+    updateProfile,
+    getUserSettings,
+    updateUserSettings,
+    getDevices
+
+} from "../core/data.js";
+
+import {
+
+    showLoader,
+    hideLoader,
+    showToast,
+    buttonLoading
+
+} from "../core/ui.js";
+
+import {
+
+    navigate
+
+} from "../core/navigation.js";
 
 // 2. DOM Elements
 const DOM = {
