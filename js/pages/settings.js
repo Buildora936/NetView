@@ -14,11 +14,11 @@ import {
 
 import {
 
-    getProfile,
-    updateProfile,
-    getUserSettings,
-    updateUserSettings,
-    getDevices
+getProfile,
+updateProfile,
+getUserSettings,
+updateUserSettings,
+getDevices
 
 } from "../core/data.js";
 
