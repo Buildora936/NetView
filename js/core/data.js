@@ -194,3 +194,78 @@ export async function rpc(
     );
 
 }
+// ==========================================
+// Devices
+// ==========================================
+
+export async function deleteDevice(deviceId){
+
+    const user =
+        await getUser();
+
+
+    const { error } =
+        await supabase
+
+        .from("devices")
+
+        .delete()
+
+        .eq(
+            "id",
+            deviceId
+        )
+
+        .eq(
+            "user_id",
+            user.id
+        );
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+export async function deleteOtherDevices(currentDeviceId){
+
+    const user =
+        await getUser();
+
+
+    const { error } =
+        await supabase
+
+        .from("devices")
+
+        .delete()
+
+        .neq(
+            "id",
+            currentDeviceId
+        )
+
+        .eq(
+            "user_id",
+            user.id
+        );
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    return true;
+
+}
