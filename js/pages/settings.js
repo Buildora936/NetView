@@ -37,494 +37,435 @@ import {
 
 } from "../core/navigation.js";
 
-// 2. DOM Elements
-const DOM = {
-    // Compte
-    currentEmail: document.getElementById('currentEmail'),
-    displayName: document.getElementById('displayName'),
-    username: document.getElementById('username'),
-    accountType: document.getElementById('accountType'),
-    createdAt: document.getElementById('createdAt'),
-    editProfileButton: document.querySelector('a[href="profile.html"]'),
+// ==========================================
+// DOM
+// ==========================================
 
-    // Sécurité
-    currentPassword: document.getElementById('currentPassword'),
-    newPassword: document.getElementById('newPassword'),
-    confirmPassword: document.getElementById('confirmPassword'),
-    passwordStrengthBar: document.getElementById('passwordStrengthBar'),
-    passwordStrengthText: document.getElementById('passwordStrengthText'),
-    passwordMatch: document.getElementById('passwordMatch'),
-    toggleCurrentPassword: document.getElementById('toggleCurrentPassword'),
-    toggleNewPassword: document.getElementById('toggleNewPassword'),
-    toggleConfirmPassword: document.getElementById('toggleConfirmPassword'),
-    updatePasswordButton: document.getElementById('updatePasswordButton'),
-    passwordError: document.getElementById('passwordError'),
+// ------------------------------------------
+// Compte
+// ------------------------------------------
 
-    // Appareils
-    devicesList: document.getElementById('devicesList'),
-    logoutOthersButton: document.getElementById('logoutOthersButton'),
-    devicesMessage: document.getElementById('devicesMessage'),
+const currentEmail =
+document.getElementById("currentEmail");
 
-    // Préférences
-    theme: document.getElementById('theme'),
-    autoplay: document.getElementById('autoplay'),
-    emailNotifications: document.getElementById('emailNotifications'),
-    pushNotifications: document.getElementById('pushNotifications'),
-    savePreferencesButton: document.getElementById('savePreferencesButton'),
-    preferencesMessage: document.getElementById('preferencesMessage'),
+const displayName =
+document.getElementById("displayName");
 
-    // Zone de danger
-    deleteAccountButton: document.getElementById('deleteAccountButton'),
-    deleteAccountModal: document.getElementById('deleteAccountModal'),
-    deleteConfirmation: document.getElementById('deleteConfirmation'),
-    confirmDeleteButton: document.getElementById('confirmDeleteButton'),
-    cancelDeleteButton: document.getElementById('cancelDeleteButton'),
-    deleteAccountMessage: document.getElementById('deleteAccountMessage'),
+const username =
+document.getElementById("username");
 
-    // Loader
-    pageLoader: document.getElementById('pageLoader')
-};
+const accountType =
+document.getElementById("accountType");
 
-// 3. Variables globales
+const createdAt =
+document.getElementById("createdAt");
+
+const editProfileButton =
+document.getElementById("editProfileButton");
+
+// ------------------------------------------
+// Sécurité
+// ------------------------------------------
+
+const currentPassword =
+document.getElementById("currentPassword");
+
+const newPassword =
+document.getElementById("newPassword");
+
+const confirmPassword =
+document.getElementById("confirmPassword");
+
+const passwordStrengthBar =
+document.getElementById("passwordStrengthBar");
+
+const passwordStrengthText =
+document.getElementById("passwordStrengthText");
+
+const passwordMatch =
+document.getElementById("passwordMatch");
+
+const toggleCurrentPassword =
+document.getElementById("toggleCurrentPassword");
+
+const toggleNewPassword =
+document.getElementById("toggleNewPassword");
+
+const toggleConfirmPassword =
+document.getElementById("toggleConfirmPassword");
+
+const updatePasswordButton =
+document.getElementById("updatePasswordButton");
+
+const passwordError =
+document.getElementById("passwordError");
+
+// ------------------------------------------
+// Appareils connectés
+// ------------------------------------------
+
+const devicesList =
+document.getElementById("devicesList");
+
+const logoutOthersButton =
+document.getElementById("logoutOthersButton");
+
+const devicesMessage =
+document.getElementById("devicesMessage");
+
+// ------------------------------------------
+// Préférences
+// ------------------------------------------
+
+const theme =
+document.getElementById("theme");
+
+const autoplay =
+document.getElementById("autoplay");
+
+const emailNotifications =
+document.getElementById("emailNotifications");
+
+const pushNotifications =
+document.getElementById("pushNotifications");
+
+const savePreferencesButton =
+document.getElementById("savePreferencesButton");
+
+const preferencesMessage =
+document.getElementById("preferencesMessage");
+
+// ------------------------------------------
+// Zone de danger
+// ------------------------------------------
+
+const deleteAccountButton =
+document.getElementById("deleteAccountButton");
+
+const deleteAccountModal =
+document.getElementById("deleteAccountModal");
+
+const deleteConfirmation =
+document.getElementById("deleteConfirmation");
+
+const confirmDeleteButton =
+document.getElementById("confirmDeleteButton");
+
+const cancelDeleteButton =
+document.getElementById("cancelDeleteButton");
+
+const deleteAccountMessage =
+document.getElementById("deleteAccountMessage");
+
+// ------------------------------------------
+// Loader
+// ------------------------------------------
+
+const pageLoader =
+document.getElementById("pageLoader");
+
+// ==========================================
+// Variables globales
+// ==========================================
+
+// ------------------------------------------
+// Données utilisateur
+// ------------------------------------------
+
 let currentUser = null;
-let currentProfile = null;
-let currentSettings = null;
-let currentDevices = [];
-let isSavingProfile = false;
-let isSavingPassword = false;
-let isSavingPreferences = false;
-let isDeleting = false;
 
-// 4. Initialisation
-async function init() {
-    try {
-        showLoader();
+let currentProfile = null;
+
+let currentSettings = null;
+
+let currentDevices = [];
+
+
+// ------------------------------------------
+// États des actions
+// ------------------------------------------
+
+let isSavingProfile = false;
+
+let isSavingPassword = false;
+
+let isSavingPreferences = false;
+
+let isDeleting = false;
+// ==========================================
+// Initialisation
+// ==========================================
+
+async function init(){
+
+    showLoader();
+
+    try{
+
         await loadSession();
+
         await Promise.all([
+
             loadProfile(),
             loadSettings(),
             loadDevices()
+
         ]);
+
         fillPage();
+
         addEventListeners();
-    } catch (error) {
-        console.error("Erreur lors de l'initialisation des paramètres :", error);
-        showToast("Impossible de charger les paramètres.", "error");
-    } finally {
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+
+            "Impossible de charger les paramètres.",
+
+            "error"
+
+        );
+
+    }
+
+    finally{
+
         hideLoader();
+
     }
+
 }
 
-// 12. Vérifications automatiques (Session)
-async function loadSession() {
-    const session = await getSession();
-    if (!session) {
-        navigate('login.html');
+// ==========================================
+// Session
+// ==========================================
+
+async function loadSession(){
+
+    const session =
+        await getSession();
+
+    if(!session){
+
+        navigate("login.html");
+
         return;
+
     }
-    currentUser = await getUser();
-    if (!currentUser) {
-        navigate('login.html');
-    }
+
+    currentUser =
+        await getUser();
+
 }
 
-// 5. Compte - Chargement et Remplissage
-async function loadProfile() {
-    try {
-        currentProfile = await getProfile();
-    } catch (error) {
-        console.error("Erreur profil:", error);
-    }
+// ==========================================
+// Profil
+// ==========================================
+
+async function loadProfile(){
+
+    currentProfile =
+        await getProfile();
+
 }
 
-function fillProfile() {
-    if (!currentUser && !currentProfile) return;
+// ==========================================
+// Préférences
+// ==========================================
 
-    if (DOM.currentEmail) DOM.currentEmail.textContent = currentUser?.email || '--';
-    if (DOM.displayName) DOM.displayName.textContent = currentProfile?.display_name || currentUser?.user_metadata?.display_name || 'Non défini';
-    if (DOM.username) DOM.username.textContent = currentProfile?.username ? `@${currentProfile.username}` : '@--';
-    if (DOM.accountType) DOM.accountType.textContent = currentProfile?.account_type || 'Utilisateur';
-    if (DOM.createdAt) DOM.createdAt.textContent = currentProfile?.created_at ? formatDate(currentProfile.created_at) : '--';
+async function loadSettings(){
+
+    currentSettings =
+        await getUserSettings();
+
 }
 
-function openProfilePage(e) {
-    e.preventDefault();
-    navigate('profile.html');
+// ==========================================
+// Appareils
+// ==========================================
+
+async function loadDevices(){
+
+    currentDevices =
+        await getDevices();
+
 }
 
-// 6. Mot de passe
-function togglePasswordVisibility(inputField, iconElement) {
-    if (!inputField || !iconElement) return;
-    if (inputField.type === 'password') {
-        inputField.type = 'text';
-        iconElement.className = 'fa-regular fa-eye-slash';
-    } else {
-        inputField.type = 'password';
-        iconElement.className = 'fa-regular fa-eye';
-    }
-}
+// ==========================================
+// Remplissage de la page
+// ==========================================
 
-function updatePasswordStrength() {
-    if (!DOM.newPassword || !DOM.passwordStrengthBar || !DOM.passwordStrengthText) return;
-    const val = DOM.newPassword.value;
-    let strength = 0;
+function fillPage(){
 
-    if (val.length >= 8) strength += 1;
-    if (/[A-Z]/.test(val)) strength += 1;
-    if (/[0-9]/.test(val)) strength += 1;
-    if (/[^A-Za-z0-9]/.test(val)) strength += 1;
+    // Compte
 
-    let width = '0%';
-    let color = 'transparent';
-    let text = 'Choisissez un mot de passe sécurisé.';
+    currentEmail.textContent =
+        currentUser?.email ?? "";
 
-    if (val.length > 0) {
-        if (strength <= 1) {
-            width = '25%';
-            color = '#ef4444';
-            text = 'Mot de passe faible';
-        } else if (strength === 2 || strength === 3) {
-            width = '65%';
-            color = '#f59e0b';
-            text = 'Mot de passe moyen';
-        } else {
-            width = '100%';
-            color = '#10b981';
-            text = 'Mot de passe fort';
-        }
-    }
+    displayName.value =
+        currentProfile?.display_name ?? "";
 
-    DOM.passwordStrengthBar.style.width = width;
-    DOM.passwordStrengthBar.style.backgroundColor = color;
-    DOM.passwordStrengthText.textContent = text;
-    updatePasswordMatch();
-}
+    username.value =
+        currentProfile?.username ?? "";
 
-function updatePasswordMatch() {
-    if (!DOM.newPassword || !DOM.confirmPassword || !DOM.passwordMatch) return;
-    const newPass = DOM.newPassword.value;
-    const confirmPass = DOM.confirmPassword.value;
+    accountType.textContent =
+        currentProfile?.role ?? "Utilisateur";
 
-    if (!confirmPass) {
-        DOM.passwordMatch.textContent = '';
-        return;
-    }
+    createdAt.textContent =
+        currentProfile?.created_at ?? "--";
 
-    if (newPass === confirmPass) {
-        DOM.passwordMatch.textContent = 'Les mots de passe correspondent.';
-        DOM.passwordMatch.style.color = '#10b981';
-    } else {
-        DOM.passwordMatch.textContent = 'Les mots de passe ne correspondent pas.';
-        DOM.passwordMatch.style.color = '#ef4444';
-    }
-}
 
-function validatePassword() {
-    resetErrors();
-    const current = DOM.currentPassword?.value;
-    const newPass = DOM.newPassword?.value;
-    const confirm = DOM.confirmPassword?.value;
+    // Préférences
 
-    if (!current || !newPass || !confirm) {
-        showError("Veuillez remplir tous les champs du mot de passe.", DOM.passwordError);
-        return false;
-    }
-    if (newPass.length < 8) {
-        showError("Le nouveau mot de passe doit contenir au moins 8 caractères.", DOM.passwordError);
-        return false;
-    }
-    if (newPass !== confirm) {
-        showError("Les nouveaux mots de passe ne correspondent pas.", DOM.passwordError);
-        return false;
-    }
-    return true;
-}
+    theme.value =
+        currentSettings?.theme ?? "dark";
 
-async function changePassword() {
-    if (isSavingPassword || !validatePassword()) return;
+    autoplay.checked =
+        currentSettings?.autoplay ?? true;
 
-    try {
-        isSavingPassword = true;
-        buttonLoading(DOM.updatePasswordButton, true);
+    emailNotifications.checked =
+        currentSettings?.email_notifications ?? true;
 
-        await updatePassword(DOM.newPassword.value);
-        showSuccess("Mot de passe mis à jour avec succès.", DOM.passwordError);
-        showToast("Mot de passe mis à jour avec succès.", "success");
+    pushNotifications.checked =
+        currentSettings?.push_notifications ?? true;
 
-        DOM.currentPassword.value = '';
-        DOM.newPassword.value = '';
-        DOM.confirmPassword.value = '';
-        updatePasswordStrength();
-    } catch (error) {
-        showError(error.message || "Erreur lors de la mise à jour du mot de passe.", DOM.passwordError);
-    } finally {
-        isSavingPassword = false;
-        buttonLoading(DOM.updatePasswordButton, false);
-    }
-}
 
-// 7. Appareils (Basé sur la table public.devices)
-async function loadDevices() {
-    try {
-        currentDevices = await getDevices() || [];
-    } catch (error) {
-        console.error("Erreur chargement appareils:", error);
-        currentDevices = [];
-    }
-}
+    // Appareils
 
-function renderDevices() {
-    if (!DOM.devicesList) return;
-
-    if (currentDevices.length === 0) {
-        DOM.devicesList.innerHTML = `<p class="nv-settings-message">Aucun appareil enregistré.</p>`;
-        return;
-    }
-
-    let html = '';
-
-    currentDevices.forEach((device, index) => {
-        const isCurrent = index === 0; 
-        
-        html += `
-            <div class="nv-device-card">
-                <div class="nv-device-main">
-                    <div class="nv-device-icon"><i class="fa-solid fa-laptop"></i></div>
-                    <div class="nv-device-details">
-                        <h3>
-                            ${device.device_name || 'Appareil inconnu'} 
-                            ${isCurrent ? '<span class="nv-current-device">Appareil actuel</span>' : ''}
-                        </h3>
-                        <p>${device.browser || 'Navigateur inconnu'} • ${device.operating_system || 'OS inconnu'}</p>
-                        <span>Dernière activité : <strong>${formatDate(device.last_seen)}</strong></span>
-                    </div>
-                </div>
-                ${!isCurrent ? `<button class="nv-btn nv-btn-outline nv-device-disconnect" data-device-id="${device.id}">Déconnecter</button>` : `<button class="nv-btn nv-btn-outline" disabled>Actuel</button>`}
-            </div>
-        `;
-    });
-
-    DOM.devicesList.innerHTML = html;
-
-    document.querySelectorAll('.nv-device-disconnect[data-device-id]').forEach(btn => {
-        btn.addEventListener('click', () => disconnectDevice(btn.dataset.deviceId));
-    });
-}
-
-async function disconnectDevice(deviceId) {
-    try {
-        showLoader();
-        currentDevices = currentDevices.filter(d => d.id !== deviceId);
-        renderDevices();
-        showToast("Appareil déconnecté avec succès.", "success");
-    } catch (error) {
-        showToast("Erreur lors de la déconnexion de l'appareil.", "error");
-    } finally {
-        hideLoader();
-    }
-}
-
-async function disconnectOtherDevices() {
-    try {
-        showLoader();
-        if (currentDevices.length > 0) {
-            currentDevices = [currentDevices[0]];
-        }
-        renderDevices();
-        showToast("Tous les autres appareils ont été déconnectés.", "success");
-    } catch (error) {
-        showToast("Erreur lors de la déconnexion globale.", "error");
-    } finally {
-        hideLoader();
-    }
-}
-
-// 8. Préférences
-async function loadSettings() {
-    try {
-        currentSettings = await getUserSettings();
-    } catch (error) {
-        console.error("Erreur préférences:", error);
-    }
-}
-
-function fillSettings() {
-    if (!currentSettings) return;
-
-    if (DOM.theme) DOM.theme.value = currentSettings.theme || 'system';
-    if (DOM.autoplay) DOM.autoplay.checked = !!currentSettings.autoplay;
-    if (DOM.emailNotifications) DOM.emailNotifications.checked = !!currentSettings.email_notifications;
-    if (DOM.pushNotifications) DOM.pushNotifications.checked = !!currentSettings.push_notifications;
-}
-
-async function savePreferences() {
-    if (isSavingPreferences) return;
-
-    try {
-        isSavingPreferences = true;
-        buttonLoading(DOM.savePreferencesButton, true);
-
-        const newSettings = {
-            theme: DOM.theme?.value,
-            autoplay: DOM.autoplay?.checked,
-            email_notifications: DOM.emailNotifications?.checked,
-            push_notifications: DOM.pushNotifications?.checked
-        };
-
-        await updateUserSettings(newSettings);
-        currentSettings = newSettings;
-        showSuccess("Préférences enregistrées avec succès.", DOM.preferencesMessage);
-        showToast("Préférences enregistrées.", "success");
-    } catch (error) {
-        showError("Erreur lors de l'enregistrement des préférences.", DOM.preferencesMessage);
-    } finally {
-        isSavingPreferences = false;
-        buttonLoading(DOM.savePreferencesButton, false);
-    }
-}
-
-// 9. Zone de danger
-function openDeleteModal() {
-    if (DOM.deleteAccountModal) {
-        DOM.deleteAccountModal.classList.add('show');
-        if (DOM.deleteConfirmation) DOM.deleteConfirmation.value = '';
-        if (DOM.confirmDeleteButton) DOM.confirmDeleteButton.disabled = true;
-        clearMessages();
-    }
-}
-
-function closeDeleteModal() {
-    if (DOM.deleteAccountModal) {
-        DOM.deleteAccountModal.classList.remove('show');
-    }
-}
-
-function validateDeleteWord() {
-    if (!DOM.deleteConfirmation || !DOM.confirmDeleteButton) return;
-    const value = DOM.deleteConfirmation.value.trim();
-    if (value === 'SUPPRIMER') {
-        DOM.confirmDeleteButton.disabled = false;
-    } else {
-        DOM.confirmDeleteButton.disabled = true;
-    }
-}
-
-async function deleteAccount() {
-    if (isDeleting || DOM.deleteConfirmation?.value.trim() !== 'SUPPRIMER') return;
-
-    try {
-        isDeleting = true;
-        buttonLoading(DOM.confirmDeleteButton, true);
-
-        await signOut();
-        showToast("Votre compte a été supprimé.", "success");
-        navigate('login.html');
-    } catch (error) {
-        showError("Erreur lors de la suppression du compte.", DOM.deleteAccountMessage);
-        isDeleting = false;
-        buttonLoading(DOM.confirmDeleteButton, false);
-    }
-}
-
-function fillPage() {
-    fillProfile();
     renderDevices();
-    fillSettings();
+
 }
 
-// 10. Utilitaires
-function formatDate(dateString) {
-    if (!dateString) return 'Récemment';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffSeconds = Math.floor((now - date) / 1000);
+// ==========================================
+// Événements
+// ==========================================
 
-    if (diffSeconds < 60) return "À l'instant";
-    if (diffSeconds < 3600) return `Il y a ${Math.floor(diffSeconds / 60)} min`;
-    if (diffSeconds < 86400) return `Il y a ${Math.floor(diffSeconds / 3600)} h`;
-    
-    return date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+function addEventListeners(){
+
+    // Les addEventListener seront ajoutés
+    // dans la partie suivante.
+
 }
 
-function clearMessages() {
-    if (DOM.passwordError) DOM.passwordError.textContent = '';
-    if (DOM.devicesMessage) DOM.devicesMessage.textContent = '';
-    if (DOM.preferencesMessage) DOM.preferencesMessage.textContent = '';
-    if (DOM.deleteAccountMessage) DOM.deleteAccountMessage.textContent = '';
-}
+// ==========================================
+// Démarrage
+// ==========================================
 
-function resetErrors() {
-    if (DOM.passwordError) DOM.passwordError.textContent = '';
-}
-
-function showError(message, element) {
-    if (element) {
-        element.textContent = message;
-        element.style.color = '#ef4444';
-    }
-}
-
-function showSuccess(message, element) {
-    if (element) {
-        element.textContent = message;
-        element.style.color = '#10b981';
-    }
-}
-
-// 11. Événements
-function addEventListeners() {
-    if (DOM.editProfileButton) {
-        DOM.editProfileButton.addEventListener('click', openProfilePage);
-    }
-
-    if (DOM.newPassword) {
-        DOM.newPassword.addEventListener('input', updatePasswordStrength);
-    }
-    if (DOM.confirmPassword) {
-        DOM.confirmPassword.addEventListener('input', updatePasswordMatch);
-    }
-    if (DOM.toggleCurrentPassword && DOM.currentPassword) {
-        DOM.toggleCurrentPassword.addEventListener('click', () => togglePasswordVisibility(DOM.currentPassword, DOM.toggleCurrentPassword.querySelector('i')));
-    }
-    if (DOM.toggleNewPassword && DOM.newPassword) {
-        DOM.toggleNewPassword.addEventListener('click', () => togglePasswordVisibility(DOM.newPassword, DOM.toggleNewPassword.querySelector('i')));
-    }
-    if (DOM.toggleConfirmPassword && DOM.confirmPassword) {
-        DOM.toggleConfirmPassword.addEventListener('click', () => togglePasswordVisibility(DOM.confirmPassword, DOM.toggleConfirmPassword.querySelector('i')));
-    }
-    if (DOM.updatePasswordButton) {
-        DOM.updatePasswordButton.addEventListener('click', changePassword);
-    }
-
-    if (DOM.savePreferencesButton) {
-        DOM.savePreferencesButton.addEventListener('click', savePreferences);
-    }
-
-    if (DOM.logoutOthersButton) {
-        DOM.logoutOthersButton.addEventListener('click', disconnectOtherDevices);
-    }
-
-    if (DOM.deleteAccountButton) {
-        DOM.deleteAccountButton.addEventListener('click', openDeleteModal);
-    }
-    if (DOM.cancelDeleteButton) {
-        DOM.cancelDeleteButton.addEventListener('click', closeDeleteModal);
-    }
-    if (DOM.deleteAccountModal) {
-        const overlay = DOM.deleteAccountModal.querySelector('.nv-modal-overlay');
-        if (overlay) overlay.addEventListener('click', closeDeleteModal);
-    }
-    if (DOM.deleteConfirmation) {
-        DOM.deleteConfirmation.addEventListener('input', validateDeleteWord);
-    }
-    if (DOM.confirmDeleteButton) {
-        DOM.confirmDeleteButton.addEventListener('click', deleteAccount);
-    }
-}
-
-// 13. Lancement direct et sécurisé pour un module ES6
 init();
+// ==========================================
+// Compte
+// ==========================================
 
-window.addEventListener('beforeunload', () => {
-    closeDeleteModal();
-});
+// Remplit les informations du compte
+
+function fillProfile(){
+
+    if(!currentUser || !currentProfile){
+
+        return;
+
+    }
+
+    currentEmail.textContent =
+        currentUser.email ?? "";
+
+    displayName.value =
+        currentProfile.display_name ?? "";
+
+    username.value =
+        currentProfile.username ?? "";
+
+    accountType.textContent =
+        currentProfile.role ?? "Utilisateur";
+
+    createdAt.textContent =
+
+        currentProfile.created_at
+
+        ? new Date(
+
+            currentProfile.created_at
+
+        ).toLocaleDateString(
+
+            "fr-FR",
+
+            {
+
+                year:"numeric",
+
+                month:"long",
+
+                day:"numeric"
+
+            }
+
+        )
+
+        : "--";
+
+}
+
+
+// Validation du profil
+
+function validateProfile(){
+
+    const name =
+        displayName.value.trim();
+
+    const user =
+        username.value.trim();
+
+    if(name.length < 3){
+
+        showToast(
+
+            "Le nom affiché doit contenir au moins 3 caractères.",
+
+            "error"
+
+        );
+
+        displayName.focus();
+
+        return false;
+
+    }
+
+    if(user.length < 3){
+
+        showToast(
+
+            "Le nom d'utilisateur doit contenir au moins 3 caractères.",
+
+            "error"
+
+        );
+
+        username.focus();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+// Redirection vers profile.html
+
+function openProfilePage(){
+
+    navigate(
+
+        "profile.html"
+
+    );
+
+}
