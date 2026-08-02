@@ -198,74 +198,189 @@ export async function rpc(
 // Devices
 // ==========================================
 
-export async function deleteDevice(deviceId){
+export async function getDevices(){
 
     const user =
-        await getUser();
+    (await supabase.auth.getUser())
+    .data.user;
 
 
-    const { error } =
-        await supabase
+    return await supabase
 
-        .from("devices")
+    .from("devices")
 
-        .delete()
+    .select("*")
 
-        .eq(
-            "id",
-            deviceId
-        )
+    .eq(
+        "user_id",
+        user.id
+    )
 
-        .eq(
-            "user_id",
-            user.id
-        );
-
-
-    if(error){
-
-        throw error;
-
-    }
-
-
-    return true;
+    .order(
+        "last_seen",
+        {
+            ascending:false
+        }
+    );
 
 }
 
 
 
-export async function deleteOtherDevices(currentDeviceId){
+export async function deleteDevice(
+    deviceId
+){
 
     const user =
-        await getUser();
+    (await supabase.auth.getUser())
+    .data.user;
 
 
-    const { error } =
-        await supabase
+    return await supabase
 
-        .from("devices")
+    .from("devices")
 
-        .delete()
+    .delete()
 
-        .neq(
-            "id",
-            currentDeviceId
-        )
+    .eq(
+        "id",
+        deviceId
+    )
 
-        .eq(
-            "user_id",
-            user.id
-        );
+    .eq(
+        "user_id",
+        user.id
+    );
 
-
-    if(error){
-
-        throw error;
-
-    }
+}
 
 
-    return true;
+
+export async function deleteOtherDevices(
+    currentDeviceId
+){
+
+    const user =
+    (await supabase.auth.getUser())
+    .data.user;
+
+
+    return await supabase
+
+    .from("devices")
+
+    .delete()
+
+    .neq(
+        "id",
+        currentDeviceId
+    )
+
+    .eq(
+        "user_id",
+        user.id
+    );
+
+}
+// ==========================================
+// Profile
+// ==========================================
+
+export async function getProfile(){
+
+    const user =
+    (await supabase.auth.getUser())
+    .data.user;
+
+
+    return await supabase
+
+    .from("profiles")
+
+    .select("*")
+
+    .eq(
+        "id",
+        user.id
+    )
+
+    .single();
+
+}
+
+
+
+export async function updateProfile(
+    values
+){
+
+    const user =
+    (await supabase.auth.getUser())
+    .data.user;
+
+
+    return await supabase
+
+    .from("profiles")
+
+    .update(
+        values
+    )
+
+    .eq(
+        "id",
+        user.id
+    );
+
+}
+// ==========================================
+// User Settings
+// ==========================================
+
+export async function getUserSettings(){
+
+    const user =
+    (await supabase.auth.getUser())
+    .data.user;
+
+
+    return await supabase
+
+    .from("user_settings")
+
+    .select("*")
+
+    .eq(
+        "user_id",
+        user.id
+    )
+
+    .single();
+
+}
+
+
+
+export async function updateUserSettings(
+    values
+){
+
+    const user =
+    (await supabase.auth.getUser())
+    .data.user;
+
+
+    return await supabase
+
+    .from("user_settings")
+
+    .update(
+        values
+    )
+
+    .eq(
+        "user_id",
+        user.id
+    );
 
 }
