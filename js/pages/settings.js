@@ -1,7 +1,9 @@
 // ==========================================
 // NetView
-// settings.js
+// settings.js (Autonome sans data.js)
 // ==========================================
+
+import { supabase } from "./supabase.js";
 
 import {
     getSession,
@@ -9,14 +11,6 @@ import {
     updatePassword,
     signOut
 } from "../core/auth.js";
-
-import {
-    getProfile,
-    updateProfile,
-    getUserSettings,
-    updateUserSettings,
-    getDevices
-} from "../core/data.js";
 
 import {
     showLoader,
@@ -54,9 +48,8 @@ const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 const updatePasswordButton = document.getElementById("updatePasswordButton");
 
 // Appareils connectés
-const devicesContainer = document.getElementById("devicesContainer") || document.getElementById("devicesList");
-const disconnectAllButton = document.getElementById("disconnectOtherDevicesButton") || document.getElementById("logoutOthersButton");
-const devicesMessage = document.getElementById("devicesMessage");
+const devicesContainer = document.getElementById("devicesContainer");
+const disconnectAllButton = document.getElementById("disconnectOtherDevicesButton");
 
 // Préférences
 const themeSelect = document.getElementById("theme");
@@ -64,18 +57,6 @@ const autoplayToggle = document.getElementById("autoplay");
 const emailNotificationsToggle = document.getElementById("emailNotifications");
 const pushNotificationsToggle = document.getElementById("pushNotifications");
 const savePreferencesButton = document.getElementById("savePreferencesButton");
-const preferencesMessage = document.getElementById("preferencesMessage");
-
-// Zone de danger
-const deleteAccountButton = document.getElementById("deleteAccountButton");
-const deleteAccountModal = document.getElementById("deleteAccountModal");
-const deleteConfirmation = document.getElementById("deleteConfirmation");
-const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-const cancelDeleteButton = document.getElementById("cancelDeleteButton");
-const deleteAccountMessage = document.getElementById("deleteAccountMessage");
-
-// Loader
-const pageLoader = document.getElementById("pageLoader");
 
 // ==========================================
 // Variables globales
@@ -100,16 +81,17 @@ async function init() {
     try {
         await loadSession();
 
+        // Chargement direct via Supabase (sans data.js)
         await Promise.all([
-            loadProfile(),
-            loadSettings(),
-            loadDevices()
+            loadProfileData(),
+            loadSettingsData(),
+            loadDevicesData()
         ]);
 
         fillPage();
         addEventListeners();
     } catch (error) {
-        console.error(error);
+        console.error("Erreur d'initialisation :", error);
         showToast("Impossible de charger les paramètres.", "error");
     } finally {
         hideLoader();
@@ -117,7 +99,7 @@ async function init() {
 }
 
 // ==========================================
-// Session
+// Session & Appels Directs Supabase
 // ==========================================
 
 async function loadSession() {
@@ -131,37 +113,55 @@ async function loadSession() {
     currentUser = await getUser();
 }
 
-// ==========================================
-// Profil & Chargement Données
-// ==========================================
+async function loadProfileData() {
+    if (!currentUser) return;
 
-async function loadProfile() {
-    currentProfile = await getProfile();
-}
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
 
-async function loadSettings() {
-    try {
-        const settings = await getUserSettings();
-        currentSettings = settings || {
-            theme: "dark",
-            autoplay: true,
-            email_notifications: true,
-            push_notifications: true
-        };
-    } catch (error) {
-        console.error("Load settings error:", error);
-        showToast("Impossible de charger vos préférences.", "error");
+    if (error && error.code !== "PGRST116") {
+        console.error("Erreur chargement profil :", error);
     }
+    currentProfile = data || null;
 }
 
-async function loadDevices() {
-    try {
-        const devices = await getDevices();
-        currentDevices = devices || [];
-        renderDevices();
-    } catch (error) {
-        console.error("Load devices error:", error);
-        showToast("Impossible de charger les appareils connectés.", "error");
+async function loadSettingsData() {
+    if (!currentUser) return;
+
+    const { data, error } = await supabase
+        .from("user_settings")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .single();
+
+    if (error && error.code !== "PGRST116") {
+        console.error("Erreur chargement préférences :", error);
+    }
+    
+    currentSettings = data || {
+        theme: "dark",
+        autoplay: true,
+        email_notifications: true,
+        push_notifications: true
+    };
+}
+
+async function loadDevicesData() {
+    if (!currentUser) return;
+
+    const { data, error } = await supabase
+        .from("devices")
+        .select("*")
+        .eq("user_id", currentUser.id);
+
+    if (error) {
+        console.error("Erreur chargement appareils :", error);
+        currentDevices = [];
+    } else {
+        currentDevices = data || [];
     }
 }
 
@@ -176,21 +176,24 @@ function fillPage() {
 }
 
 function fillProfile() {
-    if (!currentUser || !currentProfile) return;
+    if (!currentUser) return;
 
     if (currentEmail) currentEmail.textContent = currentUser.email ?? "";
-    if (displayName) displayName.value = currentProfile.display_name ?? "";
-    if (username) username.value = currentProfile.username ?? "";
-    if (accountType) accountType.textContent = currentProfile.role ?? "Utilisateur";
-    
-    if (createdAt) {
-        createdAt.textContent = currentProfile.created_at
-            ? new Date(currentProfile.created_at).toLocaleDateString("fr-FR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            })
-            : "--";
+    if (accountType) accountType.textContent = currentProfile?.role ?? "Utilisateur";
+
+    if (currentProfile) {
+        if (displayName) displayName.value = currentProfile.display_name ?? "";
+        if (username) username.value = currentProfile.username ?? "";
+        
+        if (createdAt) {
+            createdAt.textContent = currentProfile.created_at
+                ? new Date(currentProfile.created_at).toLocaleDateString("fr-FR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                })
+                : "--";
+        }
     }
 }
 
@@ -198,13 +201,21 @@ function fillSettings() {
     if (!currentSettings) return;
 
     if (themeSelect) themeSelect.value = currentSettings.theme || "dark";
-    if (autoplayToggle) autoplayToggle.checked = currentSettings.autoplay;
-    if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings.email_notifications;
-    if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings.push_notifications;
+    if (autoplayToggle) autoplayToggle.checked = currentSettings.autoplay ?? true;
+    if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings.email_notifications ?? true;
+    if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings.push_notifications ?? true;
 }
 
 // ==========================================
-// Password Visibility & Strength
+// Navigation Profil
+// ==========================================
+
+function openProfilePage() {
+    navigate("profile.html");
+}
+
+// ==========================================
+// Mot de passe : Visibilité
 // ==========================================
 
 function togglePasswordVisibility(input, button) {
@@ -222,6 +233,10 @@ function togglePasswordVisibility(input, button) {
         isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
     );
 }
+
+// ==========================================
+// Mot de passe : Force & Correspondance
+// ==========================================
 
 function updatePasswordStrength() {
     if (!newPasswordInput) return;
@@ -287,12 +302,16 @@ function updatePasswordStrength() {
 }
 
 function updatePasswordMatch() {
-    if (!newPasswordInput || !confirmPasswordInput || !passwordMatch) return false;
+    if (!newPasswordInput || !confirmPasswordInput || !passwordMatch) {
+        return false;
+    }
 
     passwordMatch.textContent = "";
     passwordMatch.className = "nv-password-match";
 
-    if (confirmPasswordInput.value === "") return true;
+    if (confirmPasswordInput.value === "") {
+        return true;
+    }
 
     if (newPasswordInput.value === confirmPasswordInput.value) {
         passwordMatch.textContent = "Les mots de passe correspondent.";
@@ -304,6 +323,10 @@ function updatePasswordMatch() {
     passwordMatch.classList.add("error");
     return false;
 }
+
+// ==========================================
+// Validation du Mot de passe
+// ==========================================
 
 function validatePassword() {
     if (!currentPasswordInput || currentPasswordInput.value.trim() === "") {
@@ -318,29 +341,33 @@ function validatePassword() {
         return false;
     }
 
-    const newPass = newPasswordInput.value;
+    const newPassword = newPasswordInput.value;
 
-    if (newPass.length < 8) {
+    if (newPassword.length < 8) {
         showToast("Le nouveau mot de passe doit contenir au moins 8 caractères.", "error");
         newPasswordInput.focus();
         return false;
     }
-    if (!/[A-Z]/.test(newPass)) {
+
+    if (!/[A-Z]/.test(newPassword)) {
         showToast("Le mot de passe doit contenir au moins une lettre majuscule.", "error");
         newPasswordInput.focus();
         return false;
     }
-    if (!/[a-z]/.test(newPass)) {
+
+    if (!/[a-z]/.test(newPassword)) {
         showToast("Le mot de passe doit contenir au moins une lettre minuscule.", "error");
         newPasswordInput.focus();
         return false;
     }
-    if (!/[0-9]/.test(newPass)) {
+
+    if (!/[0-9]/.test(newPassword)) {
         showToast("Le mot de passe doit contenir au moins un chiffre.", "error");
         newPasswordInput.focus();
         return false;
     }
-    if (!/[^A-Za-z0-9]/.test(newPass)) {
+
+    if (!/[^A-Za-z0-9]/.test(newPassword)) {
         showToast("Le mot de passe doit contenir au moins un caractère spécial.", "error");
         newPasswordInput.focus();
         return false;
@@ -352,7 +379,7 @@ function validatePassword() {
         return false;
     }
 
-    if (newPass !== confirmPasswordInput.value) {
+    if (newPassword !== confirmPasswordInput.value) {
         showToast("Les mots de passe ne correspondent pas.", "error");
         confirmPasswordInput.focus();
         return false;
@@ -367,8 +394,16 @@ function validatePassword() {
     return true;
 }
 
+// ==========================================
+// Modification du mot de passe
+// ==========================================
+
 async function changePassword() {
-    if (isSavingPassword || !validatePassword()) return;
+    if (isSavingPassword) return;
+
+    if (!validatePassword()) {
+        return;
+    }
 
     isSavingPassword = true;
 
@@ -376,7 +411,8 @@ async function changePassword() {
         showLoader();
         buttonLoading(updatePasswordButton, true);
 
-        const { error } = await updatePassword(newPasswordInput.value);
+        const newPassword = newPasswordInput.value;
+        const { error } = await updatePassword(newPassword);
 
         if (error) throw error;
 
@@ -406,7 +442,7 @@ async function changePassword() {
 }
 
 // ==========================================
-// Devices Management
+// Gestion des Appareils
 // ==========================================
 
 function renderDevices() {
@@ -455,7 +491,9 @@ function createDeviceCard(device) {
 
     const button = card.querySelector(".nv-device-disconnect");
     if (button) {
-        button.addEventListener("click", () => disconnectDevice(device.id));
+        button.addEventListener("click", () => {
+            disconnectDevice(device.id);
+        });
     }
 
     return card;
@@ -489,10 +527,16 @@ async function disconnectDevice(deviceId) {
         isDisconnectingDevice = true;
         showLoader();
 
-        currentDevices = currentDevices.filter(d => d.id !== deviceId);
-        renderDevices();
+        const { error } = await supabase
+            .from("devices")
+            .delete()
+            .eq("id", deviceId);
+
+        if (error) throw error;
 
         showToast("Appareil déconnecté.", "success");
+        await loadDevicesData();
+        renderDevices();
     } catch (error) {
         console.error(error);
         showToast("Impossible de déconnecter cet appareil.", "error");
@@ -505,6 +549,7 @@ async function disconnectDevice(deviceId) {
 async function disconnectOtherDevices() {
     try {
         showLoader();
+
         const currentDevice = currentDevices.find(device => isCurrentDevice(device));
 
         if (!currentDevice) {
@@ -512,10 +557,17 @@ async function disconnectOtherDevices() {
             return;
         }
 
-        currentDevices = [currentDevice];
-        renderDevices();
+        const { error } = await supabase
+            .from("devices")
+            .delete()
+            .neq("id", currentDevice.id)
+            .eq("user_id", currentUser.id);
+
+        if (error) throw error;
 
         showToast("Tous les autres appareils ont été déconnectés.", "success");
+        await loadDevicesData();
+        renderDevices();
     } catch (error) {
         console.error(error);
         showToast("Impossible de déconnecter les autres appareils.", "error");
@@ -525,7 +577,7 @@ async function disconnectOtherDevices() {
 }
 
 // ==========================================
-// Preferences Save
+// Enregistrement des Préférences
 // ==========================================
 
 async function savePreferences() {
@@ -538,13 +590,17 @@ async function savePreferences() {
         buttonLoading(savePreferencesButton, true);
 
         const updatedSettings = {
+            user_id: currentUser.id,
             theme: themeSelect ? themeSelect.value : "dark",
             autoplay: autoplayToggle ? autoplayToggle.checked : true,
             email_notifications: emailNotificationsToggle ? emailNotificationsToggle.checked : true,
             push_notifications: pushNotificationsToggle ? pushNotificationsToggle.checked : true
         };
 
-        const { error } = await updateUserSettings(updatedSettings);
+        // Utilisation d'un upsert pour insérer ou mettre à jour les préférences directement
+        const { error } = await supabase
+            .from("user_settings")
+            .upsert(updatedSettings, { onConflict: "user_id" });
 
         if (error) throw error;
 
@@ -552,6 +608,10 @@ async function savePreferences() {
             ...currentSettings,
             ...updatedSettings
         };
+
+        if (typeof applyTheme === "function") {
+            applyTheme(updatedSettings.theme);
+        }
 
         showToast("Préférences enregistrées.", "success");
     } catch (error) {
@@ -565,55 +625,55 @@ async function savePreferences() {
 }
 
 // ==========================================
-// Event Listeners
+// Câblage des écouteurs d'événements
 // ==========================================
 
 function addEventListeners() {
-    // Profil / Navigation
-    if (editProfileButton) {
-        editProfileButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            navigate("profile.html");
+    if (toggleCurrentPassword) {
+        toggleCurrentPassword.addEventListener("click", () => {
+            togglePasswordVisibility(currentPasswordInput, toggleCurrentPassword);
         });
     }
 
-    // Visibilité Mots de passe
-    if (toggleCurrentPassword && currentPasswordInput) {
-        toggleCurrentPassword.addEventListener("click", () => togglePasswordVisibility(currentPasswordInput, toggleCurrentPassword));
-    }
-    if (toggleNewPassword && newPasswordInput) {
-        toggleNewPassword.addEventListener("click", () => togglePasswordVisibility(newPasswordInput, toggleNewPassword));
-    }
-    if (toggleConfirmPassword && confirmPasswordInput) {
-        toggleConfirmPassword.addEventListener("click", () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword));
+    if (toggleNewPassword) {
+        toggleNewPassword.addEventListener("click", () => {
+            togglePasswordVisibility(newPasswordInput, toggleNewPassword);
+        });
     }
 
-    // Force et correspondance MDP
+    if (toggleConfirmPassword) {
+        toggleConfirmPassword.addEventListener("click", () => {
+            togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+        });
+    }
+
     if (newPasswordInput) {
         newPasswordInput.addEventListener("input", updatePasswordStrength);
     }
+
     if (confirmPasswordInput) {
         confirmPasswordInput.addEventListener("input", updatePasswordMatch);
     }
 
-    // Bouton mise à jour MDP
     if (updatePasswordButton) {
         updatePasswordButton.addEventListener("click", changePassword);
     }
 
-    // Déconnexion autres appareils
     if (disconnectAllButton) {
         disconnectAllButton.addEventListener("click", disconnectOtherDevices);
     }
 
-    // Enregistrement préférences
     if (savePreferencesButton) {
         savePreferencesButton.addEventListener("click", savePreferences);
+    }
+
+    if (editProfileButton) {
+        editProfileButton.addEventListener("click", openProfilePage);
     }
 }
 
 // ==========================================
-// Démarrage de l'application
+// Démarrage
 // ==========================================
 
 init();
