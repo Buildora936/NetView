@@ -88,3 +88,63 @@ let currentDevices = [];
 let isSavingPassword = false;
 let isSavingPreferences = false;
 let isDeletingAccount = false;
+
+// ==========================================
+// 3. Gestion du Compte (Chargement & Affichage)
+// ==========================================
+
+async function loadSessionAndAccount() {
+    try {
+        // 1. Vérification de la session active
+        const session = await getSession();
+        if (!session) {
+            navigate("login.html");
+            return false;
+        }
+
+        // 2. Récupération de l'utilisateur authentifié (Auth)
+        currentUser = await getUser();
+        if (currentUser && currentEmail) {
+            currentEmail.textContent = currentUser.email || "--";
+        }
+
+        // 3. Récupération des données du profil (Table profiles)
+        currentProfile = await getProfile();
+        if (currentProfile) {
+            fillAccountUI(currentProfile);
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Erreur lors du chargement du compte :", error);
+        showToast("Impossible de charger les informations du compte.", "error");
+        return false;
+    }
+}
+
+function fillAccountUI(profile) {
+    if (!profile) return;
+
+    if (displayName) {
+        displayName.textContent = profile.display_name || profile.fullName || "Non défini";
+    }
+
+    if (username) {
+        username.textContent = profile.username ? `@${profile.username}` : "Non défini";
+    }
+
+    if (accountType) {
+        accountType.textContent = profile.role || profile.account_type || "Utilisateur";
+    }
+
+    if (createdAt && profile.created_at) {
+        const date = new Date(profile.created_at);
+        createdAt.textContent = date.toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    } else if (createdAt) {
+        createdAt.textContent = "--";
+    }
+}
