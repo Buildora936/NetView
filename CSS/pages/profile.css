@@ -73,7 +73,7 @@ PROFILE PAGE
 
 /* ==================================================
 Avatar & Banner Sections
-========================================== */
+================================================== */
 
 .avatar-section {
     display: flex;
@@ -152,7 +152,7 @@ Avatar & Banner Sections
 
 /* ==================================================
 Profile Form & Inputs
-========================================== */
+================================================== */
 
 .profile-form {
     display: flex;
@@ -240,7 +240,7 @@ Profile Form & Inputs
 
 /* ==================================================
 Profile Info Box
-========================================== */
+================================================== */
 
 .profile-info {
     display: flex;
@@ -271,7 +271,7 @@ Profile Info Box
 
 /* ==================================================
 Buttons Action
-========================================== */
+================================================== */
 
 .profile-buttons {
     display: flex;
@@ -291,7 +291,7 @@ Buttons Action
 
 /* ==================================================
 Country Modal
-========================================== */
+================================================== */
 
 .country-modal {
     position: fixed;
@@ -384,7 +384,7 @@ Country Modal
 
 /* ==================================================
 Notification & Loader Globaux
-========================================== */
+================================================== */
 
 .notification {
     position: fixed;
@@ -408,8 +408,8 @@ Notification & Loader Globaux
 .global-loader {
     position: fixed;
     inset: 0;
-    background: rgba(2, 6, 23, 0.8);
-    backdrop-filter: blur(6px);
+    background: rgba(2, 6, 23, 0.4); /* Moins opaque pour éviter l'effet "bloc bleu" */
+    backdrop-filter: blur(4px);
     display: none;
     justify-content: center;
     align-items: center;
