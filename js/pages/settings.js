@@ -3,376 +3,617 @@
 // settings.js
 // ==========================================
 
-import { supabase } from "../supabase.js";
-import { select, update, remove } from "../data.js";
+import {
+    getSession,
+    getUser,
+    updatePassword,
+    signOut
+} from "../core/auth.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const pageLoader = document.getElementById("pageLoader");
+import {
+    getProfile,
+    updateProfile,
+    getUserSettings,
+    updateUserSettings,
+    getDevices
+} from "../core/data.js";
+
+import {
+    showLoader,
+    hideLoader,
+    showToast,
+    buttonLoading
+} from "../core/ui.js";
+
+import {
+    navigate
+} from "../core/navigation.js";
+
+// ==========================================
+// DOM Elements
+// ==========================================
+
+// Compte
+const currentEmail = document.getElementById("currentEmail");
+const displayName = document.getElementById("displayName");
+const username = document.getElementById("username");
+const accountType = document.getElementById("accountType");
+const createdAt = document.getElementById("createdAt");
+const editProfileButton = document.getElementById("editProfileButton");
+
+// Sécurité & Mots de passe
+const currentPasswordInput = document.getElementById("currentPassword");
+const newPasswordInput = document.getElementById("newPassword");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const passwordStrengthBar = document.getElementById("passwordStrengthBar");
+const passwordStrengthText = document.getElementById("passwordStrengthText");
+const passwordMatch = document.getElementById("passwordMatch");
+const toggleCurrentPassword = document.getElementById("toggleCurrentPassword");
+const toggleNewPassword = document.getElementById("toggleNewPassword");
+const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+const updatePasswordButton = document.getElementById("updatePasswordButton");
+
+// Appareils connectés
+const devicesContainer = document.getElementById("devicesContainer") || document.getElementById("devicesList");
+const disconnectAllButton = document.getElementById("disconnectOtherDevicesButton") || document.getElementById("logoutOthersButton");
+const devicesMessage = document.getElementById("devicesMessage");
+
+// Préférences
+const themeSelect = document.getElementById("theme");
+const autoplayToggle = document.getElementById("autoplay");
+const emailNotificationsToggle = document.getElementById("emailNotifications");
+const pushNotificationsToggle = document.getElementById("pushNotifications");
+const savePreferencesButton = document.getElementById("savePreferencesButton");
+const preferencesMessage = document.getElementById("preferencesMessage");
+
+// Zone de danger
+const deleteAccountButton = document.getElementById("deleteAccountButton");
+const deleteAccountModal = document.getElementById("deleteAccountModal");
+const deleteConfirmation = document.getElementById("deleteConfirmation");
+const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+const deleteAccountMessage = document.getElementById("deleteAccountMessage");
+
+// Loader
+const pageLoader = document.getElementById("pageLoader");
+
+// ==========================================
+// Variables globales
+// ==========================================
+
+let currentUser = null;
+let currentProfile = null;
+let currentSettings = null;
+let currentDevices = [];
+
+let isSavingPassword = false;
+let isSavingPreferences = false;
+let isDisconnectingDevice = false;
+
+// ==========================================
+// Initialisation
+// ==========================================
+
+async function init() {
+    showLoader();
 
     try {
-        // 1. Vérification de l'authentification et récupération de l'utilisateur
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
-        if (authError || !user) {
-            window.location.href = "login.html";
-            return;
-        }
+        await loadSession();
 
-        // 2. Chargement des données du profil
-        await loadUserProfile(user);
+        await Promise.all([
+            loadProfile(),
+            loadSettings(),
+            loadDevices()
+        ]);
 
-        // 3. Chargement des préférences utilisateur
-        await loadUserPreferences(user);
-
-        // 4. Chargement des appareils connectés
-        await loadConnectedDevices(user);
-
-        // 5. Initialisation des écouteurs d'événements
-        initPasswordValidation();
-        initPasswordToggles();
-        initPreferencesListeners(user);
-        initDeleteAccountModal(user);
-
-    } catch (err) {
-        console.error("Erreur lors de l'initialisation des paramètres :", err);
+        fillPage();
+        addEventListeners();
+    } catch (error) {
+        console.error(error);
+        showToast("Impossible de charger les paramètres.", "error");
     } finally {
-        // Masquer le loader
-        if (pageLoader) {
-            pageLoader.style.opacity = "0";
-            setTimeout(() => pageLoader.style.display = "none", 300);
-        }
+        hideLoader();
     }
-});
+}
 
 // ==========================================
-// Chargement du profil
+// Session
 // ==========================================
-async function loadUserProfile(user) {
+
+async function loadSession() {
+    const session = await getSession();
+
+    if (!session) {
+        navigate("login.html");
+        return;
+    }
+
+    currentUser = await getUser();
+}
+
+// ==========================================
+// Profil & Chargement Données
+// ==========================================
+
+async function loadProfile() {
+    currentProfile = await getProfile();
+}
+
+async function loadSettings() {
     try {
-        const { data: profile, error } = await select("profiles", "*", [
-            { method: "eq", column: "id", value: user.id }
-        ]);
-
-        if (error) throw error;
-
-        const userData = profile && profile.length > 0 ? profile[0] : {};
-
-        document.getElementById("currentEmail").textContent = user.email || "Non renseigné";
-        document.getElementById("displayName").textContent = userData.display_name || userData.username || "Utilisateur NetView";
-        document.getElementById("username").textContent = `@${userData.username || "username"}`;
-        document.getElementById("accountType").textContent = userData.account_type || "Standard";
-        
-        if (userData.created_at) {
-            const date = new Date(userData.created_at);
-            document.getElementById("createdAt").textContent = date.toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } else {
-            document.getElementById("createdAt").textContent = "Récemment";
-        }
-    } catch (err) {
-        console.error("Erreur chargement profil:", err);
+        const settings = await getUserSettings();
+        currentSettings = settings || {
+            theme: "dark",
+            autoplay: true,
+            email_notifications: true,
+            push_notifications: true
+        };
+    } catch (error) {
+        console.error("Load settings error:", error);
+        showToast("Impossible de charger vos préférences.", "error");
     }
 }
 
-// ==========================================
-// Chargement et gestion des Préférences
-// ==========================================
-async function loadUserPreferences(user) {
+async function loadDevices() {
     try {
-        const { data: prefs, error } = await select("user_preferences", "*", [
-            { method: "eq", column: "user_id", value: user.id }
-        ]);
-
-        if (!error && prefs && prefs.length > 0) {
-            const p = prefs[0];
-            if (document.getElementById("theme")) document.getElementById("theme").value = p.theme || "dark";
-            if (document.getElementById("autoplay")) document.getElementById("autoplay").checked = !!p.autoplay;
-            if (document.getElementById("emailNotifications")) document.getElementById("emailNotifications").checked = !!p.email_notifications;
-            if (document.getElementById("pushNotifications")) document.getElementById("pushNotifications").checked = !!p.push_notifications;
-        }
-    } catch (err) {
-        console.error("Erreur chargement préférences:", err);
-    }
-}
-
-function initPreferencesListeners(user) {
-    const saveButton = document.getElementById("savePreferencesButton");
-    if (!saveButton) return;
-
-    saveButton.addEventListener("click", async () => {
-        const theme = document.getElementById("theme")?.value || "dark";
-        const autoplay = document.getElementById("autoplay")?.checked || false;
-        const emailNotifications = document.getElementById("emailNotifications")?.checked || false;
-        const pushNotifications = document.getElementById("pushNotifications")?.checked || false;
-
-        saveButton.disabled = true;
-        saveButton.textContent = "Enregistrement...";
-
-        try {
-            const { error } = await update("user_preferences", {
-                theme,
-                autoplay,
-                email_notifications: emailNotifications,
-                push_notifications: pushNotifications,
-                updated_at: new Date()
-            }, [
-                { method: "eq", column: "user_id", value: user.id }
-            ]);
-
-            if (error) throw error;
-            showNotification("Préférences enregistrées avec succès !", "success");
-        } catch (err) {
-            console.error("Erreur sauvegarde préférences:", err);
-            showNotification("Erreur lors de l'enregistrement.", "error");
-        } finally {
-            saveButton.disabled = false;
-            saveButton.textContent = "Enregistrer les préférences";
-        }
-    });
-}
-
-// ==========================================
-// Gestion des Appareils Connectés
-// ==========================================
-async function loadConnectedDevices(user) {
-    const devicesContainer = document.getElementById("devicesList");
-    const logoutOthersBtn = document.getElementById("logoutOthersButton");
-    if (!devicesContainer) return;
-
-    try {
-        const { data: devices, error } = await select("devices", "*", [
-            { method: "eq", column: "user_id", value: user.id }
-        ]);
-
-        if (error) throw error;
-
-        if (!devices || devices.length === 0) {
-            devicesContainer.innerHTML = `<p class="nv-settings-label">Aucun autre appareil connecté.</p>`;
-            return;
-        }
-
-        devicesContainer.innerHTML = devices.map(device => `
-            <div class="nv-device-card" data-id="${device.id}">
-                <div class="nv-device-main">
-                    <div class="nv-device-icon">
-                        <i class="fa-solid ${getDeviceIcon(device.device_type)}"></i>
-                    </div>
-                    <div class="nv-device-details">
-                        <h3>
-                            ${device.device_name || 'Appareil inconnu'}
-                            ${device.is_current ? '<span class="nv-current-device">Actuel</span>' : ''}
-                        </h3>
-                        <p>${device.location || 'Localisation inconnue'} • <span>${formatDate(device.last_active)}</span></p>
-                    </div>
-                </div>
-                ${!device.is_current ? `<button class="nv-btn nv-btn-outline revoke-device-btn" data-id="${device.id}">Révoquer</button>` : ''}
-            </div>
-        `).join("");
-
-        // Écouteurs pour révoquer un appareil individuel
-        document.querySelectorAll(".revoke-device-btn").forEach(btn => {
-            btn.addEventListener("click", async (e) => {
-                const deviceId = e.target.getAttribute("data-id");
-                await removeDevice(deviceId, user.id);
-            });
-        });
-
-        // Bouton pour déconnecter les autres appareils
-        if (logoutOthersBtn) {
-            logoutOthersBtn.addEventListener("click", async () => {
-                try {
-                    // Supprime tous les appareils sauf l'actuel
-                    await remove("devices", [
-                        { method: "eq", column: "user_id", value: user.id },
-                        { method: "eq", column: "is_current", value: false }
-                    ]);
-                    showNotification("Tous les autres appareils ont été déconnectés.", "success");
-                    await loadConnectedDevices(user);
-                } catch (err) {
-                    console.error("Erreur déconnexion autres appareils:", err);
-                    showNotification("Erreur lors de la déconnexion.", "error");
-                }
-            });
-        }
-
-    } catch (err) {
-        console.error("Erreur chargement appareils:", err);
-    }
-}
-
-async function removeDevice(deviceId, userId) {
-    try {
-        const { error } = await remove("devices", [
-            { method: "eq", column: "id", value: deviceId },
-            { method: "eq", column: "user_id", value: userId }
-        ]);
-
-        if (error) throw error;
-        showNotification("Appareil révoqué avec succès.", "success");
-        
-        // Recharger la liste
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) await loadConnectedDevices(user);
-    } catch (err) {
-        console.error("Erreur révocation appareil:", err);
-        showNotification("Impossible de révoquer cet appareil.", "error");
+        const devices = await getDevices();
+        currentDevices = devices || [];
+        renderDevices();
+    } catch (error) {
+        console.error("Load devices error:", error);
+        showToast("Impossible de charger les appareils connectés.", "error");
     }
 }
 
 // ==========================================
-// Sécurité & Mot de passe
+// Remplissage de la page
 // ==========================================
-function initPasswordValidation() {
-    const newPasswordInput = document.getElementById("newPassword");
-    const confirmPasswordInput = document.getElementById("confirmPassword");
-    const strengthBar = document.getElementById("passwordStrengthBar");
-    const strengthText = document.getElementById("passwordStrengthText");
-    const matchText = document.getElementById("passwordMatch");
 
+function fillPage() {
+    fillProfile();
+    fillSettings();
+    renderDevices();
+}
+
+function fillProfile() {
+    if (!currentUser || !currentProfile) return;
+
+    if (currentEmail) currentEmail.textContent = currentUser.email ?? "";
+    if (displayName) displayName.value = currentProfile.display_name ?? "";
+    if (username) username.value = currentProfile.username ?? "";
+    if (accountType) accountType.textContent = currentProfile.role ?? "Utilisateur";
+    
+    if (createdAt) {
+        createdAt.textContent = currentProfile.created_at
+            ? new Date(currentProfile.created_at).toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            })
+            : "--";
+    }
+}
+
+function fillSettings() {
+    if (!currentSettings) return;
+
+    if (themeSelect) themeSelect.value = currentSettings.theme || "dark";
+    if (autoplayToggle) autoplayToggle.checked = currentSettings.autoplay;
+    if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings.email_notifications;
+    if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings.push_notifications;
+}
+
+// ==========================================
+// Password Visibility & Strength
+// ==========================================
+
+function togglePasswordVisibility(input, button) {
+    if (!input || !button) return;
+
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+
+    button.innerHTML = isPassword
+        ? '<i class="fa-solid fa-eye-slash"></i>'
+        : '<i class="fa-solid fa-eye"></i>';
+
+    button.setAttribute(
+        "aria-label",
+        isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
+    );
+}
+
+function updatePasswordStrength() {
     if (!newPasswordInput) return;
 
-    newPasswordInput.addEventListener("input", () => {
-        const val = newPasswordInput.value;
-        let strength = 0;
+    const password = newPasswordInput.value;
+    let score = 0;
 
-        if (val.length >= 8) strength += 25;
-        if (/[A-Z]/.test(val)) strength += 25;
-        if (/[0-9]/.test(val)) strength += 25;
-        if (/[^A-Za-z0-9]/.test(val)) strength += 25;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
 
-        if (strengthBar) strengthBar.style.width = `${strength}%`;
-        
-        if (strength <= 25) {
-            if (strengthBar) strengthBar.style.backgroundColor = "#ef4444";
-            if (strengthText) strengthText.textContent = "Faible";
-        } else if (strength <= 75) {
-            if (strengthBar) strengthBar.style.backgroundColor = "#f59e0b";
-            if (strengthText) strengthText.textContent = "Moyen";
-        } else {
-            if (strengthBar) strengthBar.style.backgroundColor = "#10b981";
-            if (strengthText) strengthText.textContent = "Fort";
+    if (passwordStrengthBar) {
+        passwordStrengthBar.style.width = "0%";
+        passwordStrengthBar.className = "nv-password-strength-bar";
+    }
+
+    if (passwordStrengthText) {
+        passwordStrengthText.textContent = "";
+    }
+
+    switch (score) {
+        case 0:
+        case 1:
+            if (passwordStrengthBar) {
+                passwordStrengthBar.style.width = "20%";
+                passwordStrengthBar.classList.add("weak");
+            }
+            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe très faible.";
+            break;
+        case 2:
+            if (passwordStrengthBar) {
+                passwordStrengthBar.style.width = "40%";
+                passwordStrengthBar.classList.add("medium");
+            }
+            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe faible.";
+            break;
+        case 3:
+            if (passwordStrengthBar) {
+                passwordStrengthBar.style.width = "60%";
+                passwordStrengthBar.classList.add("good");
+            }
+            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe correct.";
+            break;
+        case 4:
+            if (passwordStrengthBar) {
+                passwordStrengthBar.style.width = "80%";
+                passwordStrengthBar.classList.add("strong");
+            }
+            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe fort.";
+            break;
+        case 5:
+            if (passwordStrengthBar) {
+                passwordStrengthBar.style.width = "100%";
+                passwordStrengthBar.classList.add("very-strong");
+            }
+            if (passwordStrengthText) passwordStrengthText.textContent = "Excellent mot de passe.";
+            break;
+    }
+
+    updatePasswordMatch();
+}
+
+function updatePasswordMatch() {
+    if (!newPasswordInput || !confirmPasswordInput || !passwordMatch) return false;
+
+    passwordMatch.textContent = "";
+    passwordMatch.className = "nv-password-match";
+
+    if (confirmPasswordInput.value === "") return true;
+
+    if (newPasswordInput.value === confirmPasswordInput.value) {
+        passwordMatch.textContent = "Les mots de passe correspondent.";
+        passwordMatch.classList.add("success");
+        return true;
+    }
+
+    passwordMatch.textContent = "Les mots de passe ne correspondent pas.";
+    passwordMatch.classList.add("error");
+    return false;
+}
+
+function validatePassword() {
+    if (!currentPasswordInput || currentPasswordInput.value.trim() === "") {
+        showToast("Veuillez saisir votre mot de passe actuel.", "error");
+        currentPasswordInput?.focus();
+        return false;
+    }
+
+    if (!newPasswordInput || newPasswordInput.value.trim() === "") {
+        showToast("Veuillez saisir un nouveau mot de passe.", "error");
+        newPasswordInput?.focus();
+        return false;
+    }
+
+    const newPass = newPasswordInput.value;
+
+    if (newPass.length < 8) {
+        showToast("Le nouveau mot de passe doit contenir au moins 8 caractères.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+    if (!/[A-Z]/.test(newPass)) {
+        showToast("Le mot de passe doit contenir au moins une lettre majuscule.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+    if (!/[a-z]/.test(newPass)) {
+        showToast("Le mot de passe doit contenir au moins une lettre minuscule.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+    if (!/[0-9]/.test(newPass)) {
+        showToast("Le mot de passe doit contenir au moins un chiffre.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+    if (!/[^A-Za-z0-9]/.test(newPass)) {
+        showToast("Le mot de passe doit contenir au moins un caractère spécial.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+
+    if (!confirmPasswordInput || confirmPasswordInput.value.trim() === "") {
+        showToast("Veuillez confirmer votre nouveau mot de passe.", "error");
+        confirmPasswordInput?.focus();
+        return false;
+    }
+
+    if (newPass !== confirmPasswordInput.value) {
+        showToast("Les mots de passe ne correspondent pas.", "error");
+        confirmPasswordInput.focus();
+        return false;
+    }
+
+    if (currentPasswordInput.value === newPasswordInput.value) {
+        showToast("Le nouveau mot de passe doit être différent de l'ancien.", "error");
+        newPasswordInput.focus();
+        return false;
+    }
+
+    return true;
+}
+
+async function changePassword() {
+    if (isSavingPassword || !validatePassword()) return;
+
+    isSavingPassword = true;
+
+    try {
+        showLoader();
+        buttonLoading(updatePasswordButton, true);
+
+        const { error } = await updatePassword(newPasswordInput.value);
+
+        if (error) throw error;
+
+        currentPasswordInput.value = "";
+        newPasswordInput.value = "";
+        confirmPasswordInput.value = "";
+
+        if (passwordStrengthBar) {
+            passwordStrengthBar.style.width = "0%";
+            passwordStrengthBar.className = "nv-password-strength-bar";
         }
+        if (passwordStrengthText) passwordStrengthText.textContent = "";
+        if (passwordMatch) {
+            passwordMatch.textContent = "";
+            passwordMatch.className = "nv-password-match";
+        }
+
+        showToast("Votre mot de passe a été mis à jour avec succès.", "success");
+    } catch (error) {
+        console.error("Password update error:", error);
+        showToast(error.message || "Impossible de modifier le mot de passe.", "error");
+    } finally {
+        hideLoader();
+        buttonLoading(updatePasswordButton, false);
+        isSavingPassword = false;
+    }
+}
+
+// ==========================================
+// Devices Management
+// ==========================================
+
+function renderDevices() {
+    if (!devicesContainer) return;
+
+    devicesContainer.innerHTML = "";
+
+    if (!currentDevices || currentDevices.length === 0) {
+        devicesContainer.innerHTML = `
+            <div class="nv-empty">
+                Aucun appareil connecté.
+            </div>
+        `;
+        return;
+    }
+
+    currentDevices.forEach(device => {
+        const card = createDeviceCard(device);
+        devicesContainer.appendChild(card);
     });
-
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener("input", () => {
-            if (confirmPasswordInput.value === newPasswordInput.value) {
-                matchText.textContent = "Les mots de passe correspondent.";
-                matchText.style.color = "#10b981";
-            } else {
-                matchText.textContent = "Les mots de passe ne correspondent pas.";
-                matchText.style.color = "#ef4444";
-            }
-        });
-    }
 }
 
-function initPasswordToggles() {
-    document.querySelectorAll(".nv-password-toggle").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const targetId = btn.getAttribute("data-target") || btn.previousElementSibling?.id;
-            const input = document.getElementById(targetId);
-            if (!input) return;
+function createDeviceCard(device) {
+    const card = document.createElement("div");
+    card.className = "nv-device-card";
 
-            if (input.type === "password") {
-                input.type = "text";
-                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-            } else {
-                input.type = "password";
-                btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
-            }
-        });
-    });
-}
+    const current = renderCurrentDeviceBadge(device);
 
-// ==========================================
-// Suppression de compte (Zone de danger)
-// ==========================================
-function initDeleteAccountModal(user) {
-    const deleteBtn = document.getElementById("deleteAccountButton");
-    const modal = document.getElementById("deleteAccountModal");
-    const cancelBtn = document.getElementById("cancelDeleteButton");
-    const confirmInput = document.getElementById("deleteConfirmation");
-    const confirmBtn = document.getElementById("confirmDeleteButton");
-
-    if (!deleteBtn || !modal) return;
-
-    deleteBtn.addEventListener("click", () => {
-        modal.classList.add("show");
-    });
-
-    if (cancelBtn) {
-        cancelBtn.addEventListener("click", () => {
-            modal.classList.remove("show");
-            if (confirmInput) confirmInput.value = "";
-        });
-    }
-
-    if (confirmInput && confirmBtn) {
-        confirmInput.addEventListener("input", () => {
-            confirmBtn.disabled = confirmInput.value.trim() !== "SUPPRIMER";
-        });
-
-        confirmBtn.addEventListener("click", async () => {
-            try {
-                confirmBtn.disabled = true;
-                confirmBtn.textContent = "Suppression...";
-
-                // Suppression logique ou appel RPC/Edge function pour supprimer l'utilisateur Supabase
-                const { error } = await remove("profiles", [
-                    { method: "eq", column: "id", value: user.id }
-                ]);
-
-                if (error) throw error;
-
-                await supabase.auth.signOut();
-                window.location.href = "login.html";
-            } catch (err) {
-                console.error("Erreur lors de la suppression du compte :", err);
-                showNotification("Erreur lors de la suppression du compte.", "error");
-                confirmBtn.disabled = false;
-                confirmBtn.textContent = "Supprimer définitivement";
-            }
-        });
-    }
-}
-
-// ==========================================
-// Fonctions utilitaires
-// ==========================================
-function getDeviceIcon(type) {
-    switch ((type || "").toLowerCase()) {
-        case "mobile": return "fa-mobile-screen-button";
-        case "tablet": return "fa-tablet-screen-button";
-        default: return "fa-desktop";
-    }
-}
-
-function formatDate(dateString) {
-    if (!dateString) return "Récemment";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-}
-
-function showNotification(message, type = "success") {
-    // Système de notification simple (ajustable selon vos composants globaux)
-    const notif = document.createElement("div");
-    notif.className = `nv-notification nv-notification-${type}`;
-    notif.style.cssText = `
-        position: fixed; bottom: 20px; right: 20px; z-index: 10000;
-        padding: 12px 20px; border-radius: 12px; font-size: 0.9rem;
-        background: ${type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
-        color: #fff; backdrop-filter: blur(8px); box-path: 0 10px 25px rgba(0,0,0,0.3);
-        animation: fadeUp 0.3s ease;
+    card.innerHTML = `
+        <div class="nv-device-icon">
+            <i class="fa-solid fa-desktop"></i>
+        </div>
+        <div class="nv-device-info">
+            <h3>
+                ${device.device_name || "Appareil inconnu"}
+                ${current}
+            </h3>
+            <p>Navigateur : ${device.browser || "--"}</p>
+            <p>Système : ${device.operating_system || "--"}</p>
+            <p>Dernière activité : ${formatDeviceDate(device.last_seen)}</p>
+        </div>
+        <button class="nv-btn nv-btn-danger nv-device-disconnect" data-device-id="${device.id}">
+            Déconnecter
+        </button>
     `;
-    notif.textContent = message;
-    document.body.appendChild(notif);
 
-    setTimeout(() => {
-        notif.style.opacity = "0";
-        setTimeout(() => notif.remove(), 300);
-    }, 3000);
+    const button = card.querySelector(".nv-device-disconnect");
+    if (button) {
+        button.addEventListener("click", () => disconnectDevice(device.id));
+    }
+
+    return card;
 }
+
+function renderCurrentDeviceBadge(device) {
+    if (isCurrentDevice(device)) {
+        return `
+            <span class="nv-device-badge">
+                Appareil actuel
+            </span>
+        `;
+    }
+    return "";
+}
+
+function isCurrentDevice(device) {
+    const browser = navigator.userAgent;
+    return device.browser && browser.includes(device.browser);
+}
+
+function formatDeviceDate(date) {
+    if (!date) return "--";
+    return new Date(date).toLocaleString("fr-FR");
+}
+
+async function disconnectDevice(deviceId) {
+    if (isDisconnectingDevice) return;
+
+    try {
+        isDisconnectingDevice = true;
+        showLoader();
+
+        currentDevices = currentDevices.filter(d => d.id !== deviceId);
+        renderDevices();
+
+        showToast("Appareil déconnecté.", "success");
+    } catch (error) {
+        console.error(error);
+        showToast("Impossible de déconnecter cet appareil.", "error");
+    } finally {
+        hideLoader();
+        isDisconnectingDevice = false;
+    }
+}
+
+async function disconnectOtherDevices() {
+    try {
+        showLoader();
+        const currentDevice = currentDevices.find(device => isCurrentDevice(device));
+
+        if (!currentDevice) {
+            showToast("Impossible d'identifier l'appareil actuel.", "error");
+            return;
+        }
+
+        currentDevices = [currentDevice];
+        renderDevices();
+
+        showToast("Tous les autres appareils ont été déconnectés.", "success");
+    } catch (error) {
+        console.error(error);
+        showToast("Impossible de déconnecter les autres appareils.", "error");
+    } finally {
+        hideLoader();
+    }
+}
+
+// ==========================================
+// Preferences Save
+// ==========================================
+
+async function savePreferences() {
+    if (isSavingPreferences) return;
+
+    isSavingPreferences = true;
+
+    try {
+        showLoader();
+        buttonLoading(savePreferencesButton, true);
+
+        const updatedSettings = {
+            theme: themeSelect ? themeSelect.value : "dark",
+            autoplay: autoplayToggle ? autoplayToggle.checked : true,
+            email_notifications: emailNotificationsToggle ? emailNotificationsToggle.checked : true,
+            push_notifications: pushNotificationsToggle ? pushNotificationsToggle.checked : true
+        };
+
+        const { error } = await updateUserSettings(updatedSettings);
+
+        if (error) throw error;
+
+        currentSettings = {
+            ...currentSettings,
+            ...updatedSettings
+        };
+
+        showToast("Préférences enregistrées.", "success");
+    } catch (error) {
+        console.error("Save settings error:", error);
+        showToast(error.message || "Impossible d'enregistrer les préférences.", "error");
+    } finally {
+        hideLoader();
+        buttonLoading(savePreferencesButton, false);
+        isSavingPreferences = false;
+    }
+}
+
+// ==========================================
+// Event Listeners
+// ==========================================
+
+function addEventListeners() {
+    // Profil / Navigation
+    if (editProfileButton) {
+        editProfileButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            navigate("profile.html");
+        });
+    }
+
+    // Visibilité Mots de passe
+    if (toggleCurrentPassword && currentPasswordInput) {
+        toggleCurrentPassword.addEventListener("click", () => togglePasswordVisibility(currentPasswordInput, toggleCurrentPassword));
+    }
+    if (toggleNewPassword && newPasswordInput) {
+        toggleNewPassword.addEventListener("click", () => togglePasswordVisibility(newPasswordInput, toggleNewPassword));
+    }
+    if (toggleConfirmPassword && confirmPasswordInput) {
+        toggleConfirmPassword.addEventListener("click", () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword));
+    }
+
+    // Force et correspondance MDP
+    if (newPasswordInput) {
+        newPasswordInput.addEventListener("input", updatePasswordStrength);
+    }
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener("input", updatePasswordMatch);
+    }
+
+    // Bouton mise à jour MDP
+    if (updatePasswordButton) {
+        updatePasswordButton.addEventListener("click", changePassword);
+    }
+
+    // Déconnexion autres appareils
+    if (disconnectAllButton) {
+        disconnectAllButton.addEventListener("click", disconnectOtherDevices);
+    }
+
+    // Enregistrement préférences
+    if (savePreferencesButton) {
+        savePreferencesButton.addEventListener("click", savePreferences);
+    }
+}
+
+// ==========================================
+// Démarrage de l'application
+// ==========================================
+
+init();
