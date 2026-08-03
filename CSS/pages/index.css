@@ -1,0 +1,1480 @@
+/* ==========================================
+   INDEX PAGE
+   Structure générale
+========================================== */
+
+/* ==========================================
+   Body
+========================================== */
+
+body{
+
+    overflow-x:hidden;
+
+    overflow-y:auto;
+
+    background:var(--nv-background);
+
+}
+
+
+/* ==========================================
+   Animated Background
+========================================== */
+
+.nv-home-background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-10;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.18),
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+    rgba(59,130,246,.15),
+    transparent 45%),
+
+    linear-gradient(
+    145deg,
+    #020617,
+    #071124,
+    #0B1120,
+    #020617);
+
+}
+
+.nv-home-background::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-20%;
+
+    background:
+
+    linear-gradient(
+
+    135deg,
+
+    transparent,
+
+    rgba(37,99,235,.08),
+
+    transparent,
+
+    rgba(96,165,250,.08),
+
+    transparent
+
+    );
+
+    background-size:300% 300%;
+
+    animation:gradientMove 20s linear infinite;
+
+    filter:blur(80px);
+
+}
+
+.nv-home-background::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(
+
+    rgba(255,255,255,.03) 1px,
+
+    transparent 1px),
+
+    linear-gradient(
+
+    90deg,
+
+    rgba(255,255,255,.03) 1px,
+
+    transparent 1px);
+
+    background-size:50px 50px;
+
+    mask-image:
+
+    radial-gradient(
+
+    circle,
+
+    white,
+
+    transparent 90%);
+
+}
+
+
+/* ==========================================
+   Orbs
+========================================== */
+
+.nv-orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(70px);
+
+    animation:floatOrb 12s ease-in-out infinite;
+
+}
+
+.nv-orb.one{
+
+    width:320px;
+
+    height:320px;
+
+    top:-120px;
+
+    left:-120px;
+
+    background:rgba(37,99,235,.25);
+
+}
+
+.nv-orb.two{
+
+    width:260px;
+
+    height:260px;
+
+    bottom:-100px;
+
+    right:-80px;
+
+    background:rgba(59,130,246,.22);
+
+    animation-delay:2s;
+
+}
+
+.nv-orb.three{
+
+    width:180px;
+
+    height:180px;
+
+    left:55%;
+
+    top:45%;
+
+    background:rgba(96,165,250,.18);
+
+    animation-delay:5s;
+
+}
+
+
+/* ==========================================
+   Main Layout
+========================================== */
+
+.nv-home{
+
+    display:flex;
+
+    min-height:100vh;
+
+    position:relative;
+
+}
+
+
+/* ==========================================
+   Main Content
+========================================== */
+
+.nv-main{
+
+    flex:1;
+
+    margin-left:260px;
+
+    margin-top:72px;
+
+    padding:1.5rem;
+
+    transition:
+
+    margin-left .25s ease,
+
+    padding .25s ease;
+
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.nv-header{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:72px;
+
+    z-index:200;
+
+    backdrop-filter:blur(25px);
+
+    background:rgba(15,23,42,.82);
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+
+/* ==========================================
+   Sidebar
+========================================== */
+
+.nv-sidebar{
+
+    position:fixed;
+
+    top:72px;
+
+    left:0;
+
+    bottom:0;
+
+    width:260px;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    background:rgba(15,23,42,.82);
+
+    backdrop-filter:blur(20px);
+
+    border-right:1px solid rgba(255,255,255,.06);
+
+    transition:width .25s ease;
+
+}
+
+.nv-sidebar::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.nv-sidebar::-webkit-scrollbar-thumb{
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:999px;
+
+}
+
+
+/* ==========================================
+   Sidebar Collapsed
+========================================== */
+
+.nv-sidebar.collapsed{
+
+    width:88px;
+
+}
+
+.nv-sidebar.collapsed + .nv-main{
+
+    margin-left:88px;
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:1200px){
+
+    .nv-main{
+
+        margin-left:88px;
+
+    }
+
+    .nv-sidebar{
+
+        width:88px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .nv-sidebar{
+
+        transform:translateX(-100%);
+
+        width:260px;
+
+        z-index:250;
+
+    }
+
+    .nv-sidebar.open{
+
+        transform:translateX(0);
+
+    }
+
+    .nv-main{
+
+        margin-left:0;
+
+        padding:1rem;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .nv-main{
+
+        padding:.75rem;
+
+    }
+  /* ==========================================
+   HEADER
+========================================== */
+
+.nv-header-content{
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:1.5rem;
+
+    padding:0 1.5rem;
+
+}
+
+/* ==========================================
+   Header Left
+========================================== */
+
+.nv-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    flex-shrink:0;
+
+}
+
+.nv-menu-button{
+
+    width:44px;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:transparent;
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.nv-menu-button:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.nv-logo{
+
+    height:34px;
+
+    width:auto;
+
+}
+
+/* ==========================================
+   Search
+========================================== */
+
+.nv-header-center{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.nv-search{
+
+    width:min(100%,720px);
+
+    display:flex;
+
+    align-items:center;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+    transition:.25s;
+
+}
+
+.nv-search:focus-within{
+
+    border-color:var(--nv-primary);
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+.nv-search input{
+
+    flex:1;
+
+    height:48px;
+
+    padding:0 1.25rem;
+
+    background:transparent;
+
+    border:none;
+
+    outline:none;
+
+    color:var(--nv-text);
+
+    font-size:.95rem;
+
+}
+
+.nv-search input::placeholder{
+
+    color:var(--nv-text-muted);
+
+}
+
+.nv-search button{
+
+    width:64px;
+
+    height:48px;
+
+    border:none;
+
+    background:rgba(255,255,255,.05);
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.nv-search button:hover{
+
+    background:rgba(37,99,235,.18);
+
+}
+
+/* ==========================================
+   Header Right
+========================================== */
+
+.nv-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+    flex-shrink:0;
+
+}
+
+.nv-header-action{
+
+    width:44px;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:transparent;
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    position:relative;
+
+}
+
+.nv-header-action:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.nv-header-action i{
+
+    font-size:1.1rem;
+
+}
+
+/* ==========================================
+   Notification Badge
+========================================== */
+
+.nv-badge{
+
+    position:absolute;
+
+    top:5px;
+
+    right:5px;
+
+    min-width:18px;
+
+    height:18px;
+
+    padding:0 5px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:999px;
+
+    background:#EF4444;
+
+    color:#fff;
+
+    font-size:.7rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Avatar
+========================================== */
+
+.nv-header-avatar{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    border:2px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+}
+
+.nv-header-avatar:hover{
+
+    border-color:var(--nv-primary);
+
+}
+
+.nv-header-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.nv-sidebar-content{
+
+    padding:1rem .75rem 2rem;
+
+}
+
+.nv-sidebar-section{
+
+    margin-bottom:1rem;
+
+    padding-bottom:1rem;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.nv-sidebar-title{
+
+    padding:.5rem 1rem;
+
+    font-size:.8rem;
+
+    color:var(--nv-text-muted);
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+}
+
+/* ==========================================
+   Sidebar Item
+========================================== */
+
+.nv-sidebar-link{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    height:48px;
+
+    padding:0 1rem;
+
+    border-radius:14px;
+
+    color:var(--nv-text-secondary);
+
+    text-decoration:none;
+
+    transition:.25s;
+
+}
+
+.nv-sidebar-link:hover{
+
+    background:rgba(255,255,255,.06);
+
+    color:var(--nv-text);
+
+}
+
+.nv-sidebar-link.active{
+
+    background:rgba(37,99,235,.18);
+
+    color:var(--nv-primary);
+
+    font-weight:600;
+
+}
+
+.nv-sidebar-link i{
+
+    width:24px;
+
+    text-align:center;
+
+    font-size:1.15rem;
+
+}
+
+.nv-sidebar-link span{
+
+    white-space:nowrap;
+
+}
+
+/* ==========================================
+   Collapsed Sidebar
+========================================== */
+
+.nv-sidebar.collapsed .nv-sidebar-link{
+
+    justify-content:center;
+
+    padding:0;
+
+}
+
+.nv-sidebar.collapsed .nv-sidebar-link span{
+
+    display:none;
+
+}
+
+.nv-sidebar.collapsed .nv-sidebar-title{
+
+    display:none;
+
+}
+
+/* ==========================================
+   Sidebar Footer
+========================================== */
+
+.nv-sidebar-footer{
+
+    padding:1rem;
+
+    font-size:.8rem;
+
+    color:var(--nv-text-muted);
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:900px){
+
+    .nv-search{
+
+        max-width:420px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .nv-header-content{
+
+        padding:0 1rem;
+
+    }
+
+    .nv-search{
+
+        max-width:none;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .nv-header-center{
+
+        display:none;
+
+    }
+
+}
+  /* ==========================================
+   CATEGORIES BAR
+========================================== */
+
+.nv-categories{
+
+    position:sticky;
+
+    top:72px;
+
+    z-index:100;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+    padding:.75rem 0 1rem;
+
+    margin-bottom:1.5rem;
+
+    background:linear-gradient(
+        to bottom,
+        rgba(2,6,23,.95),
+        rgba(2,6,23,.75),
+        transparent
+    );
+
+    backdrop-filter:blur(20px);
+
+}
+
+
+/* ==========================================
+   Scroll Container
+========================================== */
+
+.nv-categories-scroll{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+
+    -ms-overflow-style:none;
+
+    flex:1;
+
+}
+
+.nv-categories-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+/* ==========================================
+   Category Button
+========================================== */
+
+.nv-category{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.5rem;
+
+    flex-shrink:0;
+
+    min-width:max-content;
+
+    height:40px;
+
+    padding:0 1.15rem;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.06);
+
+    color:var(--nv-text-secondary);
+
+    cursor:pointer;
+
+    font-size:.9rem;
+
+    font-weight:500;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .2s ease;
+
+}
+
+.nv-category:hover{
+
+    background:rgba(255,255,255,.12);
+
+    color:var(--nv-text);
+
+    transform:translateY(-1px);
+
+}
+
+
+/* ==========================================
+   Active Category
+========================================== */
+
+.nv-category.active{
+
+    background:var(--nv-primary);
+
+    color:#fff;
+
+    font-weight:600;
+
+    box-shadow:0 10px 25px rgba(37,99,235,.30);
+
+}
+
+.nv-category.active:hover{
+
+    background:var(--nv-primary);
+
+    color:#fff;
+
+}
+
+
+/* ==========================================
+   Category Icon
+========================================== */
+
+.nv-category i{
+
+    font-size:.95rem;
+
+}
+
+
+/* ==========================================
+   Scroll Buttons
+========================================== */
+
+.nv-category-arrow{
+
+    width:40px;
+
+    height:40px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.06);
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.nv-category-arrow:hover{
+
+    background:rgba(37,99,235,.18);
+
+    color:var(--nv-primary);
+
+}
+
+
+/* ==========================================
+   Disabled Arrow
+========================================== */
+
+.nv-category-arrow:disabled{
+
+    opacity:.35;
+
+    cursor:not-allowed;
+
+}
+
+
+/* ==========================================
+   Focus
+========================================== */
+
+.nv-category:focus-visible,
+
+.nv-category-arrow:focus-visible{
+
+    outline:none;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.25);
+
+}
+
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-categories{
+
+        padding:.5rem 0 .75rem;
+
+        margin-bottom:1rem;
+
+    }
+
+    .nv-category{
+
+        height:36px;
+
+        padding:0 1rem;
+
+        font-size:.85rem;
+
+    }
+
+    .nv-category-arrow{
+
+        display:none;
+
+    }
+
+}
+  /* ==========================================
+   SHORTS SECTION
+========================================== */
+
+.nv-shorts-section{
+
+    margin:3rem 0;
+
+}
+
+.nv-shorts-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:1.5rem;
+
+}
+
+.nv-shorts-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+}
+
+.nv-shorts-title i{
+
+    font-size:1.5rem;
+
+    color:#EF4444;
+
+}
+
+.nv-shorts-title h2{
+
+    font-size:1.4rem;
+
+    font-weight:700;
+
+    color:var(--nv-text);
+
+}
+
+.nv-shorts-more{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.5rem;
+
+    color:var(--nv-primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.nv-shorts-more:hover{
+
+    color:var(--nv-primary-light);
+
+}
+
+
+/* ==========================================
+   Shorts Grid
+========================================== */
+
+.nv-shorts-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(220px,1fr));
+
+    gap:1.25rem;
+
+}
+
+
+/* ==========================================
+   Short Card
+========================================== */
+
+.nv-short-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.75rem;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease;
+
+}
+
+.nv-short-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+/* ==========================================
+   Thumbnail
+========================================== */
+
+.nv-short-thumbnail{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:9 / 16;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.06);
+
+}
+
+.nv-short-thumbnail img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:
+        transform .35s ease;
+
+}
+
+.nv-short-card:hover
+.nv-short-thumbnail img{
+
+    transform:scale(1.06);
+
+}
+
+
+/* ==========================================
+   Overlay
+========================================== */
+
+.nv-short-overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    padding:1rem;
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(0,0,0,.65)
+
+    );
+
+}
+
+.nv-short-duration{
+
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+
+    padding:.25rem .5rem;
+
+    border-radius:999px;
+
+    background:rgba(0,0,0,.65);
+
+    color:#fff;
+
+    font-size:.75rem;
+
+    font-weight:600;
+
+}
+
+.nv-short-views{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.35rem;
+
+    color:#fff;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================
+   Short Content
+========================================== */
+
+.nv-short-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.4rem;
+
+}
+
+.nv-short-title{
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:var(--nv-text);
+
+    line-height:1.4;
+
+    display:-webkit-box;
+
+    -webkit-line-clamp:2;
+
+    -webkit-box-orient:vertical;
+
+    overflow:hidden;
+
+}
+
+.nv-short-author{
+
+    color:var(--nv-text-secondary);
+
+    font-size:.88rem;
+
+}
+
+.nv-short-stats{
+
+    color:var(--nv-text-muted);
+
+    font-size:.82rem;
+
+}
+
+
+/* ==========================================
+   Hover Action
+========================================== */
+
+.nv-short-menu{
+
+    position:absolute;
+
+    top:12px;
+
+    left:12px;
+
+    width:36px;
+
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:rgba(0,0,0,.45);
+
+    color:#fff;
+
+    opacity:0;
+
+    transition:.25s;
+
+}
+
+.nv-short-card:hover
+.nv-short-menu{
+
+    opacity:1;
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:1200px){
+
+    .nv-shorts-grid{
+
+        grid-template-columns:
+        repeat(auto-fill,minmax(200px,1fr));
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .nv-shorts-section{
+
+        margin:2.5rem 0;
+
+    }
+
+    .nv-shorts-grid{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+        gap:1rem;
+
+    }
+
+    .nv-short-thumbnail{
+
+        border-radius:16px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .nv-shorts-header{
+
+        margin-bottom:1rem;
+
+    }
+
+    .nv-shorts-title h2{
+
+        font-size:1.2rem;
+
+    }
+
+    .nv-shorts-grid{
+
+        gap:.75rem;
+
+    }
+
+    .nv-short-title{
+
+        font-size:.92rem;
+
+    }
+
+}
+
+}
