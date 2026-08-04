@@ -1,1063 +1,414 @@
 <!DOCTYPE html>
-
 <html lang="fr">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NetView - Regardez des vidéos, des shorts, des lives et découvrez les produits des créateurs.">
+    <meta name="theme-color" content="#2563EB">
+    <title>NetView</title>
 
-<meta charset="UTF-8">
+    <!-- ==========================================
+    Favicon
+    ========================================== -->
+    <link rel="icon" href="NetView_icone.png">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+    <!-- ==========================================
+    Font Awesome
+    ========================================== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<meta
-    name="description"
-    content="NetView - Regardez des vidéos, des shorts, des lives et découvrez les produits des créateurs.">
+    <!-- ==========================================
+    Core CSS
+    ========================================== -->
+    <link rel="stylesheet" href="CSS/core/reset.css">
+    <link rel="stylesheet" href="CSS/core/variables.css">
+    <link rel="stylesheet" href="CSS/core/typography.css">
+    <link rel="stylesheet" href="CSS/core/utilities.css">
+    <link rel="stylesheet" href="CSS/core/animations.css">
 
-<meta
-    name="theme-color"
-    content="#2563EB">
+    <!-- ==========================================
+    Components
+    ========================================== -->
+    <link rel="stylesheet" href="CSS/components/header.css">
+    <link rel="stylesheet" href="CSS/components/sidebar.css">
+    <link rel="stylesheet" href="CSS/components/buttons.css">
+    <link rel="stylesheet" href="CSS/components/cards.css">
+    <link rel="stylesheet" href="CSS/components/forms.css">
+    <link rel="stylesheet" href="CSS/components/modal.css">
+    <link rel="stylesheet" href="CSS/components/toast.css">
+    <link rel="stylesheet" href="CSS/components/loader.css">
 
-<title>
-
-NetView
-
-</title>
-
-<!-- ==========================================
-Favicon
-========================================== -->
-
-<link
-    rel="icon"
-    href="NetView_icone.png">
-
-<!-- ==========================================
-Font Awesome
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-<!-- ==========================================
-Core CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/core/reset.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/variables.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/typography.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/animations.css">
-
-<!-- ==========================================
-Components
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/components/header.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/sidebar.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/buttons.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/cards.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/forms.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/modal.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/toast.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/loader.css">
-
-<!-- ==========================================
-Page CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/pages/index.css">
-
+    <!-- ==========================================
+    Page CSS
+    ========================================== -->
+    <link rel="stylesheet" href="CSS/pages/index.css">
 </head>
-
 <body>
 
-<!-- ==========================================
-Background
-========================================== -->
-
-<div class="nv-home-background">
-
-<div class="nv-orb one"></div>
-
-<div class="nv-orb two"></div>
-
-<div class="nv-orb three"></div>
-
-</div>
-
-<!-- ==========================================
-Loader
-========================================== -->
-
-<div
-    id="globalLoader"
-    class="nv-page-loader">
-
-<div class="nv-loader"></div>
-
-</div>
-
-<!-- ==========================================
-Header
-========================================== -->
-
-<header class="nv-header">
-
-<div class="nv-header-left">
-
-<button
-    id="menuButton"
-    class="nv-icon-button">
-
-<i class="fa-solid fa-bars"></i>
-
-</button>
-
-<a
-    href="index.html"
-    class="nv-logo">
-
-<img
-    src="NetView.png"
-    alt="NetView">
-
-</a>
-
-</div>
-
-<div class="nv-header-center">
-
-<form
-    id="searchForm"
-    class="nv-search-form">
-
-<input
-    id="searchInput"
-    class="nv-search-input"
-    type="search"
-    placeholder="Rechercher">
-
-<button
-    class="nv-search-button"
-    type="submit">
-
-<i class="fa-solid fa-magnifying-glass"></i>
-
-</button>
-
-</form>
-
-</div>
-
-<!-- ==========================================
-Header Right
-========================================== -->
-
-<div
-    id="headerRight"
-    class="nv-header-right">
-
-</div>
-
-</header>
-
-<!-- ==========================================
-Sidebar
-========================================== -->
-
-<aside
-    id="sidebar"
-    class="nv-sidebar">
-
-<nav>
-
-<a
-    href="index.html"
-    class="nv-sidebar-item active">
-
-<i class="fa-solid fa-house"></i>
-
-<span>
-
-Accueil
-
-</span>
-
-</a>
-
-<a
-    href="shorts.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-bolt"></i>
-
-<span>
-
-Shorts
-
-</span>
-
-</a>
-
-<a
-    href="lives.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-tower-broadcast"></i>
-
-<span>
-
-Lives
-
-</span>
-
-</a>
-
-<a
-    href="subscriptions.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-users"></i>
-
-<span>
-
-Abonnements
-
-</span>
-
-</a>
-
-<a
-    href="library.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-photo-film"></i>
-
-<span>
-
-Bibliothèque
-
-</span>
-
-</a>
-
-<hr>
-
-<a
-    href="netview-shop.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-store"></i>
-
-<span>
-
-Boutique
-
-</span>
-
-</a>
-
-<a
-    href="downloads.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-download"></i>
-
-<span>
-
-Téléchargements
-
-</span>
-
-</a>
-
-<a
-    href="messages.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-comments"></i>
-
-<span>
-
-Messages
-
-</span>
-
-</a>
-
-<a
-    href="studio.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-chart-column"></i>
-
-<span>
-
-Studio
-
-</span>
-
-</a>
-
-<a
-    href="settings.html"
-    class="nv-sidebar-item">
-
-<i class="fa-solid fa-gear"></i>
-
-<span>
-
-Paramètres
-
-</span>
-
-</a>
-
-</nav>
-
-</aside>
-
-<!-- ==========================================
-Main
-========================================== -->
-
-<main class="nv-home">
-
-<!-- ==========================================
-Categories
-========================================== -->
-
-<section class="nv-categories">
-
-<button
-    class="nv-category active">
-
-Tout
-
-</button>
-
-<div
-    id="categoriesContainer"
-    class="nv-categories-scroll">
-
-<!-- Catégories générées par JS
-selon les tendances -->
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Videos Grid
-========================================== -->
-
-<section
-    id="videosGrid"
-    class="nv-video-grid">
-<!-- ==========================================
-Video Cards
-========================================== -->
-
-<!-- Les cartes vidéo seront générées par index.js -->
-
-</section>
-
-<!-- ==========================================
-Empty State
-========================================== -->
-
-<section
-    id="videosEmpty"
-    class="nv-empty-state"
-    hidden>
-
-<i class="fa-regular fa-face-frown"></i>
-
-<h2>
-
-Aucune vidéo disponible
-
-</h2>
-
-<p>
-
-Les vidéos apparaîtront ici dès qu'elles seront publiées.
-
-</p>
-
-</section>
-
-<!-- ==========================================
-Skeleton Videos
-========================================== -->
-
-<section
-    id="videosSkeleton"
-    class="nv-video-grid"
-    hidden>
-
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-
-</section>
-
-<!-- ==========================================
-Shorts
-========================================== -->
-
-<section class="nv-home-section">
-
-<div class="nv-section-header">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-bolt"></i>
-
-<h2>
-
-Shorts
-
-</h2>
-
-</div>
-
-<a
-    href="shorts.html"
-    class="nv-section-link">
-
-Tout voir
-
-</a>
-
-</div>
-
-<div
-    id="shortsGrid"
-    class="nv-shorts-grid">
-
-<!-- Généré par JavaScript -->
-
-</div>
-
-<div
-    id="shortsEmpty"
-    class="nv-empty-state"
-    hidden>
-
-<p>
-
-Aucun Short disponible.
-
-</p>
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Deuxième grille de vidéos
-========================================== -->
-
-<section
-    id="videosGridTwo"
-    class="nv-video-grid">
-
-<!-- Généré par JavaScript -->
-
-</section>
-
-<!-- ==========================================
-Lives
-========================================== -->
-
-<section class="nv-home-section">
-
-<div class="nv-section-header">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-tower-broadcast"></i>
-
-<h2>
-
-Lives en direct
-
-</h2>
-
-</div>
-
-<a
-    href="lives.html"
-    class="nv-section-link">
-
-Tout voir
-
-</a>
-
-</div>
-
-<div
-    id="livesCarousel"
-    class="nv-horizontal-scroll">
-
-<!-- Cartes Live générées par JavaScript -->
-
-</div>
-
-<div
-    id="livesEmpty"
-    class="nv-empty-state"
-    hidden>
-
-<p>
-
-Aucun Live en cours.
-
-</p>
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Produits sponsorisés
-========================================== -->
-
-<section class="nv-home-section">
-
-<div class="nv-section-header">
-
-<div class="nv-section-title">
-
-<i class="fa-solid fa-store"></i>
-
-<h2>
-
-Produits sponsorisés
-
-</h2>
-
-</div>
-
-<a
-    href="netview-shop.html"
-    class="nv-section-link">
-
-Découvrir
-
-</a>
-
-</div>
-
-<div
-    id="sponsoredProducts"
-    class="nv-horizontal-scroll">
-
-<!-- Produits générés par JavaScript -->
-
-</div>
-
-<div
-    id="productsEmpty"
-    class="nv-empty-state"
-    hidden>
-
-<p>
-
-Aucun produit sponsorisé.
-
-</p>
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Reprise du flux vidéo
-========================================== -->
-
-<section
-    id="videosGridThree"
-    class="nv-video-grid">
-
-<!-- Généré par JavaScript -->
-
-</section>
-
-<!-- ==========================================
-Chargement infini
-========================================== -->
-
-<div
-    id="loadMoreTrigger">
-
-</div>
-
-<!-- ==========================================
-Skeleton (chargement supplémentaire)
-========================================== -->
-
-<section
-    id="moreVideosSkeleton"
-    class="nv-video-grid"
-    hidden>
-
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-<div class="nv-video-skeleton"></div>
-
-</section>
-
-<!-- ==========================================
-Fin du contenu principal
-========================================== -->
-
-</main>
-<!-- ==========================================
-Templates
-========================================== -->
-
-<!-- ==========================================
-Video Card Template
-========================================== -->
-
-<template id="videoCardTemplate">
-
-<article class="nv-video-card">
-
-<a
-    class="nv-video-thumbnail"
-    href="#">
-
-<img
-    class="nv-video-image"
-    src=""
-    alt="Miniature">
-
-<span class="nv-video-duration">
-
-00:00
-
-</span>
-
-</a>
-
-<div class="nv-video-content">
-
-<a
-    href="#"
-    class="nv-video-avatar">
-
-<img
-    src=""
-    alt="Avatar">
-
-</a>
-
-<div class="nv-video-info">
-
-<a
-    href="#"
-    class="nv-video-title">
-
-Titre de la vidéo
-
-</a>
-
-<a
-    href="#"
-    class="nv-video-channel">
-
-Chaîne
-
-</a>
-
-<div class="nv-video-meta">
-
-<span class="nv-video-views">
-
-0 vues
-
-</span>
-
-•
-
-<span class="nv-video-date">
-
-Aujourd'hui
-
-</span>
-
-</div>
-
-</div>
-
-<button
-    class="nv-video-menu-button">
-
-<i class="fa-solid fa-ellipsis-vertical"></i>
-
-</button>
-
-</div>
-
-</article>
-
-</template>
-
-<!-- ==========================================
-Short Card Template
-========================================== -->
-
-<template id="shortCardTemplate">
-
-<article class="nv-short-card">
-
-<a href="#">
-
-<img
-    class="nv-short-image"
-    src=""
-    alt="Short">
-
-</a>
-
-<div class="nv-short-info">
-
-<h3>
-
-Titre
-
-</h3>
-
-<span>
-
-0 vues
-
-</span>
-
-</div>
-
-</article>
-
-</template>
-
-<!-- ==========================================
-Live Card Template
-========================================== -->
-
-<template id="liveCardTemplate">
-
-<article class="nv-live-card">
-
-<a href="#">
-
-<img
-    class="nv-live-image"
-    src=""
-    alt="Live">
-
-<span class="nv-live-badge">
-
-LIVE
-
-</span>
-
-</a>
-
-<div class="nv-live-info">
-
-<h3>
-
-Titre du live
-
-</h3>
-
-<p>
-
-Créateur
-
-</p>
-
-<span>
-
-0 spectateurs
-
-</span>
-
-</div>
-
-</article>
-
-</template>
-
-<!-- ==========================================
-Product Card Template
-========================================== -->
-
-<template id="productCardTemplate">
-
-<article class="nv-product-card">
-
-<a href="#">
-
-<img
-    class="nv-product-image"
-    src=""
-    alt="Produit">
-
-</a>
-
-<div class="nv-product-info">
-
-<h3>
-
-Produit
-
-</h3>
-
-<p>
-
-Créateur
-
-</p>
-
-<strong>
-
-0,00 $
-
-</strong>
-
-</div>
-
-</article>
-
-</template>
-
-<!-- ==========================================
-Video Context Menu
-========================================== -->
-
-<div
-    id="videoContextMenu"
-    class="nv-context-menu">
-
-<button>
-
-<i class="fa-regular fa-clock"></i>
-
-Regarder plus tard
-
-</button>
-
-<button>
-
-<i class="fa-solid fa-list"></i>
-
-Ajouter à une playlist
-
-</button>
-
-<button>
-
-<i class="fa-solid fa-share"></i>
-
-Partager
-
-</button>
-
-<button>
-
-<i class="fa-solid fa-download"></i>
-
-Télécharger
-
-</button>
-
-<button>
-
-<i class="fa-regular fa-flag"></i>
-
-Signaler
-
-</button>
-
-</div>
-
-<!-- ==========================================
-Short Context Menu
-========================================== -->
-
-<div
-    id="shortContextMenu"
-    class="nv-context-menu">
-
-<button>
-
-<i class="fa-solid fa-share"></i>
-
-Partager
-
-</button>
-
-<button>
-
-<i class="fa-regular fa-flag"></i>
-
-Signaler
-
-</button>
-
-</div>
-
-<!-- ==========================================
-Live Context Menu
-========================================== -->
-
-<div
-    id="liveContextMenu"
-    class="nv-context-menu">
-
-<button>
-
-<i class="fa-solid fa-share"></i>
-
-Partager
-
-</button>
-
-<button>
-
-<i class="fa-regular fa-bell"></i>
-
-Recevoir une notification
-
-</button>
-
-<button>
-
-<i class="fa-regular fa-flag"></i>
-
-Signaler
-
-</button>
-
-</div>
-
-<!-- ==========================================
-Product Context Menu
-========================================== -->
-
-<div
-    id="productContextMenu"
-    class="nv-context-menu">
-
-<button>
-
-<i class="fa-solid fa-cart-shopping"></i>
-
-Ajouter au panier
-
-</button>
-
-<button>
-
-<i class="fa-regular fa-heart"></i>
-
-Ajouter aux favoris
-
-</button>
-
-<button>
-
-<i class="fa-solid fa-share"></i>
-
-Partager
-
-</button>
-
-</div>
-
-<!-- ==========================================
-Global Loader
-========================================== -->
-
-<div
-    id="globalLoader"
-    class="nv-page-loader">
-
-<div class="nv-loader"></div>
-
-</div>
-
-<!-- ==========================================
-Toast Container
-========================================== -->
-
-<div
-    id="toastContainer"
-    class="nv-toast-container">
-
-</div>
-<!-- ==========================================
-Scripts
-========================================== -->
-<script
-    type="module"
-    src="JS/pages/index.js"></script>
-
+    <!-- ==========================================
+    Background
+    ========================================== -->
+    <div class="nv-home-background">
+        <div class="nv-orb one"></div>
+        <div class="nv-orb two"></div>
+        <div class="nv-orb three"></div>
+    </div>
+
+    <!-- ==========================================
+    Loader
+    ========================================== -->
+    <div id="globalLoader" class="nv-page-loader">
+        <div class="nv-loader"></div>
+    </div>
+
+    <!-- ==========================================
+    Header
+    ========================================== -->
+    <header class="nv-header">
+        <div class="nv-header-left">
+            <button id="menuButton" class="nv-icon-button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <a href="index.html" class="nv-logo">
+                <img src="NetView.png" alt="NetView">
+            </a>
+        </div>
+
+        <div class="nv-header-center">
+            <form id="searchForm" class="nv-search-form">
+                <input id="searchInput" class="nv-search-input" type="search" placeholder="Rechercher">
+                <button class="nv-search-button" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- ==========================================
+        Header Right
+        ========================================== -->
+        <div id="headerRight" class="nv-header-right">
+        </div>
+    </header>
+
+    <!-- ==========================================
+    Sidebar
+    ========================================== -->
+    <aside id="sidebar" class="nv-sidebar">
+        <nav>
+            <a href="index.html" class="nv-sidebar-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="shorts.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Shorts</span>
+            </a>
+            <a href="lives.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-tower-broadcast"></i>
+                <span>Lives</span>
+            </a>
+            <a href="subscriptions.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Abonnements</span>
+            </a>
+            <a href="library.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-photo-film"></i>
+                <span>Bibliothèque</span>
+            </a>
+            <hr>
+            <a href="netview-shop.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-store"></i>
+                <span>Boutique</span>
+            </a>
+            <a href="downloads.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-download"></i>
+                <span>Téléchargements</span>
+            </a>
+            <a href="messages.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-comments"></i>
+                <span>Messages</span>
+            </a>
+            <a href="studio.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Studio</span>
+            </a>
+            <a href="settings.html" class="nv-sidebar-item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Paramètres</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ==========================================
+    Main
+    ========================================== -->
+    <main class="nv-home">
+
+        <!-- ==========================================
+        Categories
+        ========================================== -->
+        <section class="nv-categories">
+            <button class="nv-category active">Tout</button>
+            <div id="categoriesContainer" class="nv-categories-scroll">
+                <!-- Catégories générées par JS selon les tendances -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+        Videos Grid
+        ========================================== -->
+        <section id="videosGrid" class="nv-video-grid">
+            <!-- Les cartes vidéo seront générées par index.js -->
+        </section>
+
+        <!-- ==========================================
+        Empty State
+        ========================================== -->
+        <section id="videosEmpty" class="nv-empty-state" hidden>
+            <i class="fa-regular fa-face-frown"></i>
+            <h2>Aucune vidéo disponible</h2>
+            <p>Les vidéos apparaîtront ici dès qu'elles seront publiées.</p>
+        </section>
+
+        <!-- ==========================================
+        Skeleton Videos
+        ========================================== -->
+        <section id="videosSkeleton" class="nv-video-grid" hidden>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+        </section>
+
+        <!-- ==========================================
+        Shorts
+        ========================================== -->
+        <section class="nv-home-section">
+            <div class="nv-section-header">
+                <div class="nv-section-title">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h2>Shorts</h2>
+                </div>
+                <a href="shorts.html" class="nv-section-link">Tout voir</a>
+            </div>
+            <div id="shortsGrid" class="nv-shorts-grid">
+                <!-- Généré par JavaScript -->
+            </div>
+            <div id="shortsEmpty" class="nv-empty-state" hidden>
+                <p>Aucun Short disponible.</p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+        Deuxième grille de vidéos
+        ========================================== -->
+        <section id="videosGridTwo" class="nv-video-grid">
+            <!-- Généré par JavaScript -->
+        </section>
+
+        <!-- ==========================================
+        Lives
+        ========================================== -->
+        <section class="nv-home-section">
+            <div class="nv-section-header">
+                <div class="nv-section-title">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                    <h2>Lives en direct</h2>
+                </div>
+                <a href="lives.html" class="nv-section-link">Tout voir</a>
+            </div>
+            <div id="livesCarousel" class="nv-horizontal-scroll">
+                <!-- Cartes Live générées par JavaScript -->
+            </div>
+            <div id="livesEmpty" class="nv-empty-state" hidden>
+                <p>Aucun Live en cours.</p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+        Produits sponsorisés
+        ========================================== -->
+        <section class="nv-home-section">
+            <div class="nv-section-header">
+                <div class="nv-section-title">
+                    <i class="fa-solid fa-store"></i>
+                    <h2>Produits sponsorisés</h2>
+                </div>
+                <a href="netview-shop.html" class="nv-section-link">Découvrir</a>
+            </div>
+            <div id="sponsoredProducts" class="nv-horizontal-scroll">
+                <!-- Produits générés par JavaScript -->
+            </div>
+            <div id="productsEmpty" class="nv-empty-state" hidden>
+                <p>Aucun produit sponsorisé.</p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+        Reprise du flux vidéo
+        ========================================== -->
+        <section id="videosGridThree" class="nv-video-grid">
+            <!-- Généré par JavaScript -->
+        </section>
+
+        <!-- ==========================================
+        Chargement infini
+        ========================================== -->
+        <div id="loadMoreTrigger"></div>
+
+        <!-- ==========================================
+        Skeleton (chargement supplémentaire)
+        ========================================== -->
+        <section id="moreVideosSkeleton" class="nv-video-grid" hidden>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+            <div class="nv-video-skeleton"></div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+    Templates
+    ========================================== -->
+
+    <!-- ==========================================
+    Video Card Template
+    ========================================== -->
+    <template id="videoCardTemplate">
+        <article class="nv-video-card">
+            <a class="nv-video-thumbnail" href="#">
+                <img class="nv-video-image" src="" alt="Miniature">
+                <span class="nv-video-duration">00:00</span>
+            </a>
+            <div class="nv-video-content">
+                <a href="#" class="nv-video-avatar">
+                    <img src="" alt="Avatar">
+                </a>
+                <div class="nv-video-info">
+                    <a href="#" class="nv-video-title">Titre de la vidéo</a>
+                    <a href="#" class="nv-video-channel">Chaîne</a>
+                    <div class="nv-video-meta">
+                        <span class="nv-video-views">0 vues</span>
+                        •
+                        <span class="nv-video-date">Aujourd'hui</span>
+                    </div>
+                </div>
+                <button class="nv-video-menu-button">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+            </div>
+        </article>
+    </template>
+
+    <!-- ==========================================
+    Short Card Template
+    ========================================== -->
+    <template id="shortCardTemplate">
+        <article class="nv-short-card">
+            <a href="#">
+                <img class="nv-short-image" src="" alt="Short">
+            </a>
+            <div class="nv-short-info">
+                <h3>Titre</h3>
+                <span>0 vues</span>
+            </div>
+        </article>
+    </template>
+
+    <!-- ==========================================
+    Live Card Template
+    ========================================== -->
+    <template id="liveCardTemplate">
+        <article class="nv-live-card">
+            <a href="#">
+                <img class="nv-live-image" src="" alt="Live">
+                <span class="nv-live-badge">LIVE</span>
+            </a>
+            <div class="nv-live-info">
+                <h3>Titre du live</h3>
+                <p>Créateur</p>
+                <span>0 spectateurs</span>
+            </div>
+        </article>
+    </template>
+
+    <!-- ==========================================
+    Product Card Template
+    ========================================== -->
+    <template id="productCardTemplate">
+        <article class="nv-product-card">
+            <a href="#">
+                <img class="nv-product-image" src="" alt="Produit">
+            </a>
+            <div class="nv-product-info">
+                <h3>Produit</h3>
+                <p>Créateur</p>
+                <strong>0,00 $</strong>
+            </div>
+        </article>
+    </template>
+
+    <!-- ==========================================
+    Video Context Menu
+    ========================================== -->
+    <div id="videoContextMenu" class="nv-context-menu">
+        <button><i class="fa-regular fa-clock"></i> Regarder plus tard</button>
+        <button><i class="fa-solid fa-list"></i> Ajouter à une playlist</button>
+        <button><i class="fa-solid fa-share"></i> Partager</button>
+        <button><i class="fa-solid fa-download"></i> Télécharger</button>
+        <button><i class="fa-regular fa-flag"></i> Signaler</button>
+    </div>
+
+    <!-- ==========================================
+    Short Context Menu
+    ========================================== -->
+    <div id="shortContextMenu" class="nv-context-menu">
+        <button><i class="fa-solid fa-share"></i> Partager</button>
+        <button><i class="fa-regular fa-flag"></i> Signaler</button>
+    </div>
+
+    <!-- ==========================================
+    Live Context Menu
+    ========================================== -->
+    <div id="liveContextMenu" class="nv-context-menu">
+        <button><i class="fa-solid fa-share"></i> Partager</button>
+        <button><i class="fa-regular fa-bell"></i> Recevoir une notification</button>
+        <button><i class="fa-regular fa-flag"></i> Signaler</button>
+    </div>
+
+    <!-- ==========================================
+    Product Context Menu
+    ========================================== -->
+    <div id="productContextMenu" class="nv-context-menu">
+        <button><i class="fa-solid fa-cart-shopping"></i> Ajouter au panier</button>
+        <button><i class="fa-regular fa-heart"></i> Ajouter aux favoris</button>
+        <button><i class="fa-solid fa-share"></i> Partager</button>
+    </div>
+
+    <!-- ==========================================
+    Global Loader
+    ========================================== -->
+    <div id="globalLoader" class="nv-page-loader">
+        <div class="nv-loader"></div>
+    </div>
+
+    <!-- ==========================================
+    Toast Container
+    ========================================== -->
+    <div id="toastContainer" class="nv-toast-container"></div>
+
+    <!-- ==========================================
+    Scripts
+    ========================================== -->
+    <script type="module" src="JS/pages/index.js"></script>
 </body>
-
 </html>
