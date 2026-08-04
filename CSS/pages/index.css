@@ -1478,3 +1478,958 @@ body{
 }
 
 }
+/* ==========================================
+   HORIZONTAL SECTIONS
+   Lives & Sponsored Products
+========================================== */
+
+.nv-horizontal-section{
+
+    margin:3rem 0;
+
+}
+
+.nv-horizontal-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:1.5rem;
+
+}
+
+.nv-horizontal-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+}
+
+.nv-horizontal-title i{
+
+    font-size:1.35rem;
+
+    color:var(--nv-primary);
+
+}
+
+.nv-horizontal-title h2{
+
+    color:var(--nv-text);
+
+    font-size:1.35rem;
+
+    font-weight:700;
+
+}
+
+.nv-horizontal-link{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.4rem;
+
+    color:var(--nv-primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.nv-horizontal-link:hover{
+
+    color:var(--nv-primary-light);
+
+}
+
+
+/* ==========================================
+   Horizontal Scroll
+========================================== */
+
+.nv-horizontal-scroll{
+
+    display:flex;
+
+    gap:1.25rem;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+
+    -ms-overflow-style:none;
+
+    padding-bottom:.35rem;
+
+}
+
+.nv-horizontal-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+/* ==========================================
+   Live Card
+========================================== */
+
+.nv-live-card{
+
+    flex:0 0 340px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.85rem;
+
+    cursor:pointer;
+
+    transition:transform .25s ease;
+
+}
+
+.nv-live-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.nv-live-thumbnail{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+    overflow:hidden;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+.nv-live-thumbnail img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:transform .35s ease;
+
+}
+
+.nv-live-card:hover .nv-live-thumbnail img{
+
+    transform:scale(1.05);
+
+}
+
+
+/* ==========================================
+   LIVE Badge
+========================================== */
+
+.nv-live-badge{
+
+    position:absolute;
+
+    top:12px;
+
+    left:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.4rem;
+
+    padding:.35rem .75rem;
+
+    border-radius:999px;
+
+    background:#EF4444;
+
+    color:#fff;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    letter-spacing:.04em;
+
+    text-transform:uppercase;
+
+    box-shadow:0 8px 20px rgba(239,68,68,.35);
+
+}
+
+.nv-live-badge::before{
+
+    content:"";
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    animation:nvLivePulse 1.2s infinite;
+
+}
+
+.nv-live-viewers{
+
+    position:absolute;
+
+    right:12px;
+
+    bottom:12px;
+
+    padding:.35rem .65rem;
+
+    border-radius:999px;
+
+    background:rgba(0,0,0,.65);
+
+    color:#fff;
+
+    font-size:.8rem;
+
+    font-weight:600;
+
+}
+
+.nv-live-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.4rem;
+
+}
+
+.nv-live-title{
+
+    color:var(--nv-text);
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    line-height:1.45;
+
+}
+
+.nv-live-channel{
+
+    color:var(--nv-text-secondary);
+
+    font-size:.9rem;
+
+}
+
+.nv-live-category{
+
+    color:var(--nv-text-muted);
+
+    font-size:.82rem;
+
+}
+
+
+/* ==========================================
+   Sponsored Product Card
+========================================== */
+
+.nv-product-card{
+
+    flex:0 0 260px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.75rem;
+
+    padding:1rem;
+
+    border-radius:20px;
+
+    background:rgba(15,23,42,.70);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+.nv-product-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:rgba(37,99,235,.35);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.30);
+
+}
+
+.nv-product-image{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:1/1;
+
+    overflow:hidden;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.05);
+
+}
+
+.nv-product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:transform .35s ease;
+
+}
+
+.nv-product-card:hover .nv-product-image img{
+
+    transform:scale(1.06);
+
+}
+
+
+/* ==========================================
+   Sponsored Badge
+========================================== */
+
+.nv-sponsored-badge{
+
+    position:absolute;
+
+    top:10px;
+
+    left:10px;
+
+    padding:.3rem .7rem;
+
+    border-radius:999px;
+
+    background:var(--nv-primary);
+
+    color:#fff;
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+    letter-spacing:.04em;
+
+    text-transform:uppercase;
+
+}
+
+.nv-product-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.45rem;
+
+}
+
+.nv-product-title{
+
+    color:var(--nv-text);
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    line-height:1.45;
+
+}
+
+.nv-product-creator{
+
+    color:var(--nv-text-secondary);
+
+    font-size:.86rem;
+
+}
+
+.nv-product-price{
+
+    color:#22C55E;
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+}
+
+
+/* ==========================================
+   Live Animation
+========================================== */
+
+@keyframes nvLivePulse{
+
+    0%{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        opacity:.35;
+
+        transform:scale(.7);
+
+    }
+
+    100%{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-live-card{
+
+        flex-basis:300px;
+
+    }
+
+    .nv-product-card{
+
+        flex-basis:220px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .nv-horizontal-section{
+
+        margin:2.5rem 0;
+
+    }
+
+    .nv-live-card{
+
+        flex-basis:270px;
+
+    }
+
+    .nv-product-card{
+
+        flex-basis:190px;
+
+    }
+
+}
+/* ==========================================
+   SKELETON LOADERS
+========================================== */
+
+.nv-skeleton{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.06);
+
+}
+
+.nv-skeleton::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255,255,255,.10),
+
+        transparent
+
+    );
+
+    transform:translateX(-100%);
+
+    animation:nvSkeleton 1.3s infinite;
+
+}
+
+.nv-skeleton-video{
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+}
+
+.nv-skeleton-short{
+
+    width:100%;
+
+    aspect-ratio:9/16;
+
+}
+
+.nv-skeleton-avatar{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+}
+
+.nv-skeleton-line{
+
+    height:12px;
+
+    border-radius:999px;
+
+    margin-top:.75rem;
+
+}
+
+.nv-skeleton-line.small{
+
+    width:45%;
+
+}
+
+.nv-skeleton-line.medium{
+
+    width:70%;
+
+}
+
+.nv-skeleton-line.large{
+
+    width:100%;
+
+}
+
+@keyframes nvSkeleton{
+
+    from{
+
+        transform:translateX(-100%);
+
+    }
+
+    to{
+
+        transform:translateX(100%);
+
+    }
+
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.nv-empty{
+
+    width:100%;
+
+    padding:5rem 2rem;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    border-radius:24px;
+
+    border:1px dashed rgba(255,255,255,.12);
+
+    background:rgba(255,255,255,.03);
+
+}
+
+.nv-empty i{
+
+    font-size:3rem;
+
+    color:var(--nv-primary);
+
+    margin-bottom:1rem;
+
+}
+
+.nv-empty h3{
+
+    color:var(--nv-text);
+
+    margin-bottom:.75rem;
+
+}
+
+.nv-empty p{
+
+    max-width:500px;
+
+    color:var(--nv-text-secondary);
+
+    line-height:1.7;
+
+}
+
+
+/* ==========================================
+   CONTEXT MENU
+========================================== */
+
+.nv-context-menu{
+
+    position:fixed;
+
+    min-width:240px;
+
+    padding:.5rem;
+
+    display:none;
+
+    flex-direction:column;
+
+    background:rgba(15,23,42,.96);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    box-shadow:0 25px 50px rgba(0,0,0,.40);
+
+    z-index:5000;
+
+    animation:nvMenuIn .18s ease;
+
+}
+
+.nv-context-menu.show{
+
+    display:flex;
+
+}
+
+.nv-context-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.85rem;
+
+    height:46px;
+
+    padding:0 1rem;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:transparent;
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    text-align:left;
+
+}
+
+.nv-context-item:hover{
+
+    background:rgba(255,255,255,.06);
+
+}
+
+.nv-context-item.danger{
+
+    color:#EF4444;
+
+}
+
+.nv-context-item i{
+
+    width:20px;
+
+    text-align:center;
+
+}
+
+@keyframes nvMenuIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ==========================================
+   GLOBAL ANIMATIONS
+========================================== */
+
+.nv-fade-up{
+
+    animation:nvFadeUp .45s ease;
+
+}
+
+.nv-scale{
+
+    animation:nvScale .25s ease;
+
+}
+
+@keyframes nvFadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes nvScale{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+
+/* ==========================================
+   FINAL RESPONSIVE
+========================================== */
+
+@media(max-width:1200px){
+
+    .nv-video-grid{
+
+        grid-template-columns:
+        repeat(auto-fill,minmax(280px,1fr));
+
+    }
+
+}
+
+@media(max-width:992px){
+
+    .nv-video-grid{
+
+        grid-template-columns:
+        repeat(auto-fill,minmax(260px,1fr));
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .nv-main{
+
+        padding:1rem;
+
+    }
+
+    .nv-horizontal-scroll{
+
+        gap:1rem;
+
+    }
+
+    .nv-context-menu{
+
+        min-width:220px;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .nv-video-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .nv-empty{
+
+        padding:3rem 1rem;
+
+    }
+
+    .nv-empty i{
+
+        font-size:2.5rem;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .nv-main{
+
+        padding:.75rem;
+
+    }
+
+    .nv-context-menu{
+
+        width:calc(100vw - 24px);
+
+        min-width:0;
+
+        left:12px !important;
+
+        right:12px;
+
+    }
+
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+
+    *::before,
+
+    *::after{
+
+        animation-duration:.01ms !important;
+
+        animation-iteration-count:1 !important;
+
+        transition-duration:.01ms !important;
+
+        scroll-behavior:auto !important;
+
+    }
+
+}
