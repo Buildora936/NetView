@@ -402,13 +402,26 @@ body{
 
     flex-shrink:0;
 
+    min-width:220px;
+
 }
 
-.nv-menu-button{
 
-    width:44px;
+/* ==========================================
+   Menu Button
+========================================== */
 
-    height:44px;
+#menuButton{
+
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     border:none;
 
@@ -418,26 +431,87 @@ body{
 
     color:var(--nv-text);
 
+    font-size:1.15rem;
+
     cursor:pointer;
 
-    transition:.25s;
+    transition:
+        background .2s,
+        color .2s;
 
 }
 
-.nv-menu-button:hover{
+#menuButton:hover{
 
     background:rgba(255,255,255,.08);
 
 }
 
-.nv-logo{
+#menuButton:active{
 
-    height:34px;
-
-    width:auto;
+    transform:scale(.96);
 
 }
 
+
+/* ==========================================
+   Logo
+========================================== */
+
+.nv-logo{
+
+    display:flex;
+
+    align-items:center;
+
+    text-decoration:none;
+
+    flex-shrink:0;
+
+}
+
+.nv-logo img{
+
+    height:32px;
+
+    width:auto;
+
+    display:block;
+
+    object-fit:contain;
+
+    transition:transform .2s;
+
+}
+
+.nv-logo:hover img{
+
+    transform:scale(1.03);
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .nv-header-left{
+
+        min-width:auto;
+
+        gap:.75rem;
+
+    }
+
+    .nv-logo img{
+
+        height:28px;
+
+    }
+
+}
 /* ==========================================
    Search
 ========================================== */
