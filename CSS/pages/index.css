@@ -389,7 +389,44 @@ body{
 }
 
 /* ==========================================
-   Header Left
+   HEADER
+========================================== */
+
+.nv-header{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:64px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:2rem;
+
+    padding:0 1rem;
+
+    background:rgba(15,23,42,.96);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    z-index:1000;
+
+}
+
+
+/* ==========================================
+   LEFT
 ========================================== */
 
 .nv-header-left{
@@ -400,18 +437,154 @@ body{
 
     gap:1rem;
 
-    flex-shrink:0;
+    flex:0 0 220px;
 
-    min-width:220px;
+}
+
+.nv-logo{
+
+    display:flex;
+
+    align-items:center;
+
+    text-decoration:none;
+
+}
+
+.nv-logo img{
+
+    display:block;
+
+    height:34px;
+
+    width:auto;
+
+    object-fit:contain;
 
 }
 
 
 /* ==========================================
-   Menu Button
+   CENTER
 ========================================== */
 
-#menuButton{
+.nv-header-center{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.nv-search-form{
+
+    width:100%;
+
+    max-width:650px;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.nv-search-input{
+
+    flex:1;
+
+    height:40px;
+
+    padding:0 16px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    border-right:none;
+
+    border-radius:999px 0 0 999px;
+
+    background:#121212;
+
+    color:#fff;
+
+    font-size:.95rem;
+
+}
+
+.nv-search-input::placeholder{
+
+    color:#888;
+
+}
+
+.nv-search-input:focus{
+
+    outline:none;
+
+    border-color:var(--nv-primary);
+
+}
+
+.nv-search-button{
+
+    width:64px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    border-radius:0 999px 999px 0;
+
+    background:#202020;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.nv-search-button:hover{
+
+    background:#2c2c2c;
+
+}
+
+
+/* ==========================================
+   RIGHT
+========================================== */
+
+.nv-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-end;
+
+    gap:.75rem;
+
+    flex:0 0 220px;
+
+}
+
+
+/* ==========================================
+   ICON BUTTON
+========================================== */
+
+.nv-icon-button{
+
+    position:relative;
 
     width:40px;
 
@@ -429,242 +602,34 @@ body{
 
     background:transparent;
 
-    color:var(--nv-text);
+    color:#fff;
 
     font-size:1.15rem;
 
     cursor:pointer;
 
-    transition:
-        background .2s,
-        color .2s;
+    transition:.2s;
 
 }
 
-#menuButton:hover{
+.nv-icon-button:hover{
 
     background:rgba(255,255,255,.08);
 
 }
 
-#menuButton:active{
-
-    transform:scale(.96);
-
-}
-
 
 /* ==========================================
-   Logo
-========================================== */
-
-.nv-logo{
-
-    display:flex;
-
-    align-items:center;
-
-    text-decoration:none;
-
-    flex-shrink:0;
-
-}
-
-.nv-logo img{
-
-    height:32px;
-
-    width:auto;
-
-    display:block;
-
-    object-fit:contain;
-
-    transition:transform .2s;
-
-}
-
-.nv-logo:hover img{
-
-    transform:scale(1.03);
-
-}
-
-
-/* ==========================================
-   Responsive
-========================================== */
-
-@media(max-width:768px){
-
-    .nv-header-left{
-
-        min-width:auto;
-
-        gap:.75rem;
-
-    }
-
-    .nv-logo img{
-
-        height:28px;
-
-    }
-
-}
-/* ==========================================
-   Search
-========================================== */
-
-.nv-header-center{
-
-    flex:1;
-
-    display:flex;
-
-    justify-content:center;
-
-}
-
-.nv-search{
-
-    width:min(100%,720px);
-
-    display:flex;
-
-    align-items:center;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:999px;
-
-    overflow:hidden;
-
-    transition:.25s;
-
-}
-
-.nv-search:focus-within{
-
-    border-color:var(--nv-primary);
-
-    box-shadow:0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-.nv-search input{
-
-    flex:1;
-
-    height:48px;
-
-    padding:0 1.25rem;
-
-    background:transparent;
-
-    border:none;
-
-    outline:none;
-
-    color:var(--nv-text);
-
-    font-size:.95rem;
-
-}
-
-.nv-search input::placeholder{
-
-    color:var(--nv-text-muted);
-
-}
-
-.nv-search button{
-
-    width:64px;
-
-    height:48px;
-
-    border:none;
-
-    background:rgba(255,255,255,.05);
-
-    color:var(--nv-text);
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.nv-search button:hover{
-
-    background:rgba(37,99,235,.18);
-
-}
-
-/* ==========================================
-   Header Right
-========================================== */
-
-.nv-header-right{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:.75rem;
-
-    flex-shrink:0;
-
-}
-
-.nv-header-action{
-
-    width:44px;
-
-    height:44px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:transparent;
-
-    color:var(--nv-text);
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    position:relative;
-
-}
-
-.nv-header-action:hover{
-
-    background:rgba(255,255,255,.08);
-
-}
-
-.nv-header-action i{
-
-    font-size:1.1rem;
-
-}
-
-/* ==========================================
-   Notification Badge
+   NOTIFICATION BADGE
 ========================================== */
 
 .nv-badge{
 
     position:absolute;
 
-    top:5px;
+    top:4px;
 
-    right:5px;
+    right:3px;
 
     min-width:18px;
 
@@ -680,7 +645,7 @@ body{
 
     border-radius:999px;
 
-    background:#EF4444;
+    background:#ef4444;
 
     color:#fff;
 
@@ -690,44 +655,107 @@ body{
 
 }
 
+
 /* ==========================================
-   Avatar
+   AVATAR
 ========================================== */
 
-.nv-header-avatar{
+.nv-avatar-button{
 
-    width:40px;
+    display:flex;
 
-    height:40px;
+    align-items:center;
 
-    border-radius:50%;
+    justify-content:center;
 
-    overflow:hidden;
-
-    cursor:pointer;
-
-    border:2px solid rgba(255,255,255,.08);
-
-    transition:.25s;
+    text-decoration:none;
 
 }
 
-.nv-header-avatar:hover{
+.nv-avatar-button img{
+
+    width:36px;
+
+    height:36px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid transparent;
+
+    transition:.2s;
+
+}
+
+.nv-avatar-button:hover img{
 
     border-color:var(--nv-primary);
 
 }
 
-.nv-header-avatar img{
 
-    width:100%;
+/* ==========================================
+   RESPONSIVE
+========================================== */
 
-    height:100%;
+@media(max-width:900px){
 
-    object-fit:cover;
+    .nv-header{
+
+        gap:1rem;
+
+    }
+
+    .nv-header-left{
+
+        flex:0 0 auto;
+
+    }
+
+    .nv-header-right{
+
+        flex:0 0 auto;
+
+    }
 
 }
 
+@media(max-width:700px){
+
+    .nv-search-form{
+
+        max-width:100%;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .nv-header{
+
+        padding:0 .75rem;
+
+    }
+
+    .nv-search-input{
+
+        display:none;
+
+    }
+
+    .nv-search-button{
+
+        width:40px;
+
+        border-radius:50%;
+
+        border:1px solid rgba(255,255,255,.12);
+
+    }
+
+}
 /* ==========================================
    SIDEBAR
 ========================================== */
