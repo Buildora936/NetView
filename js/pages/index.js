@@ -49,6 +49,11 @@ document.querySelector(
     ".nv-header"
 );
 
+const headerRight =
+document.getElementById(
+    "headerRight"
+);
+
 const menuButton =
 document.getElementById(
     "menuButton"
