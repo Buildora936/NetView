@@ -64,14 +64,26 @@ if (togglePasswordButton) {
 }
 
 // ==========================================
-// Détection intelligente de l'appareil
+// Détection intelligente de l'appareil et IP
 // ==========================================
 
 async function registerDevice(userId) {
     try {
         const ua = navigator.userAgent;
 
-        // 1. Détection intelligente de l'OS avec versions et subtilités
+        // 1. Récupération de l'adresse IP publique
+        let ipAddress = null;
+        try {
+            const ipResponse = await fetch("https://api.ipify.org?format=json");
+            if (ipResponse.ok) {
+                const ipData = await ipResponse.json();
+                ipAddress = ipData.ip;
+            }
+        } catch (ipErr) {
+            console.warn("Impossible de récupérer l'adresse IP :", ipErr);
+        }
+
+        // 2. Détection intelligente de l'OS avec versions et subtilités
         let os = "Système inconnu";
         if (/windows NT 10.0/.test(ua)) os = "Windows 10/11";
         else if (/windows NT 6.3/.test(ua)) os = "Windows 8.1";
@@ -83,7 +95,7 @@ async function registerDevice(userId) {
         else if (/linux/.test(ua)) os = "Linux";
         else if (/cros/.test(ua)) os = "Chrome OS";
 
-        // 2. Détection intelligente du navigateur réel
+        // 3. Détection intelligente du navigateur réel
         let browser = "Navigateur inconnu";
         if (/edg/i.test(ua)) browser = "Microsoft Edge";
         else if (/opr|opera/i.test(ua)) browser = "Opera";
@@ -92,7 +104,7 @@ async function registerDevice(userId) {
         else if (/chrome/i.test(ua) && !/chromium/i.test(ua)) browser = "Google Chrome";
         else if (/safari/i.test(ua) && !/chrome/i.test(ua)) browser = "Safari";
 
-        // 3. Détection intelligente du type d'appareil
+        // 4. Détection intelligente du type d'appareil
         let deviceType = "Ordinateur";
         if (/mobi|android/i.test(ua) && !/ipad|tablet/i.test(ua)) {
             deviceType = "Téléphone mobile";
@@ -100,10 +112,10 @@ async function registerDevice(userId) {
             deviceType = "Tablette";
         }
 
-        // 4. Construction automatique du nom de l'appareil
+        // 5. Construction automatique du nom de l'appareil
         const deviceName = `${deviceType} - ${os} (${browser})`;
 
-        // 5. Enregistrement en base de données Supabase
+        // 6. Enregistrement en base de données Supabase avec l'adresse IP
         const { error } = await supabase
             .from("devices")
             .insert([
@@ -112,6 +124,7 @@ async function registerDevice(userId) {
                     device_name: deviceName,
                     browser: browser,
                     operating_system: `${os} (${deviceType})`,
+                    ip_address: ipAddress,
                     last_seen: new Date().toISOString()
                 }
             ]);
@@ -123,7 +136,6 @@ async function registerDevice(userId) {
         console.error("Erreur technique (registerDevice) :", err);
     }
 }
-
 // ==========================================
 // Soumission du Formulaire de Connexion
 // ==========================================
