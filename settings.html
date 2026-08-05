@@ -63,105 +63,11 @@
                         <span id="currentEmail" class="nv-settings-value">--</span>
                     </div>
                     <div class="nv-settings-item">
-                        <span class="nv-settings-label">Nom affiché</span>
-                        <span id="displayName" class="nv-settings-value">--</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Nom d'utilisateur</span>
-                        <span id="username" class="nv-settings-value">--</span>
-                    </div>
-                    <div class="nv-settings-item">
-                        <span class="nv-settings-label">Type de compte</span>
-                        <span id="accountType" class="nv-settings-value">--</span>
-                    </div>
-                    <div class="nv-settings-item">
                         <span class="nv-settings-label">Compte créé le</span>
                         <span id="createdAt" class="nv-settings-value">--</span>
                     </div>
                 </div>
                 <a href="profile.html" id="editProfileButton" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">Modifier le profil</a>
-            </section>
-
-            <!-- 2. Sécurité -->
-            <section class="nv-settings-section">
-                <div class="nv-section-header">
-                    <div class="nv-section-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <div>
-                        <h2>Sécurité</h2>
-                        <p>Modifiez votre mot de passe afin de protéger votre compte NetView.</p>
-                    </div>
-                </div>
-
-                <div class="nv-form-group">
-                    <label for="currentPassword" class="nv-label">Mot de passe actuel</label>
-                    <div class="nv-input-wrapper">
-                        <input id="currentPassword" type="password" class="nv-input" autocomplete="current-password" placeholder="Votre mot de passe actuel">
-                        <button id="toggleCurrentPassword" type="button" class="nv-password-toggle" aria-label="Afficher le mot de passe">
-                            <i class="fa-regular fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="nv-form-group">
-                    <label for="newPassword" class="nv-label">Nouveau mot de passe</label>
-                    <div class="nv-input-wrapper">
-                        <input id="newPassword" type="password" class="nv-input" autocomplete="new-password" placeholder="Minimum 8 caractères">
-                        <button id="toggleNewPassword" type="button" class="nv-password-toggle" aria-label="Afficher le mot de passe">
-                            <i class="fa-regular fa-eye"></i>
-                        </button>
-                    </div>
-                    <div class="nv-password-strength">
-                        <div id="passwordStrengthBar" class="nv-password-strength-bar"></div>
-                    </div>
-                    <div id="passwordStrengthText" class="nv-password-strength-text">Choisissez un mot de passe sécurisé.</div>
-                </div>
-
-                <div class="nv-form-group">
-                    <label for="confirmPassword" class="nv-label">Confirmer le nouveau mot de passe</label>
-                    <div class="nv-input-wrapper">
-                        <input id="confirmPassword" type="password" class="nv-input" autocomplete="new-password" placeholder="Confirmez votre nouveau mot de passe">
-                        <button id="toggleConfirmPassword" type="button" class="nv-password-toggle" aria-label="Afficher le mot de passe">
-                            <i class="fa-regular fa-eye"></i>
-                        </button>
-                    </div>
-                    <div id="passwordMatch" class="nv-password-match"></div>
-                </div>
-
-                <div id="passwordError" class="error" style="margin-bottom: 1rem;"></div>
-
-                <button id="updatePasswordButton" type="button" class="nv-btn nv-btn-gradient">
-                    <i class="fa-solid fa-key"></i>
-                    <span>Mettre à jour le mot de passe</span>
-                </button>
-            </section>
-
-            <!-- 3. Appareils connectés -->
-            <section class="nv-settings-section">
-                <div class="nv-section-header">
-                    <div class="nv-section-icon">
-                        <i class="fa-solid fa-laptop"></i>
-                    </div>
-                    <div>
-                        <h2>Appareils connectés</h2>
-                        <p>Consultez les appareils connectés à votre compte NetView et gérez vos sessions actives.</p>
-                    </div>
-                </div>
-
-                <!-- ID mis à jour pour correspondre au script JS -->
-                <div id="devicesContainer" class="nv-devices-list">
-                    <!-- Injecté dynamiquement par JavaScript -->
-                </div>
-
-                <div class="nv-device-actions" style="margin-top: 1rem;">
-                    <button id="disconnectOtherDevicesButton" type="button" class="nv-btn nv-btn-secondary">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Déconnecter tous les autres appareils</span>
-                    </button>
-                </div>
-
-                <div id="devicesMessage" class="nv-settings-message"></div>
             </section>
 
             <!-- 4. Préférences -->
@@ -263,6 +169,42 @@
                 </div>
             </section>
 
+            <!-- 3. Appareils connectés -->
+            <section class="nv-settings-section">
+                <div class="nv-section-header">
+                    <div class="nv-section-icon">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+                    <div>
+                        <h2>Appareils connectés</h2>
+                        <p>Consultez la liste des appareils connectés à votre compte NetView.</p>
+                    </div>
+                </div>
+
+                <button id="viewDevicesButton" type="button" class="nv-btn nv-btn-secondary" style="margin-top: 1rem;">
+                    <i class="fa-solid fa-list"></i>
+                    <span>Voir la liste de connexion</span>
+                </button>
+            </section>
+
+            <!-- 2. Sécurité -->
+            <section class="nv-settings-section">
+                <div class="nv-section-header">
+                    <div class="nv-section-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h2>Sécurité</h2>
+                        <p>Protégez votre compte NetView en gérant votre mot de passe.</p>
+                    </div>
+                </div>
+
+                <button id="changePasswordButton" type="button" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Changer mon mot de passe</span>
+                </button>
+            </section>
+            
             <!-- 6. Zone de danger -->
             <section class="nv-settings-section nv-danger-section">
                 <div class="nv-section-header">
@@ -279,19 +221,9 @@
                     <h3>Supprimer définitivement votre compte</h3>
                     <p>La suppression de votre compte effacera définitivement votre profil NetView ainsi que toutes les données associées.</p>
                     
-                    <ul class="nv-danger-list">
-                        <li><i class="fa-solid fa-circle-check"></i> Profil</li>
-                        <li><i class="fa-solid fa-circle-check"></i> Paramètres</li>
-                        <li><i class="fa-solid fa-circle-check"></i> Rôles</li>
-                        <li><i class="fa-solid fa-circle-check"></i> Appareils enregistrés</li>
-                        <li><i class="fa-solid fa-circle-check"></i> Toutes les autres données liées via <strong>ON DELETE CASCADE</strong></li>
-                    </ul>
-
-                    <p class="nv-danger-warning">Cette opération est définitive et ne pourra pas être annulée.</p>
-
-                    <button id="deleteAccountButton" type="button" class="nv-btn nv-btn-danger">
+                    <button id="removeAccountButton" type="button" class="nv-btn nv-btn-danger" style="margin-top: 1rem;">
                         <i class="fa-solid fa-trash-can"></i>
-                        <span>Supprimer définitivement mon compte</span>
+                        <span>Supprimer le compte</span>
                     </button>
                 </div>
             </section>
@@ -305,44 +237,8 @@
         <div class="nv-loader-text">Veuillez patienter...</div>
     </div>
 
-    <!-- Modal de suppression de compte -->
-    <div id="deleteAccountModal" class="nv-modal" style="display:none;">
-        <div class="nv-modal-overlay"></div>
-        <div class="nv-modal-content">
-            <div class="nv-danger-modal-icon">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            
-            <h2>Supprimer définitivement votre compte ?</h2>
-            <p>Cette action est <strong>irréversible</strong>. Votre compte NetView ainsi que toutes les données associées seront définitivement supprimés.</p>
-
-            <div class="nv-warning-box">
-                <p>Pour confirmer cette action, saisissez le mot :</p>
-                <h3>SUPPRIMER</h3>
-            </div>
-
-            <div class="nv-form-group">
-                <label for="deleteConfirmation" class="nv-label">Confirmation</label>
-                <input id="deleteConfirmation" type="text" class="nv-input" autocomplete="off" spellcheck="false" placeholder="Tapez SUPPRIMER">
-            </div>
-
-            <div id="deleteAccountMessage" class="nv-settings-message"></div>
-
-            <div class="nv-modal-actions">
-                <button id="cancelDeleteButton" type="button" class="nv-btn nv-btn-secondary">Annuler</button>
-                <button id="confirmDeleteButton" type="button" class="nv-btn nv-btn-danger" disabled>Supprimer définitivement</button>
-            </div>
-        </div>
-    </div>
-    <!-- ==========================================
-        Notification
-     ========================================== -->
-
-<div
-    id="notification"
-    class="notification"
-></div>
-
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
     <!-- Import JavaScript -->
     <script type="module" src="js/pages/settings.js"></script>
