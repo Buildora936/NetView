@@ -285,28 +285,92 @@ Formulaires & Inputs
     color: #fff;
 }
 
-/* Indicateur de force du mot de passe */
+/* ==================================================
+Password Strength & Match indicators
+================================================== */
+
 .nv-password-strength {
-    width: 100%;
     height: 4px;
+    width: 100%;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 2px;
+    margin-top: 0.5rem;
     overflow: hidden;
-    margin-top: 0.25rem;
 }
 
 .nv-password-strength-bar {
     height: 100%;
     width: 0%;
-    transition: width .3s ease, background-color .3s ease;
+    transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-.nv-password-strength-text,
+.nv-password-strength-text {
+    font-size: 0.85rem;
+    color: var(--nv-text-secondary);
+    margin-top: 0.35rem;
+}
+
 .nv-password-match {
-    font-size: 0.8rem;
-    color: var(--nv-text-muted, #64748b);
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+/* ==================================================
+Password States
+================================================== */
+
+.nv-password-strength-bar.weak{
+
+    background:#EF4444;
+
 }
 
+.nv-password-strength-bar.medium{
+
+    background:#F97316;
+
+}
+
+.nv-password-strength-bar.good{
+
+    background:#FACC15;
+
+}
+
+.nv-password-strength-bar.strong{
+
+    background:#22C55E;
+
+}
+
+.nv-password-strength-bar.very-strong{
+
+    background:linear-gradient(
+        90deg,
+        #22C55E,
+        #10B981
+    );
+
+}
+
+/* ==========================================
+Password Match
+========================================== */
+
+.nv-password-match.success{
+
+    color:#22C55E;
+
+    font-weight:600;
+
+}
+
+.nv-password-match.error{
+
+    color:#EF4444;
+
+    font-weight:600;
+
+}
 /* ==================================================
 Toggles (Interrupteurs)
 ========================================== */
