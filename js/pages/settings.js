@@ -12,8 +12,7 @@ import {
 
 import {
     getUserSettings,
-    updateUserSettings,
-    getDevices
+    updateUserSettings
 } from "../core/data.js";
 
 import {
@@ -53,9 +52,8 @@ const toggleNewPassword = document.getElementById("toggleNewPassword");
 const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 const updatePasswordButton = document.getElementById("updatePasswordButton");
 
-// Appareils connectés
-const devicesContainer = document.getElementById("devicesContainer");
-const disconnectOtherDevicesButton = document.getElementById("disconnectOtherDevicesButton");
+// Appareils connectés / Redirection vers devices_list.html
+const viewDevicesButton = document.getElementById("viewDevicesButton");
 
 // Préférences
 const themeSelect = document.getElementById("theme");
@@ -77,11 +75,9 @@ const cancelDeleteButton = document.getElementById("cancelDeleteButton");
 let currentUser = null;
 let currentProfile = null;
 let currentSettings = null;
-let currentDevices = [];
 
 let isSavingPassword = false;
 let isSavingPreferences = false;
-let isDisconnectingDevice = false;
 let isDeletingAccount = false;
 
 // ==========================================
@@ -109,8 +105,7 @@ async function init() {
         await loadSession();
         await Promise.all([
             loadProfileData(),
-            loadSettingsData(),
-            loadDevicesData()
+            loadSettingsData()
         ]);
         fillPage();
         addEventListeners();
@@ -154,16 +149,6 @@ async function loadSettingsData() {
     };
 }
 
-async function loadDevicesData() {
-    try {
-        const devices = await getDevices();
-        currentDevices = devices || [];
-    } catch (error) {
-        console.error("Load devices error:", error);
-        currentDevices = [];
-    }
-}
-
 // ==========================================
 // Remplissage de la page
 // ==========================================
@@ -187,8 +172,6 @@ function fillPage() {
     if (autoplayToggle) autoplayToggle.checked = currentSettings?.autoplay ?? true;
     if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings?.email_notifications ?? true;
     if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings?.push_notifications ?? true;
-
-    renderDevices();
 }
 
 // ==========================================
@@ -362,73 +345,6 @@ async function changePassword() {
 }
 
 // ==========================================
-// Appareils connectés
-// ==========================================
-function renderDevices() {
-    if (!devicesContainer) return;
-    devicesContainer.innerHTML = "";
-
-    if (!currentDevices || currentDevices.length === 0) {
-        devicesContainer.innerHTML = `<div class="nv-empty">Aucun appareil connecté.</div>`;
-        return;
-    }
-
-    currentDevices.forEach(device => {
-        const card = createDeviceCard(device);
-        devicesContainer.appendChild(card);
-    });
-}
-
-function createDeviceCard(device) {
-    const card = document.createElement("div");
-    card.className = "nv-device-card";
-    const currentBadge = isCurrentDevice(device) ? `<span class="nv-device-badge">Appareil actuel</span>` : "";
-
-    card.innerHTML = `
-        <div class="nv-device-icon"><i class="fa-solid fa-desktop"></i></div>
-        <div class="nv-device-info">
-            <h3>${device.device_name || "Appareil inconnu"} ${currentBadge}</h3>
-            <p>Navigateur : ${device.browser || "--"}</p>
-            <p>Système : ${device.operating_system || "--"}</p>
-            <p>Dernière activité : ${formatDeviceDate(device.last_seen)}</p>
-        </div>
-        <button class="nv-btn nv-btn-danger nv-device-disconnect" data-device-id="${device.id}">Déconnecter</button>
-    `;
-
-    const btn = card.querySelector(".nv-device-disconnect");
-    btn.addEventListener("click", () => disconnectDevice(device.id));
-    return card;
-}
-
-function isCurrentDevice(device) {
-    const browser = navigator.userAgent;
-    return device.browser && browser.includes(device.browser);
-}
-
-function formatDeviceDate(date) {
-    if (!date) return "--";
-    return new Date(date).toLocaleString("fr-FR");
-}
-
-async function disconnectDevice(deviceId) {
-    if (isDisconnectingDevice) return;
-    isDisconnectingDevice = true;
-    try {
-        showLoader();
-        await getDevices(); 
-        showNotification("Appareil déconnecté.", false);
-        await loadDevicesData();
-        renderDevices();
-    } catch (error) {
-        console.error(error);
-        showNotification("Impossible de déconnecter cet appareil.", true);
-    } finally {
-        hideLoader();
-        isDisconnectingDevice = false;
-    }
-}
-
-// ==========================================
 // Préférences
 // ==========================================
 async function savePreferences() {
@@ -549,6 +465,11 @@ function addEventListeners() {
     if (editProfileButton) {
         editProfileButton.addEventListener("click", () => {
             navigate("profile.html");
+        });
+    }
+    if (viewDevicesButton) {
+        viewDevicesButton.addEventListener("click", () => {
+            navigate("devices_list.html");
         });
     }
 
