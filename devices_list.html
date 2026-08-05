@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consultez la liste des appareils connectés à votre compte NetView.">
+    <meta name="theme-color" content="#2563EB">
+    <title>Appareils connectés • NetView</title>
+    
+    <link rel="icon" type="image/png" href="NetView_icone.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="CSS/core/variables.css">
+    <link rel="stylesheet" href="CSS/core/reset.css">
+    <link rel="stylesheet" href="CSS/core/typography.css">
+    <link rel="stylesheet" href="CSS/core/animations.css">
+    <link rel="stylesheet" href="CSS/core/utilities.css">
+
+    <!-- Components -->
+    <link rel="stylesheet" href="CSS/components/buttons.css">
+    <link rel="stylesheet" href="CSS/components/forms.css">
+    <link rel="stylesheet" href="CSS/components/cards.css">
+    <link rel="stylesheet" href="CSS/components/modal.css">
+    <link rel="stylesheet" href="CSS/components/toast.css">
+    <link rel="stylesheet" href="CSS/components/loader.css">
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="CSS/pages/settings.css">
+</head>
+<body>
+
+    <div class="nv-settings-background">
+        <div class="nv-orb one"></div>
+        <div class="nv-orb two"></div>
+        <div class="nv-orb three"></div>
+    </div>
+
+    <main class="nv-settings">
+        <section class="nv-settings-card">
+
+            <!-- Header -->
+            <div class="nv-settings-header">
+                <a href="settings.html" class="nv-back-button" aria-label="Retour aux paramètres">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <img src="NetView.png" alt="NetView" class="nv-settings-logo">
+                <h1>Appareils connectés</h1>
+                <p>Consultez la liste de vos sessions et connexions actives.</p>
+            </div>
+
+            <!-- Liste des connexions / appareils -->
+            <section class="nv-settings-section">
+                <div class="nv-section-header">
+                    <div class="nv-section-icon">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+                    <div>
+                        <h2>Sessions actives</h2>
+                        <p>Voici les informations concernant vos accès récents à NetView.</p>
+                    </div>
+                </div>
+
+                <!-- Conteneur dynamique ou statique pour les appareils -->
+                <div id="devicesContainer" class="nv-devices-list" style="margin-top: 1.5rem;">
+                    <!-- Exemple de carte d'appareil (peut être injectée via JS ou gérée ici) -->
+                    <div class="nv-settings-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; margin-bottom: 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i class="fa-solid fa-desktop" style="font-size: 1.5rem; color: var(--nv-primary, #2563EB);"></i>
+                            <div>
+                                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem;">Navigateur Web (Actuel)</h3>
+                                <p style="font-size: 0.85rem; color: var(--nv-text-muted, #94A3B8);">Dernière connexion active sur cet appareil</p>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.85rem; color: #22c55e; font-weight: 500;">En ligne</span>
+                    </div>
+                </div>
+
+                <div id="devicesMessage" class="nv-settings-message" style="margin-top: 1rem;"></div>
+            </section>
+
+        </section>
+    </main>
+
+    <!-- Loader Global -->
+    <div id="pageLoader" class="nv-page-loader" style="display:none;">
+        <div class="nv-spinner nv-spinner-lg"></div>
+        <div class="nv-loader-text">Veuillez patienter...</div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+</body>
+</html>
