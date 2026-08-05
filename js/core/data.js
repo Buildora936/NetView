@@ -179,6 +179,35 @@ export async function unsubscribe(
 
 }
 
+/**
+ * Écoute en temps réel si l'appareil actuel est supprimé pour le déconnecter instantanément
+ */
+export function initDeviceRevocationListener() {
+    const currentDeviceId = localStorage.getItem("netview_current_device_id");
+    if (!currentDeviceId) return;
+
+    supabase
+        .channel('netview-device-revocation')
+        .on(
+            'postgres_changes',
+            {
+                event: 'DELETE',
+                schema: 'public',
+                table: 'devices',
+                filter: `id=eq.${currentDeviceId}`
+            },
+            async () => {
+                // Nettoyage local et déconnexion
+                localStorage.removeItem("netview_current_device_id");
+                await supabase.auth.signOut();
+
+                alert("Votre session a été révoquée à distance depuis un autre appareil.");
+                window.location.href = "login.html";
+            }
+        )
+        .subscribe();
+}
+
 // ==========================================
 // RPC
 // ==========================================
@@ -271,13 +300,11 @@ export async function getProfile(){
 
     let roleName = "Utilisateur";
     if (userRoleData && userRoleData.roles) {
-        // Gérer si roles est un tableau ou un objet unique selon la configuration Supabase
         roleName = Array.isArray(userRoleData.roles) 
             ? (userRoleData.roles[0]?.name || "Utilisateur") 
             : (userRoleData.roles.name || "Utilisateur");
     }
 
-    // On retourne l'ensemble fusionné avec le champ 'role'
     return {
         ...profileData,
         role: roleName
