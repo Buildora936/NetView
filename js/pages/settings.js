@@ -6,7 +6,6 @@
 import {
     getSession,
     getUser,
-    updatePassword,
     signOut
 } from "../core/auth.js";
 
@@ -31,23 +30,14 @@ import { supabase } from "../core/supabase.js";
 // DOM Elements
 // ==========================================
 
-// Compte (Nom affiché, Nom d'utilisateur et Type de compte retirés)
+// Compte
 const currentEmail = document.getElementById("currentEmail");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
 const notification = document.getElementById("notification");
 
-// Sécurité / Mot de passe
-const currentPasswordInput = document.getElementById("currentPassword");
-const newPasswordInput = document.getElementById("newPassword");
-const confirmPasswordInput = document.getElementById("confirmPassword");
-const passwordStrengthBar = document.getElementById("passwordStrengthBar");
-const passwordStrengthText = document.getElementById("passwordStrengthText");
-const passwordMatch = document.getElementById("passwordMatch");
-const toggleCurrentPassword = document.getElementById("toggleCurrentPassword");
-const toggleNewPassword = document.getElementById("toggleNewPassword");
-const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-const updatePasswordButton = document.getElementById("updatePasswordButton");
+// Sécurité / Redirection vers forgot-password.html
+const changePasswordButton = document.getElementById("changePasswordButton");
 
 // Appareils connectés / Redirection vers devices_list.html
 const viewDevicesButton = document.getElementById("viewDevicesButton");
@@ -69,7 +59,6 @@ let currentUser = null;
 let currentProfile = null;
 let currentSettings = null;
 
-let isSavingPassword = false;
 let isSavingPreferences = false;
 
 // ==========================================
@@ -164,176 +153,6 @@ function fillPage() {
 }
 
 // ==========================================
-// Gestion de la visibilité des mots de passe
-// ==========================================
-function togglePasswordVisibility(input, button) {
-    if (!input || !button) return;
-    const isPassword = input.type === "password";
-    input.type = isPassword ? "text" : "password";
-    button.innerHTML = isPassword ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
-    button.setAttribute("aria-label", isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe");
-}
-
-// ==========================================
-// Password Strength
-// ==========================================
-
-function updatePasswordStrength() {
-    if (!newPasswordInput) return;
-    const value = newPasswordInput.value;
-    let score = 0;
-
-    if (value.length >= 8) score++;
-    if (/[A-Z]/.test(value)) score++;
-    if (/[a-z]/.test(value)) score++;
-    if (/[0-9]/.test(value)) score++;
-    if (/[^A-Za-z0-9]/.test(value)) score++;
-
-    if (passwordStrengthBar) {
-        passwordStrengthBar.className = "nv-password-strength-bar";
-    }
-
-    if (value.length === 0) {
-        if (passwordStrengthBar) passwordStrengthBar.style.width = "0%";
-        if (passwordStrengthText) passwordStrengthText.textContent = "Choisissez un mot de passe sécurisé.";
-        updatePasswordMatch();
-        return;
-    }
-
-    switch (score) {
-        case 0:
-        case 1:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "20%";
-                passwordStrengthBar.classList.add("weak");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe très faible.";
-            break;
-        case 2:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "40%";
-                passwordStrengthBar.classList.add("medium");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe faible.";
-            break;
-        case 3:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "60%";
-                passwordStrengthBar.classList.add("good");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe correct.";
-            break;
-        case 4:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "80%";
-                passwordStrengthBar.classList.add("strong");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe fort.";
-            break;
-        case 5:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "100%";
-                passwordStrengthBar.classList.add("very-strong");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Excellent mot de passe.";
-            break;
-    }
-
-    updatePasswordMatch();
-}
-
-function updatePasswordMatch() {
-    if (!newPasswordInput || !confirmPasswordInput || !passwordMatch) return false;
-
-    passwordMatch.textContent = "";
-    passwordMatch.className = "nv-password-match";
-
-    if (confirmPasswordInput.value === "") return true;
-
-    if (newPasswordInput.value === confirmPasswordInput.value) {
-        passwordMatch.textContent = "Les mots de passe correspondent.";
-        passwordMatch.classList.add("success");
-        return true;
-    }
-
-    passwordMatch.textContent = "Les mots de passe ne correspondent pas.";
-    passwordMatch.classList.add("error");
-    return false;
-}
-
-function validatePassword() {
-    if (!currentPasswordInput || currentPasswordInput.value.trim() === "") {
-        showNotification("Veuillez saisir votre mot de passe actuel.", true);
-        currentPasswordInput?.focus();
-        return false;
-    }
-    if (!newPasswordInput || newPasswordInput.value.trim() === "") {
-        showNotification("Veuillez saisir un nouveau mot de passe.", true);
-        newPasswordInput?.focus();
-        return false;
-    }
-    const newPass = newPasswordInput.value;
-    if (newPass.length < 8) {
-        showNotification("Le nouveau mot de passe doit contenir au moins 8 caractères.", true);
-        newPasswordInput.focus();
-        return false;
-    }
-    if (!/[A-Z]/.test(newPass) || !/[a-z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
-        showNotification("Le mot de passe doit contenir majuscules, minuscules, chiffres et caractères spéciaux.", true);
-        newPasswordInput.focus();
-        return false;
-    }
-    if (newPass !== confirmPasswordInput?.value) {
-        showNotification("Les mots de passe ne correspondent pas.", true);
-        confirmPasswordInput?.focus();
-        return false;
-    }
-    if (currentPasswordInput.value === newPass) {
-        showNotification("Le nouveau mot de passe doit être différent de l'ancien.", true);
-        newPasswordInput.focus();
-        return false;
-    }
-    return true;
-}
-
-async function changePassword() {
-    if (isSavingPassword) return;
-    if (!validatePassword()) return;
-
-    isSavingPassword = true;
-    try {
-        showLoader();
-        buttonLoading(updatePasswordButton, true);
-
-        const { error } = await updatePassword(newPasswordInput.value);
-        if (error) throw error;
-
-        currentPasswordInput.value = "";
-        newPasswordInput.value = "";
-        confirmPasswordInput.value = "";
-
-        if (passwordStrengthBar) {
-            passwordStrengthBar.style.width = "0%";
-            passwordStrengthBar.className = "nv-password-strength-bar";
-        }
-        if (passwordStrengthText) passwordStrengthText.textContent = "";
-        if (passwordMatch) {
-            passwordMatch.textContent = "";
-            passwordMatch.className = "nv-password-match";
-        }
-
-        showNotification("Votre mot de passe a été mis à jour avec succès.", false);
-    } catch (error) {
-        console.error("Password update error:", error);
-        showNotification(error.message || "Impossible de modifier le mot de passe.", true);
-    } finally {
-        hideLoader();
-        buttonLoading(updatePasswordButton, false);
-        isSavingPassword = false;
-    }
-}
-
-// ==========================================
 // Préférences
 // ==========================================
 async function savePreferences() {
@@ -381,23 +200,10 @@ function applyTheme(theme) {
 // Événements globaux
 // ==========================================
 function addEventListeners() {
-    if (toggleCurrentPassword) {
-        toggleCurrentPassword.addEventListener("click", () => togglePasswordVisibility(currentPasswordInput, toggleCurrentPassword));
-    }
-    if (toggleNewPassword) {
-        toggleNewPassword.addEventListener("click", () => togglePasswordVisibility(newPasswordInput, toggleNewPassword));
-    }
-    if (toggleConfirmPassword) {
-        toggleConfirmPassword.addEventListener("click", () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword));
-    }
-    if (newPasswordInput) {
-        newPasswordInput.addEventListener("input", updatePasswordStrength);
-    }
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener("input", updatePasswordMatch);
-    }
-    if (updatePasswordButton) {
-        updatePasswordButton.addEventListener("click", changePassword);
+    if (changePasswordButton) {
+        changePasswordButton.addEventListener("click", () => {
+            navigate("forgot-password.html");
+        });
     }
     if (savePreferencesButton) {
         savePreferencesButton.addEventListener("click", savePreferences);
