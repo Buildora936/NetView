@@ -64,6 +64,67 @@ if (togglePasswordButton) {
 }
 
 // ==========================================
+// Détection intelligente de l'appareil
+// ==========================================
+
+async function registerDevice(userId) {
+    try {
+        const ua = navigator.userAgent;
+
+        // 1. Détection intelligente de l'OS avec versions et subtilités
+        let os = "Système inconnu";
+        if (/windows NT 10.0/.test(ua)) os = "Windows 10/11";
+        else if (/windows NT 6.3/.test(ua)) os = "Windows 8.1";
+        else if (/windows NT 6.2/.test(ua)) os = "Windows 8";
+        else if (/windows NT 6.1/.test(ua)) os = "Windows 7";
+        else if (/android/.test(ua)) os = "Android";
+        else if (/iphone|ipad|ipod/.test(ua)) os = "iOS";
+        else if (/mac os x/.test(ua)) os = "macOS";
+        else if (/linux/.test(ua)) os = "Linux";
+        else if (/cros/.test(ua)) os = "Chrome OS";
+
+        // 2. Détection intelligente du navigateur réel
+        let browser = "Navigateur inconnu";
+        if (/edg/i.test(ua)) browser = "Microsoft Edge";
+        else if (/opr|opera/i.test(ua)) browser = "Opera";
+        else if (/samsungbrowser/i.test(ua)) browser = "Samsung Internet";
+        else if (/firefox/i.test(ua)) browser = "Firefox";
+        else if (/chrome/i.test(ua) && !/chromium/i.test(ua)) browser = "Google Chrome";
+        else if (/safari/i.test(ua) && !/chrome/i.test(ua)) browser = "Safari";
+
+        // 3. Détection intelligente du type d'appareil
+        let deviceType = "Ordinateur";
+        if (/mobi|android/i.test(ua) && !/ipad|tablet/i.test(ua)) {
+            deviceType = "Téléphone mobile";
+        } else if (/ipad|tablet|kindle/i.test(ua) || (navigator.maxTouchPoints > 1 && /macintosh/i.test(ua))) {
+            deviceType = "Tablette";
+        }
+
+        // 4. Construction automatique du nom de l'appareil
+        const deviceName = `${deviceType} - ${os} (${browser})`;
+
+        // 5. Enregistrement en base de données Supabase
+        const { error } = await supabase
+            .from("devices")
+            .insert([
+                {
+                    user_id: userId,
+                    device_name: deviceName,
+                    browser: browser,
+                    operating_system: `${os} (${deviceType})`,
+                    last_seen: new Date().toISOString()
+                }
+            ]);
+
+        if (error) {
+            console.error("Erreur lors de l'enregistrement intelligent de l'appareil :", error.message);
+        }
+    } catch (err) {
+        console.error("Erreur technique (registerDevice) :", err);
+    }
+}
+
+// ==========================================
 // Soumission du Formulaire de Connexion
 // ==========================================
 
@@ -95,6 +156,12 @@ loginForm.addEventListener("submit", async (e) => {
         });
 
         if (error) throw error;
+
+        // Enregistrement intelligent de l'appareil connecté
+        const userId = data.user?.id;
+        if (userId) {
+            await registerDevice(userId);
+        }
 
         // Gestion "Se souvenir de moi"
         if (rememberMeCheckbox.checked) {
