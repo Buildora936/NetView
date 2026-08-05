@@ -64,7 +64,7 @@ const emailNotificationsToggle = document.getElementById("emailNotifications");
 const pushNotificationsToggle = document.getElementById("pushNotifications");
 const savePreferencesButton = document.getElementById("savePreferencesButton");
 
-// Zone de danger
+// Zone de danger / Modal de suppression
 const deleteAccountButton = document.getElementById("deleteAccountButton");
 const deleteAccountModal = document.getElementById("deleteAccountModal");
 const deleteConfirmation = document.getElementById("deleteConfirmation");
@@ -82,6 +82,7 @@ let currentDevices = [];
 let isSavingPassword = false;
 let isSavingPreferences = false;
 let isDisconnectingDevice = false;
+let isDeletingAccount = false;
 
 // ==========================================
 // Initialisation
@@ -449,6 +450,52 @@ function applyTheme(theme) {
 }
 
 // ==========================================
+// Gestion du Modal de Suppression de Compte
+// ==========================================
+function openDeleteModal() {
+    if (!deleteAccountModal) return;
+    deleteAccountModal.style.display = "flex";
+    if (deleteConfirmation) {
+        deleteConfirmation.value = "";
+        deleteConfirmation.focus();
+    }
+    if (confirmDeleteButton) {
+        confirmDeleteButton.disabled = true;
+    }
+}
+
+function closeDeleteModal() {
+    if (!deleteAccountModal) return;
+    deleteAccountModal.style.display = "none";
+}
+
+async function handleAccountDeletion() {
+    if (isDeletingAccount) return;
+    isDeletingAccount = true;
+
+    try {
+        showLoader();
+        if (confirmDeleteButton) buttonLoading(confirmDeleteButton, true);
+
+        const { error: profileError } = await getProfile() ? supabase.from("profiles").delete().eq("id", currentUser?.id) : { error: null };
+        if (profileError) console.error("Erreur suppression profil :", profileError);
+
+        await signOut();
+
+        showToast("Votre compte a été supprimé.", "success");
+        navigate("login.html");
+    } catch (error) {
+        console.error("Erreur lors de la suppression du compte :", error);
+        showToast(error.message || "Impossible de supprimer le compte.", "error");
+    } finally {
+        hideLoader();
+        if (confirmDeleteButton) buttonLoading(confirmDeleteButton, false);
+        isDeletingAccount = false;
+        closeDeleteModal();
+    }
+}
+
+// ==========================================
 // Événements globaux
 // ==========================================
 function addEventListeners() {
@@ -477,6 +524,27 @@ function addEventListeners() {
         editProfileButton.addEventListener("click", () => {
             navigate("profile.html");
         });
+    }
+
+    // Écouteurs pour le Modal de Suppression de Compte
+    if (deleteAccountButton) {
+        deleteAccountButton.addEventListener("click", openDeleteModal);
+    }
+    if (cancelDeleteButton) {
+        cancelDeleteButton.addEventListener("click", closeDeleteModal);
+    }
+    const modalOverlay = deleteAccountModal?.querySelector(".nv-modal-overlay");
+    if (modalOverlay) {
+        modalOverlay.addEventListener("click", closeDeleteModal);
+    }
+    if (deleteConfirmation && confirmDeleteButton) {
+        deleteConfirmation.addEventListener("input", () => {
+            const val = deleteConfirmation.value.trim();
+            confirmDeleteButton.disabled = (val !== "SUPPRIMER");
+        });
+    }
+    if (confirmDeleteButton) {
+        confirmDeleteButton.addEventListener("click", handleAccountDeletion);
     }
 }
 
