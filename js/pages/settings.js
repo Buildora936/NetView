@@ -40,8 +40,6 @@ const accountType = document.getElementById("accountType");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
 const notification = document.getElementById("notification");
-const notification = document.getElementById("notification");
-const notification = document.getElementById("notification");
 
 // Sécurité / Mot de passe
 const currentPasswordInput = document.getElementById("currentPassword");
@@ -91,6 +89,7 @@ let isDeletingAccount = false;
 // ==========================================
 
 function showNotification(message, isError = false) {
+    if (!notification) return;
     notification.textContent = message;
     notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
     notification.style.color = isError ? "#ef4444" : "#22c55e";
@@ -117,7 +116,7 @@ async function init() {
         addEventListeners();
     } catch (error) {
         console.error(error);
-        showNotification("Impossible de charger les paramètres.", "error");
+        showNotification("Impossible de charger les paramètres.", true);
     } finally {
         hideLoader();
     }
@@ -159,7 +158,6 @@ async function loadDevicesData() {
 // Remplissage de la page
 // ==========================================
 function fillPage() {
-    // Compte (Récupération depuis l'objet utilisateur et profil)
     if (currentEmail) currentEmail.textContent = currentUser?.email ?? "";
     if (displayNameInput) displayNameInput.value = currentProfile?.display_name ?? "";
     if (usernameInput) usernameInput.value = currentProfile?.username ?? "";
@@ -175,13 +173,11 @@ function fillPage() {
             : "--";
     }
 
-    // Préférences
     if (themeSelect) themeSelect.value = currentSettings?.theme ?? "dark";
     if (autoplayToggle) autoplayToggle.checked = currentSettings?.autoplay ?? true;
     if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings?.email_notifications ?? true;
     if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings?.push_notifications ?? true;
 
-    // Appareils
     renderDevices();
 }
 
@@ -285,33 +281,33 @@ function updatePasswordMatch() {
 
 function validatePassword() {
     if (!currentPasswordInput || currentPasswordInput.value.trim() === "") {
-        showNotification("Veuillez saisir votre mot de passe actuel.", "error");
+        showNotification("Veuillez saisir votre mot de passe actuel.", true);
         currentPasswordInput?.focus();
         return false;
     }
     if (!newPasswordInput || newPasswordInput.value.trim() === "") {
-        showNotification("Veuillez saisir un nouveau mot de passe.", "error");
+        showNotification("Veuillez saisir un nouveau mot de passe.", true);
         newPasswordInput?.focus();
         return false;
     }
     const newPass = newPasswordInput.value;
     if (newPass.length < 8) {
-        showNotification("Le nouveau mot de passe doit contenir au moins 8 caractères.", "error");
+        showNotification("Le nouveau mot de passe doit contenir au moins 8 caractères.", true);
         newPasswordInput.focus();
         return false;
     }
     if (!/[A-Z]/.test(newPass) || !/[a-z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
-        showNotification("Le mot de passe doit contenir majuscules, minuscules, chiffres et caractères spéciaux.", "error");
+        showNotification("Le mot de passe doit contenir majuscules, minuscules, chiffres et caractères spéciaux.", true);
         newPasswordInput.focus();
         return false;
     }
     if (newPass !== confirmPasswordInput?.value) {
-        showNotification("Les mots de passe ne correspondent pas.", "error");
+        showNotification("Les mots de passe ne correspondent pas.", true);
         confirmPasswordInput?.focus();
         return false;
     }
     if (currentPasswordInput.value === newPass) {
-        showNotification("Le nouveau mot de passe doit être différent de l'ancien.", "error");
+        showNotification("Le nouveau mot de passe doit être différent de l'ancien.", true);
         newPasswordInput.focus();
         return false;
     }
@@ -344,10 +340,10 @@ async function changePassword() {
             passwordMatch.className = "nv-password-match";
         }
 
-        showNotification("Votre mot de passe a été mis à jour avec succès.", "success");
+        showNotification("Votre mot de passe a été mis à jour avec succès.", false);
     } catch (error) {
         console.error("Password update error:", error);
-        showNotification(error.message || "Impossible de modifier le mot de passe.", "error");
+        showNotification(error.message || "Impossible de modifier le mot de passe.", true);
     } finally {
         hideLoader();
         buttonLoading(updatePasswordButton, false);
@@ -410,12 +406,12 @@ async function disconnectDevice(deviceId) {
     try {
         showLoader();
         await getDevices(); 
-        showNotification("Appareil déconnecté.", "success");
+        showNotification("Appareil déconnecté.", false);
         await loadDevicesData();
         renderDevices();
     } catch (error) {
         console.error(error);
-        showNotification("Impossible de déconnecter cet appareil.", "error");
+        showNotification("Impossible de déconnecter cet appareil.", true);
     } finally {
         hideLoader();
         isDisconnectingDevice = false;
@@ -446,10 +442,10 @@ async function savePreferences() {
         currentSettings = { ...currentSettings, ...updatedSettings };
         applyTheme(updatedSettings.theme);
 
-        showNotification("Préférences enregistrées.", "success");
+        showNotification("Préférences enregistrées.", false);
     } catch (error) {
         console.error("Save settings error:", error);
-        showNotification(error.message || "Impossible d'enregistrer les préférences.", "error");
+        showNotification(error.message || "Impossible d'enregistrer les préférences.", true);
     } finally {
         hideLoader();
         buttonLoading(savePreferencesButton, false);
@@ -499,11 +495,11 @@ async function handleAccountDeletion() {
 
         await signOut();
 
-        showNotification("Votre compte a été supprimé.", "success");
+        showNotification("Votre compte a été supprimé.", false);
         navigate("login.html");
     } catch (error) {
         console.error("Erreur lors de la suppression du compte :", error);
-        showNotification(error.message || "Impossible de supprimer le compte.", "error");
+        showNotification(error.message || "Impossible de supprimer le compte.", true);
     } finally {
         hideLoader();
         if (confirmDeleteButton) buttonLoading(confirmDeleteButton, false);
@@ -543,7 +539,6 @@ function addEventListeners() {
         });
     }
 
-    // Écouteurs pour le Modal de Suppression de Compte
     if (deleteAccountButton) {
         deleteAccountButton.addEventListener("click", openDeleteModal);
     }
