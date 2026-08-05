@@ -194,193 +194,133 @@ export async function rpc(
     );
 
 }
+
 // ==========================================
 // Devices
 // ==========================================
 
 export async function getDevices(){
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return { data: [], error: null };
 
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
+    const { data, error } = await supabase
+        .from("devices")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("last_seen", { ascending: false });
 
-
-    return await supabase
-
-    .from("devices")
-
-    .select("*")
-
-    .eq(
-        "user_id",
-        user.id
-    )
-
-    .order(
-        "last_seen",
-        {
-            ascending:false
-        }
-    );
-
+    return data || [];
 }
-
-
 
 export async function deleteDevice(
     deviceId
 ){
-
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
-
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return { error: "Non connecté" };
 
     return await supabase
-
-    .from("devices")
-
-    .delete()
-
-    .eq(
-        "id",
-        deviceId
-    )
-
-    .eq(
-        "user_id",
-        user.id
-    );
-
+        .from("devices")
+        .delete()
+        .eq("id", deviceId)
+        .eq("user_id", user.id);
 }
-
-
 
 export async function deleteOtherDevices(
     currentDeviceId
 ){
-
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
-
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return { error: "Non connecté" };
 
     return await supabase
-
-    .from("devices")
-
-    .delete()
-
-    .neq(
-        "id",
-        currentDeviceId
-    )
-
-    .eq(
-        "user_id",
-        user.id
-    );
-
+        .from("devices")
+        .delete()
+        .neq("id", currentDeviceId)
+        .eq("user_id", user.id);
 }
+
 // ==========================================
-// Profile
+// Profile & Roles
 // ==========================================
 
 export async function getProfile(){
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return null;
 
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
+    // 1. Récupération du profil principal
+    const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
+    if (profileError) {
+        console.error("Erreur chargement profil:", profileError.message);
+        return null;
+    }
 
-    return await supabase
+    // 2. Récupération du rôle associé via user_roles et roles
+    const { data: userRoleData } = await supabase
+        .from("user_roles")
+        .select(`
+            roles (
+                name
+            )
+        `)
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-    .from("profiles")
+    let roleName = "Utilisateur";
+    if (userRoleData && userRoleData.roles) {
+        // Gérer si roles est un tableau ou un objet unique selon la configuration Supabase
+        roleName = Array.isArray(userRoleData.roles) 
+            ? (userRoleData.roles[0]?.name || "Utilisateur") 
+            : (userRoleData.roles.name || "Utilisateur");
+    }
 
-    .select("*")
-
-    .eq(
-        "id",
-        user.id
-    )
-
-    .single();
-
+    // On retourne l'ensemble fusionné avec le champ 'role'
+    return {
+        ...profileData,
+        role: roleName
+    };
 }
-
-
 
 export async function updateProfile(
     values
 ){
-
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
-
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return { error: "Non connecté" };
 
     return await supabase
-
-    .from("profiles")
-
-    .update(
-        values
-    )
-
-    .eq(
-        "id",
-        user.id
-    );
-
+        .from("profiles")
+        .update(values)
+        .eq("id", user.id);
 }
+
 // ==========================================
 // User Settings
 // ==========================================
 
 export async function getUserSettings(){
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return null;
 
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
+    const { data } = await supabase
+        .from("user_settings")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-
-    return await supabase
-
-    .from("user_settings")
-
-    .select("*")
-
-    .eq(
-        "user_id",
-        user.id
-    )
-
-    .single();
-
+    return data;
 }
-
-
 
 export async function updateUserSettings(
     values
 ){
-
-    const user =
-    (await supabase.auth.getUser())
-    .data.user;
-
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) return { error: "Non connecté" };
 
     return await supabase
-
-    .from("user_settings")
-
-    .update(
-        values
-    )
-
-    .eq(
-        "user_id",
-        user.id
-    );
-
+        .from("user_settings")
+        .update(values)
+        .eq("user_id", user.id);
 }
