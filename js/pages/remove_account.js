@@ -114,30 +114,20 @@ async function deleteAccount() {
         showLoader();
         buttonLoading(confirmDeleteButton, true);
         if (deleteAccountMessage) {
-            deleteAccountMessage.textContent = "Suppression du profil et des données en cours...";
+            deleteAccountMessage.textContent = "Suppression du compte en cours...";
             deleteAccountMessage.style.color = "var(--nv-text-muted, #94A3B8)";
         }
 
-        // 1. Supprimer l'entrée dans la table 'profiles' (les cascades s'occuperont du reste en base de données si configuré)
-        const { error: profileError } = await supabase
-            .from("profiles")
-            .delete()
-            .eq("id", currentUser.id);
+        // Appel de la fonction RPC sécurisée Supabase
+        const { error: rpcError } = await supabase.rpc("delete_user_account");
 
-        if (profileError) {
-            console.error("Profile deletion error:", profileError);
-            // On continue quand même pour essayer de déconnecter l'utilisateur
-        }
+        if (rpcError) throw rpcError;
 
-        // 2. Déconnecter la session Supabase Auth
-        const { error: authError } = await supabase.auth.signOut();
-        if (authError) {
-            console.error("Auth sign out error:", authError);
-        }
+        // Déconnexion locale de la session par sécurité
+        await supabase.auth.signOut();
 
         showNotification("Votre compte a été supprimé avec succès.", false);
 
-        // 3. Redirection vers l'accueil ou la page de connexion après un court délai
         setTimeout(() => {
             navigate("login.html");
         }, 1500);
