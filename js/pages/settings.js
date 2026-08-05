@@ -11,8 +11,6 @@ import {
 } from "../core/auth.js";
 
 import {
-    getProfile,
-    updateProfile,
     getUserSettings,
     updateUserSettings,
     getDevices
@@ -27,6 +25,8 @@ import {
 import {
     navigate
 } from "../core/navigation.js";
+
+import { supabase } from "../core/supabase.js";
 
 // ==========================================
 // DOM Elements
@@ -132,7 +132,17 @@ async function loadSession() {
 }
 
 async function loadProfileData() {
-    currentProfile = await getProfile();
+    if (!currentUser) return;
+    const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+    if (error && error.code !== "PGRST116") {
+        console.error("Load profile error:", error);
+    }
+    currentProfile = profile || null;
 }
 
 async function loadSettingsData() {
@@ -490,7 +500,10 @@ async function handleAccountDeletion() {
         showLoader();
         if (confirmDeleteButton) buttonLoading(confirmDeleteButton, true);
 
-        const { error: profileError } = await getProfile() ? supabase.from("profiles").delete().eq("id", currentUser?.id) : { error: null };
+        const { error: profileError } = currentUser 
+            ? await supabase.from("profiles").delete().eq("id", currentUser.id) 
+            : { error: null };
+            
         if (profileError) console.error("Erreur suppression profil :", profileError);
 
         await signOut();
