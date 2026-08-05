@@ -179,66 +179,51 @@ function togglePasswordVisibility(input, button) {
 }
 
 // ==========================================
-// Force et correspondance des mots de passe
+// Password Strength
 // ==========================================
+
 function updatePasswordStrength() {
-    if (!newPasswordInput) return;
-    const password = newPasswordInput.value;
+    const value = inputPassword.value;
     let score = 0;
 
-    if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[a-z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
+    if (value.length >= 8) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/[a-z]/.test(value)) score++;
+    if (/[0-9]/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
 
-    if (passwordStrengthBar) {
-        passwordStrengthBar.style.width = "0%";
-        passwordStrengthBar.className = "nv-password-strength-bar";
-    }
-    if (passwordStrengthText) {
-        passwordStrengthText.textContent = "";
-    }
+    passwordStrengthBar.className = "nv-password-strength-bar";
 
     switch (score) {
         case 0:
         case 1:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "20%";
-                passwordStrengthBar.classList.add("weak");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe très faible.";
+            passwordStrengthBar.style.width = "20%";
+            passwordStrengthBar.classList.add("weak");
+            passwordStrengthText.textContent = "Mot de passe très faible.";
             break;
         case 2:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "40%";
-                passwordStrengthBar.classList.add("medium");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe faible.";
+            passwordStrengthBar.style.width = "40%";
+            passwordStrengthBar.classList.add("medium");
+            passwordStrengthText.textContent = "Mot de passe faible.";
             break;
         case 3:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "60%";
-                passwordStrengthBar.classList.add("good");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe correct.";
+            passwordStrengthBar.style.width = "60%";
+            passwordStrengthBar.classList.add("good");
+            passwordStrengthText.textContent = "Mot de passe correct.";
             break;
         case 4:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "80%";
-                passwordStrengthBar.classList.add("strong");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Mot de passe fort.";
+            passwordStrengthBar.style.width = "80%";
+            passwordStrengthBar.classList.add("strong");
+            passwordStrengthText.textContent = "Mot de passe fort.";
             break;
         case 5:
-            if (passwordStrengthBar) {
-                passwordStrengthBar.style.width = "100%";
-                passwordStrengthBar.classList.add("very-strong");
-            }
-            if (passwordStrengthText) passwordStrengthText.textContent = "Excellent mot de passe.";
+            passwordStrengthBar.style.width = "100%";
+            passwordStrengthBar.classList.add("very-strong");
+            passwordStrengthText.textContent = "Excellent mot de passe.";
             break;
     }
-    updatePasswordMatch();
+
+    checkPasswordMatch();
 }
 
 function updatePasswordMatch() {
