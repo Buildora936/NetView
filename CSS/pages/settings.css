@@ -836,3 +836,12 @@ Animations & Responsive
         width: 100%;
     }
 }
+/* Ajustement responsive pour les actions du modal */
+@media (max-width: 480px) {
+    .nv-modal-actions {
+        flex-direction: column-reverse;
+    }
+    .nv-modal-actions .nv-btn {
+        width: 100%;
+    }
+}
