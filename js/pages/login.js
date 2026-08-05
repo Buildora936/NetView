@@ -115,8 +115,8 @@ async function registerDevice(userId) {
         // 5. Construction automatique du nom de l'appareil
         const deviceName = `${deviceType} - ${os} (${browser})`;
 
-        // 6. Enregistrement en base de données Supabase avec l'adresse IP
-        const { error } = await supabase
+        // 6. Enregistrement en base de données Supabase et récupération de l'ID créé (.select().single())
+        const { data, error } = await supabase
             .from("devices")
             .insert([
                 {
@@ -127,10 +127,15 @@ async function registerDevice(userId) {
                     ip_address: ipAddress,
                     last_seen: new Date().toISOString()
                 }
-            ]);
+            ])
+            .select()
+            .single();
 
         if (error) {
             console.error("Erreur lors de l'enregistrement intelligent de l'appareil :", error.message);
+        } else if (data && data.id) {
+            // STOCKAGE DE L'ID DE L'APPAREIL ACTUEL POUR LE TEMPS RÉEL (Étape 1 validée)
+            localStorage.setItem("netview_current_device_id", data.id);
         }
     } catch (err) {
         console.error("Erreur technique (registerDevice) :", err);
