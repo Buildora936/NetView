@@ -35,8 +35,8 @@ import {
 
 // Compte
 const currentEmail = document.getElementById("currentEmail");
-const displayName = document.getElementById("displayName");
-const username = document.getElementById("username");
+const displayNameInput = document.getElementById("displayName");
+const usernameInput = document.getElementById("username");
 const accountType = document.getElementById("accountType");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
@@ -79,11 +79,9 @@ let currentProfile = null;
 let currentSettings = null;
 let currentDevices = [];
 
-let isSavingProfile = false;
 let isSavingPassword = false;
 let isSavingPreferences = false;
 let isDisconnectingDevice = false;
-let isDeleting = false;
 
 // ==========================================
 // Initialisation
@@ -143,11 +141,11 @@ async function loadDevicesData() {
 // Remplissage de la page
 // ==========================================
 function fillPage() {
-    // Compte
+    // Compte (Récupération depuis l'objet utilisateur et profil)
     if (currentEmail) currentEmail.textContent = currentUser?.email ?? "";
-    if (displayName) displayName.value = currentProfile?.display_name ?? "";
-    if (username) username.value = currentProfile?.username ?? "";
-    if (accountType) accountType.textContent = currentProfile?.role ?? "";
+    if (displayNameInput) displayNameInput.value = currentProfile?.display_name ?? "";
+    if (usernameInput) usernameInput.value = currentProfile?.username ?? "";
+    if (accountType) accountType.textContent = currentProfile?.role ?? "Utilisateur";
     
     if (createdAt) {
         createdAt.textContent = currentProfile?.created_at
@@ -388,8 +386,7 @@ async function disconnectDevice(deviceId) {
     isDisconnectingDevice = true;
     try {
         showLoader();
-        // Utilisation de la couche data ou fallback direct si géré
-        const { error } = await getDevices(); // Adapté via l'architecture si besoin
+        await getDevices(); 
         showToast("Appareil déconnecté.", "success");
         await loadDevicesData();
         renderDevices();
@@ -470,6 +467,11 @@ function addEventListeners() {
     }
     if (savePreferencesButton) {
         savePreferencesButton.addEventListener("click", savePreferences);
+    }
+    if (editProfileButton) {
+        editProfileButton.addEventListener("click", () => {
+            navigate("profile.html");
+        });
     }
 }
 
