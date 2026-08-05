@@ -31,11 +31,8 @@ import { supabase } from "../core/supabase.js";
 // DOM Elements
 // ==========================================
 
-// Compte
+// Compte (Nom affiché, Nom d'utilisateur et Type de compte retirés)
 const currentEmail = document.getElementById("currentEmail");
-const displayNameInput = document.getElementById("displayName");
-const usernameInput = document.getElementById("username");
-const accountType = document.getElementById("accountType");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
 const notification = document.getElementById("notification");
@@ -62,12 +59,8 @@ const emailNotificationsToggle = document.getElementById("emailNotifications");
 const pushNotificationsToggle = document.getElementById("pushNotifications");
 const savePreferencesButton = document.getElementById("savePreferencesButton");
 
-// Zone de danger / Modal de suppression
-const deleteAccountButton = document.getElementById("deleteAccountButton");
-const deleteAccountModal = document.getElementById("deleteAccountModal");
-const deleteConfirmation = document.getElementById("deleteConfirmation");
-const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+// Zone de danger / Redirection vers remove_account.html
+const removeAccountButton = document.getElementById("removeAccountButton");
 
 // ==========================================
 // Variables globales
@@ -78,7 +71,6 @@ let currentSettings = null;
 
 let isSavingPassword = false;
 let isSavingPreferences = false;
-let isDeletingAccount = false;
 
 // ==========================================
 // NOTIFICATION
@@ -154,9 +146,6 @@ async function loadSettingsData() {
 // ==========================================
 function fillPage() {
     if (currentEmail) currentEmail.textContent = currentUser?.email ?? "";
-    if (displayNameInput) displayNameInput.value = currentProfile?.display_name ?? "";
-    if (usernameInput) usernameInput.value = currentProfile?.username ?? "";
-    if (accountType) accountType.textContent = currentProfile?.role ?? "Utilisateur";
     
     if (createdAt) {
         createdAt.textContent = currentProfile?.created_at
@@ -389,55 +378,6 @@ function applyTheme(theme) {
 }
 
 // ==========================================
-// Gestion du Modal de Suppression de Compte
-// ==========================================
-function openDeleteModal() {
-    if (!deleteAccountModal) return;
-    deleteAccountModal.style.display = "flex";
-    if (deleteConfirmation) {
-        deleteConfirmation.value = "";
-        deleteConfirmation.focus();
-    }
-    if (confirmDeleteButton) {
-        confirmDeleteButton.disabled = true;
-    }
-}
-
-function closeDeleteModal() {
-    if (!deleteAccountModal) return;
-    deleteAccountModal.style.display = "none";
-}
-
-async function handleAccountDeletion() {
-    if (isDeletingAccount) return;
-    isDeletingAccount = true;
-
-    try {
-        showLoader();
-        if (confirmDeleteButton) buttonLoading(confirmDeleteButton, true);
-
-        const { error: profileError } = currentUser 
-            ? await supabase.from("profiles").delete().eq("id", currentUser.id) 
-            : { error: null };
-            
-        if (profileError) console.error("Erreur suppression profil :", profileError);
-
-        await signOut();
-
-        showNotification("Votre compte a été supprimé.", false);
-        navigate("login.html");
-    } catch (error) {
-        console.error("Erreur lors de la suppression du compte :", error);
-        showNotification(error.message || "Impossible de supprimer le compte.", true);
-    } finally {
-        hideLoader();
-        if (confirmDeleteButton) buttonLoading(confirmDeleteButton, false);
-        isDeletingAccount = false;
-        closeDeleteModal();
-    }
-}
-
-// ==========================================
 // Événements globaux
 // ==========================================
 function addEventListeners() {
@@ -472,25 +412,10 @@ function addEventListeners() {
             navigate("devices_list.html");
         });
     }
-
-    if (deleteAccountButton) {
-        deleteAccountButton.addEventListener("click", openDeleteModal);
-    }
-    if (cancelDeleteButton) {
-        cancelDeleteButton.addEventListener("click", closeDeleteModal);
-    }
-    const modalOverlay = deleteAccountModal?.querySelector(".nv-modal-overlay");
-    if (modalOverlay) {
-        modalOverlay.addEventListener("click", closeDeleteModal);
-    }
-    if (deleteConfirmation && confirmDeleteButton) {
-        deleteConfirmation.addEventListener("input", () => {
-            const val = deleteConfirmation.value.trim();
-            confirmDeleteButton.disabled = (val !== "SUPPRIMER");
+    if (removeAccountButton) {
+        removeAccountButton.addEventListener("click", () => {
+            navigate("remove_account.html");
         });
-    }
-    if (confirmDeleteButton) {
-        confirmDeleteButton.addEventListener("click", handleAccountDeletion);
     }
 }
 
