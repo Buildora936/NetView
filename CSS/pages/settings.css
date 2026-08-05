@@ -680,103 +680,106 @@ Boutons Standards & Spécifiques
     box-shadow: none !important;
 }
 
-/* ==================================================
-Modales & Loader (Partagés)
-========================================== */
+/* ==========================================
+   Modal de Suppression de Compte NetView
+   ========================================== */
 
 .nv-modal {
     position: fixed;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    z-index: 5000;
-}
-
-.nv-modal.show {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .nv-modal-overlay {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
+    animation: nvFadeIn 0.2s ease-in-out;
 }
 
 .nv-modal-content {
     position: relative;
-    width: min(100%, 460px);
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
+    background: var(--nv-card-bg, #1e1e24);
+    color: var(--nv-text-color, #ffffff);
+    width: 100%;
+    max-width: 480px;
     padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    animation: fadeUp .3s ease;
-    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--nv-border-color, rgba(255, 255, 255, 0.1));
+    z-index: 1000;
+    animation: nvScaleUp 0.2s ease-in-out;
+    box-sizing: border-box;
 }
 
 .nv-danger-modal-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(239, 68, 68, 0.15);
+    font-size: 2.5rem;
     color: #ef4444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    margin: 0 auto;
+    margin-bottom: 1rem;
 }
 
 .nv-modal-content h2 {
-    font-size: 1.25rem;
-    color: var(--nv-text-primary, #fff);
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
 }
 
 .nv-modal-content p {
-    font-size: 0.9rem;
-    color: var(--nv-text-secondary, #94a3b8);
+    font-size: 0.95rem;
+    color: var(--nv-text-muted, #9ca3af);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
 }
 
 .nv-warning-box {
-    background: rgba(239, 68, 68, 0.05);
-    border: 1px dashed rgba(239, 68, 68, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+}
+
+.nv-warning-box p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #fca5a5;
 }
 
 .nv-warning-box h3 {
-    color: #ef4444;
+    margin: 0.25rem 0 0 0;
     font-size: 1.1rem;
+    color: #ef4444;
     letter-spacing: 1px;
-    margin-top: 0.25rem;
 }
 
 .nv-modal-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-.nv-page-loader {
-    position: fixed;
-    inset: 0;
-    background: rgba(2, 6, 23, 0.8);
-    backdrop-filter: blur(6px);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    z-index: 9999;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
 }
 
+@keyframes nvFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes nvScaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
 .nv-spinner {
     width: 48px;
     height: 48px;
