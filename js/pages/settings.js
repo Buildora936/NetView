@@ -39,6 +39,9 @@ const usernameInput = document.getElementById("username");
 const accountType = document.getElementById("accountType");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
+const notification = document.getElementById("notification");
+const notification = document.getElementById("notification");
+const notification = document.getElementById("notification");
 
 // Sécurité / Mot de passe
 const currentPasswordInput = document.getElementById("currentPassword");
@@ -82,6 +85,21 @@ let isSavingPassword = false;
 let isSavingPreferences = false;
 let isDisconnectingDevice = false;
 let isDeletingAccount = false;
+
+// ==========================================
+// NOTIFICATION
+// ==========================================
+
+function showNotification(message, isError = false) {
+    notification.textContent = message;
+    notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
+    notification.style.color = isError ? "#ef4444" : "#22c55e";
+    notification.classList.add("show");
+
+    setTimeout(() => {
+        notification.classList.remove("show");
+    }, 3500);
+}
 
 // ==========================================
 // Initialisation
