@@ -28,7 +28,10 @@ import {
 import {
     navigate
 } from "../core/navigation.js";
+import { initDeviceRevocationListener } from "./data.js";
 
+// Lancer l'écouteur de déconnexion à distance dès que l'app se charge
+initDeviceRevocationListener();
 
 // ==========================================
 // DOM
