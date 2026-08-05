@@ -31,6 +31,8 @@ const notification = document.getElementById("notification");
 // Variables globales
 // ==========================================
 let currentUser = null;
+// Cache pour éviter de refaire des requêtes pour la même IP
+const locationCache = {};
 
 // ==========================================
 // NOTIFICATION
@@ -45,6 +47,42 @@ function showNotification(message, isError = false) {
     setTimeout(() => {
         notification.classList.remove("show");
     }, 3500);
+}
+
+// ==========================================
+// Géolocalisation par IP
+// ==========================================
+async function getLocationFromIP(ip) {
+    if (!ip || ip === "127.0.0.1" || ip === "::1" || ip.startsWith("192.168.") || ip.startsWith("10.")) {
+        return "Réseau local";
+    }
+
+    if (locationCache[ip]) {
+        return locationCache[ip];
+    }
+
+    try {
+        // Utilisation de l'API gratuite ipapi.co
+        const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        if (!response.ok) throw new Error("Erreur réseau géolocalisation");
+        
+        const data = await response.json();
+        if (data.error) {
+            return "Emplacement inconnu";
+        }
+
+        const city = data.city || "";
+        const country = data.country_name || "";
+        
+        let location = [city, country].filter(Boolean).join(", ");
+        if (!location) location = "Emplacement inconnu";
+
+        locationCache[ip] = location;
+        return location;
+    } catch (error) {
+        console.error("Geoloc error for IP:", ip, error);
+        return "Emplacement inconnu";
+    }
 }
 
 // ==========================================
@@ -102,7 +140,7 @@ async function loadDevices() {
         return;
     }
 
-    devices.forEach(device => {
+    for (const device of devices) {
         const item = document.createElement("div");
         item.className = "nv-settings-item";
         item.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; margin-bottom: 0.75rem; gap: 1rem;";
@@ -117,6 +155,9 @@ async function loadDevices() {
             })
             : "Inconnue";
 
+        // Traduction de l'IP en emplacement (asynchrone)
+        const locationText = await getLocationFromIP(device.ip_address);
+
         item.innerHTML = `
             <div style="display: flex; align-items: center; gap: 1rem; overflow: hidden;">
                 <i class="fa-solid fa-laptop" style="font-size: 1.5rem; color: var(--nv-primary, #2563EB); flex-shrink: 0;"></i>
@@ -125,7 +166,11 @@ async function loadDevices() {
                     <p style="font-size: 0.85rem; color: var(--nv-text-muted, #94A3B8); margin: 0;">
                         ${device.browser || "Navigateur inconnu"} • ${device.operating_system || "OS inconnu"}
                     </p>
-                    <p style="font-size: 0.75rem; color: var(--nv-text-muted, #94A3B8); margin-top: 0.2rem;">
+                    <p style="font-size: 0.8rem; color: var(--nv-primary, #2563EB); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.3rem;">
+                        <i class="fa-solid fa-location-dot" style="font-size: 0.75rem;"></i>
+                        <span>${locationText}</span> ${device.ip_address ? `(${device.ip_address})` : ""}
+                    </p>
+                    <p style="font-size: 0.75rem; color: var(--nv-text-muted, #94A3B8); margin-top: 0.1rem;">
                         Dernière activité : ${lastSeenDate}
                     </p>
                 </div>
@@ -137,7 +182,7 @@ async function loadDevices() {
         `;
 
         devicesContainer.appendChild(item);
-    });
+    }
 
     // Attacher les écouteurs sur les boutons de suppression
     document.querySelectorAll(".revoke-device-btn").forEach(btn => {
