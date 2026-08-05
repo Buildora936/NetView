@@ -79,7 +79,7 @@
                         <span id="createdAt" class="nv-settings-value">--</span>
                     </div>
                 </div>
-                <a href="profile.html" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">Modifier le profil</a>
+                <a href="profile.html" id="editProfileButton" class="nv-btn nv-btn-gradient" style="margin-top: 1rem;">Modifier le profil</a>
             </section>
 
             <!-- 2. Sécurité -->
@@ -149,13 +149,13 @@
                     </div>
                 </div>
 
-                <!-- Conteneur propre pour recevoir les données dynamiques de Supabase -->
-                <div id="devicesList" class="nv-devices-list">
+                <!-- ID mis à jour pour correspondre au script JS -->
+                <div id="devicesContainer" class="nv-devices-list">
                     <!-- Injecté dynamiquement par JavaScript -->
                 </div>
 
                 <div class="nv-device-actions" style="margin-top: 1rem;">
-                    <button id="logoutOthersButton" type="button" class="nv-btn nv-btn-secondary">
+                    <button id="disconnectOtherDevicesButton" type="button" class="nv-btn nv-btn-secondary">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Déconnecter tous les autres appareils</span>
                     </button>
@@ -335,7 +335,7 @@
         </div>
     </div>
 
-    <!-- Import JavaScript avec le bon chemin et le module -->
+    <!-- Import JavaScript -->
     <script type="module" src="js/pages/settings.js"></script>
 </body>
 </html>
