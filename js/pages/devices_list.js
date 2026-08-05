@@ -20,8 +20,6 @@ import {
 
 import { supabase } from "../core/supabase.js";
 
-import { initDeviceRevocationListener } from "./data.js";
-
 
 // ==========================================
 // DOM Elements
@@ -112,8 +110,6 @@ async function loadSession() {
     }
     currentUser = await getUser();
 }
-// Lancer l'écouteur de déconnexion à distance dès que l'app se charge
-initDeviceRevocationListener();
 
 // ==========================================
 // Chargement et Affichage des Appareils
