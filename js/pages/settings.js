@@ -147,7 +147,7 @@ function fillPage() {
     if (currentEmail) currentEmail.textContent = currentUser?.email ?? "";
     if (displayName) displayName.value = currentProfile?.display_name ?? "";
     if (username) username.value = currentProfile?.username ?? "";
-    if (accountType) accountType.textContent = currentProfile?.role ?? "Utilisateur";
+    if (accountType) accountType.textContent = currentProfile?.role ?? "";
     
     if (createdAt) {
         createdAt.textContent = currentProfile?.created_at
