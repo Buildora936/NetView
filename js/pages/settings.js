@@ -2,8 +2,6 @@
 // NetView
 // settings.js
 // ==========================================
-import { supabase } from "./supabase.js";
-
 
 import {
     getSession,
