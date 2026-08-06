@@ -177,7 +177,6 @@ async function initProfile() {
     }
 }
 
-
 // ==========================================
 // Avatar & Banner Management
 // ==========================================
@@ -274,14 +273,13 @@ countryModal.addEventListener("click", (e) => {
     }
 });
 
-
 // ==========================================
 // Storage Upload Helpers
 // ==========================================
 
 async function uploadFileToStorage(userId, file, bucketName) {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${bucketName}_${Date.now()}.${fileExt}`;
+    const fileName = `banner_${Date.now()}.${fileExt}`;
     const filePath = `${userId}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
@@ -296,7 +294,6 @@ async function uploadFileToStorage(userId, file, bucketName) {
 
     return data.publicUrl;
 }
-
 
 // ==========================================
 // GeoIP Helper
@@ -314,7 +311,6 @@ async function detectUserCountry() {
         return null;
     }
 }
-
 
 // ==========================================
 // Form Submission & Save Profile
@@ -347,7 +343,7 @@ profileForm.addEventListener("submit", async (e) => {
         displayNameMessage.textContent = "";
     }
 
-    // Utilisation exclusive du loader du bouton lors de la sauvegarde
+    // CORRECTION : Utiliser uniquement le loader du bouton pour éviter de bloquer l'écran avec le loader global
     saveProfileButton.disabled = true;
     saveProfileText.hidden = true;
     saveProfileLoader.hidden = false;
@@ -393,6 +389,7 @@ profileForm.addEventListener("submit", async (e) => {
         console.error(error);
         showNotification(error.message || "Erreur lors de l'enregistrement du profil.", true);
         
+        // Réactiver le bouton en cas d'erreur
         saveProfileButton.disabled = false;
         saveProfileText.hidden = false;
         saveProfileLoader.hidden = true;
@@ -415,7 +412,6 @@ logoutButton.addEventListener("click", async () => {
         showPageLoader(false);
     }
 });
-
 
 // ==========================================
 // Run Initialization
