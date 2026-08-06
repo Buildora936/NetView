@@ -351,3 +351,157 @@ export async function updateUserSettings(
         .update(values)
         .eq("user_id", user.id);
 }
+// ==========================================
+// Videos
+// ==========================================
+
+export async function getVideos(options = {}){
+
+    let query =
+        supabase
+        .from("videos")
+        .select("*")
+        .eq("status","published")
+        .order("created_at",{
+            ascending:false
+        });
+
+    if(options.category &&
+       options.category !== "Tous"){
+
+        query =
+            query.eq(
+                "category",
+                options.category
+            );
+
+    }
+
+    if(options.search){
+
+        query =
+            query.ilike(
+                "title",
+                `%${options.search}%`
+            );
+
+    }
+
+    if(options.page){
+
+        const limit = 20;
+
+        const from =
+            (options.page - 1) * limit;
+
+        const to =
+            from + limit - 1;
+
+        query =
+            query.range(
+                from,
+                to
+            );
+
+    }
+
+    const { data, error } =
+        await query;
+
+    if(error)
+        throw error;
+
+    return data || [];
+
+}
+// ==========================================
+// Shorts
+// ==========================================
+
+export async function getShorts(options = {}){
+
+    let query =
+        supabase
+        .from("shorts")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+    if(options.category &&
+       options.category !== "Tous"){
+
+        query =
+            query.eq(
+                "category",
+                options.category
+            );
+
+    }
+
+    const { data, error } =
+        await query;
+
+    if(error)
+        throw error;
+
+    return data || [];
+
+}
+// ==========================================
+// Lives
+// ==========================================
+
+export async function getLives(){
+
+    const { data, error } =
+        await supabase
+        .from("lives")
+        .select("*")
+        .eq(
+            "status",
+            "live"
+        )
+        .order(
+            "started_at",
+            {
+                ascending:false
+            }
+        );
+
+    if(error)
+        throw error;
+
+    return data || [];
+
+}
+// ==========================================
+// Sponsored Products
+// ==========================================
+
+export async function getSponsoredProducts(){
+
+    const { data, error } =
+        await supabase
+        .from("products")
+        .select("*")
+        .eq(
+            "is_sponsored",
+            true
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+    if(error)
+        throw error;
+
+    return data || [];
+
+}
