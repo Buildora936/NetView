@@ -11,8 +11,7 @@ import {
 
 import {
     getUserSettings,
-    updateUserSettings,
-    initDeviceRevocationListener
+    updateUserSettings
 } from "../core/data.js";
 
 import {
@@ -27,8 +26,6 @@ import {
 
 import { supabase } from "../core/supabase.js";
 
-// Lancer l'écouteur de déconnexion à distance dès que l'app se charge
-initDeviceRevocationListener();
 
 // ==========================================
 // DOM Elements
