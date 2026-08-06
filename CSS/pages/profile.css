@@ -405,12 +405,12 @@ Notification & Loader Globaux
     transform: translateY(0);
 }
 
-.global-loader {
+.global-loader.show  {
     position: fixed;
     inset: 0;
     background: rgba(2, 6, 23, 0.75);
     backdrop-filter: blur(8px);
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -419,7 +419,7 @@ Notification & Loader Globaux
     transition: opacity 0.3s ease;
 }
 
-.global-loader.show {
+.global-loader {
     opacity: 1;
     pointer-events: auto;
 }
