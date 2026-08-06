@@ -3,816 +3,2175 @@
 // index.js
 // ==========================================
 
-import {
+
+// ==========================================
+// Imports
+// ==========================================
+
+import{
+
     getSession,
+
     getUser,
+
     signOut
-} from "../core/auth.js";
 
-import {
+}from "../core/auth.js";
+
+
+import{
+
     getProfile,
+
     getVideos,
+
     getShorts,
+
     getLives,
-    getSponsoredProducts,
-    select,
-    initDeviceRevocationListener
-} from "../core/data.js";
 
-import {
+    getSponsoredProducts
+
+}from "../core/data.js";
+
+
+import{
+
     showLoader,
+
     hideLoader,
-    showToast,
+
     buttonLoading
-} from "../core/ui.js";
 
-import {
+}from "../core/ui.js";
+
+
+import{
+
     navigate
-} from "../core/navigation.js";
 
+}from "../core/navigation.js";
 
-// Lancer l'écouteur de déconnexion à distance dès que l'app se charge
-initDeviceRevocationListener();
 
 // ==========================================
-// DOM
-// ==========================================
-
 // Header
-const header = document.querySelector(".nv-header");
-const headerRight = document.getElementById("headerRight");
-const menuButton = document.getElementById("menuButton");
-const searchForm = document.getElementById("searchForm");
-const searchInput = document.getElementById("searchInput");
-const searchButton = document.querySelector(".nv-search-button");
-const uploadButton = document.getElementById("uploadButton");
-const notificationsButton = document.getElementById("notificationsButton");
-const notificationBadge = document.getElementById("notificationBadge");
-const loginButton = document.getElementById("loginButton");
-const headerAvatar = document.getElementById("headerAvatar");
+// ==========================================
 
+const menuButton =
+    document.getElementById(
+        "menuButton"
+    );
+
+const searchForm =
+    document.getElementById(
+        "searchForm"
+    );
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+const searchButton =
+    searchForm?.querySelector(
+        ".nv-search-button"
+    );
+
+const headerRight =
+    document.getElementById(
+        "headerRight"
+    );
+
+const uploadButton =
+    document.getElementById(
+        "uploadButton"
+    );
+
+const notificationsButton =
+    document.getElementById(
+        "notificationsButton"
+    );
+
+const notificationBadge =
+    document.getElementById(
+        "notificationBadge"
+    );
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+const headerAvatar =
+    document.getElementById(
+        "headerAvatar"
+    );
+
+
+// ==========================================
 // Sidebar
-const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
+// ==========================================
 
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+const sidebarNav =
+    sidebar?.querySelector(
+        ".nv-sidebar-nav"
+    );
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+
+// ==========================================
 // Categories
-const categoriesBar = document.querySelector(".nv-categories");
-const categoriesScroll = document.getElementById("categoriesContainer");
+// ==========================================
 
-// Main Content
-const videosGrid = document.getElementById("videosGrid");
-const videosGridTwo = document.getElementById("videosGridTwo");
-const videosGridThree = document.getElementById("videosGridThree");
-const shortsGrid = document.getElementById("shortsGrid");
-const livesContainer = document.getElementById("livesCarousel");
-const productsContainer = document.getElementById("sponsoredProducts");
-
-// Empty States
-const videosEmpty = document.getElementById("videosEmpty");
-const shortsEmpty = document.getElementById("shortsEmpty");
-const livesEmpty = document.getElementById("livesEmpty");
-const productsEmpty = document.getElementById("productsEmpty");
-
-// Skeletons
-const videosSkeleton = document.getElementById("videosSkeleton");
-const moreVideosSkeleton = document.getElementById("moreVideosSkeleton");
-
-// Context Menus
-const videoContextMenu = document.getElementById("videoContextMenu");
-const shortContextMenu = document.getElementById("shortContextMenu");
-const liveContextMenu = document.getElementById("liveContextMenu");
-const productContextMenu = document.getElementById("productContextMenu");
+const categoriesContainer =
+    document.querySelector(
+        ".nv-categories-scroll"
+    );
 
 
 // ==========================================
-// Variables globales
+// Home
 // ==========================================
 
-let currentUser = null;
-let currentProfile = null;
-let videos = [];
-let shorts = [];
-let lives = [];
-let products = [];
-let categories = [];
-let sidebarOpen = false;
-let currentCategory = "all";
-let isLoading = false;
-let activeContextMenu = null;
+const videosGrid =
+    document.getElementById(
+        "videosGrid"
+    );
+
+const videosFeed =
+    document.getElementById(
+        "videosFeed"
+    );
+
+const videosFeedContinue =
+    document.getElementById(
+        "videosFeedContinue"
+    );
+
+const videosBeforeInfinite =
+    document.getElementById(
+        "videosBeforeInfinite"
+    );
+
+const shortsGrid =
+    document.getElementById(
+        "shortsGrid"
+    );
+
+const shortsGridContinue =
+    document.getElementById(
+        "shortsGridContinue"
+    );
+
+const livesContainer =
+    document.getElementById(
+        "livesContainer"
+    );
+
+const productsContainer =
+    document.getElementById(
+        "productsContainer"
+    );
 
 
+// ==========================================
+// UI
+// ==========================================
+
+const infiniteLoader =
+    document.getElementById(
+        "infiniteLoader"
+    );
+
+const skeletonContainer =
+    document.getElementById(
+        "skeletonContainer"
+    );
+
+const emptyState =
+    document.getElementById(
+        "emptyState"
+    );
+
+const contextMenu =
+    document.getElementById(
+        "contextMenu"
+    );
+
+const pageLoader =
+    document.querySelector(
+        ".nv-page-loader"
+    );
+
+const notification =
+    document.getElementById(
+        "notification"
+    );
+
+
+// ==========================================
+// Global Variables
+// ==========================================
+
+let currentUser =
+    null;
+
+let currentProfile =
+    null;
+
+let videos =
+    [];
+
+let shorts =
+    [];
+
+let lives =
+    [];
+
+let products =
+    [];
+
+let sidebarOpen =
+    false;
+
+let currentCategory =
+    "Tous";
+
+let isLoading =
+    false;
+
+let hasMoreVideos =
+    true;
+
+let currentPage =
+    1;
+
+let searchQuery =
+    "";
+
+let infiniteScrollObserver =
+    null;
 // ==========================================
 // Initialisation
 // ==========================================
 
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+
+// ==========================================
+// Init
+// ==========================================
+
 async function init(){
+
     try{
-        isLoading = true;
+
         showLoader();
 
-        if(videosSkeleton) videosSkeleton.hidden = false;
-
         await checkSession();
-        await loadHomeContent();
-        
+
+        await loadProfile();
+
         fillHeader();
+
         fillSidebar();
 
-        loadCategories();
-        renderAllContent();
+        await loadHomeContent();
 
         addEventListeners();
+
     }
+
     catch(error){
+
         console.error(error);
-        showToast(
-            "Impossible de charger la page.",
-            "error"
-        );
+
     }
+
     finally{
-        isLoading = false;
+
         hideLoader();
-        if(videosSkeleton) videosSkeleton.hidden = true;
+
     }
+
 }
 
 
 // ==========================================
-// Session
+// Vérification Session
 // ==========================================
 
 async function checkSession(){
-    const session = await getSession();
 
-    if(!session){
+    try{
+
+        const session =
+            await getSession();
+
+        if(!session){
+
+            currentUser = null;
+
+            return;
+
+        }
+
+        currentUser =
+            await getUser();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
         currentUser = null;
-        currentProfile = null;
-        return;
+
     }
 
-    currentUser = await getUser();
-
-    if(currentUser){
-        await loadProfile();
-    }
 }
 
 
 // ==========================================
-// Profil
+// Chargement Profil
 // ==========================================
 
 async function loadProfile(){
-    if(!currentUser)
+
+    if(!currentUser){
+
+        currentProfile = null;
+
         return;
 
-    const { data } = await getProfile();
-    currentProfile = data;
+    }
+
+    try{
+
+        currentProfile =
+            await getProfile(
+                currentUser.id
+            );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        currentProfile = null;
+
+    }
+
 }
 
 
 // ==========================================
-// Contenu Accueil
+// Chargement Accueil
 // ==========================================
 
 async function loadHomeContent(){
-    try {
-        const [
-            loadedVideos,
-            loadedShorts,
-            loadedLives,
-            loadedProducts
-        ] = await Promise.all([
-            getVideos(),
-            getShorts(),
-            getLives(),
-            getSponsoredProducts()
-        ]);
 
-        videos = loadedVideos?.data || loadedVideos || [];
-        shorts = loadedShorts?.data || loadedShorts || [];
-        lives = loadedLives?.data || loadedLives || [];
-        products = loadedProducts?.data || loadedProducts || [];
-    } catch (e) {
-        console.warn("Erreur de chargement des données distantes, utilisation de données par défaut.", e);
-        videos = [];
-        shorts = [];
-        lives = [];
-        products = [];
-    }
+    await Promise.all([
+
+        loadVideos(),
+
+        loadShorts(),
+
+        loadLives(),
+
+        loadSponsoredProducts()
+
+    ]);
+
 }
 
 
 // ==========================================
-// Header + Sidebar Rendu
+// Header
 // ==========================================
 
 function fillHeader(){
+
     updateHeader();
+
 }
+
+
+// ==========================================
+// Sidebar
+// ==========================================
 
 function fillSidebar(){
+
     updateSidebar();
+
 }
+// ==========================================
+// Header + Sidebar
+// ==========================================
+
+
+// ==========================================
+// Toggle Sidebar
+// ==========================================
 
 function toggleSidebar(){
+
     if(sidebarOpen){
+
         closeSidebar();
+
     }
+
     else{
+
         openSidebar();
+
     }
+
 }
+
+
+// ==========================================
+// Open Sidebar
+// ==========================================
 
 function openSidebar(){
+
     sidebarOpen = true;
-    if(sidebar) sidebar.classList.add("active");
-    if(sidebarOverlay) sidebarOverlay.classList.add("active");
-    document.body.classList.add("nv-sidebar-open");
+
+    sidebar.classList.add(
+        "active"
+    );
+
+    sidebarOverlay?.classList.add(
+        "active"
+    );
+
 }
+
+
+// ==========================================
+// Close Sidebar
+// ==========================================
 
 function closeSidebar(){
+
     sidebarOpen = false;
-    if(sidebar) sidebar.classList.remove("active");
-    if(sidebarOverlay) sidebarOverlay.classList.remove("active");
-    document.body.classList.remove("nv-sidebar-open");
+
+    sidebar.classList.remove(
+        "active"
+    );
+
+    sidebarOverlay?.classList.remove(
+        "active"
+    );
+
 }
+
+
+// ==========================================
+// Update Header
+// ==========================================
 
 function updateHeader(){
+
     if(currentUser){
+
         showUserHeader();
+
     }
+
     else{
+
         showGuestHeader();
+
     }
+
 }
 
+
+// ==========================================
+// Update Sidebar
+// ==========================================
+
+function updateSidebar(){
+
+    if(currentUser){
+
+        showUserSidebar();
+
+    }
+
+    else{
+
+        showGuestSidebar();
+
+    }
+
+}
+
+
+// ==========================================
+// Guest Header
+// ==========================================
+
 function showGuestHeader(){
-    if(!headerRight) return;
+
+    if(!headerRight)
+        return;
+
     headerRight.innerHTML = `
+
         <button
             id="loginButton"
             class="nv-login-button">
-            S'identifier
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>
+
+                S'identifier
+
+            </span>
+
         </button>
+
     `;
 
-    const btn = document.getElementById("loginButton");
-    if(btn){
-        btn.addEventListener("click", () => {
-            navigate("auth.html");
-        });
-    }
 }
 
+
+// ==========================================
+// User Header
+// ==========================================
+
 function showUserHeader(){
-    if(!headerRight) return;
+
+    if(!headerRight)
+        return;
+
     headerRight.innerHTML = `
+
         <button
             id="uploadButton"
             class="nv-icon-button"
             title="Publier">
+
             <i class="fa-solid fa-circle-plus"></i>
+
         </button>
+
         <button
             id="notificationsButton"
             class="nv-icon-button">
+
             <i class="fa-regular fa-bell"></i>
+
             <span
                 id="notificationBadge"
                 class="nv-badge">
-                0
+
             </span>
+
         </button>
+
         <a
             href="settings.html"
             class="nv-avatar-button">
+
             <img
                 id="headerAvatar"
-                src="${currentProfile?.avatar_url || "images/default-avatar.png"}"
+                src="${
+                    currentProfile?.avatar_url ||
+                    "images/default-avatar.png"
+                }"
                 alt="Avatar">
+
         </a>
+
     `;
 
-    const upBtn = document.getElementById("uploadButton");
-    if(upBtn){
-        upBtn.addEventListener("click", () => {
-            navigate("studio.html");
-        });
-    }
-
-    const notifBtn = document.getElementById("notificationsButton");
-    if(notifBtn){
-        notifBtn.addEventListener("click", () => {
-            toggleNotifications();
-        });
-    }
 }
 
-function updateSidebar(){
-    if(currentUser){
-        showUserSidebar();
-    }
-    else{
-        showGuestSidebar();
-    }
-}
+
+// ==========================================
+// Guest Sidebar
+// ==========================================
 
 function showGuestSidebar(){
-    if(!sidebar) return;
-    sidebar.innerHTML = `
-        <nav class="nv-sidebar-nav">
-            <a href="index.html" class="nv-sidebar-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="search.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <span>Recherche</span>
-            </a>
-            <a href="trending.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-fire"></i>
-                <span>Tendances</span>
-            </a>
-            <a href="shorts.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Shorts</span>
-            </a>
-            <a href="lives.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-tower-broadcast"></i>
-                <span>Lives</span>
-            </a>
-            <hr>
-            <a href="netview-shop.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-store"></i>
-                <span>Boutique</span>
-            </a>
-            <a href="help.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-circle-question"></i>
-                <span>Aide</span>
-            </a>
-        </nav>
+
+    if(!sidebarNav)
+        return;
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Accueil</span>
+
+        </a>
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>Shorts</span>
+
+        </a>
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>Lives</span>
+
+        </a>
+
+        <a href="search.html">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <span>Explorer</span>
+
+        </a>
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>Boutique</span>
+
+        </a>
+
+        <hr>
+
+        <a href="auth.html">
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>S'identifier</span>
+
+        </a>
+
     `;
+
 }
+
+
+// ==========================================
+// User Sidebar
+// ==========================================
 
 function showUserSidebar(){
-    if(!sidebar) return;
-    sidebar.innerHTML = `
-        <nav class="nv-sidebar-nav">
-            <a href="index.html" class="nv-sidebar-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="search.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <span>Recherche</span>
-            </a>
-            <a href="trending.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-fire"></i>
-                <span>Tendances</span>
-            </a>
-            <a href="shorts.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Shorts</span>
-            </a>
-            <a href="lives.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-tower-broadcast"></i>
-                <span>Lives</span>
-            </a>
-            <a href="subscriptions.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-users"></i>
-                <span>Abonnements</span>
-            </a>
-            <a href="library.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-photo-film"></i>
-                <span>Bibliothèque</span>
-            </a>
-            <a href="history.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span>Historique</span>
-            </a>
-            <a href="playlist.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-list"></i>
-                <span>Playlists</span>
-            </a>
-            <a href="notification.html" class="nv-sidebar-item">
-                <i class="fa-regular fa-bell"></i>
-                <span>Notifications</span>
-            </a>
-            <hr>
-            <a href="studio.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Studio</span>
-            </a>
-            <a href="netview-shop.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-store"></i>
-                <span>Boutique</span>
-            </a>
-            <a href="settings.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-gear"></i>
-                <span>Paramètres</span>
-            </a>
-            <a href="help.html" class="nv-sidebar-item">
-                <i class="fa-solid fa-circle-question"></i>
-                <span>Aide</span>
-            </a>
-        </nav>
+
+    if(!sidebarNav)
+        return;
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Accueil</span>
+
+        </a>
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>Shorts</span>
+
+        </a>
+
+        <a href="subscriptions.html">
+
+            <i class="fa-solid fa-tv"></i>
+
+            <span>Abonnements</span>
+
+        </a>
+
+        <a href="playlist.html">
+
+            <i class="fa-solid fa-list"></i>
+
+            <span>Playlists</span>
+
+        </a>
+
+        <a href="history.html">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            <span>Historique</span>
+
+        </a>
+
+        <a href="watch-later.html">
+
+            <i class="fa-regular fa-clock"></i>
+
+            <span>À regarder</span>
+
+        </a>
+
+        <a href="liked-videos.html">
+
+            <i class="fa-solid fa-thumbs-up"></i>
+
+            <span>J'aime</span>
+
+        </a>
+
+        <hr>
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>Lives</span>
+
+        </a>
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>Boutique</span>
+
+        </a>
+
+        <a href="settings.html">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>Paramètres</span>
+
+        </a>
+
+        <a
+            href="#"
+            id="logoutButton">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Déconnexion</span>
+
+        </a>
+
     `;
-}
 
-closeSidebar();
+}
+// ==========================================
+// Accueil
+// Chargement des données
+// ==========================================
 
 
 // ==========================================
-// Partie 4 — Recherche + Catégories
+// Chargement Accueil
 // ==========================================
 
-function searchVideos(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) return videos;
-    return videos.filter(v => 
-        (v.title && v.title.toLowerCase().includes(q)) || 
-        (v.channel && v.channel.toLowerCase().includes(q))
-    );
-}
+async function loadHomeContent(){
 
-function submitSearch(e) {
-    if(e) e.preventDefault();
-    if(!searchInput) return;
-    const query = searchInput.value;
-    if(query.trim()) {
-        navigate(`search.html?q=${encodeURIComponent(query)}`);
+    try{
+
+        isLoading = true;
+
+        showLoader();
+
+        await Promise.all([
+
+            loadVideos(),
+
+            loadShorts(),
+
+            loadLives(),
+
+            loadSponsoredProducts()
+
+        ]);
+
     }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+    finally{
+
+        isLoading = false;
+
+        hideLoader();
+
+    }
+
 }
 
-function clearSearch() {
-    if(searchInput) searchInput.value = "";
-    filterContent();
+
+// ==========================================
+// Charger les vidéos
+// ==========================================
+
+async function loadVideos(){
+
+    try{
+
+        const data =
+            await getVideos({
+
+                category:
+                    currentCategory,
+
+                page:
+                    currentPage,
+
+                search:
+                    searchQuery
+
+            });
+
+
+        videos =
+            Array.isArray(data)
+            ? data
+            : [];
+
+
+        hasMoreVideos =
+            videos.length > 0;
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        videos = [];
+
+        hasMoreVideos = false;
+
+    }
+
 }
 
-async function loadCategories() {
-    categories = [
-        "Gaming", "Musique", "Actualités", "Podcasts", 
-        "Technologie", "Sport", "Cuisine", "Animation", "Films"
+
+// ==========================================
+// Charger les Shorts
+// ==========================================
+
+async function loadShorts(){
+
+    try{
+
+        const data =
+            await getShorts({
+
+                category:
+                    currentCategory
+
+            });
+
+
+        shorts =
+            Array.isArray(data)
+            ? data
+            : [];
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        shorts = [];
+
+    }
+
+}
+
+
+// ==========================================
+// Charger les Lives
+// ==========================================
+
+async function loadLives(){
+
+    try{
+
+        const data =
+            await getLives();
+
+
+        lives =
+            Array.isArray(data)
+            ? data
+            : [];
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        lives = [];
+
+    }
+
+}
+
+
+// ==========================================
+// Charger les Produits Sponsorisés
+// ==========================================
+
+async function loadSponsoredProducts(){
+
+    try{
+
+        const data =
+            await getSponsoredProducts();
+
+
+        products =
+            Array.isArray(data)
+            ? data
+            : [];
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        products = [];
+
+    }
+
+}
+// ==========================================
+// Rendu du contenu
+// ==========================================
+
+
+// ==========================================
+// Render Videos
+// ==========================================
+
+function renderVideos(){
+
+    const containers = [
+
+        videosGrid,
+
+        videosFeed,
+
+        videosFeedContinue,
+
+        videosBeforeInfinite
+
     ];
-    
-    if(!categoriesScroll) return;
-    
-    categoriesScroll.innerHTML = categories.map(cat => `
-        <button class="nv-category" data-category="${cat}">${cat}</button>
-    `).join("");
 
-    categoriesScroll.querySelectorAll(".nv-category").forEach(btn => {
-        btn.addEventListener("click", () => {
-            selectCategory(btn.dataset.category, btn);
-        });
+
+    containers.forEach(container=>{
+
+        if(!container)
+            return;
+
+        container.innerHTML = "";
+
     });
-}
 
-function selectCategory(category, buttonElement) {
-    document.querySelectorAll(".nv-categories .nv-category, .nv-categories-scroll .nv-category").forEach(b => {
-        b.classList.remove("active");
+
+    if(!videos.length){
+
+        return;
+
+    }
+
+
+    videos.forEach(video=>{
+
+        const card =
+            createVideoCard(
+                video
+            );
+
+
+        containers.forEach(container=>{
+
+            if(container){
+
+                container.appendChild(
+                    card.cloneNode(true)
+                );
+
+            }
+
+        );
+
     });
-    if(buttonElement) {
-        buttonElement.classList.add("active");
-    } else {
-        const allBtn = document.querySelector(".nv-categories .nv-category");
-        if(allBtn) allBtn.classList.add("active");
-    }
-    
-    currentCategory = category;
-    filterContent();
+
 }
 
-function filterContent() {
-    let filtered = videos;
-    if(currentCategory !== "all") {
-        filtered = videos.filter(v => v.category === currentCategory);
-    }
-    renderVideosList(filtered);
-}
-
-function scrollCategoriesLeft() {
-    if(categoriesScroll) {
-        categoriesScroll.scrollBy({ left: -200, behavior: "smooth" });
-    }
-}
-
-function scrollCategoriesRight() {
-    if(categoriesScroll) {
-        categoriesScroll.scrollBy({ left: 200, behavior: "smooth" });
-    }
-}
 
 
 // ==========================================
-// Partie 5 — Contenu principal & Création cartes
+// Render Shorts
 // ==========================================
 
-function renderAllContent() {
-    renderVideos();
-    renderShorts();
-    renderLives();
-    renderSponsoredProducts();
-}
+function renderShorts(){
 
-function renderVideos() {
-    renderVideosList(videos);
-}
+    const containers = [
 
-function renderVideosList(list) {
-    if (!videosGrid) return;
-    
-    videosGrid.innerHTML = "";
-    if (videosGridTwo) videosGridTwo.innerHTML = "";
-    if (videosGridThree) videosGridThree.innerHTML = "";
+        shortsGrid,
 
-    if (!list || list.length === 0) {
-        if(videosEmpty) videosEmpty.hidden = false;
-        return;
-    }
-    if(videosEmpty) videosEmpty.hidden = true;
+        shortsGridContinue
 
-    // Répartition sur les 3 grilles de la page d'accueil pour simuler la mise en page
-    const chunk1 = list.slice(0, 4);
-    const chunk2 = list.slice(4, 8);
-    const chunk3 = list.slice(8);
+    ];
 
-    if(videosGrid) {
-        chunk1.forEach(video => videosGrid.appendChild(createVideoCard(video)));
-    }
-    if(videosGridTwo && chunk2.length > 0) {
-        chunk2.forEach(video => videosGridTwo.appendChild(createVideoCard(video)));
-    }
-    if(videosGridThree && chunk3.length > 0) {
-        chunk3.forEach(video => videosGridThree.appendChild(createVideoCard(video)));
-    }
-}
 
-function createVideoCard(video) {
-    const template = document.getElementById("videoCardTemplate");
-    if(!template) {
-        const div = document.createElement("div");
-        div.className = "nv-video-card";
-        div.textContent = video.title || "Vidéo";
-        return div;
-    }
+    containers.forEach(container=>{
 
-    const clone = template.content.cloneNode(true);
-    const article = clone.querySelector(".nv-video-card");
+        if(!container)
+            return;
 
-    const img = clone.querySelector(".nv-video-image");
-    if(img) img.src = video.thumbnail_url || "images/default-thumb.png";
+        container.innerHTML = "";
 
-    const duration = clone.querySelector(".nv-video-duration");
-    if(duration) duration.textContent = video.duration || "10:00";
-
-    const avatar = clone.querySelector(".nv-video-avatar img");
-    if(avatar) avatar.src = video.channel_avatar || "images/default-avatar.png";
-
-    const title = clone.querySelector(".nv-video-title");
-    if(title) {
-        title.textContent = video.title || "Titre de la vidéo";
-        title.href = `watch.html?id=${video.id || ""}`;
-    }
-
-    const channel = clone.querySelector(".nv-video-channel");
-    if(channel) {
-        channel.textContent = video.channel || "Chaîne";
-        channel.href = `channel.html?id=${video.channel_id || ""}`;
-    }
-
-    const views = clone.querySelector(".nv-video-views");
-    if(views) views.textContent = `${video.views || 0} vues`;
-
-    const date = clone.querySelector(".nv-video-date");
-    if(date) date.textContent = video.date || "Récemment";
-
-    const menuBtn = clone.querySelector(".nv-video-menu-button");
-    if(menuBtn) {
-        menuBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openContextMenu(videoContextMenu, e);
-        });
-    }
-
-    return clone;
-}
-
-function renderShorts() {
-    if(!shortsGrid) return;
-    shortsGrid.innerHTML = "";
-    
-    if(!shorts || shorts.length === 0) {
-        if(shortsEmpty) shortsEmpty.hidden = false;
-        return;
-    }
-    if(shortsEmpty) shortsEmpty.hidden = true;
-
-    shorts.forEach(short => {
-        shortsGrid.appendChild(createShortCard(short));
     });
-}
 
-function createShortCard(short) {
-    const template = document.getElementById("shortCardTemplate");
-    if(!template) {
-        const div = document.createElement("div");
-        div.className = "nv-short-card";
-        return div;
+
+    if(!shorts.length){
+
+        return;
+
     }
-    const clone = template.content.cloneNode(true);
-    const img = clone.querySelector(".nv-short-image");
-    if(img) img.src = short.thumbnail_url || "images/default-thumb.png";
 
-    const title = clone.querySelector(".nv-short-info h3");
-    if(title) title.textContent = short.title || "Short";
 
-    const views = clone.querySelector(".nv-short-info span");
-    if(views) views.textContent = `${short.views || 0} vues`;
+    shorts.forEach(short=>{
 
-    return clone;
+        const card =
+            createShortCard(
+                short
+            );
+
+
+        containers.forEach(container=>{
+
+            if(container){
+
+                container.appendChild(
+                    card.cloneNode(true)
+                );
+
+            }
+
+        );
+
+    });
+
 }
 
-function renderLives() {
-    if(!livesContainer) return;
+
+
+// ==========================================
+// Render Lives
+// ==========================================
+
+function renderLives(){
+
+    if(!livesContainer)
+        return;
+
+
     livesContainer.innerHTML = "";
 
-    if(!lives || lives.length === 0) {
-        if(livesEmpty) livesEmpty.hidden = false;
+
+    if(!lives.length){
+
         return;
-    }
-    if(livesEmpty) livesEmpty.hidden = true;
 
-    lives.forEach(live => {
-        livesContainer.appendChild(createLiveCard(live));
+    }
+
+
+    lives.forEach(live=>{
+
+        livesContainer.appendChild(
+
+            createLiveCard(
+                live
+            )
+
+        );
+
     });
+
 }
 
-function createLiveCard(live) {
-    const template = document.getElementById("liveCardTemplate");
-    if(!template) {
-        const div = document.createElement("div");
-        div.className = "nv-live-card";
-        return div;
-    }
-    const clone = template.content.cloneNode(true);
-    const img = clone.querySelector(".nv-live-image");
-    if(img) img.src = live.thumbnail_url || "images/default-thumb.png";
 
-    const title = clone.querySelector(".nv-live-info h3");
-    if(title) title.textContent = live.title || "Live";
 
-    const creator = clone.querySelector(".nv-live-info p");
-    if(creator) creator.textContent = live.channel || "Créateur";
+// ==========================================
+// Render Products
+// ==========================================
 
-    const specs = clone.querySelector(".nv-live-info span");
-    if(specs) specs.textContent = `${live.viewers || 0} spectateurs`;
+function renderProducts(){
 
-    return clone;
-}
+    if(!productsContainer)
+        return;
 
-function renderSponsoredProducts() {
-    if(!productsContainer) return;
+
     productsContainer.innerHTML = "";
 
-    if(!products || products.length === 0) {
-        if(productsEmpty) productsEmpty.hidden = false;
+
+    if(!products.length){
+
         return;
-    }
-    if(productsEmpty) productsEmpty.hidden = true;
 
-    products.forEach(product => {
-        productsContainer.appendChild(createProductCard(product));
+    }
+
+
+    products.forEach(product=>{
+
+        productsContainer.appendChild(
+
+            createProductCard(
+                product
+            )
+
+        );
+
     });
+
 }
+// ==========================================
+// Création des cartes
+// ==========================================
 
-function createProductCard(product) {
-    const template = document.getElementById("productCardTemplate");
-    if(!template) {
-        const div = document.createElement("div");
-        div.className = "nv-product-card";
-        return div;
-    }
-    const clone = template.content.cloneNode(true);
-    const img = clone.querySelector(".nv-product-image");
-    if(img) img.src = product.image_url || "images/default-thumb.png";
 
-    const title = clone.querySelector(".nv-product-info h3");
-    if(title) title.textContent = product.title || "Produit";
+// ==========================================
+// Video Card
+// ==========================================
 
-    const creator = clone.querySelector(".nv-product-info p");
-    if(creator) creator.textContent = product.creator || "Créateur";
+function createVideoCard(video){
 
-    const price = clone.querySelector(".nv-product-info strong");
-    if(price) price.textContent = `${product.price || "0,00"} $`;
+    const article =
+        document.createElement(
+            "article"
+        );
 
-    return clone;
+    article.className =
+        "nv-video-card";
+
+    article.dataset.id =
+        video.id;
+
+    article.innerHTML = `
+
+        <a
+            href="player.html?id=${video.id}"
+            class="nv-video-link">
+
+            <div class="nv-video-thumbnail">
+
+                <img
+                    src="${video.thumbnail_url}"
+                    alt="${video.title}">
+
+                <span
+                    class="nv-video-duration">
+
+                    ${video.duration}
+
+                </span>
+
+            </div>
+
+        </a>
+
+        <div
+            class="nv-video-content">
+
+            <a
+                href="channel.html?u=${video.channel_username}"
+                class="nv-video-avatar">
+
+                <img
+                    src="${video.channel_avatar}"
+                    alt="${video.channel_name}">
+
+            </a>
+
+            <div
+                class="nv-video-info">
+
+                <a
+                    href="player.html?id=${video.id}"
+                    class="nv-video-title">
+
+                    ${video.title}
+
+                </a>
+
+                <a
+                    href="channel.html?u=${video.channel_username}"
+                    class="nv-video-channel">
+
+                    ${video.channel_name}
+
+                </a>
+
+                <div
+                    class="nv-video-meta">
+
+                    ${video.views} vues • ${video.created_at}
+
+                </div>
+
+            </div>
+
+            <button
+                class="nv-video-menu"
+                data-video="${video.id}">
+
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+            </button>
+
+        </div>
+
+    `;
+
+    return article;
+
 }
 
 
 // ==========================================
-// Partie 6 — Menus + Notifications
+// Short Card
 // ==========================================
 
-function openContextMenu(menuElement, event) {
-    closeContextMenu();
-    if (!menuElement) return;
-    
-    activeContextMenu = menuElement;
-    menuElement.style.top = `${event.clientY}px`;
-    menuElement.style.left = `${event.clientX}px`;
-    menuElement.classList.add("active");
+function createShortCard(short){
 
-    document.addEventListener("click", handleOutsideClickForMenu);
-}
+    const article =
+        document.createElement(
+            "article"
+        );
 
-function closeContextMenu() {
-    if (activeContextMenu) {
-        activeContextMenu.classList.remove("active");
-        activeContextMenu = null;
-    }
-    document.removeEventListener("click", handleOutsideClickForMenu);
-}
+    article.className =
+        "nv-short-card";
 
-function handleOutsideClickForMenu(e) {
-    if (activeContextMenu && !activeContextMenu.contains(e.target)) {
-        closeContextMenu();
-    }
-}
+    article.dataset.id =
+        short.id;
 
-function toggleNotifications() {
-    showToast("Panneau de notifications ouvert", "info");
-}
+    article.innerHTML = `
 
-async function loadNotificationsCount() {
-    if (!currentUser) return;
-    if (notificationBadge) {
-        notificationBadge.textContent = "0";
-    }
+        <a
+            href="player.html?short=${short.id}">
+
+            <div
+                class="nv-short-thumbnail">
+
+                <img
+                    src="${short.thumbnail_url}"
+                    alt="${short.title}">
+
+            </div>
+
+            <div
+                class="nv-short-info">
+
+                <h3>
+
+                    ${short.title}
+
+                </h3>
+
+                <p>
+
+                    ${short.views} vues
+
+                </p>
+
+            </div>
+
+        </a>
+
+    `;
+
+    return article;
+
 }
 
 
 // ==========================================
-// Partie 7 — Événements
+// Live Card
+// ==========================================
+
+function createLiveCard(live){
+
+    const article =
+        document.createElement(
+            "article"
+        );
+
+    article.className =
+        "nv-live-card";
+
+    article.dataset.id =
+        live.id;
+
+    article.innerHTML = `
+
+        <a
+            href="live.html?id=${live.id}">
+
+            <div
+                class="nv-live-thumbnail">
+
+                <img
+                    src="${live.thumbnail_url}"
+                    alt="${live.title}">
+
+                <span
+                    class="nv-live-badge">
+
+                    LIVE
+
+                </span>
+
+            </div>
+
+            <div
+                class="nv-live-info">
+
+                <h3>
+
+                    ${live.title}
+
+                </h3>
+
+                <p>
+
+                    ${live.channel_name}
+
+                </p>
+
+            </div>
+
+        </a>
+
+    `;
+
+    return article;
+
+}
+
+
+// ==========================================
+// Product Card
+// ==========================================
+
+function createProductCard(product){
+
+    const article =
+        document.createElement(
+            "article"
+        );
+
+    article.className =
+        "nv-product-card";
+
+    article.dataset.id =
+        product.id;
+
+    article.innerHTML = `
+
+        <a
+            href="product.html?id=${product.id}">
+
+            <div
+                class="nv-product-image">
+
+                <img
+                    src="${product.image_url}"
+                    alt="${product.name}">
+
+            </div>
+
+            <div
+                class="nv-product-info">
+
+                <h3>
+
+                    ${product.name}
+
+                </h3>
+
+                <strong>
+
+                    ${product.price}
+
+                </strong>
+
+            </div>
+
+        </a>
+
+    `;
+
+    return article;
+
+}
+
+
+
+// ==========================================
+// Recherche + Catégories
+// ==========================================
+
+
+// ==========================================
+// Charger les catégories
+// ==========================================
+
+function renderCategories(categories){
+
+    if(!categoriesContainer)
+        return;
+
+    categoriesContainer.innerHTML = "";
+
+    categories.forEach(category=>{
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+        button.className =
+            "nv-category";
+
+        if(category === currentCategory){
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+        button.textContent =
+            category;
+
+        button.dataset.category =
+            category;
+
+        categoriesContainer.appendChild(
+            button
+        );
+
+    });
+
+}
+
+
+// ==========================================
+// Recherche
+// ==========================================
+
+async function searchVideos(query){
+
+    searchQuery = query.trim();
+
+    currentPage = 1;
+
+    await loadVideos();
+
+    renderVideos();
+
+}
+
+
+// ==========================================
+// Changer de catégorie
+// ==========================================
+
+async function changeCategory(category){
+
+    currentCategory =
+        category;
+
+    currentPage = 1;
+
+    await loadHomeContent();
+
+    renderVideos();
+
+    renderShorts();
+
+    renderLives();
+
+    renderProducts();
+
+    document
+        .querySelectorAll(".nv-category")
+        .forEach(button=>{
+
+            button.classList.toggle(
+                "active",
+                button.dataset.category === category
+            );
+
+        });
+
+}
+// ==========================================
+// Événements
 // ==========================================
 
 function addEventListeners(){
-    // Header Menu Button
-    if(menuButton){
-        menuButton.addEventListener("click", (e) => {
-            e.stopPropagation();
-            toggleSidebar();
-        });
-    }
 
-    // Sidebar Overlay
-    if(sidebarOverlay){
-        sidebarOverlay.addEventListener("click", () => {
-            closeSidebar();
-        });
-    }
+    // ======================================
+    // Sidebar
+    // ======================================
 
-    // Search Form
-    if(searchForm){
-        searchForm.addEventListener("submit", submitSearch);
-    }
+    menuButton?.addEventListener(
+        "click",
+        toggleSidebar
+    );
 
-    // Categories All Button
-    const allCategoryBtn = document.querySelector(".nv-category");
-    if(allCategoryBtn){
-        allCategoryBtn.addEventListener("click", () => {
-            selectCategory("all", allCategoryBtn);
-        });
-    }
+    sidebarOverlay?.addEventListener(
+        "click",
+        closeSidebar
+    );
 
-    // Responsive window resize
-    window.addEventListener("resize", () => {
-        if(window.innerWidth > 1024) {
-            closeSidebar();
+
+    // ======================================
+    // Recherche
+    // ======================================
+
+    searchForm?.addEventListener(
+        "submit",
+        async(event)=>{
+
+            event.preventDefault();
+
+            await searchVideos(
+                searchInput.value
+            );
+
         }
-    });
+    );
 
-    // Close menus on Escape
-    document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape") {
+
+    searchInput?.addEventListener(
+        "keydown",
+        async(event)=>{
+
+            if(event.key !== "Enter")
+                return;
+
+            event.preventDefault();
+
+            await searchVideos(
+                searchInput.value
+            );
+
+        }
+    );
+
+
+    // ======================================
+    // Catégories
+    // ======================================
+
+    categoriesContainer?.addEventListener(
+        "click",
+        async(event)=>{
+
+            const button =
+                event.target.closest(
+                    ".nv-category"
+                );
+
+            if(!button)
+                return;
+
+            await changeCategory(
+                button.dataset.category
+            );
+
+        }
+    );
+
+
+    // ======================================
+    // Header (délégation)
+    // ======================================
+
+    headerRight?.addEventListener(
+        "click",
+        async(event)=>{
+
+            const login =
+                event.target.closest(
+                    "#loginButton"
+                );
+
+            if(login){
+
+                navigate(
+                    "auth.html"
+                );
+
+                return;
+
+            }
+
+
+            const upload =
+                event.target.closest(
+                    "#uploadButton"
+                );
+
+            if(upload){
+
+                navigate(
+                    "publish.html"
+                );
+
+                return;
+
+            }
+
+
+            const notifications =
+                event.target.closest(
+                    "#notificationsButton"
+                );
+
+            if(notifications){
+
+                navigate(
+                    "notification.html"
+                );
+
+                return;
+
+            }
+
+        }
+    );
+
+
+    // ======================================
+    // Sidebar (délégation)
+    // ======================================
+
+    sidebarNav?.addEventListener(
+        "click",
+        async(event)=>{
+
+            const logout =
+                event.target.closest(
+                    "#logoutButton"
+                );
+
+            if(!logout)
+                return;
+
+            event.preventDefault();
+
+            await signOut();
+
+            navigate(
+                "auth.html"
+            );
+
+        }
+    );
+
+
+    // ======================================
+    // Menus vidéos
+    // ======================================
+
+    document.addEventListener(
+        "click",
+        event=>{
+
+            const menu =
+                event.target.closest(
+                    ".nv-video-menu"
+                );
+
+            if(menu){
+
+                openContextMenu(
+                    menu.dataset.video,
+                    event.pageX,
+                    event.pageY
+                );
+
+                return;
+
+            }
+
             closeContextMenu();
-            closeSidebar();
+
         }
-    });
+    );
+
+
+    // ======================================
+    // Infinite Scroll
+    // ======================================
+
+    window.addEventListener(
+        "scroll",
+        handleInfiniteScroll
+    );
+
+
+    // ======================================
+    // Responsive
+    // ======================================
+
+    window.addEventListener(
+        "resize",
+        ()=>{
+
+            if(window.innerWidth > 900){
+
+                sidebarOverlay
+                    ?.classList.remove(
+                        "active"
+                    );
+
+            }
+
+        }
+    );
+
 }
 
 
 // ==========================================
-// Partie 8 — Vérifications automatiques + Nettoyage
+// Infinite Scroll
 // ==========================================
 
-window.addEventListener("beforeunload", () => {
-    closeSidebar();
-    closeContextMenu();
-});
+async function handleInfiniteScroll(){
 
-// Lancement automatique au chargement du DOM
-document.addEventListener("DOMContentLoaded", init);
+    if(isLoading)
+        return;
+
+    if(!hasMoreVideos)
+        return;
+
+    const scrollPosition =
+
+        window.innerHeight +
+
+        window.scrollY;
+
+
+    const pageHeight =
+
+        document.body.offsetHeight;
+
+
+    if(scrollPosition < pageHeight - 600)
+        return;
+
+
+    isLoading = true;
+
+    currentPage++;
+
+    try{
+
+        const data =
+            await getVideos({
+
+                page:
+                    currentPage,
+
+                category:
+                    currentCategory,
+
+                search:
+                    searchQuery
+
+            });
+
+        if(!data.length){
+
+            hasMoreVideos =
+                false;
+
+            return;
+
+        }
+
+        videos.push(
+            ...data
+        );
+
+        renderVideos();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+    finally{
+
+        isLoading = false;
+
+    }
+
+}
+
+
+// ==========================================
+// Context Menu
+// ==========================================
+
+function openContextMenu(
+    videoId,
+    x,
+    y
+){
+
+    if(!contextMenu)
+        return;
+
+    contextMenu.dataset.video =
+        videoId;
+
+    contextMenu.style.left =
+        `${x}px`;
+
+    contextMenu.style.top =
+        `${y}px`;
+
+    contextMenu.classList.add(
+        "active"
+    );
+
+}
+
+
+function closeContextMenu(){
+
+    contextMenu?.classList.remove(
+        "active"
+    );
+
+}
+// ==========================================
+// Utilitaires
+// ==========================================
+
+
+// ==========================================
+// Format Vues
+// ==========================================
+
+function formatViews(views){
+
+    views =
+        Number(views) || 0;
+
+    if(views >= 1000000000){
+
+        return (
+            (views / 1000000000)
+            .toFixed(1)
+            .replace(".0","") +
+            " Md"
+        );
+
+    }
+
+    if(views >= 1000000){
+
+        return (
+            (views / 1000000)
+            .toFixed(1)
+            .replace(".0","") +
+            " M"
+        );
+
+    }
+
+    if(views >= 1000){
+
+        return (
+            (views / 1000)
+            .toFixed(1)
+            .replace(".0","") +
+            " k"
+        );
+
+    }
+
+    return views.toString();
+
+}
+
+
+
+// ==========================================
+// Format Date
+// ==========================================
+
+function formatDate(date){
+
+    if(!date)
+        return "";
+
+    const value =
+        new Date(date);
+
+    if(isNaN(value))
+        return "";
+
+    return value.toLocaleDateString(
+        "fr-FR",
+        {
+
+            day:"2-digit",
+
+            month:"short",
+
+            year:"numeric"
+
+        }
+
+    );
+
+}
+
+
+
+// ==========================================
+// Notification
+// ==========================================
+
+function showNotification(
+
+    message,
+
+    type="success"
+
+){
+
+    if(!notification)
+        return;
+
+    notification.className =
+        `notification ${type}`;
+
+    notification.textContent =
+        message;
+
+    notification.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        notification.timer
+    );
+
+    notification.timer =
+        setTimeout(()=>{
+
+            notification.classList.remove(
+                "show"
+            );
+
+        },3000);
+
+}
+
+
+
+// ==========================================
+// Empty State
+// ==========================================
+
+function showEmptyState(
+
+    container,
+
+    message="Aucun résultat."
+
+){
+
+    if(!container)
+        return;
+
+    container.innerHTML = `
+
+        <div class="nv-empty-state">
+
+            <i class="fa-regular fa-folder-open"></i>
+
+            <p>
+
+                ${message}
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+
+function hideEmptyState(container){
+
+    if(!container)
+        return;
+
+    container.innerHTML = "";
+
+}
+
+
+
+// ==========================================
+// Clear Containers
+// ==========================================
+
+function clearContainers(){
+
+    [
+
+        videosGrid,
+
+        videosFeed,
+
+        videosFeedContinue,
+
+        videosBeforeInfinite,
+
+        shortsGrid,
+
+        shortsGridContinue,
+
+        livesContainer,
+
+        productsContainer
+
+    ].forEach(container=>{
+
+        if(container){
+
+            container.innerHTML = "";
+
+        }
+
+    });
+
+}
+
+
+
+// ==========================================
+// Reset
+// ==========================================
+
+function resetData(){
+
+    videos = [];
+
+    shorts = [];
+
+    lives = [];
+
+    products = [];
+
+    currentPage = 1;
+
+    hasMoreVideos = true;
+
+    searchQuery = "";
+
+}
+
+
+
+// ==========================================
+// Cleanup
+// ==========================================
+
+function destroy(){
+
+    window.removeEventListener(
+
+        "scroll",
+
+        handleInfiniteScroll
+
+    );
+
+    window.removeEventListener(
+
+        "resize",
+
+        closeSidebar
+
+    );
+
+    closeSidebar();
+
+    closeContextMenu();
+
+    hideLoader();
+
+    clearContainers();
+
+}
+
+
+
+// ==========================================
+// Before Unload
+// ==========================================
+
+window.addEventListener(
+
+    "beforeunload",
+
+    ()=>{
+
+        destroy();
+
+    }
+
+);
