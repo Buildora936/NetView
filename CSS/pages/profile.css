@@ -381,7 +381,51 @@ Country Modal
     background: rgba(37, 99, 235, 0.15);
     color: #fff;
 }
+/* Style et correction pour le sélecteur de langue */
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
+.input-container i {
+    position: absolute;
+    left: 1rem;
+    z-index: 2;
+    pointer-events: none; /* Empêche l'icône de bloquer le clic sur le select */
+    color: var(--nv-text-muted, #94A3B8);
+}
+
+.input-container select#language {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem; /* Espace à gauche pour l'icône */
+    background: rgba(255, 255, 255, 0.05); /* Ajuste selon ton thème */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: inherit;
+    font-size: 0.95rem;
+    appearance: none; /* Supprime le style natif moche du navigateur */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Ajout d'une flèche personnalisée propre à droite */
+.input-container::after {
+    content: "\f078"; /* Icône flèche du bas FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 1rem;
+    font-size: 0.8rem;
+    color: var(--nv-text-muted, #94A3B8);
+    pointer-events: none;
+}
+
+.input-container select#language:focus {
+    outline: none;
+    border-color: var(--nv-primary, #2563EB);
+}
 /* ==================================================
 Notification & Loaders (venant de devices_list.css)
 ================================================== */
