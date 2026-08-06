@@ -413,7 +413,7 @@ if (profileForm) {
             showNotification("Profil enregistré avec succès !");
             
             setTimeout(() => {
-                window.location.replace("index.html");
+                window.location.replace("settings.html");
             }, 1200);
 
         } catch (error) {
