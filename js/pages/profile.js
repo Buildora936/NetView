@@ -142,7 +142,6 @@ async function initProfile() {
             if (profile.country) {
                 countryInput.value = profile.country;
             } else {
-                // Sinon détection automatique par IP
                 const autoDetectedCountry = await detectUserCountry();
                 countryInput.value = autoDetectedCountry || "France";
             }
@@ -163,7 +162,6 @@ async function initProfile() {
                 companyVerifiedBadge.style.color = "#22c55e";
             }
         } else {
-            // Nouveau profil : Détection auto par IP ou valeur par défaut
             verifiedBadge.textContent = "Non vérifié";
             verifiedBadge.style.color = "#ef4444";
 
@@ -281,8 +279,6 @@ countryModal.addEventListener("click", (e) => {
 
 async function uploadFileToStorage(userId, file, bucketName) {
     const fileExt = file.name.split('.').pop();
-    // Crée un chemin du type : userId/avatar-123456789.png ou userId/banner.png
-    // Pour un nom fixe comme banner.png à chaque fois : `${userId}/banner.${fileExt}`
     const fileName = `banner_${Date.now()}.${fileExt}`;
     const filePath = `${userId}/${fileName}`;
 
@@ -309,13 +305,13 @@ async function detectUserCountry() {
         if (!response.ok) return null;
         
         const data = await response.json();
-        // data.country_name renvoie le nom du pays en anglais (ex: "Haiti", "France", "Canada")
         return data.country_name || null;
     } catch (error) {
         console.warn("Impossible de détecter le pays par IP :", error);
         return null;
     }
 }
+
 // ==========================================
 // Form Submission & Save Profile
 // ==========================================
@@ -347,21 +343,21 @@ profileForm.addEventListener("submit", async (e) => {
         displayNameMessage.textContent = "";
     }
 
+    // CORRECTION : Utiliser uniquement le loader du bouton pour éviter de bloquer l'écran avec le loader global
     saveProfileButton.disabled = true;
     saveProfileText.hidden = true;
     saveProfileLoader.hidden = false;
-    showPageLoader(true);
 
     try {
         let avatarUrl = null;
         let bannerUrl = null;
 
         if (selectedAvatarFile) {
-            avatarUrl = await uploadFileToStorage(currentUser.id, selectedAvatarFile, "avatars", "avatars");
+            avatarUrl = await uploadFileToStorage(currentUser.id, selectedAvatarFile, "avatars");
         }
 
         if (selectedBannerFile) {
-            bannerUrl = await uploadFileToStorage(currentUser.id, selectedBannerFile, "banners", "banners");
+            bannerUrl = await uploadFileToStorage(currentUser.id, selectedBannerFile, "banners");
         }
 
         const updates = {
@@ -392,11 +388,11 @@ profileForm.addEventListener("submit", async (e) => {
     } catch (error) {
         console.error(error);
         showNotification(error.message || "Erreur lors de l'enregistrement du profil.", true);
+        
+        // Réactiver le bouton en cas d'erreur
         saveProfileButton.disabled = false;
         saveProfileText.hidden = false;
         saveProfileLoader.hidden = true;
-    } finally {
-        showPageLoader(false);
     }
 });
 
