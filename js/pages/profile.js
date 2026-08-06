@@ -4,11 +4,9 @@
 // ==========================================
 
 import { supabase } from "../core/supabase.js";
-
 import {
     showLoader,
-    hideLoader,
-    buttonLoading
+    hideLoader
 } from "../core/ui.js";
 
 // ==========================================
@@ -44,6 +42,8 @@ const companyVerifiedBadge = document.getElementById("companyVerifiedBadge");
 
 // Buttons & Actions
 const saveProfileButton = document.getElementById("saveProfileButton");
+const saveProfileText = document.getElementById("saveProfileText");
+const saveProfileLoader = document.getElementById("saveProfileLoader");
 const logoutButton = document.getElementById("logoutButton");
 const notification = document.getElementById("notification");
 
@@ -119,7 +119,6 @@ async function initProfile() {
         }
 
         if (profile) {
-            // Badge KYC
             const isKycVerified = !!profile.verified; 
             if (verifiedBadge) {
                 verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
@@ -134,7 +133,6 @@ async function initProfile() {
             }
             if (languageSelect) languageSelect.value = profile.language || "fr";
 
-            // Détection du pays : Priorité au pays sauvegardé dans la BDD
             if (profile.country && countryInput) {
                 countryInput.value = profile.country;
             } else if (countryInput) {
@@ -343,6 +341,11 @@ if (profileForm) {
     profileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        if (!currentUser) {
+            showNotification("Utilisateur non authentifié.", true);
+            return;
+        }
+
         const usernameVal = usernameInput ? usernameInput.value.trim().toLowerCase() : "";
         const displayNameVal = displayNameInput ? displayNameInput.value.trim() : "";
         const bioVal = bioInput ? bioInput.value.trim() : "";
@@ -373,7 +376,9 @@ if (profileForm) {
 
         try {
             showLoader();
-            if (saveProfileButton) buttonLoading(saveProfileButton, true);
+            if (saveProfileButton) saveProfileButton.disabled = true;
+            if (saveProfileText) saveProfileText.hidden = true;
+            if (saveProfileLoader) saveProfileLoader.hidden = false;
 
             let avatarUrl = null;
             let bannerUrl = null;
@@ -416,7 +421,9 @@ if (profileForm) {
             showNotification(error.message || "Erreur lors de l'enregistrement du profil.", true);
         } finally {
             hideLoader();
-            if (saveProfileButton) buttonLoading(saveProfileButton, false);
+            if (saveProfileButton) saveProfileButton.disabled = false;
+            if (saveProfileText) saveProfileText.hidden = false;
+            if (saveProfileLoader) saveProfileLoader.hidden = true;
         }
     });
 }
