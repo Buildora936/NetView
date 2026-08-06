@@ -96,6 +96,7 @@ async function init() {
     showLoader();
     try {
         await loadSession();
+        if (!currentUser) return;
         await loadDevices();
     } catch (error) {
         console.error(error);
@@ -111,7 +112,10 @@ async function loadSession() {
         navigate("login.html");
         return;
     }
-    currentUser = await getUser();
+    currentUser = await getUser() || session.user;
+    if (!currentUser) {
+        navigate("login.html");
+    }
 }
 
 // ==========================================
@@ -144,7 +148,15 @@ async function loadDevices() {
         return;
     }
 
-    for (const device of devices) {
+    // Récupération simultanée de toutes les géolocalisations (plus rapide)
+    const devicesWithLocations = await Promise.all(
+        devices.map(async (device) => {
+            const locationText = await getLocationFromIP(device.ip_address);
+            return { ...device, locationText };
+        })
+    );
+
+    for (const device of devicesWithLocations) {
         const item = document.createElement("div");
         item.className = "nv-settings-item";
         item.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; margin-bottom: 0.75rem; gap: 1rem;";
@@ -159,9 +171,6 @@ async function loadDevices() {
             })
             : "Inconnue";
 
-        // Traduction de l'IP en emplacement (asynchrone)
-        const locationText = await getLocationFromIP(device.ip_address);
-
         item.innerHTML = `
             <div style="display: flex; align-items: center; gap: 1rem; overflow: hidden;">
                 <i class="fa-solid fa-laptop" style="font-size: 1.5rem; color: var(--nv-primary, #2563EB); flex-shrink: 0;"></i>
@@ -172,7 +181,7 @@ async function loadDevices() {
                     </p>
                     <p style="font-size: 0.8rem; color: var(--nv-primary, #2563EB); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.3rem;">
                         <i class="fa-solid fa-location-dot" style="font-size: 0.75rem;"></i>
-                        <span>${locationText}</span> ${device.ip_address ? `(${device.ip_address})` : ""}
+                        <span>${device.locationText}</span> ${device.ip_address ? `(${device.ip_address})` : ""}
                     </p>
                     <p style="font-size: 0.75rem; color: var(--nv-text-muted, #94A3B8); margin-top: 0.1rem;">
                         Dernière activité : ${lastSeenDate}
