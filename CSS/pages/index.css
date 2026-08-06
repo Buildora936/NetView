@@ -1257,5 +1257,617 @@ body{
             0 14px;
 
     }
+ /* ==========================================
+   NetView
+   index.css
+   Partie 3 — Loaders + États + Menus + Animations
+========================================== */
+
+
+/* ==========================================
+   Correction Layout Header / Categories / Main
+========================================== */
+
+.nv-header{
+
+    margin-bottom:0;
+
+}
+
+
+.nv-categories{
+
+    margin-top:0;
+
+    padding-top:0;
+
+}
+
+
+.nv-home{
+
+    padding-top:112px;
+
+}
+
+
+
+/* ==========================================
+   Skeleton Loaders
+========================================== */
+
+.nv-skeleton{
+
+    background:
+
+        linear-gradient(
+            90deg,
+            var(--nv-surface),
+            var(--nv-surface-hover),
+            var(--nv-surface)
+        );
+
+    background-size:200% 100%;
+
+    animation:
+
+        nvSkeletonShimmer
+
+        1.5s
+
+        infinite;
+
+    border-radius:
+
+        12px;
+
+}
+
+
+
+.nv-skeleton-thumbnail{
+
+    width:100%;
+
+    aspect-ratio:
+
+        16 / 9;
+
+}
+
+
+
+.nv-skeleton-text{
+
+    height:14px;
+
+    width:80%;
+
+    margin-top:10px;
+
+}
+
+
+
+.nv-skeleton-avatar{
+
+    width:36px;
+
+    height:36px;
+
+    border-radius:50%;
+
+}
+
+
+
+@keyframes nvSkeletonShimmer{
+
+    from{
+
+        background-position:
+
+            200% 0;
+
+    }
+
+
+    to{
+
+        background-position:
+
+            -200% 0;
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.nv-empty-state{
+
+    width:100%;
+
+    min-height:250px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    color:
+
+        var(--nv-text-secondary);
+
+}
+
+
+
+.nv-empty-state i{
+
+    font-size:48px;
+
+    margin-bottom:16px;
+
+    color:
+
+        var(--nv-primary);
+
+}
+
+
+
+.nv-empty-state h3{
+
+    color:
+
+        var(--nv-text);
+
+    margin-bottom:8px;
+
+}
+
+
+
+/* ==========================================
+   Context Menu
+========================================== */
+
+.nv-context-menu{
+
+    position:fixed;
+
+    display:none;
+
+    min-width:220px;
+
+    background:
+
+        var(--nv-surface);
+
+    border:
+
+        1px solid var(--nv-border);
+
+    border-radius:
+
+        12px;
+
+    padding:8px;
+
+    box-shadow:
+
+        0 15px 40px rgba(0,0,0,.35);
+
+    z-index:2000;
+
+}
+
+
+
+.nv-context-menu.active{
+
+    display:block;
+
+    animation:
+
+        nvMenuShow
+
+        .2s
+
+        ease;
+
+}
+
+
+
+.nv-context-menu button{
+
+    width:100%;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    border:none;
+
+    background:transparent;
+
+    color:
+
+        var(--nv-text);
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+
+
+.nv-context-menu button:hover{
+
+    background:
+
+        var(--nv-surface-hover);
+
+}
+
+
+
+@keyframes nvMenuShow{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(-8px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Full Screen Loader
+========================================== */
+
+.nv-page-loader{
+
+    position:fixed;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+
+        rgba(0,0,0,.45);
+
+    backdrop-filter:
+
+        blur(8px);
+
+    z-index:3000;
+
+}
+
+
+
+.nv-page-loader.active{
+
+    display:flex;
+
+}
+
+
+
+.nv-loader{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    border:
+
+        4px solid rgba(255,255,255,.25);
+
+    border-top-color:
+
+        var(--nv-primary);
+
+    animation:
+
+        nvLoaderRotate
+
+        .8s
+
+        linear infinite;
+
+}
+
+
+
+@keyframes nvLoaderRotate{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Toast Adaptation
+========================================== */
+
+#notification{
+
+    position:fixed;
+
+    top:80px;
+
+    right:20px;
+
+    z-index:4000;
+
+}
+
+
+
+.notification{
+
+    animation:
+
+        nvNotificationIn
+
+        .3s
+
+        ease;
+
+}
+
+
+
+@keyframes nvNotificationIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateX(40px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateX(0);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Sidebar Animation
+========================================== */
+
+.nv-sidebar{
+
+    transition:
+
+        width .3s ease,
+
+        transform .3s ease;
+
+}
+
+
+
+.nv-sidebar.active{
+
+    animation:
+
+        nvSidebarOpen
+
+        .3s
+
+        ease;
+
+}
+
+
+
+@keyframes nvSidebarOpen{
+
+    from{
+
+        transform:
+
+            translateX(-20px);
+
+    }
+
+
+    to{
+
+        transform:
+
+            translateX(0);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Card Hover Animations
+========================================== */
+
+.nv-video-card,
+
+.nv-short-card,
+
+.nv-live-card,
+
+.nv-product-card{
+
+    transition:
+
+        transform .25s ease;
+
+}
+
+
+
+.nv-video-card:hover,
+
+.nv-short-card:hover,
+
+.nv-live-card:hover,
+
+.nv-product-card:hover{
+
+    transform:
+
+        translateY(-4px);
+
+}
+
+
+
+/* ==========================================
+   Content Appearance
+========================================== */
+
+.nv-video-card,
+
+.nv-short-card,
+
+.nv-live-card,
+
+.nv-product-card{
+
+    animation:
+
+        nvContentAppear
+
+        .4s
+
+        ease;
+
+}
+
+
+
+@keyframes nvContentAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(15px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Final Breakpoints
+========================================== */
+
+
+@media(max-width:768px){
+
+    .nv-page-loader{
+
+        backdrop-filter:
+
+            blur(5px);
+
+    }
+
+
+    #notification{
+
+        left:16px;
+
+        right:16px;
+
+    }
+
+}
+
+
+
+@media(max-width:480px){
+
+    .nv-context-menu{
+
+        min-width:180px;
+
+    }
+
+}
 
 }
