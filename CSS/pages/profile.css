@@ -405,6 +405,8 @@ Notification & Loader Globaux
     transform: translateY(0);
 }
 
+
+
 .loader-circle {
     width: 48px;
     height: 48px;
