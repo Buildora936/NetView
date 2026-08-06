@@ -5,12 +5,17 @@
 
 import { supabase } from "../core/supabase.js";
 
+import {
+    showLoader,
+    hideLoader,
+    buttonLoading
+} from "../core/ui.js";
+
 // ==========================================
 // DOM Elements
 // ==========================================
 
 const profileForm = document.getElementById("profileForm");
-const globalLoader = document.getElementById("globalLoader");
 
 // Avatar
 const avatarPreview = document.getElementById("avatarPreview");
@@ -39,8 +44,6 @@ const companyVerifiedBadge = document.getElementById("companyVerifiedBadge");
 
 // Buttons & Actions
 const saveProfileButton = document.getElementById("saveProfileButton");
-const saveProfileText = document.getElementById("saveProfileText");
-const saveProfileLoader = document.getElementById("saveProfileLoader");
 const logoutButton = document.getElementById("logoutButton");
 const notification = document.getElementById("notification");
 
@@ -67,10 +70,11 @@ const countriesList = [
 
 
 // ==========================================
-// Notifications & Loader Helpers
+// Notifications Helper
 // ==========================================
 
 function showNotification(message, isError = false) {
+    if (!notification) return;
     notification.textContent = message;
     notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
     notification.style.color = isError ? "#ef4444" : "#22c55e";
@@ -81,21 +85,13 @@ function showNotification(message, isError = false) {
     }, 3500);
 }
 
-function showPageLoader(show) {
-    if (show) {
-        globalLoader.classList.add("show");
-    } else {
-        globalLoader.classList.remove("show");
-    }
-}
-
 
 // ==========================================
 // Initialization & Load Profile Data
 // ==========================================
 
 async function initProfile() {
-    showPageLoader(true);
+    showLoader();
 
     try {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -107,7 +103,7 @@ async function initProfile() {
 
         currentUser = session.user;
 
-        if (currentUser && currentUser.email) {
+        if (currentUser && currentUser.email && emailAddress) {
             emailAddress.textContent = currentUser.email;
         }
 
@@ -125,51 +121,59 @@ async function initProfile() {
         if (profile) {
             // Badge KYC
             const isKycVerified = !!profile.verified; 
-            verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
-            verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
+            if (verifiedBadge) {
+                verifiedBadge.textContent = isKycVerified ? "Vérifié" : "Non vérifié";
+                verifiedBadge.style.color = isKycVerified ? "#22c55e" : "#ef4444";
+            }
 
-            usernameInput.value = profile.username || "";
-            displayNameInput.value = profile.display_name || "";
-            bioInput.value = profile.bio || "";
-            bioCounter.textContent = (profile.bio || "").length;
-            languageSelect.value = profile.language || "fr";
+            if (usernameInput) usernameInput.value = profile.username || "";
+            if (displayNameInput) displayNameInput.value = profile.display_name || "";
+            if (bioInput) {
+                bioInput.value = profile.bio || "";
+                if (bioCounter) bioCounter.textContent = (profile.bio || "").length;
+            }
+            if (languageSelect) languageSelect.value = profile.language || "fr";
 
             // Détection du pays : Priorité au pays sauvegardé dans la BDD
-            if (profile.country) {
+            if (profile.country && countryInput) {
                 countryInput.value = profile.country;
-            } else {
+            } else if (countryInput) {
                 const autoDetectedCountry = await detectUserCountry();
                 countryInput.value = autoDetectedCountry || "France";
             }
 
-            if (profile.avatar_url) {
+            if (profile.avatar_url && avatarPreview) {
                 avatarPreview.src = profile.avatar_url;
             }
 
-            if (profile.banner_url) {
+            if (profile.banner_url && bannerImage) {
                 bannerImage.src = profile.banner_url;
                 bannerImage.style.display = "block";
-            } else {
+            } else if (bannerImage) {
                 bannerImage.style.display = "none";
             }
 
-            if (profile.company_verified) {
+            if (profile.company_verified && companyVerifiedBadge) {
                 companyVerifiedBadge.textContent = "Vérifiée";
                 companyVerifiedBadge.style.color = "#22c55e";
             }
         } else {
-            verifiedBadge.textContent = "Non vérifié";
-            verifiedBadge.style.color = "#ef4444";
+            if (verifiedBadge) {
+                verifiedBadge.textContent = "Non vérifié";
+                verifiedBadge.style.color = "#ef4444";
+            }
 
-            const autoDetectedCountry = await detectUserCountry();
-            countryInput.value = autoDetectedCountry || "France";
+            if (countryInput) {
+                const autoDetectedCountry = await detectUserCountry();
+                countryInput.value = autoDetectedCountry || "France";
+            }
         }
 
     } catch (error) {
         console.error(error);
         showNotification("Impossible de charger le profil.", true);
     } finally {
-        showPageLoader(false);
+        hideLoader();
     }
 }
 
@@ -178,49 +182,57 @@ async function initProfile() {
 // Avatar & Banner Management
 // ==========================================
 
-avatarButton.addEventListener("click", () => {
-    avatarInput.click();
-});
+if (avatarButton && avatarInput) {
+    avatarButton.addEventListener("click", () => {
+        avatarInput.click();
+    });
 
-avatarInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    avatarInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-        showNotification("L'image ne doit pas dépasser 5 Mo.", true);
-        return;
-    }
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification("L'image ne doit pas dépasser 5 Mo.", true);
+            return;
+        }
 
-    selectedAvatarFile = file;
-    avatarPreview.src = URL.createObjectURL(file);
-});
+        selectedAvatarFile = file;
+        if (avatarPreview) avatarPreview.src = URL.createObjectURL(file);
+    });
+}
 
-bannerButton.addEventListener("click", () => {
-    bannerInput.click();
-});
+if (bannerButton && bannerInput) {
+    bannerButton.addEventListener("click", () => {
+        bannerInput.click();
+    });
 
-bannerInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    bannerInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    if (file.size > 8 * 1024 * 1024) {
-        showNotification("La bannière ne doit pas dépasser 8 Mo.", true);
-        return;
-    }
+        if (file.size > 8 * 1024 * 1024) {
+            showNotification("La bannière ne doit pas dépasser 8 Mo.", true);
+            return;
+        }
 
-    selectedBannerFile = file;
-    bannerImage.src = URL.createObjectURL(file);
-    bannerImage.style.display = "block";
-});
+        selectedBannerFile = file;
+        if (bannerImage) {
+            bannerImage.src = URL.createObjectURL(file);
+            bannerImage.style.display = "block";
+        }
+    });
+}
 
 
 // ==========================================
 // Bio Counter
 // ==========================================
 
-bioInput.addEventListener("input", () => {
-    bioCounter.textContent = bioInput.value.length;
-});
+if (bioInput && bioCounter) {
+    bioInput.addEventListener("input", () => {
+        bioCounter.textContent = bioInput.value.length;
+    });
+}
 
 
 // ==========================================
@@ -228,6 +240,7 @@ bioInput.addEventListener("input", () => {
 // ==========================================
 
 function renderCountries(filter = "") {
+    if (!countryList) return;
     countryList.innerHTML = "";
     
     const filtered = countriesList.filter(c => c.toLowerCase().includes(filter.toLowerCase()));
@@ -242,33 +255,43 @@ function renderCountries(filter = "") {
         div.className = "country-item";
         div.textContent = country;
         div.addEventListener("click", () => {
-            countryInput.value = country;
-            countryModal.classList.remove("show");
+            if (countryInput) countryInput.value = country;
+            if (countryModal) countryModal.classList.remove("show");
         });
         countryList.appendChild(div);
     });
 }
 
-countryInput.addEventListener("click", () => {
-    renderCountries();
-    countryModal.classList.add("show");
-    countrySearch.value = "";
-    countrySearch.focus();
-});
+if (countryInput && countryModal) {
+    countryInput.addEventListener("click", () => {
+        renderCountries();
+        countryModal.classList.add("show");
+        if (countrySearch) {
+            countrySearch.value = "";
+            countrySearch.focus();
+        }
+    });
+}
 
-closeCountryModal.addEventListener("click", () => {
-    countryModal.classList.remove("show");
-});
-
-countrySearch.addEventListener("input", (e) => {
-    renderCountries(e.target.value);
-});
-
-countryModal.addEventListener("click", (e) => {
-    if (e.target === countryModal) {
+if (closeCountryModal && countryModal) {
+    closeCountryModal.addEventListener("click", () => {
         countryModal.classList.remove("show");
-    }
-});
+    });
+}
+
+if (countrySearch) {
+    countrySearch.addEventListener("input", (e) => {
+        renderCountries(e.target.value);
+    });
+}
+
+if (countryModal) {
+    countryModal.addEventListener("click", (e) => {
+        if (e.target === countryModal) {
+            countryModal.classList.remove("show");
+        }
+    });
+}
 
 
 // ==========================================
@@ -316,101 +339,106 @@ async function detectUserCountry() {
 // Form Submission & Save Profile
 // ==========================================
 
-profileForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+if (profileForm) {
+    profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const usernameVal = usernameInput.value.trim().toLowerCase();
-    const displayNameVal = displayNameInput.value.trim();
-    const bioVal = bioInput.value.trim();
-    const countryVal = countryInput.value.trim();
-    const languageVal = languageSelect.value;
+        const usernameVal = usernameInput ? usernameInput.value.trim().toLowerCase() : "";
+        const displayNameVal = displayNameInput ? displayNameInput.value.trim() : "";
+        const bioVal = bioInput ? bioInput.value.trim() : "";
+        const countryVal = countryInput ? countryInput.value.trim() : "";
+        const languageVal = languageSelect ? languageSelect.value : "fr";
 
-    if (usernameVal && usernameVal.length < 3) {
-        usernameMessage.textContent = "Le nom d'utilisateur doit contenir au moins 3 caractères.";
-        usernameMessage.style.color = "#ef4444";
-        usernameInput.focus();
-        return;
-    } else {
-        usernameMessage.textContent = "";
-    }
-
-    if (!displayNameVal) {
-        displayNameMessage.textContent = "Le nom complet est requis.";
-        displayNameMessage.style.color = "#ef4444";
-        displayNameInput.focus();
-        return;
-    } else {
-        displayNameMessage.textContent = "";
-    }
-
-    // Utilisation exclusive du loader du bouton lors de la sauvegarde
-    saveProfileButton.disabled = true;
-    saveProfileText.hidden = true;
-    saveProfileLoader.hidden = false;
-
-    try {
-        let avatarUrl = null;
-        let bannerUrl = null;
-
-        if (selectedAvatarFile) {
-            avatarUrl = await uploadFileToStorage(currentUser.id, selectedAvatarFile, "avatars");
+        if (usernameVal && usernameVal.length < 3) {
+            if (usernameMessage) {
+                usernameMessage.textContent = "Le nom d'utilisateur doit contenir au moins 3 caractères.";
+                usernameMessage.style.color = "#ef4444";
+            }
+            if (usernameInput) usernameInput.focus();
+            return;
+        } else if (usernameMessage) {
+            usernameMessage.textContent = "";
         }
 
-        if (selectedBannerFile) {
-            bannerUrl = await uploadFileToStorage(currentUser.id, selectedBannerFile, "banners");
+        if (!displayNameVal) {
+            if (displayNameMessage) {
+                displayNameMessage.textContent = "Le nom complet est requis.";
+                displayNameMessage.style.color = "#ef4444";
+            }
+            if (displayNameInput) displayNameInput.focus();
+            return;
+        } else if (displayNameMessage) {
+            displayNameMessage.textContent = "";
         }
 
-        const updates = {
-            id: currentUser.id,
-            username: usernameVal || null,
-            display_name: displayNameVal,
-            bio: bioVal || null,
-            country: countryVal || null,
-            language: languageVal,
-            updated_at: new Date().toISOString()
-        };
+        try {
+            showLoader();
+            if (saveProfileButton) buttonLoading(saveProfileButton, true);
 
-        if (avatarUrl) updates.avatar_url = avatarUrl;
-        if (bannerUrl) updates.banner_url = bannerUrl;
+            let avatarUrl = null;
+            let bannerUrl = null;
 
-        const { error: upsertError } = await supabase
-            .from("profiles")
-            .upsert(updates);
+            if (selectedAvatarFile) {
+                avatarUrl = await uploadFileToStorage(currentUser.id, selectedAvatarFile, "avatars");
+            }
 
-        if (upsertError) throw upsertError;
+            if (selectedBannerFile) {
+                bannerUrl = await uploadFileToStorage(currentUser.id, selectedBannerFile, "banners");
+            }
 
-        showNotification("Profil enregistré avec succès !");
-        
-        setTimeout(() => {
-            window.location.replace("index.html");
-        }, 1200);
+            const updates = {
+                id: currentUser.id,
+                username: usernameVal || null,
+                display_name: displayNameVal,
+                bio: bioVal || null,
+                country: countryVal || null,
+                language: languageVal,
+                updated_at: new Date().toISOString()
+            };
 
-    } catch (error) {
-        console.error(error);
-        showNotification(error.message || "Erreur lors de l'enregistrement du profil.", true);
-        
-        saveProfileButton.disabled = false;
-        saveProfileText.hidden = false;
-        saveProfileLoader.hidden = true;
-    }
-});
+            if (avatarUrl) updates.avatar_url = avatarUrl;
+            if (bannerUrl) updates.banner_url = bannerUrl;
+
+            const { error: upsertError } = await supabase
+                .from("profiles")
+                .upsert(updates);
+
+            if (upsertError) throw upsertError;
+
+            showNotification("Profil enregistré avec succès !");
+            
+            setTimeout(() => {
+                window.location.replace("index.html");
+            }, 1200);
+
+        } catch (error) {
+            console.error(error);
+            showNotification(error.message || "Erreur lors de l'enregistrement du profil.", true);
+        } finally {
+            hideLoader();
+            if (saveProfileButton) buttonLoading(saveProfileButton, false);
+        }
+    });
+}
 
 
 // ==========================================
 // Logout Action
 // ==========================================
 
-logoutButton.addEventListener("click", async () => {
-    try {
-        showPageLoader(true);
-        await supabase.auth.signOut();
-        window.location.replace("login.html");
-    } catch (error) {
-        console.error(error);
-        showNotification("Erreur lors de la déconnexion.", true);
-        showPageLoader(false);
-    }
-});
+if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+        try {
+            showLoader();
+            await supabase.auth.signOut();
+            window.location.replace("login.html");
+        } catch (error) {
+            console.error(error);
+            showNotification("Erreur lors de la déconnexion.", true);
+            hideLoader();
+        }
+    });
+}
 
 
 // ==========================================
