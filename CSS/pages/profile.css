@@ -383,7 +383,7 @@ Country Modal
 }
 
 /* ==================================================
-Notification & Loader Globaux
+Notification & Loaders (venant de devices_list.css)
 ================================================== */
 
 .notification {
@@ -410,17 +410,17 @@ Notification & Loader Globaux
     inset: 0;
     background: rgba(2, 6, 23, 0.4);
     backdrop-filter: blur(4px);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
 }
 
 .global-loader.show {
-    display: none;
+    display: flex;
 }
 
-.loader-circle {
+.nv-spinner {
     width: 48px;
     height: 48px;
     border: 3px solid rgba(37, 99, 235, 0.2);
@@ -429,13 +429,29 @@ Notification & Loader Globaux
     animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.nv-loader-text {
+    color: var(--nv-text-secondary, #94a3b8);
+    font-size: 0.9rem;
 }
 
 /* ==========================================
-Responsive
+Animations & Responsive
 ========================================== */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
 @media (max-width: 768px) {
     .profile-page {
