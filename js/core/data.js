@@ -14,37 +14,29 @@ export async function select(
     columns = "*",
     filters = null
 ) {
-
     let query = supabase
         .from(table)
         .select(columns);
 
     if (filters) {
-
         for (const filter of filters) {
-
             query = query[filter.method](
                 filter.column,
                 filter.value
             );
-
         }
-
     }
 
     return await query;
-
 }
 
 export async function insert(
     table,
     values
 ) {
-
     return await supabase
         .from(table)
         .insert(values);
-
 }
 
 export async function update(
@@ -52,44 +44,36 @@ export async function update(
     values,
     filters
 ) {
-
     let query = supabase
         .from(table)
         .update(values);
 
     for (const filter of filters) {
-
         query = query[filter.method](
             filter.column,
             filter.value
         );
-
     }
 
     return await query;
-
 }
 
 export async function remove(
     table,
     filters
 ) {
-
     let query = supabase
         .from(table)
         .delete();
 
     for (const filter of filters) {
-
         query = query[filter.method](
             filter.column,
             filter.value
         );
-
     }
 
     return await query;
-
 }
 
 // ==========================================
@@ -102,48 +86,40 @@ export async function uploadFile(
     file,
     options = {}
 ) {
-
     return await supabase
         .storage
         .from(bucket)
         .upload(path, file, options);
-
 }
 
 export async function downloadFile(
     bucket,
     path
 ) {
-
     return await supabase
         .storage
         .from(bucket)
         .download(path);
-
 }
 
 export function getPublicUrl(
     bucket,
     path
 ) {
-
     return supabase
         .storage
         .from(bucket)
         .getPublicUrl(path);
-
 }
 
 export async function deleteFile(
     bucket,
     path
 ) {
-
     return await supabase
         .storage
         .from(bucket)
         .remove([path]);
-
 }
 
 // ==========================================
@@ -155,7 +131,6 @@ export function subscribe(
     table,
     callback
 ) {
-
     return supabase
         .channel(channelName)
         .on(
@@ -168,15 +143,12 @@ export function subscribe(
             callback
         )
         .subscribe();
-
 }
 
 export async function unsubscribe(
     channel
 ) {
-
     return await supabase.removeChannel(channel);
-
 }
 
 /**
@@ -216,19 +188,17 @@ export async function rpc(
     functionName,
     params = {}
 ) {
-
     return await supabase.rpc(
         functionName,
         params
     );
-
 }
 
 // ==========================================
 // Devices
 // ==========================================
 
-export async function getDevices(){
+export async function getDevices() {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return { data: [], error: null };
 
@@ -243,7 +213,7 @@ export async function getDevices(){
 
 export async function deleteDevice(
     deviceId
-){
+) {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return { error: "Non connecté" };
 
@@ -256,7 +226,7 @@ export async function deleteDevice(
 
 export async function deleteOtherDevices(
     currentDeviceId
-){
+) {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return { error: "Non connecté" };
 
@@ -271,7 +241,7 @@ export async function deleteOtherDevices(
 // Profile & Roles
 // ==========================================
 
-export async function getProfile(){
+export async function getProfile() {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return null;
 
@@ -313,7 +283,7 @@ export async function getProfile(){
 
 export async function updateProfile(
     values
-){
+) {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return { error: "Non connecté" };
 
@@ -327,7 +297,7 @@ export async function updateProfile(
 // User Settings
 // ==========================================
 
-export async function getUserSettings(){
+export async function getUserSettings() {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return null;
 
@@ -342,7 +312,7 @@ export async function getUserSettings(){
 
 export async function updateUserSettings(
     values
-){
+) {
     const user = (await supabase.auth.getUser()).data.user;
     if (!user) return { error: "Non connecté" };
 
@@ -351,114 +321,89 @@ export async function updateUserSettings(
         .update(values)
         .eq("user_id", user.id);
 }
+
 // ==========================================
 // Videos
 // ==========================================
 
-export async function getVideos(options = {}){
-
-    let query =
-        supabase
+export async function getVideos(options = {}) {
+    let query = supabase
         .from("videos")
         .select("*")
-        .eq("status","published")
-        .order("created_at",{
-            ascending:false
+        .eq("status", "published")
+        .order("created_at", {
+            ascending: false
         });
 
-    if(options.category &&
-       options.category !== "Tous"){
-
-        query =
-            query.eq(
-                "category",
-                options.category
-            );
-
+    if (options.category && options.category !== "Tous") {
+        query = query.eq(
+            "category",
+            options.category
+        );
     }
 
-    if(options.search){
-
-        query =
-            query.ilike(
-                "title",
-                `%${options.search}%`
-            );
-
+    if (options.search) {
+        query = query.ilike(
+            "title",
+            `%${options.search}%`
+        );
     }
 
-    if(options.page){
-
+    if (options.page) {
         const limit = 20;
+        const from = (options.page - 1) * limit;
+        const to = from + limit - 1;
 
-        const from =
-            (options.page - 1) * limit;
-
-        const to =
-            from + limit - 1;
-
-        query =
-            query.range(
-                from,
-                to
-            );
-
+        query = query.range(
+            from,
+            to
+        );
     }
 
-    const { data, error } =
-        await query;
+    const { data, error } = await query;
 
-    if(error)
+    if (error)
         throw error;
 
     return data || [];
-
 }
+
 // ==========================================
 // Shorts
 // ==========================================
 
-export async function getShorts(options = {}){
-
-    let query =
-        supabase
+export async function getShorts(options = {}) {
+    let query = supabase
         .from("shorts")
         .select("*")
         .order(
             "created_at",
             {
-                ascending:false
+                ascending: false
             }
         );
 
-    if(options.category &&
-       options.category !== "Tous"){
-
-        query =
-            query.eq(
-                "category",
-                options.category
-            );
-
+    if (options.category && options.category !== "Tous") {
+        query = query.eq(
+            "category",
+            options.category
+        );
     }
 
-    const { data, error } =
-        await query;
+    const { data, error } = await query;
 
-    if(error)
+    if (error)
         throw error;
 
     return data || [];
-
 }
+
 // ==========================================
 // Lives
 // ==========================================
 
-export async function getLives(){
-
-    const { data, error } =
-        await supabase
+export async function getLives() {
+    const { data, error } = await supabase
         .from("lives")
         .select("*")
         .eq(
@@ -468,24 +413,22 @@ export async function getLives(){
         .order(
             "started_at",
             {
-                ascending:false
+                ascending: false
             }
         );
 
-    if(error)
+    if (error)
         throw error;
 
     return data || [];
-
 }
+
 // ==========================================
 // Sponsored Products
 // ==========================================
 
-export async function getSponsoredProducts(){
-
-    const { data, error } =
-        await supabase
+export async function getSponsoredProducts() {
+    const { data, error } = await supabase
         .from("products")
         .select("*")
         .eq(
@@ -495,13 +438,12 @@ export async function getSponsoredProducts(){
         .order(
             "created_at",
             {
-                ascending:false
+                ascending: false
             }
         );
 
-    if(error)
+    if (error)
         throw error;
 
     return data || [];
-
-}
+} 
