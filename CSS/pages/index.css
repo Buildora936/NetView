@@ -6,7 +6,7 @@
 
 
 /* ==========================================
-   Background
+   NetView Background
 ========================================== */
 
 .nv-home-background{
@@ -21,8 +21,17 @@
 
     pointer-events:none;
 
+    background:
+
+        var(--nv-background);
+
 }
 
+
+
+/* ==========================================
+   Animated Orbs
+========================================== */
 
 .nv-orb{
 
@@ -30,78 +39,172 @@
 
     border-radius:50%;
 
-    filter:blur(80px);
+    filter:blur(100px);
 
     opacity:.35;
 
-    animation:nvOrbMove 12s infinite alternate ease-in-out;
+    animation:
+
+        nvOrbFloat
+
+        15s
+
+        infinite
+
+        alternate
+
+        ease-in-out;
 
 }
 
+
+
+/* Orb 1 */
 
 .nv-orb.one{
 
-    width:420px;
+    width:450px;
 
-    height:420px;
+    height:450px;
 
-    top:-150px;
+    top:-180px;
 
-    left:-120px;
+    left:-160px;
 
-    background:#2563EB;
+    background:
+
+        #2563EB;
 
 }
 
 
+
+/* Orb 2 */
+
 .nv-orb.two{
+
+    width:400px;
+
+    height:400px;
+
+    top:30%;
+
+    right:-180px;
+
+    background:
+
+        #3B82F6;
+
+    animation-delay:
+
+        3s;
+
+}
+
+
+
+/* Orb 3 */
+
+.nv-orb.three{
 
     width:350px;
 
     height:350px;
 
-    right:-100px;
-
-    top:30%;
-
-    background:#3B82F6;
-
-}
-
-
-.nv-orb.three{
-
-    width:300px;
-
-    height:300px;
-
-    bottom:-100px;
+    bottom:-150px;
 
     left:35%;
 
-    background:#1D4ED8;
+    background:
 
-}
+        #1D4ED8;
 
+    animation-delay:
 
-@keyframes nvOrbMove{
-
-    from{
-
-        transform:translateY(0);
-
-    }
-
-    to{
-
-        transform:translateY(40px);
-
-    }
+        6s;
 
 }
 
 
 
+/* ==========================================
+   Animation
+========================================== */
+
+@keyframes nvOrbFloat{
+
+
+    0%{
+
+        transform:
+
+            translate3d(0,0,0)
+
+            scale(1);
+
+    }
+
+
+    50%{
+
+        transform:
+
+            translate3d(40px,-30px,0)
+
+            scale(1.08);
+
+    }
+
+
+    100%{
+
+        transform:
+
+            translate3d(-20px,40px,0)
+
+            scale(1);
+
+    }
+
+}
+
+
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width:600px){
+
+
+    .nv-orb.one{
+
+        width:280px;
+
+        height:280px;
+
+    }
+
+
+    .nv-orb.two{
+
+        width:250px;
+
+        height:250px;
+
+    }
+
+
+    .nv-orb.three{
+
+        width:220px;
+
+        height:220px;
+
+    }
+
+
+}
 /* ==========================================
    Body
 ========================================== */
