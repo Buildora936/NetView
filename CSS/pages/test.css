@@ -1,0 +1,261 @@
+/* ==========================================
+// NetView
+// CSS/pages/index.css
+// ========================================== */
+
+/* --- Animated Background --- */
+.nv-home-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--nv-bg-main, #0f172a);
+}
+
+.nv-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: floatOrb 20s infinite alternate ease-in-out;
+}
+
+.nv-orb.one {
+    width: 400px;
+    height: 400px;
+    background: var(--nv-primary, #2563eb);
+    top: -100px;
+    left: -100px;
+}
+
+.nv-orb.two {
+    width: 500px;
+    height: 500px;
+    background: #9333ea;
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.nv-orb.three {
+    width: 300px;
+    height: 300px;
+    background: #06b6d4;
+    top: 40%;
+    left: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes floatOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(50px, 50px) scale(1.1);
+    }
+}
+
+/* --- Main Layout --- */
+.nv-home {
+    padding: calc(var(--nv-header-height, 64px) + 20px) 24px 40px 24px;
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+@media (min-width: 1024px) {
+    .nv-home {
+        padding-left: calc(var(--nv-sidebar-width, 240px) + 24px);
+    }
+}
+
+/* --- Categories Bar --- */
+.nv-categories {
+    position: sticky;
+    top: var(--nv-header-height, 64px);
+    background: var(--nv-bg-main, #0f172a);
+    z-index: 10;
+    padding: 12px 0;
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    border-bottom: 1px solid var(--nv-border, rgba(255, 255, 255, 0.08));
+}
+
+.nv-categories-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.nv-categories-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.nv-category {
+    background: var(--nv-surface, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.1));
+    color: var(--nv-text-main, #f8fafc);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nv-category:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nv-category.active {
+    background: var(--nv-primary, #2563eb);
+    border-color: var(--nv-primary, #2563eb);
+    color: #ffffff;
+}
+
+/* --- Sections & Grid Layouts --- */
+.nv-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.nv-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nv-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--nv-text-main, #f8fafc);
+}
+
+.nv-video-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+
+@media (min-width: 640px) {
+    .nv-video-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .nv-video-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1440px) {
+    .nv-video-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* --- Shorts Section --- */
+.nv-shorts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    .nv-shorts-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* --- Horizontal Scroll Sections (Products, Lives) --- */
+.nv-horizontal-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--nv-border, rgba(255, 255, 255, 0.2)) transparent;
+}
+
+.nv-horizontal-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.nv-horizontal-scroll::-webkit-scrollbar-thumb {
+    background: var(--nv-border, rgba(255, 255, 255, 0.2));
+    border-radius: 3px;
+}
+
+/* --- Loaders & States --- */
+.nv-infinite-loader {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+}
+
+.nv-skeleton-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.nv-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--nv-text-muted, #94a3b8);
+}
+
+.nv-context-menu {
+    position: absolute;
+    background: var(--nv-surface-card, #1e293b);
+    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.1));
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+}
+
+.nv-context-menu.show {
+    display: block;
+}
+
+/* --- Global Notification Overlay --- */
+.notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--nv-surface-card, #1e293b);
+    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.1));
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    color: #f8fafc;
+    z-index: 1100;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
