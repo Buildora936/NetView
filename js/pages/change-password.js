@@ -21,6 +21,7 @@ const notification = document.getElementById("notification");
 const togglePassword = document.getElementById("togglePassword");
 
 function showNotification(message, isError = false) {
+    if (!notification) return;
     notification.textContent = message;
     notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
     notification.style.color = isError ? "#ef4444" : "#22c55e";
@@ -32,7 +33,7 @@ function showNotification(message, isError = false) {
 }
 
 // Gestion de l'affichage du mot de passe
-if (togglePassword) {
+if (togglePassword && passwordInput) {
     togglePassword.addEventListener("click", () => {
         const isVisible = passwordInput.type === "text";
         passwordInput.type = isVisible ? "password" : "text";
@@ -40,54 +41,64 @@ if (togglePassword) {
     });
 }
 
-changeForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+if (changeForm) {
+    changeForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    changeError.textContent = "";
-    changeError.classList.remove("show");
+        if (changeError) {
+            changeError.textContent = "";
+            changeError.classList.remove("show");
+        }
 
-    const passwordVal = passwordInput.value;
-    const confirmVal = confirmPasswordInput.value;
+        const passwordVal = passwordInput ? passwordInput.value : "";
+        const confirmVal = confirmPasswordInput ? confirmPasswordInput.value : "";
 
-    if (passwordVal.length < 6) {
-        changeError.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
-        changeError.classList.add("show");
-        passwordInput.focus();
-        return;
-    }
+        if (passwordVal.length < 6) {
+            if (changeError) {
+                changeError.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
+                changeError.classList.add("show");
+            }
+            if (passwordInput) passwordInput.focus();
+            return;
+        }
 
-    if (passwordVal !== confirmVal) {
-        changeError.textContent = "Les mots de passe ne correspondent pas.";
-        changeError.classList.add("show");
-        confirmPasswordInput.focus();
-        return;
-    }
+        if (passwordVal !== confirmVal) {
+            if (changeError) {
+                changeError.textContent = "Les mots de passe ne correspondent pas.";
+                changeError.classList.add("show");
+            }
+            if (confirmPasswordInput) confirmPasswordInput.focus();
+            return;
+        }
 
-    submitButton.disabled = true;
-    submitText.hidden = true;
-    submitLoader.hidden = false;
-    globalLoader.classList.add("show");
+        if (submitButton) submitButton.disabled = true;
+        if (submitText) submitText.hidden = true;
+        if (submitLoader) submitLoader.hidden = false;
+        if (globalLoader) globalLoader.classList.add("show");
 
-    try {
-        const { error } = await supabase.auth.updateUser({
-            password: passwordVal
-        });
+        try {
+            const { error } = await supabase.auth.updateUser({
+                password: passwordVal
+            });
 
-        if (error) throw error;
+            if (error) throw error;
 
-        showNotification("Mot de passe mis à jour avec succès !");
-        
-        setTimeout(() => {
-            window.location.replace("login.html");
-        }, 2000);
+            showNotification("Mot de passe mis à jour avec succès !");
+            
+            setTimeout(() => {
+                window.location.replace("login.html");
+            }, 2000);
 
-    } catch (error) {
-        console.error(error);
-        changeError.textContent = error.message || "Erreur lors de la mise à jour du mot de passe.";
-        changeError.classList.add("show");
-        submitButton.disabled = false;
-        submitText.hidden = false;
-        submitLoader.hidden = true;
-        globalLoader.classList.remove("show");
-    }
-});
+        } catch (error) {
+            console.error(error);
+            if (changeError) {
+                changeError.textContent = error.message || "Erreur lors de la mise à jour du mot de passe.";
+                changeError.classList.add("show");
+            }
+            if (submitButton) submitButton.disabled = false;
+            if (submitText) submitText.hidden = false;
+            if (submitLoader) submitLoader.hidden = true;
+            if (globalLoader) globalLoader.classList.remove("show");
+        }
+    });
+}
