@@ -31,27 +31,22 @@ import { supabase } from "../core/supabase.js";
 // DOM Elements
 // ==========================================
 
-// Compte
 const currentEmail = document.getElementById("currentEmail");
 const createdAt = document.getElementById("createdAt");
 const editProfileButton = document.getElementById("editProfileButton");
 const notification = document.getElementById("notification");
 
-// Sécurité / Redirection vers forgot-password.html
 const changePasswordButton = document.getElementById("changePasswordButton");
-
-// Appareils connectés / Redirection vers devices_list.html
 const viewDevicesButton = document.getElementById("viewDevicesButton");
 
-// Préférences
 const themeSelect = document.getElementById("theme");
 const autoplayToggle = document.getElementById("autoplay");
 const emailNotificationsToggle = document.getElementById("emailNotifications");
 const pushNotificationsToggle = document.getElementById("pushNotifications");
 const savePreferencesButton = document.getElementById("savePreferencesButton");
 
-// Zone de danger / Redirection vers remove_account.html
 const removeAccountButton = document.getElementById("removeAccountButton");
+
 
 // ==========================================
 // Variables globales
@@ -61,6 +56,7 @@ let currentProfile = null;
 let currentSettings = null;
 
 let isSavingPreferences = false;
+
 
 // ==========================================
 // NOTIFICATION
@@ -78,6 +74,7 @@ function showNotification(message, isError = false) {
     }, 3500);
 }
 
+
 // ==========================================
 // Initialisation
 // ==========================================
@@ -85,10 +82,13 @@ async function init() {
     showLoader();
     try {
         await loadSession();
+        if (!currentUser) return;
+
         await Promise.all([
             loadProfileData(),
             loadSettingsData()
         ]);
+        
         fillPage();
         addEventListeners();
     } catch (error) {
@@ -105,7 +105,10 @@ async function loadSession() {
         navigate("login.html");
         return;
     }
-    currentUser = await getUser();
+    currentUser = await getUser() || session.user;
+    if (!currentUser) {
+        navigate("login.html");
+    }
 }
 
 async function loadProfileData() {
@@ -131,6 +134,7 @@ async function loadSettingsData() {
     };
 }
 
+
 // ==========================================
 // Remplissage de la page
 // ==========================================
@@ -153,6 +157,7 @@ function fillPage() {
     if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings?.push_notifications ?? true;
 }
 
+
 // ==========================================
 // Préférences
 // ==========================================
@@ -171,8 +176,8 @@ async function savePreferences() {
             push_notifications: pushNotificationsToggle ? pushNotificationsToggle.checked : true
         };
 
-        const { error } = await updateUserSettings(updatedSettings);
-        if (error) throw error;
+        const result = await updateUserSettings(updatedSettings);
+        if (result && result.error) throw result.error;
 
         currentSettings = { ...currentSettings, ...updatedSettings };
         applyTheme(updatedSettings.theme);
@@ -196,6 +201,7 @@ function applyTheme(theme) {
         document.documentElement.setAttribute("data-theme", theme);
     }
 }
+
 
 // ==========================================
 // Événements globaux
@@ -225,6 +231,7 @@ function addEventListeners() {
         });
     }
 }
+
 
 // ==========================================
 // Lancement
