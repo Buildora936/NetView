@@ -823,32 +823,52 @@ body{
 
 
 /* ==========================================
-   Styles des cartes vidéos (NetView)
-   ========================================== */
-
-/* ==========================================
-   Style Cartes Vidéos - Mode YouTube
+   Style Cartes Vidéos - Grille Style YouTube (6 par ligne)
    ========================================== */
 
 .nv-videos-grid,
 .nv-videos-feed {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px 20px;
+    /* Ajustement de minmax pour caler 6 vidéos par ligne sur grand écran */
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px 12px;
     width: 100%;
 }
 
-@media (min-width: 1400px) {
+/* Forcer exactement la responsivité dynamique style YouTube */
+@media (min-width: 1800px) {
+    .nv-videos-grid,
+    .nv-videos-feed {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (min-width: 1500px) and (max-width: 1799px) {
+    .nv-videos-grid,
+    .nv-videos-feed {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 1100px) and (max-width: 1499px) {
     .nv-videos-grid,
     .nv-videos-feed {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (min-width: 1900px) {
+@media (min-width: 768px) and (max-width: 1099px) {
     .nv-videos-grid,
     .nv-videos-feed {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .nv-videos-grid,
+    .nv-videos-feed {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 8px;
     }
 }
 
@@ -862,7 +882,7 @@ body{
     padding: 0;
 }
 
-/* Miniature 16:9 aux coins arrondis type YouTube */
+/* Miniature 16:9 compacte */
 .nv-video-thumbnail {
     position: relative;
     width: 100%;
@@ -879,39 +899,37 @@ body{
     transition: border-radius 0.2s ease;
 }
 
-/* Effet au survol de la carte (optionnel : aplatit les coins de la miniature comme sur YT) */
 .nv-video-card:hover .nv-video-thumbnail img {
     border-radius: 0px;
 }
 
-/* Badge de durée sombre et arrondi */
+/* Badge de durée plus discret */
 .nv-video-duration {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 6px;
+    right: 6px;
     background-color: rgba(0, 0, 0, 0.8);
     color: #ffffff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    padding: 3px 6px;
+    padding: 2px 4px;
     border-radius: 4px;
-    letter-spacing: 0.5px;
 }
 
-/* Bloc d'informations sous la vidéo */
+/* Bloc d'informations sous la vidéo (plus compact) */
 .nv-video-content {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 10px;
     position: relative;
     align-items: flex-start;
 }
 
-/* Avatar circulaire de la chaîne */
+/* Avatar de la chaîne plus petit */
 .nv-video-avatar {
     flex-shrink: 0;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     overflow: hidden;
     background-color: #272727;
@@ -923,7 +941,6 @@ body{
     object-fit: cover;
 }
 
-/* Conteneur des textes */
 .nv-video-info {
     flex: 1;
     display: flex;
@@ -931,13 +948,13 @@ body{
     min-width: 0;
 }
 
-/* Titre de la vidéo (max 2 lignes) */
+/* Titre de la vidéo (taille police YouTube) */
 .nv-video-title {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 500;
     color: #f1f1f1;
-    line-height: 1.4;
-    margin: 0 0 6px 0;
+    line-height: 1.35;
+    margin: 0 0 4px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -951,10 +968,10 @@ body{
 
 /* Nom de la chaîne */
 .nv-video-channel {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #aaa;
     text-decoration: none;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -969,25 +986,25 @@ body{
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #aaa;
 }
 
-/* Bouton 3 points vertical (caché par défaut, apparaît au survol de la carte comme sur YT) */
+/* Bouton menu 3 points */
 .nv-video-menu-btn {
     background: none;
     border: none;
     color: #aaa;
     cursor: pointer;
     padding: 0;
-    height: 36px;
-    width: 36px;
+    height: 32px;
+    width: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     position: absolute;
-    top: 0;
+    top: -2px;
     right: -4px;
     opacity: 0;
     transition: opacity 0.2s ease, background-color 0.2s, color 0.2s;
