@@ -259,6 +259,8 @@ let searchQuery =
 
 let infiniteScrollObserver =
     null;
+
+
 // ==========================================
 // Initialisation
 // ==========================================
@@ -378,27 +380,6 @@ async function loadProfile(){
 
 
 // ==========================================
-// Chargement Accueil
-// ==========================================
-
-async function loadHomeContent(){
-
-    await Promise.all([
-
-        loadVideos(),
-
-        loadShorts(),
-
-        loadLives(),
-
-        loadSponsoredProducts()
-
-    ]);
-
-}
-
-
-// ==========================================
 // Header
 // ==========================================
 
@@ -418,9 +399,6 @@ function fillSidebar(){
     updateSidebar();
 
 }
-// ==========================================
-// Header + Sidebar
-// ==========================================
 
 
 // ==========================================
@@ -779,6 +757,8 @@ function showUserSidebar(){
     `;
 
 }
+
+
 // ==========================================
 // Accueil
 // Chargement des données
@@ -808,6 +788,14 @@ async function loadHomeContent(){
             loadSponsoredProducts()
 
         ]);
+
+        renderVideos();
+
+        renderShorts();
+
+        renderLives();
+
+        renderProducts();
 
     }
 
@@ -968,6 +956,8 @@ async function loadSponsoredProducts(){
     }
 
 }
+
+
 // ==========================================
 // Rendu du contenu
 // ==========================================
@@ -1027,7 +1017,7 @@ function renderVideos(){
 
             }
 
-        );
+        }); // Correction : fermeture correcte de la boucle forEach
 
     });
 
@@ -1085,7 +1075,7 @@ function renderShorts(){
 
             }
 
-        );
+        }); // Correction : fermeture correcte de la boucle forEach
 
     });
 
@@ -1162,6 +1152,8 @@ function renderProducts(){
     });
 
 }
+
+
 // ==========================================
 // Création des cartes
 // ==========================================
@@ -1443,7 +1435,6 @@ function createProductCard(product){
 }
 
 
-
 // ==========================================
 // Recherche + Catégories
 // ==========================================
@@ -1523,14 +1514,6 @@ async function changeCategory(category){
 
     await loadHomeContent();
 
-    renderVideos();
-
-    renderShorts();
-
-    renderLives();
-
-    renderProducts();
-
     document
         .querySelectorAll(".nv-category")
         .forEach(button=>{
@@ -1543,6 +1526,8 @@ async function changeCategory(category){
         });
 
 }
+
+
 // ==========================================
 // Événements
 // ==========================================
@@ -1822,7 +1807,7 @@ async function handleInfiniteScroll(){
 
             });
 
-        if(!data.length){
+        if(!data || !data.length){
 
             hasMoreVideos =
                 false;
@@ -1890,6 +1875,8 @@ function closeContextMenu(){
     );
 
 }
+
+
 // ==========================================
 // Utilitaires
 // ==========================================
@@ -1942,7 +1929,6 @@ function formatViews(views){
 }
 
 
-
 // ==========================================
 // Format Date
 // ==========================================
@@ -1973,7 +1959,6 @@ function formatDate(date){
     );
 
 }
-
 
 
 // ==========================================
@@ -2017,7 +2002,6 @@ function showNotification(
 }
 
 
-
 // ==========================================
 // Empty State
 // ==========================================
@@ -2052,7 +2036,6 @@ function showEmptyState(
 }
 
 
-
 function hideEmptyState(container){
 
     if(!container)
@@ -2061,7 +2044,6 @@ function hideEmptyState(container){
     container.innerHTML = "";
 
 }
-
 
 
 // ==========================================
@@ -2099,11 +2081,14 @@ function clearContainers(){
     });
 
 }
-
+// ==========================================
+// NetView
+// index.js (Suite et fin)
+// ==========================================
 
 
 // ==========================================
-// Reset
+// Réinitialisation des données
 // ==========================================
 
 function resetData(){
@@ -2125,7 +2110,6 @@ function resetData(){
 }
 
 
-
 // ==========================================
 // Cleanup
 // ==========================================
@@ -2140,11 +2124,24 @@ function destroy(){
 
     );
 
+    // Correction : Utilisation d'une fonction anonyme pour correspondre exactement 
+    // à l'écouteur d'événement déclaré dans addEventListeners()
     window.removeEventListener(
 
         "resize",
 
-        closeSidebar
+        () => {
+
+            if(window.innerWidth > 900){
+
+                sidebarOverlay
+                    ?.classList.remove(
+                        "active"
+                    );
+
+            }
+
+        }
 
     );
 
@@ -2157,7 +2154,6 @@ function destroy(){
     clearContainers();
 
 }
-
 
 
 // ==========================================
