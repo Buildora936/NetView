@@ -1315,58 +1315,52 @@ function createLiveCard(live){
 // Product Card
 // ==========================================
 
-function createProductCard(product){
-
-    const article =
-        document.createElement(
-            "article"
-        );
-
-    article.className =
-        "nv-product-card";
-
-    article.dataset.id =
-        product.id;
-
-    article.innerHTML = `
-
-        <a
-            href="product.html?id=${product.id}">
-
-            <div
-                class="nv-product-image">
-
-                <img
-                    src="${product.image_url}"
-                    alt="${product.name}">
-
+function createProductCard(product) {
+    return `
+        <article class="nv-product-card" data-id="${product.id || ''}">
+            <div class="nv-product-badge-container">
+                ${product.badge ? `<span class="nv-product-badge">${product.badge}</span>` : ''}
+                <button class="nv-product-wishlist" aria-label="Ajouter aux favoris">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+            
+            <div class="nv-product-thumbnail">
+                <img src="${product.imageUrl || 'default-product.jpg'}" alt="${product.title}" loading="lazy">
+                <div class="nv-product-overlay-actions">
+                    <button class="nv-product-quick-view"><i class="fa-solid fa-eye"></i> Aperçu rapide</button>
+                </div>
             </div>
 
-            <div
-                class="nv-product-info">
+            <div class="nv-product-content">
+                <div class="nv-product-category-tag">${product.category || 'Lifestyle'}</div>
+                <h3 class="nv-product-title">${product.title}</h3>
+                
+                <div class="nv-product-rating">
+                    <div class="nv-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span class="nv-rating-count">(${product.reviewsCount || '128'})</span>
+                </div>
 
-                <h3>
-
-                    ${product.name}
-
-                </h3>
-
-                <strong>
-
-                    ${product.price}
-
-                </strong>
-
+                <div class="nv-product-footer">
+                    <div class="nv-product-price-box">
+                        <span class="nv-product-price">${product.price || '0,00 €'}</span>
+                        ${product.oldPrice ? `<span class="nv-product-old-price">${product.oldPrice}</span>` : ''}
+                    </div>
+                    <button class="nv-product-buy-btn" aria-label="Acheter le produit">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Acheter</span>
+                    </button>
+                </div>
             </div>
-
-        </a>
-
+        </article>
     `;
-
-    return article;
-
 }
-
 
 // ==========================================
 // Recherche + Catégories
