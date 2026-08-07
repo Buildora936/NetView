@@ -442,3 +442,255 @@ export async function getSponsoredProducts() {
 
     return data || [];
 } 
+// ==========================================
+// Search
+// ==========================================
+
+const SEARCH_LIMIT = 20;
+
+
+
+export async function searchVideos(
+    query,
+    page = 1
+){
+
+    const from =
+        (page - 1) * SEARCH_LIMIT;
+
+    const to =
+        from + SEARCH_LIMIT - 1;
+
+    const { data, error } =
+        await supabase
+        .from("videos")
+        .select(`
+            *,
+            profiles:user_id(
+                username,
+                avatar_url
+            )
+        `)
+        .or(
+            `title.ilike.%${query}%,description.ilike.%${query}%`
+        )
+        .eq(
+            "status",
+            "published"
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data || [];
+
+}
+
+
+
+
+
+export async function searchShorts(
+    query,
+    page = 1
+){
+
+    const from =
+        (page - 1) * SEARCH_LIMIT;
+
+    const to =
+        from + SEARCH_LIMIT - 1;
+
+    const { data, error } =
+        await supabase
+        .from("shorts")
+        .select(`
+            *,
+            profiles:user_id(
+                username,
+                avatar_url
+            )
+        `)
+        .or(
+            `title.ilike.%${query}%,description.ilike.%${query}%`
+        )
+        .eq(
+            "status",
+            "published"
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data || [];
+
+}
+
+
+
+
+
+export async function searchChannels(
+    query,
+    page = 1
+){
+
+    const from =
+        (page - 1) * SEARCH_LIMIT;
+
+    const to =
+        from + SEARCH_LIMIT - 1;
+
+    const { data, error } =
+        await supabase
+        .from("channels")
+        .select("*")
+        .or(
+            `name.ilike.%${query}%,description.ilike.%${query}%`
+        )
+        .order(
+            "subscribers",
+            {
+                ascending:false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data || [];
+
+}
+
+
+
+
+
+export async function searchLives(
+    query,
+    page = 1
+){
+
+    const from =
+        (page - 1) * SEARCH_LIMIT;
+
+    const to =
+        from + SEARCH_LIMIT - 1;
+
+    const { data, error } =
+        await supabase
+        .from("lives")
+        .select(`
+            *,
+            channels(
+                name,
+                avatar_url
+            )
+        `)
+        .or(
+            `title.ilike.%${query}%,description.ilike.%${query}%`
+        )
+        .eq(
+            "status",
+            "live"
+        )
+        .order(
+            "started_at",
+            {
+                ascending:false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data || [];
+
+}
+
+
+
+
+
+export async function searchProducts(
+    query,
+    page = 1
+){
+
+    const from =
+        (page - 1) * SEARCH_LIMIT;
+
+    const to =
+        from + SEARCH_LIMIT - 1;
+
+    const { data, error } =
+        await supabase
+        .from("products")
+        .select("*")
+        .or(
+            `name.ilike.%${query}%,description.ilike.%${query}%`
+        )
+        .eq(
+            "status",
+            "published"
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    return data || [];
+
+}
