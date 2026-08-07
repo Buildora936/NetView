@@ -326,48 +326,43 @@ export async function updateUserSettings(
 // Videos
 // ==========================================
 
-export async function getVideos(options = {}) {
+export async function getVideos({ category, page, search }) {
     let query = supabase
-        .from("videos")
-        .select("*")
-        .eq("status", "published")
-        .order("created_at", {
-            ascending: false
-        });
+        .from('videos')
+        .select(`
+            *,
+            channels (
+                name,
+                handle,
+                avatar_url
+            )
+        `);
 
-    if (options.category && options.category !== "Tous") {
-        query = query.eq(
-            "category",
-            options.category
-        );
+    // Filtrer par recherche si présente
+    if (search) {
+        query = query.ilike('title', `%${search}%`);
     }
 
-    if (options.search) {
-        query = query.ilike(
-            "title",
-            `%${options.search}%`
-        );
-    }
-
-    if (options.page) {
-        const limit = 20;
-        const from = (options.page - 1) * limit;
-        const to = from + limit - 1;
-
-        query = query.range(
-            from,
-            to
-        );
-    }
+    // Gestion de la pagination (optionnelle selon votre implémentation)
+    const limit = 12;
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
 
     const { data, error } = await query;
 
-    if (error)
-        throw error;
+    if (error) {
+        console.error("Erreur Supabase getVideos:", error);
+        return [];
+    }
 
-    return data || [];
+    // Transformer les données pour s'adapter à votre rendu HTML
+    return data.map(video => ({
+        ...video,
+        channelName: video.channels?.name || 'Chaîne inconnue',
+        channelAvatar: video.channels?.avatar_url || 'images/default-avatar.png'
+    }));
 }
-
 // ==========================================
 // Shorts
 // ==========================================
