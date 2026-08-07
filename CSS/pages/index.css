@@ -901,6 +901,230 @@ body{
 }
 
 /* ==========================================
+   Ultra-Styled Product Card (NetView Store)
+========================================== */
+
+.nv-product-card {
+    position: relative;
+    background: var(--nv-surface, #1e293b);
+    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.08));
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.nv-product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.4);
+}
+
+/* --- Badges & Wishlist (Flottants sur l'image) --- */
+.nv-product-badge-container {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.nv-product-badge {
+    background: linear-gradient(135deg, var(--nv-primary, #2563eb), #9333ea);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    pointer-events: auto;
+}
+
+.nv-product-wishlist {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    pointer-events: auto;
+}
+
+.nv-product-wishlist:hover {
+    background: var(--nv-primary, #2563eb);
+    transform: scale(1.1);
+}
+
+/* --- Miniature & Aperçu rapide au survol --- */
+.nv-product-thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #0f172a;
+}
+
+.nv-product-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nv-product-card:hover .nv-product-thumbnail img {
+    transform: scale(1.08);
+}
+
+.nv-product-overlay-actions {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nv-product-card:hover .nv-product-overlay-actions {
+    opacity: 1;
+}
+
+.nv-product-quick-view {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(10px);
+    transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.nv-product-card:hover .nv-product-quick-view {
+    transform: translateY(0);
+}
+
+.nv-product-quick-view:hover {
+    background: #ffffff;
+    color: var(--nv-primary, #2563eb);
+}
+
+/* --- Contenu de la carte --- */
+.nv-product-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.nv-product-category-tag {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--nv-primary, #2563eb);
+}
+
+.nv-product-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nv-text, #f8fafc);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+/* --- Étoiles / Avis --- */
+.nv-product-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nv-stars {
+    color: #f59e0b; /* Couleur dorée pour les étoiles */
+    font-size: 12px;
+}
+
+.nv-rating-count {
+    font-size: 12px;
+    color: var(--nv-text-secondary, #94a3b8);
+}
+
+/* --- Pied de carte (Prix et Bouton Acheter) --- */
+.nv-product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--nv-border, rgba(255, 255, 255, 0.05));
+}
+
+.nv-product-price-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.nv-product-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--nv-text, #f8fafc);
+}
+
+.nv-product-old-price {
+    font-size: 12px;
+    color: var(--nv-text-secondary, #94a3b8);
+    text-decoration: line-through;
+}
+
+.nv-product-buy-btn {
+    background: var(--nv-primary, #2563eb);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.nv-product-buy-btn:hover {
+    background: #1d4ed8;
+    transform: scale(1.05);
+}
+/* ==========================================
    Shorts
 ========================================== */
 
