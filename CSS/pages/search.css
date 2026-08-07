@@ -90,9 +90,24 @@
 
 }
 
+.nv-logo{
+
+    display:flex;
+
+    align-items:center;
+
+}
 
 
+.nv-logo img{
 
+    width:120px;
+
+    height:auto;
+
+    object-fit:contain;
+
+}
 
 .nv-search-box input{
 
