@@ -1163,100 +1163,33 @@ function renderProducts(){
 // Video Card
 // ==========================================
 
-function createVideoCard(video){
-
-    const article =
-        document.createElement(
-            "article"
-        );
-
-    article.className =
-        "nv-video-card";
-
-    article.dataset.id =
-        video.id;
-
-    article.innerHTML = `
-
-        <a
-            href="player.html?id=${video.id}"
-            class="nv-video-link">
-
+function createVideoCard(video) {
+    return `
+        <article class="nv-video-card" data-id="${video.id || ''}">
             <div class="nv-video-thumbnail">
-
-                <img
-                    src="${video.thumbnail_url}"
-                    alt="${video.title}">
-
-                <span
-                    class="nv-video-duration">
-
-                    ${video.duration}
-
-                </span>
-
+                <img src="${video.thumbnailUrl || 'default-thumb.jpg'}" alt="${video.title}" loading="lazy">
+                <span class="nv-video-duration">${video.duration || '0:00'}</span>
             </div>
-
-        </a>
-
-        <div
-            class="nv-video-content">
-
-            <a
-                href="channel.html?u=${video.channel_username}"
-                class="nv-video-avatar">
-
-                <img
-                    src="${video.channel_avatar}"
-                    alt="${video.channel_name}">
-
-            </a>
-
-            <div
-                class="nv-video-info">
-
-                <a
-                    href="player.html?id=${video.id}"
-                    class="nv-video-title">
-
-                    ${video.title}
-
-                </a>
-
-                <a
-                    href="channel.html?u=${video.channel_username}"
-                    class="nv-video-channel">
-
-                    ${video.channel_name}
-
-                </a>
-
-                <div
-                    class="nv-video-meta">
-
-                    ${video.views} vues • ${video.created_at}
-
+            <div class="nv-video-content">
+                <div class="nv-video-avatar">
+                    <img src="${video.channelAvatar || 'default-avatar.jpg'}" alt="${video.channelName}" loading="lazy">
                 </div>
-
+                <div class="nv-video-info">
+                    <h3 class="nv-video-title">${video.title}</h3>
+                    <a href="#" class="nv-video-channel">${video.channelName}</a>
+                    <div class="nv-video-meta">
+                        <span>${video.views || '0'} vues</span>
+                        <span>•</span>
+                        <span>${video.timeAgo || 'Il y a un moment'}</span>
+                    </div>
+                </div>
+                <button class="nv-icon-button nv-video-menu-btn" aria-label="Action menu">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
             </div>
-
-            <button
-                class="nv-video-menu"
-                data-video="${video.id}">
-
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-
-            </button>
-
-        </div>
-
+        </article>
     `;
-
-    return article;
-
 }
-
-
 // ==========================================
 // Short Card
 // ==========================================
