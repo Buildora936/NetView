@@ -823,36 +823,98 @@ body{
 
 
 /* ==========================================
-   Video Grid
-========================================== */
+   Styles des cartes vidéos (NetView)
+   ========================================== */
 
-.nv-video-grid{
-
-    display:grid;
-
-    grid-template-columns:
-
-        repeat(4, minmax(220px,1fr));
-
-    gap:24px;
-
+.nv-videos-grid,
+.nv-videos-feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
-
-
-
-/* --- Style spécifique des cartes type YouTube --- */
 
 .nv-video-card {
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
     cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
-/* Titre limité à 2 lignes maximum avec des points de suspension (...) */
-.nv-video-title {
-    font-size: 15px;
+.nv-video-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Miniature de la vidéo */
+.nv-video-thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.nv-video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Badge de durée de la vidéo */
+.nv-video-duration {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    font-size: 0.75rem;
     font-weight: 500;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+/* Contenu sous la miniature (Avatar + Infos) */
+.nv-video-content {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    position: relative;
+}
+
+/* Avatar de la chaîne */
+.nv-video-avatar {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #2a2a2a;
+}
+
+.nv-video-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Informations textuelles */
+.nv-video-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Évite les dépassements de texte en flexbox */
+}
+
+.nv-video-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color, #ffffff);
     line-height: 1.4;
-    color: var(--nv-text);
-    margin-bottom: 4px;
+    margin: 0 0 4px 0;
+    
+    /* Limiter le titre à 2 lignes maximum */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -860,46 +922,46 @@ body{
     text-overflow: ellipsis;
 }
 
-/* Nom de la chaîne sous le titre */
 .nv-video-channel {
-    display: block;
-    font-size: 14px;
-    color: var(--nv-text-secondary);
+    font-size: 0.85rem;
+    color: var(--text-muted, #aaa);
     text-decoration: none;
     margin-bottom: 2px;
 }
 
 .nv-video-channel:hover {
-    color: var(--nv-text);
+    color: var(--text-color, #fff);
 }
 
-/* Vues + Temps avec séparateur point (•) */
 .nv-video-meta {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 14px;
-    color: var(--nv-text-secondary);
+    font-size: 0.85rem;
+    color: var(--text-muted, #aaa);
 }
 
-/* Bouton option (trois points verticaux) masqué par défaut, apparaît au survol de la carte (optionnel, style YouTube) */
-.nv-video-content {
-    position: relative;
-}
-
-.nv-video-card .nv-video-menu-btn {
-    width: 32px;
+/* Bouton menu contextuel à droite de la carte */
+.nv-video-menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted, #aaa);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
     height: 32px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.2s ease, background 0.2s ease;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
     flex-shrink: 0;
 }
 
-.nv-video-card:hover .nv-video-menu-btn {
-    opacity: 1;
+.nv-video-menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color, #fff);
 }
-
 /* ==========================================
    Ultra-Styled Product Card (NetView Store)
 ========================================== */
