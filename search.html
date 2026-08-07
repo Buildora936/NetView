@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+
+<meta
+    name="description"
+    content="Recherchez des vidéos, shorts, chaînes, lives et produits sur NetView.">
+
+
+<title>
+Recherche - NetView
+</title>
+
+
+<!-- ==========================================
+NetView Icon
+========================================== -->
+
+<link
+    rel="icon"
+    href="NetView_icone.png">
+
+
+
+<!-- ==========================================
+Font Awesome
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+
+<!-- ==========================================
+Core CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css">
+
+
+
+<!-- ==========================================
+Components CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/components/header.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/components/sidebar.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/components/forms.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css">
+
+
+<link
+    rel="stylesheet"
+    href="CSS/components/toast.css">
+
+
+
+<!-- ==========================================
+Search Page CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/pages/search.css">
+
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+Animated Background
+========================================== -->
+
+<div
+    class="nv-home-background">
+
+
+    <div
+        class="nv-orb one">
+
+    </div>
+
+
+    <div
+        class="nv-orb two">
+
+    </div>
+
+
+    <div
+        class="nv-orb three">
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Header
+========================================== -->
+
+<header
+    class="nv-header">
+
+
+<div
+    class="nv-header-left">
+
+
+<button
+    id="menuButton"
+    class="nv-icon-button">
+
+
+<i
+    class="fa-solid fa-bars">
+
+</i>
+
+
+</button>
+
+
+
+<a
+    href="index.html"
+    class="nv-logo">
+
+
+<img
+    src="NetView.png"
+    alt="NetView">
+
+
+</a>
+
+
+</div>
+
+
+
+
+<div
+    class="nv-header-center">
+
+
+<form
+    id="searchForm"
+    class="nv-search-form">
+
+
+<input
+    id="searchInput"
+    class="nv-search-input"
+    type="search"
+    placeholder="Rechercher">
+
+
+<button
+    class="nv-search-button"
+    type="submit">
+
+
+<i
+    class="fa-solid fa-magnifying-glass">
+
+</i>
+
+
+</button>
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+<div
+    class="nv-header-right">
+
+
+<!--
+Rempli dynamiquement par search.js
+Utilisateur connecté :
++
+Notifications
+Avatar
+
+Visiteur :
+S'identifier
+-->
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+<!-- ==========================================
+Sidebar
+Fermée par défaut
+========================================== -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar">
+
+
+<nav
+    class="nv-sidebar-nav">
+
+
+<!-- Généré par search.js -->
+
+
+</nav>
+
+
+</aside>
+
+
+
+
+
+<!-- ==========================================
+Mobile Overlay
+========================================== -->
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay">
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Main
+========================================== -->
+
+<main
+    class="nv-search-page">
+
+
+
+
+
+<!-- ==========================================
+Search Header
+========================================== -->
+
+<section
+    class="nv-search-header">
+
+
+<h1>
+
+Recherche
+
+</h1>
+
+
+
+
+
+<form
+    id="mobileSearchForm"
+    class="nv-search-box">
+
+
+<input
+    id="mobileSearchInput"
+    type="search"
+    placeholder="Rechercher sur NetView">
+
+
+<button
+    type="submit">
+
+
+<i
+    class="fa-solid fa-magnifying-glass">
+
+</i>
+
+
+</button>
+
+
+</form>
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+Search Filters
+========================================== -->
+
+<section
+    class="nv-search-filters">
+
+
+<div
+    class="nv-search-filter-scroll">
+
+
+
+<button
+    class="nv-search-filter active"
+    data-type="all">
+
+
+Tout
+
+
+</button>
+
+
+
+
+<button
+    class="nv-search-filter"
+    data-type="videos">
+
+
+Vidéos
+
+
+</button>
+
+
+
+
+<button
+    class="nv-search-filter"
+    data-type="shorts">
+
+
+Shorts
+
+
+</button>
+
+
+
+
+<button
+    class="nv-search-filter"
+    data-type="channels">
+
+
+Chaînes
+
+
+</button>
+
+
+
+
+<button
+    class="nv-search-filter"
+    data-type="lives">
+
+
+Lives
+
+
+</button>
+
+
+
+
+<button
+    class="nv-search-filter"
+    data-type="products">
+
+
+Produits
+
+
+</button>
+
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+Résultats
+========================================== -->
+
+<section
+    id="searchResults"
+    class="nv-search-results">
+  
+<!-- ==========================================
+Search Results Container
+========================================== -->
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+Skeleton Loaders
+========================================== -->
+
+<section
+    id="searchSkeleton"
+    class="nv-search-skeleton"
+    hidden>
+
+
+<div
+    class="nv-skeleton-card">
+
+
+<div
+    class="nv-skeleton-image">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line large">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line small">
+
+</div>
+
+
+</div>
+
+
+
+<div
+    class="nv-skeleton-card">
+
+
+<div
+    class="nv-skeleton-image">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line large">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line">
+
+</div>
+
+
+<div
+    class="nv-skeleton-line small">
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+Empty State
+========================================== -->
+
+<section
+    id="searchEmpty"
+    class="nv-empty-state"
+    hidden>
+
+
+<i
+    class="fa-solid fa-magnifying-glass">
+
+</i>
+
+
+<h2>
+
+Aucun résultat
+
+</h2>
+
+
+<p>
+
+Essayez une autre recherche.
+
+</p>
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+Infinite Loading
+========================================== -->
+
+<div
+    id="searchLoader"
+    class="nv-search-loader"
+    hidden>
+
+
+<div
+    class="nv-spinner">
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Context Menu
+========================================== -->
+
+<div
+    id="contextMenu"
+    class="nv-context-menu">
+
+
+<button>
+
+<i
+    class="fa-solid fa-clock">
+
+</i>
+
+Ajouter à regarder plus tard
+
+</button>
+
+
+
+<button>
+
+<i
+    class="fa-solid fa-share">
+
+</i>
+
+Partager
+
+</button>
+
+
+
+<button>
+
+<i
+    class="fa-solid fa-flag">
+
+</i>
+
+Signaler
+
+</button>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Page Loader
+========================================== -->
+
+<div
+    class="nv-page-loader"
+    hidden>
+
+
+<div
+    class="nv-loader">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Notification
+========================================== -->
+
+<div
+    id="notification"
+    class="notification">
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+Scripts
+========================================== -->
+
+
+<script
+    type="module"
+    src="js/pages/search.js">
+
+
+</script>
+
+
+
+
+</body>
+
+
+</html>
