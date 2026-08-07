@@ -548,7 +548,7 @@ function showUserHeader(){
             class="nv-icon-button"
             title="Publier">
 
-            <i class="fa-solid fa-circle-plus"></i>
+            <i class="fa-solid fa-plus nv-plus-icon"></i>
 
         </button>
 
