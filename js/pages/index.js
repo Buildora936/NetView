@@ -1312,7 +1312,7 @@ function createProductCard(product) {
             </div>
             
             <div class="nv-product-thumbnail">
-                <img src="${product.imageUrl || product.image_url || 'default-product.jpg'}" alt="${product.title || ''}" loading="lazy">
+                <img src="${product.thumbnail_path || product.preview_path || 'default-product.jpg'}" alt="${product.title || ''}" loading="lazy">
                 <div class="nv-product-overlay-actions">
                     <button class="nv-product-quick-view"><i class="fa-solid fa-eye"></i> Aperçu rapide</button>
                 </div>
