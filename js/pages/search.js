@@ -428,12 +428,14 @@ function loadInitialSearch(){
             query;
 
 
-        searchInput.value =
-            query;
+        if(searchInput){
+            searchInput.value = query;
+        }
 
 
-        mobileSearchInput.value =
-            query;
+        if(mobileSearchInput){
+            mobileSearchInput.value = query;
+        }
 
 
         executeSearch();
@@ -792,12 +794,14 @@ function hideSearchLoading(){
 function clearResults(){
 
 
-    searchResults.innerHTML =
-        "";
+    if(searchResults){
+        searchResults.innerHTML = "";
+    }
 
 
-    searchEmpty.hidden =
-        false;
+    if(searchEmpty){
+        searchEmpty.hidden = false;
+    }
 
 
 }
@@ -931,8 +935,10 @@ function addEventListeners(){
 
 
 
-                searchInput.value =
-                    searchQuery;
+                if(searchInput){
+                    searchInput.value =
+                        searchQuery;
+                }
 
 
 
@@ -1385,45 +1391,6 @@ function handleInfiniteScroll(){
 
 
 
-async function loadMoreResults(){
-
-
-    currentPage++;
-
-
-
-    loading = true;
-
-
-
-    try{
-
-
-        const more =
-            await executeSearch();
-
-
-
-    }
-
-    catch(error){
-
-
-        console.error(error);
-
-
-    }
-
-    finally{
-
-
-        loading = false;
-
-
-    }
-
-
-}
 // ==========================================
 // Rendu des résultats
 // ==========================================
@@ -1444,7 +1411,9 @@ function renderSearchResults(){
 
 
 
-    searchEmpty.hidden = true;
+    if(searchEmpty){
+        searchEmpty.hidden = true;
+    }
 
 
 
@@ -1454,7 +1423,9 @@ function renderSearchResults(){
         searchResultsData.length === 0
     ){
 
-        searchEmpty.hidden = false;
+        if(searchEmpty){
+            searchEmpty.hidden = false;
+        }
 
         return;
 
@@ -1698,6 +1669,13 @@ function createSectionTitle(title){
 // ==========================================
 
 
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+}
+
+
 function renderVideos(videos){
 
 
@@ -1721,7 +1699,7 @@ function renderVideos(videos){
 <article class="nv-search-video-card">
 
 
-<a class="nv-search-video-thumbnail">
+<a class="nv-search-video-thumbnail" href="watch.html?id=${video.id || ''}">
 
 
 <img
