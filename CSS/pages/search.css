@@ -1,0 +1,323 @@
+/* ==========================================
+   NetView
+   search.css
+   Partie 1
+========================================== */
+
+
+/* ==========================================
+   Search Page Layout
+========================================== */
+
+
+.nv-search-page{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+
+    padding-top:0;
+
+    margin-left:0;
+
+}
+
+
+
+
+
+/* ==========================================
+   Search Header
+========================================== */
+
+
+.nv-search-header{
+
+    width:100%;
+
+    padding:
+
+        1.5rem
+
+        2rem
+
+        1rem;
+
+}
+
+
+
+.nv-search-header h1{
+
+    margin:0;
+
+    color:
+
+        var(--nv-text);
+
+    font-size:
+
+        1.8rem;
+
+    font-weight:
+
+        var(--nv-bold);
+
+}
+
+
+
+
+
+/* ==========================================
+   Search Box
+========================================== */
+
+
+.nv-search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    width:100%;
+
+    max-width:700px;
+
+    margin-top:1rem;
+
+}
+
+
+
+
+
+.nv-search-box input{
+
+    flex:1;
+
+    height:46px;
+
+    padding:
+
+        0
+
+        1rem;
+
+    border:
+
+        1px solid var(--nv-border);
+
+    border-right:none;
+
+    border-radius:
+
+        var(--nv-radius-md)
+
+        0
+
+        0
+
+        var(--nv-radius-md);
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text);
+
+    outline:none;
+
+}
+
+
+
+.nv-search-box input:focus{
+
+    border-color:
+
+        var(--nv-primary);
+
+}
+
+
+
+
+
+.nv-search-box button{
+
+    width:55px;
+
+    height:46px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:
+
+        var(--nv-primary);
+
+    color:white;
+
+    border-radius:
+
+        0
+
+        var(--nv-radius-md)
+
+        var(--nv-radius-md)
+
+        0;
+
+}
+
+
+
+
+
+/* ==========================================
+   Search Filters
+========================================== */
+
+
+.nv-search-filters{
+
+    width:100%;
+
+    padding:
+
+        0
+
+        2rem;
+
+}
+
+
+
+.nv-search-filter-scroll{
+
+    display:flex;
+
+    gap:.75rem;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+
+}
+
+
+
+.nv-search-filter-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+
+
+
+.nv-search-filter{
+
+    flex-shrink:0;
+
+    padding:
+
+        .6rem
+
+        1.3rem;
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:
+
+        999px;
+
+    background:
+
+        var(--nv-surface);
+
+    color:
+
+        var(--nv-text-secondary);
+
+    font-weight:
+
+        var(--nv-medium);
+
+    transition:
+
+        .25s ease;
+
+}
+
+
+
+
+
+.nv-search-filter:hover{
+
+    background:
+
+        var(--nv-surface-hover);
+
+    color:
+
+        var(--nv-text);
+
+}
+
+
+
+
+
+.nv-search-filter.active{
+
+    background:
+
+        var(--nv-primary);
+
+    color:white;
+
+}
+
+
+
+
+
+/* ==========================================
+   Results Container
+========================================== */
+
+
+.nv-search-results{
+
+    width:100%;
+
+    padding:
+
+        1.5rem
+
+        2rem;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1.5rem;
+
+}
