@@ -826,32 +826,48 @@ body{
    Styles des cartes vidéos (NetView)
    ========================================== */
 
+/* ==========================================
+   Style Cartes Vidéos - Mode YouTube
+   ========================================== */
+
 .nv-videos-grid,
 .nv-videos-feed {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 16px 20px;
     width: 100%;
+}
+
+@media (min-width: 1400px) {
+    .nv-videos-grid,
+    .nv-videos-feed {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1900px) {
+    .nv-videos-grid,
+    .nv-videos-feed {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
 
 .nv-video-card {
     display: flex;
     flex-direction: column;
-    background-color: transparent;
+    background: transparent;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    font-family: "Roboto", Arial, sans-serif;
+    border: none;
+    padding: 0;
 }
 
-.nv-video-card:hover {
-    transform: translateY(-2px);
-}
-
-/* Miniature de la vidéo */
+/* Miniature 16:9 aux coins arrondis type YouTube */
 .nv-video-thumbnail {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background-color: #1a1a1a;
+    background-color: #0f0f0f;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -860,9 +876,15 @@ body{
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: border-radius 0.2s ease;
 }
 
-/* Badge de durée de la vidéo */
+/* Effet au survol de la carte (optionnel : aplatit les coins de la miniature comme sur YT) */
+.nv-video-card:hover .nv-video-thumbnail img {
+    border-radius: 0px;
+}
+
+/* Badge de durée sombre et arrondi */
 .nv-video-duration {
     position: absolute;
     bottom: 8px;
@@ -873,24 +895,26 @@ body{
     font-weight: 500;
     padding: 3px 6px;
     border-radius: 4px;
+    letter-spacing: 0.5px;
 }
 
-/* Contenu sous la miniature (Avatar + Infos) */
+/* Bloc d'informations sous la vidéo */
 .nv-video-content {
     display: flex;
     gap: 12px;
     margin-top: 12px;
     position: relative;
+    align-items: flex-start;
 }
 
-/* Avatar de la chaîne */
+/* Avatar circulaire de la chaîne */
 .nv-video-avatar {
     flex-shrink: 0;
     width: 36px;
     height: 36px;
     border-radius: 50%;
     overflow: hidden;
-    background-color: #2a2a2a;
+    background-color: #272727;
 }
 
 .nv-video-avatar img {
@@ -899,22 +923,21 @@ body{
     object-fit: cover;
 }
 
-/* Informations textuelles */
+/* Conteneur des textes */
 .nv-video-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0; /* Évite les dépassements de texte en flexbox */
+    min-width: 0;
 }
 
+/* Titre de la vidéo (max 2 lignes) */
 .nv-video-title {
     font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-color, #ffffff);
+    font-weight: 500;
+    color: #f1f1f1;
     line-height: 1.4;
-    margin: 0 0 4px 0;
-    
-    /* Limiter le titre à 2 lignes maximum */
+    margin: 0 0 6px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -922,45 +945,61 @@ body{
     text-overflow: ellipsis;
 }
 
+.nv-video-card:hover .nv-video-title {
+    color: #ffffff;
+}
+
+/* Nom de la chaîne */
 .nv-video-channel {
     font-size: 0.85rem;
-    color: var(--text-muted, #aaa);
+    color: #aaa;
     text-decoration: none;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .nv-video-channel:hover {
-    color: var(--text-color, #fff);
+    color: #ffffff;
 }
 
+/* Méta-données (vues • temps) */
 .nv-video-meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     font-size: 0.85rem;
-    color: var(--text-muted, #aaa);
+    color: #aaa;
 }
 
-/* Bouton menu contextuel à droite de la carte */
+/* Bouton 3 points vertical (caché par défaut, apparaît au survol de la carte comme sur YT) */
 .nv-video-menu-btn {
     background: none;
     border: none;
-    color: var(--text-muted, #aaa);
+    color: #aaa;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 50%;
-    height: 32px;
-    width: 32px;
+    padding: 0;
+    height: 36px;
+    width: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s, color 0.2s;
-    flex-shrink: 0;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: -4px;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s, color 0.2s;
+}
+
+.nv-video-card:hover .nv-video-menu-btn {
+    opacity: 1;
 }
 
 .nv-video-menu-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-color, #fff);
+    color: #ffffff;
 }
 /* ==========================================
    Ultra-Styled Product Card (NetView Store)
