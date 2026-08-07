@@ -1224,7 +1224,17 @@ body{
 
 }
 
+.nv-plus-icon {
+    color: blue; /* Changez la couleur */
+    font-size: 1.2rem; /* Ajustez la taille */
+    transition: transform 0.3s ease; /* Animation fluide */
+}
 
+/* Exemple d'effet au survol */
+.nv-plus-icon:hover {
+    transform: rotate(90deg);
+    color: var(--primary-color, #ff0000);
+}
 
 /* ==========================================
    Responsive Mobile
