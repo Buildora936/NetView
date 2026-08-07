@@ -840,181 +840,65 @@ body{
 
 
 
-/* ==========================================
-   Video Card
-========================================== */
+/* --- Style spécifique des cartes type YouTube --- */
 
-.nv-video-card{
-
-    position:relative;
-
-    min-width:0;
-
+.nv-video-card {
+    cursor: pointer;
 }
 
-
-
-.nv-video-thumbnail{
-
-    position:relative;
-
-    width:100%;
-
-    aspect-ratio:
-
-        16 / 9;
-
-    overflow:hidden;
-
-    border-radius:
-
-        12px;
-
-    background:
-
-        var(--nv-surface);
-
+/* Titre limité à 2 lignes maximum avec des points de suspension (...) */
+.nv-video-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--nv-text);
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-
-
-.nv-video-thumbnail img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
+/* Nom de la chaîne sous le titre */
+.nv-video-channel {
+    display: block;
+    font-size: 14px;
+    color: var(--nv-text-secondary);
+    text-decoration: none;
+    margin-bottom: 2px;
 }
 
-
-
-.nv-video-duration{
-
-    position:absolute;
-
-    right:8px;
-
-    bottom:8px;
-
-    padding:
-
-        3px 6px;
-
-    border-radius:
-
-        4px;
-
-    background:
-
-        rgba(0,0,0,.8);
-
-    color:white;
-
-    font-size:12px;
-
+.nv-video-channel:hover {
+    color: var(--nv-text);
 }
 
-
-
-.nv-video-content{
-
-    display:flex;
-
-    gap:12px;
-
-    margin-top:12px;
-
+/* Vues + Temps avec séparateur point (•) */
+.nv-video-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--nv-text-secondary);
 }
 
-
-
-.nv-video-avatar{
-
-    width:36px;
-
-    height:36px;
-
-    border-radius:50%;
-
-    overflow:hidden;
-
-    flex-shrink:0;
-
+/* Bouton option (trois points verticaux) masqué par défaut, apparaît au survol de la carte (optionnel, style YouTube) */
+.nv-video-content {
+    position: relative;
 }
 
-
-
-.nv-video-avatar img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
+.nv-video-card .nv-video-menu-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
 }
 
-
-
-.nv-video-info{
-
-    flex:1;
-
+.nv-video-card:hover .nv-video-menu-btn {
+    opacity: 1;
 }
-
-
-
-.nv-video-title{
-
-    display:block;
-
-    color:
-
-        var(--nv-text);
-
-    font-weight:
-
-        600;
-
-    line-height:1.3;
-
-}
-
-
-
-.nv-video-channel,
-
-.nv-video-meta{
-
-    color:
-
-        var(--nv-text-secondary);
-
-    font-size:
-
-        14px;
-
-}
-
-
-
-.nv-video-menu{
-
-    border:none;
-
-    background:none;
-
-    color:
-
-        var(--nv-text);
-
-    cursor:pointer;
-
-}
-
-
 
 /* ==========================================
    Shorts
