@@ -9,46 +9,27 @@
 // ==========================================
 
 import{
-
     getSession,
-
     getUser,
-
     signOut
-
 }from "../core/auth.js";
 
-
 import{
-
     getProfile,
-
     getVideos,
-
     getShorts,
-
     getLives,
-
     getSponsoredProducts
-
 }from "../core/data.js";
 
-
 import{
-
     showLoader,
-
     hideLoader,
-
     buttonLoading
-
 }from "../core/ui.js";
 
-
 import{
-
     navigate
-
 }from "../core/navigation.js";
 
 
@@ -1017,7 +998,7 @@ function renderVideos(){
 
             }
 
-        }); // Correction : fermeture correcte de la boucle forEach
+        });
 
     });
 
@@ -1075,7 +1056,7 @@ function renderShorts(){
 
             }
 
-        }); // Correction : fermeture correcte de la boucle forEach
+        });
 
     });
 
@@ -1164,32 +1145,36 @@ function renderProducts(){
 // ==========================================
 
 function createVideoCard(video) {
-    return `
-        <article class="nv-video-card" data-id="${video.id || ''}">
-            <div class="nv-video-thumbnail">
-                <img src="${video.thumbnailUrl || 'default-thumb.jpg'}" alt="${video.title}" loading="lazy">
-                <span class="nv-video-duration">${video.duration || '0:00'}</span>
+    const article = document.createElement("article");
+    article.className = "nv-video-card";
+    article.dataset.id = video.id || "";
+    
+    article.innerHTML = `
+        <div class="nv-video-thumbnail">
+            <img src="${video.thumbnailUrl || video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
+            <span class="nv-video-duration">${video.duration || '0:00'}</span>
+        </div>
+        <div class="nv-video-content">
+            <div class="nv-video-avatar">
+                <img src="${video.channelAvatar || video.avatar_url || 'default-avatar.jpg'}" alt="${video.channelName || ''}" loading="lazy">
             </div>
-            <div class="nv-video-content">
-                <div class="nv-video-avatar">
-                    <img src="${video.channelAvatar || 'default-avatar.jpg'}" alt="${video.channelName}" loading="lazy">
+            <div class="nv-video-info">
+                <h3 class="nv-video-title">${video.title || ''}</h3>
+                <a href="#" class="nv-video-channel">${video.channelName || video.channel_name || ''}</a>
+                <div class="nv-video-meta">
+                    <span>${formatViews(video.views || 0)} vues</span>
+                    <span>•</span>
+                    <span>${video.timeAgo || video.created_at || 'Il y a un moment'}</span>
                 </div>
-                <div class="nv-video-info">
-                    <h3 class="nv-video-title">${video.title}</h3>
-                    <a href="#" class="nv-video-channel">${video.channelName}</a>
-                    <div class="nv-video-meta">
-                        <span>${video.views || '0'} vues</span>
-                        <span>•</span>
-                        <span>${video.timeAgo || 'Il y a un moment'}</span>
-                    </div>
-                </div>
-                <button class="nv-icon-button nv-video-menu-btn" aria-label="Action menu">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </button>
             </div>
-        </article>
+            <button class="nv-icon-button nv-video-menu-btn nv-video-menu" data-video="${video.id || ''}" aria-label="Action menu">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </div>
     `;
+    return article;
 }
+
 // ==========================================
 // Short Card
 // ==========================================
@@ -1232,7 +1217,7 @@ function createShortCard(short){
 
                 <p>
 
-                    ${short.views} vues
+                    ${formatViews(short.views)} vues
 
                 </p>
 
@@ -1316,7 +1301,8 @@ function createLiveCard(live){
 // ==========================================
 
 function createProductCard(product) {
-    return `
+    const div = document.createElement("div");
+    div.innerHTML = `
         <article class="nv-product-card" data-id="${product.id || ''}">
             <div class="nv-product-badge-container">
                 ${product.badge ? `<span class="nv-product-badge">${product.badge}</span>` : ''}
@@ -1326,7 +1312,7 @@ function createProductCard(product) {
             </div>
             
             <div class="nv-product-thumbnail">
-                <img src="${product.imageUrl || 'default-product.jpg'}" alt="${product.title}" loading="lazy">
+                <img src="${product.imageUrl || product.image_url || 'default-product.jpg'}" alt="${product.title || ''}" loading="lazy">
                 <div class="nv-product-overlay-actions">
                     <button class="nv-product-quick-view"><i class="fa-solid fa-eye"></i> Aperçu rapide</button>
                 </div>
@@ -1334,7 +1320,7 @@ function createProductCard(product) {
 
             <div class="nv-product-content">
                 <div class="nv-product-category-tag">${product.category || 'Lifestyle'}</div>
-                <h3 class="nv-product-title">${product.title}</h3>
+                <h3 class="nv-product-title">${product.title || ''}</h3>
                 
                 <div class="nv-product-rating">
                     <div class="nv-stars">
@@ -1344,13 +1330,13 @@ function createProductCard(product) {
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star-half-stroke"></i>
                     </div>
-                    <span class="nv-rating-count">(${product.reviewsCount || '128'})</span>
+                    <span class="nv-rating-count">(${product.reviewsCount || product.reviews_count || '128'})</span>
                 </div>
 
                 <div class="nv-product-footer">
                     <div class="nv-product-price-box">
                         <span class="nv-product-price">${product.price || '0,00 €'}</span>
-                        ${product.oldPrice ? `<span class="nv-product-old-price">${product.oldPrice}</span>` : ''}
+                        ${product.oldPrice || product.old_price ? `<span class="nv-product-old-price">${product.oldPrice || product.old_price}</span>` : ''}
                     </div>
                     <button class="nv-product-buy-btn" aria-label="Acheter le produit">
                         <i class="fa-solid fa-bag-shopping"></i>
@@ -1360,6 +1346,7 @@ function createProductCard(product) {
             </div>
         </article>
     `;
+    return div.firstElementChild;
 }
 
 // ==========================================
@@ -1971,7 +1958,6 @@ function hideEmptyState(container){
     container.innerHTML = "";
 
 }
-
 
 // ==========================================
 // Clear Containers
