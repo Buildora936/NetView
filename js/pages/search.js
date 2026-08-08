@@ -1,360 +1,194 @@
-// ==========================================
-// NetView
-// search.js
-// Partie 1
-// Imports + DOM + Variables globales
-// ==========================================
 
-
-
-// ==========================================
-// Core Imports
-// ==========================================
-
+import { getSession } from "../core/auth.js";
 
 import {
-
-    getSession
-
-} from "../core/auth.js";
-
-
-
-import {
-
     searchVideos,
     searchShorts,
     searchChannels,
     searchLives,
     searchProducts
-
 } from "../core/data.js";
 
-
-
 import {
-
     showLoader,
     hideLoader,
     showToast
-
 } from "../core/ui.js";
 
-
-
-import {
-
-    navigate
-
-} from "../core/navigation.js";
-
-
-
-
-
+import { navigate } from "../core/navigation.js";
 // ==========================================
 // DOM Elements
 // ==========================================
-
-
 // Header
-
 const header =
 document.querySelector(".nv-header");
-
 
 const menuButton =
 document.getElementById(
     "menuButton"
 );
 
-
-
 const searchForm =
 document.getElementById(
     "searchForm"
 );
-
-
 
 const searchInput =
 document.getElementById(
     "searchInput"
 );
 
-
-
 const searchButton =
 document.querySelector(
     ".nv-search-button"
 );
 
-
-
-
 // Mobile Search
-
 const mobileSearchForm =
 document.getElementById(
     "mobileSearchForm"
 );
-
-
 
 const mobileSearchInput =
 document.getElementById(
     "mobileSearchInput"
 );
 
-
-
-
-
 // Sidebar
-
 const sidebar =
 document.getElementById(
     "sidebar"
 );
-
-
 
 const sidebarOverlay =
 document.getElementById(
     "sidebarOverlay"
 );
 
-
-
-
-
 // Header User
-
 const headerRight =
 document.querySelector(
     ".nv-header-right"
 );
 
-
-
-
-
 // Filters
-
 const searchFilters =
 document.querySelectorAll(
     ".nv-search-filter"
 );
 
-
-
-
-
 // Results
-
 const searchResults =
 document.getElementById(
     "searchResults"
 );
-
-
 
 const searchSkeleton =
 document.getElementById(
     "searchSkeleton"
 );
 
-
-
 const searchEmpty =
 document.getElementById(
     "searchEmpty"
 );
-
-
 
 const searchLoader =
 document.getElementById(
     "searchLoader"
 );
 
-
-
-
-
 // Context Menu
-
 const contextMenu =
 document.getElementById(
     "contextMenu"
 );
 
-
-
-
-
 // Notification
-
 const notification =
 document.getElementById(
     "notification"
 );
-
-
-
-
-
-
-
 // ==========================================
 // Variables Globales
 // ==========================================
 
-
-
 let currentUser = null;
-
-
 
 let searchQuery = "";
 
-
-
 let currentType = "all";
-
-
 
 let searchResultsData = [];
 
-
-
 let currentPage = 1;
-
-
 
 let loading = false;
 
-
-
 let hasMore = true;
-
-
 
 let sidebarOpen = false;
 
-
-
 let isMobile = false;
-
-
 
 let searchTimeout = null;
 
-
-
 let currentSearchController = null;
-
-
-
-
-
 // ==========================================
 // Responsive Search State
 // ==========================================
 
-
 const mobileBreakpoint = 768;
-
 // ==========================================
 // Initialisation
 // ==========================================
-
-
 async function init(){
 
-
-    await checkSession();
-
+   await checkSession();
 
     setupSearchBar();
 
-
     addEventListeners();
-
 
     loadInitialSearch();
 
-
 }
-
-
-
-
 
 // ==========================================
 // Vérification session
 // ==========================================
-
-
 async function checkSession(){
-
 
     const session =
         await getSession();
 
-
     if(session){
-
-
         currentUser =
             session.user;
-
-
     }
 
-
 }
-
-
-
-
 
 // ==========================================
 // Gestion des deux barres de recherche
 // Desktop / Mobile
 // ==========================================
-
-
 function setupSearchBar(){
 
-
     updateSearchBarVisibility();
-
-
 
     window.addEventListener(
         "resize",
         updateSearchBarVisibility
     );
 
-
 }
-
-
-
-
 
 function updateSearchBarVisibility(){
 
-
     isMobile =
         window.innerWidth <= mobileBreakpoint;
-
-
-
     if(isMobile){
-
-
         if(searchForm){
 
             searchForm.style.display =
@@ -362,12 +196,10 @@ function updateSearchBarVisibility(){
 
         }
 
-
         if(mobileSearchForm){
 
             mobileSearchForm.style.display =
                 "flex";
-
         }
 
 
@@ -397,12 +229,6 @@ function updateSearchBarVisibility(){
 
 }
 
-
-
-
-
-
-
 // ==========================================
 // Recherche initiale
 // ==========================================
@@ -416,8 +242,7 @@ function loadInitialSearch(){
             window.location.search
         );
 
-
-    const query =
+   const query =
         params.get("q");
 
 
@@ -445,10 +270,6 @@ function loadInitialSearch(){
 
 
 }
-
-
-
-
 
 // ==========================================
 // Recherche principale
@@ -733,10 +554,6 @@ async function searchAll(){
 }
 
 
-
-
-
-
 // ==========================================
 // Chargement visuel
 // ==========================================
@@ -767,8 +584,6 @@ function showSearchLoading(){
 
 
 
-
-
 function hideSearchLoading(){
 
 
@@ -781,10 +596,6 @@ function hideSearchLoading(){
 
 
 }
-
-
-
-
 
 // ==========================================
 // Nettoyage résultats
