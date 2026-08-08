@@ -148,30 +148,20 @@ Header
 
 <header class="nv-header">
 
-
-    <!-- ======================================
-    Header Left
-    ====================================== -->
-
     <div class="nv-header-left">
-
 
         <button
             id="menuButton"
             class="nv-icon-button"
-            type="button"
-            aria-label="Ouvrir le menu"
-            aria-expanded="false">
+            aria-label="Menu">
 
             <i class="fa-solid fa-bars"></i>
 
         </button>
 
-
         <a
             href="index.html"
-            class="nv-logo"
-            aria-label="NetView">
+            class="nv-logo">
 
             <img
                 src="NetView.png"
@@ -179,152 +169,67 @@ Header
 
         </a>
 
-
     </div>
-
-
-    <!-- ======================================
-    Header Center
-    ====================================== -->
 
     <div class="nv-header-center">
 
-
         <form
             id="searchForm"
-            class="nv-search-form"
-            role="search">
-
+            class="nv-search-form">
 
             <input
                 id="searchInput"
                 class="nv-search-input"
                 type="search"
-                name="q"
-                placeholder="Rechercher"
-                autocomplete="off"
-                aria-label="Rechercher">
-
+                placeholder="Rechercher">
 
             <button
                 class="nv-search-button"
-                type="submit"
-                aria-label="Rechercher">
+                type="submit">
 
-                <i
-                    class="fa-solid fa-magnifying-glass">
-                </i>
+                <i class="fa-solid fa-magnifying-glass"></i>
 
             </button>
-
 
         </form>
 
-
     </div>
 
+    <div
+        id="headerRight"
+        class="nv-header-right">
 
-    <!-- ======================================
-    Header Right
-    ====================================== -->
-
-    <div class="nv-header-right">
-
-
-        <!-- Guest/User controls injected by JS -->
-
-        <div
-            id="headerGuestActions"
-            class="nv-header-actions"
-            hidden>
-
-            <a
-                href="auth.html"
-                class="nv-login-button">
-
-                S'identifier
-
-            </a>
-
-        </div>
-
-
-        <div
-            id="headerUserActions"
-            class="nv-header-actions"
-            hidden>
-
-
-            <button
-                id="uploadButton"
-                class="nv-icon-button"
-                type="button"
-                title="Publier"
-                aria-label="Publier">
-
-                <i
-                    class="fa-solid fa-circle-plus">
-                </i>
-
-            </button>
-
-
-            <button
-                id="notificationsButton"
-                class="nv-icon-button"
-                type="button"
-                title="Notifications"
-                aria-label="Notifications">
-
-                <i
-                    class="fa-regular fa-bell">
-                </i>
-
-                <span
-                    id="notificationBadge"
-                    class="nv-badge"
-                    hidden>
-
-                    0
-
-                </span>
-
-            </button>
-
-
-            <a
-                href="settings.html"
-                id="headerAvatarLink"
-                class="nv-avatar-button"
-                aria-label="Mon compte">
-
-                <img
-                    id="headerAvatar"
-                    src="images/default-avatar.png"
-                    alt="Avatar">
-
-            </a>
-
-
-        </div>
-
+        <!-- Rempli dynamiquement par index.js -->
 
     </div>
-
 
 </header>
 
+<!-- ==========================================
+Sidebar
+========================================== -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar">
+
+    <nav class="nv-sidebar-nav">
+
+        <!-- Généré par index.js -->
+
+    </nav>
+
+</aside>
 
 <!-- ==========================================
-Sidebar Overlay
+Mobile Overlay
 ========================================== -->
 
 <div
     id="sidebarOverlay"
-    class="nv-sidebar-overlay"
-    aria-hidden="true">
-</div>
+    class="nv-sidebar-overlay">
 
+</div>
 
 <!-- ==========================================
 Sidebar
