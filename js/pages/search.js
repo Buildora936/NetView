@@ -1,4 +1,3 @@
-
 import { getSession } from "../core/auth.js";
 
 import {
@@ -153,6 +152,9 @@ async function init(){
     loadInitialSearch();
 
 }
+
+// Lancement automatique au chargement du module
+init();
 
 // ==========================================
 // Vérification session
@@ -1271,8 +1273,6 @@ function renderSearchResults(){
         break;
 
 
-
-
         case "channels":
 
 
@@ -1281,8 +1281,6 @@ function renderSearchResults(){
             );
 
         break;
-
-
 
 
         case "lives":
@@ -1295,8 +1293,6 @@ function renderSearchResults(){
         break;
 
 
-
-
         case "products":
 
 
@@ -1306,11 +1302,7 @@ function renderSearchResults(){
 
         break;
 
-
-
-
         default:
-
 
             renderAllResults(
                 searchResultsData
@@ -1324,13 +1316,6 @@ function renderSearchResults(){
 
 
 }
-
-
-
-
-
-
-
 // ==========================================
 // Tout afficher
 // ==========================================
@@ -2457,19 +2442,12 @@ function cleanup(){
 
         currentSearchController.abort();
 
-
         currentSearchController = null;
 
 
     }
 
-
-
 }
-
-
-
-
 
 // ==========================================
 // Avant fermeture page
@@ -2480,14 +2458,3 @@ window.addEventListener(
     "beforeunload",
     cleanup
 );
-
-
-
-
-
-// ==========================================
-// Lancement
-// ==========================================
-
-
-init();
