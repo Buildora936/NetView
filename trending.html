@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Découvrez les contenus les plus populaires sur NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Tendances - NetView
+    </title>
+
+
+    <!-- ==========================================
+    Font Awesome
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- ==========================================
+    Core CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/animations.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/utilities.css"
+    >
+
+
+    <!-- ==========================================
+    Components CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/forms.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/loader.css"
+    >
+
+
+    <!-- ==========================================
+    Trending CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/pages/trending.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+NetView Background
+========================================== -->
+
+<div
+    class="nv-home-background"
+    aria-hidden="true">
+
+    <div class="nv-orb nv-orb-one"></div>
+
+    <div class="nv-orb nv-orb-two"></div>
+
+    <div class="nv-orb nv-orb-three"></div>
+
+</div>
+
+
+<!-- ==========================================
+Header
+========================================== -->
+
+<header class="nv-header">
+
+
+    <!-- ======================================
+    Header Left
+    ====================================== -->
+
+    <div class="nv-header-left">
+
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-expanded="false">
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView">
+
+            <img
+                src="NetView.png"
+                alt="NetView">
+
+        </a>
+
+
+    </div>
+
+
+    <!-- ======================================
+    Header Center
+    ====================================== -->
+
+    <div class="nv-header-center">
+
+
+        <form
+            id="searchForm"
+            class="nv-search-form"
+            role="search">
+
+
+            <input
+                id="searchInput"
+                class="nv-search-input"
+                type="search"
+                name="q"
+                placeholder="Rechercher"
+                autocomplete="off"
+                aria-label="Rechercher">
+
+
+            <button
+                class="nv-search-button"
+                type="submit"
+                aria-label="Rechercher">
+
+                <i
+                    class="fa-solid fa-magnifying-glass">
+                </i>
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- ======================================
+    Header Right
+    ====================================== -->
+
+    <div class="nv-header-right">
+
+
+        <!-- Guest/User controls injected by JS -->
+
+        <div
+            id="headerGuestActions"
+            class="nv-header-actions"
+            hidden>
+
+            <a
+                href="auth.html"
+                class="nv-login-button">
+
+                S'identifier
+
+            </a>
+
+        </div>
+
+
+        <div
+            id="headerUserActions"
+            class="nv-header-actions"
+            hidden>
+
+
+            <button
+                id="uploadButton"
+                class="nv-icon-button"
+                type="button"
+                title="Publier"
+                aria-label="Publier">
+
+                <i
+                    class="fa-solid fa-circle-plus">
+                </i>
+
+            </button>
+
+
+            <button
+                id="notificationsButton"
+                class="nv-icon-button"
+                type="button"
+                title="Notifications"
+                aria-label="Notifications">
+
+                <i
+                    class="fa-regular fa-bell">
+                </i>
+
+                <span
+                    id="notificationBadge"
+                    class="nv-badge"
+                    hidden>
+
+                    0
+
+                </span>
+
+            </button>
+
+
+            <a
+                href="settings.html"
+                id="headerAvatarLink"
+                class="nv-avatar-button"
+                aria-label="Mon compte">
+
+                <img
+                    id="headerAvatar"
+                    src="images/default-avatar.png"
+                    alt="Avatar">
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</header>
+
+
+<!-- ==========================================
+Sidebar Overlay
+========================================== -->
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+    aria-hidden="true">
+</div>
+
+
+<!-- ==========================================
+Sidebar
+Fermée par défaut
+========================================== -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+    aria-label="Navigation principale">
+
+
+    <nav class="nv-sidebar-nav">
+
+
+        <!-- ==================================
+        Principal
+        ================================== -->
+
+        <div class="nv-sidebar-section">
+
+
+            <a
+                href="index.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>
+                    Accueil
+                </span>
+
+            </a>
+
+
+            <a
+                href="trending.html"
+                class="nv-sidebar-item active">
+
+                <i class="fa-solid fa-fire"></i>
+
+                <span>
+                    Tendances
+                </span>
+
+            </a>
+
+
+            <a
+                href="subscriptions.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-layer-group"></i>
+
+                <span>
+                    Abonnements
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- ==================================
+        Compte
+        ================================== -->
+
+        <div class="nv-sidebar-section">
+
+
+            <div class="nv-sidebar-heading">
+
+                Vous
+
+            </div>
+
+
+            <a
+                href="library.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-photo-film"></i>
+
+                <span>
+                    Bibliothèque
+                </span>
+
+            </a>
+
+
+            <a
+                href="playlist.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-list"></i>
+
+                <span>
+                    Playlists
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- ==================================
+        Création
+        ================================== -->
+
+        <div class="nv-sidebar-section">
+
+
+            <div class="nv-sidebar-heading">
+
+                Créer
+
+            </div>
+
+
+            <a
+                href="add-channel.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-video"></i>
+
+                <span>
+                    Créer une chaîne
+                </span>
+
+            </a>
+
+
+            <a
+                href="add-live.html"
+                class="nv-sidebar-item">
+
+                <i class="fa-solid fa-tower-broadcast"></i>
+
+                <span>
+                    Démarrer un live
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+    </nav>
+
+</aside>
+
+
+<!-- ==========================================
+Categories
+========================================== -->
+
+<section
+    class="nv-categories"
+    aria-label="Catégories">
+
+
+    <div
+        class="nv-categories-scroll">
+
+
+        <button
+            class="nv-category active"
+            type="button"
+            data-category="">
+
+            Tous
+
+        </button>
+
+
+        <!-- Les catégories seront générées par trending.js -->
+
+
+    </div>
+
+
+</section>
+
+
+<!-- ==========================================
+Main
+========================================== -->
+
+<main
+    id="mainContent"
+    class="nv-home nv-trending-main">
+
+<!-- ==========================================
+Trending Header
+========================================== -->
+
+<section
+    class="nv-trending-header">
+
+    <div class="nv-trending-heading">
+
+        <span
+            class="nv-trending-icon">
+
+            <i class="fa-solid fa-fire"></i>
+
+        </span>
+
+        <div>
+
+            <h1>
+                Tendances
+            </h1>
+
+            <p>
+                Les contenus les plus regardés sur NetView
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+Trending Videos
+========================================== -->
+
+<section
+    class="nv-trending-section"
+    id="trendingVideosSection">
+
+    <div
+        class="nv-section-header">
+
+        <div>
+
+            <h2>
+                Vidéos tendance
+            </h2>
+
+            <p>
+                Les vidéos qui attirent le plus l'attention
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="trendingVideos"
+        class="nv-trending-video-list">
+
+        <!--
+        Les vidéos tendance seront générées
+        dynamiquement par trending.js
+        -->
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+Trending Shorts
+========================================== -->
+
+<section
+    class="nv-trending-section"
+    id="trendingShortsSection">
+
+    <div
+        class="nv-section-header">
+
+        <div>
+
+            <h2>
+                Shorts tendance
+            </h2>
+
+            <p>
+                Les Shorts les plus populaires
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="trendingShorts"
+        class="nv-shorts-grid">
+
+        <!--
+        Shorts générés par trending.js
+        -->
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+Trending Lives
+========================================== -->
+
+<section
+    class="nv-trending-section"
+    id="trendingLivesSection">
+
+    <div
+        class="nv-section-header">
+
+        <div>
+
+            <h2>
+                Lives tendance
+            </h2>
+
+            <p>
+                Les directs les plus regardés
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="trendingLives"
+        class="nv-horizontal-scroll">
+
+        <!--
+        Lives générés par trending.js
+        -->
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+Sponsored Products
+========================================== -->
+
+<section
+    class="nv-trending-section"
+    id="trendingProductsSection">
+
+    <div
+        class="nv-section-header">
+
+        <div>
+
+            <h2>
+                Produits sponsorisés tendance
+            </h2>
+
+            <p>
+                Découvrez les produits populaires de la communauté
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="trendingProducts"
+        class="nv-horizontal-scroll">
+
+        <!--
+        Produits générés par trending.js
+        -->
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+Trending Ranking
+========================================== -->
+
+<section
+    class="nv-trending-section"
+    id="trendingRankingSection">
+
+    <div
+        class="nv-section-header">
+
+        <div>
+
+            <h2>
+                Classement des tendances
+            </h2>
+
+            <p>
+                Les contenus les plus performants actuellement
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="trendingRanking"
+        class="nv-trending-ranking">
+
+        <!--
+        Classement généré par trending.js
+        -->
+
+    </div>
+
+</section>
+  
+</main>
+<!-- ==========================================
+Skeleton Loaders
+========================================== -->
+
+<section
+    id="trendingSkeleton"
+    class="nv-trending-skeleton"
+    hidden
+    aria-hidden="true">
+
+    <div class="nv-skeleton nv-skeleton-trending"></div>
+
+    <div class="nv-skeleton nv-skeleton-trending"></div>
+
+    <div class="nv-skeleton nv-skeleton-trending"></div>
+
+</section>
+
+
+<!-- ==========================================
+Empty State
+========================================== -->
+
+<section
+    id="trendingEmpty"
+    class="nv-empty-state"
+    hidden>
+
+    <div class="nv-empty-icon">
+
+        <i class="fa-solid fa-fire"></i>
+
+    </div>
+
+    <h2>
+        Aucune tendance disponible
+    </h2>
+
+    <p>
+        Les contenus populaires apparaîtront ici
+        lorsqu'ils seront disponibles.
+    </p>
+
+    <a
+        href="index.html"
+        class="nv-button">
+
+        Retour à l'accueil
+
+    </a>
+
+</section>
+
+
+<!-- ==========================================
+Full Page Loader
+========================================== -->
+
+<div
+    id="pageLoader"
+    class="nv-page-loader"
+    hidden
+    aria-hidden="true">
+
+    <div class="nv-loader">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+Context Menu
+========================================== -->
+
+<div
+    id="contextMenu"
+    class="nv-context-menu"
+    hidden>
+
+    <button
+        type="button"
+        data-action="save">
+
+        <i class="fa-regular fa-clock"></i>
+
+        <span>
+            Enregistrer
+        </span>
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="share">
+
+        <i class="fa-solid fa-share"></i>
+
+        <span>
+            Partager
+        </span>
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="not-interested">
+
+        <i class="fa-solid fa-ban"></i>
+
+        <span>
+            Pas intéressé
+        </span>
+
+    </button>
+
+</div>
+
+
+<!-- ==========================================
+Notification
+========================================== -->
+
+<div
+    id="notification"
+    class="notification"
+    role="status"
+    aria-live="polite">
+</div>
+
+
+<!-- ==========================================
+Scripts
+========================================== -->
+
+<script
+    type="module"
+    src="js/pages/trending.js">
+</script>
+
+
+</body>
+
+</html>
