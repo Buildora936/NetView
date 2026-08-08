@@ -141,6 +141,7 @@ NetView Background
 
 </div>
 
+
 <!-- ==========================================
 Header
 ========================================== -->
@@ -170,6 +171,7 @@ Header
 
     </div>
 
+
     <div class="nv-header-center">
 
         <form
@@ -180,11 +182,14 @@ Header
                 id="searchInput"
                 class="nv-search-input"
                 type="search"
-                placeholder="Rechercher">
+                placeholder="Rechercher"
+                autocomplete="off"
+            >
 
             <button
                 class="nv-search-button"
-                type="submit">
+                type="submit"
+                aria-label="Rechercher">
 
                 <i class="fa-solid fa-magnifying-glass"></i>
 
@@ -194,15 +199,24 @@ Header
 
     </div>
 
+
     <div
         id="headerRight"
         class="nv-header-right">
 
-        <!-- Rempli dynamiquement par index.js -->
+        <!--
+        Rempli dynamiquement par trending.js
+        Visiteur :
+        bouton S'identifier
+
+        Utilisateur :
+        + / Notifications / Avatar
+        -->
 
     </div>
 
 </header>
+
 
 <!-- ==========================================
 Sidebar
@@ -214,11 +228,12 @@ Sidebar
 
     <nav class="nv-sidebar-nav">
 
-        <!-- Généré par index.js -->
+        <!-- Généré dynamiquement par trending.js -->
 
     </nav>
 
 </aside>
+
 
 <!-- ==========================================
 Mobile Overlay
@@ -229,42 +244,413 @@ Mobile Overlay
     class="nv-sidebar-overlay">
 
 </div>
+
+
 <!-- ==========================================
 Categories
 ========================================== -->
 
 <section class="nv-categories">
 
-<div
-    class="nv-categories-scroll">
+    <div
+        class="nv-categories-scroll">
 
-<button
-    class="nv-category active">
+        <button
+            type="button"
+            class="nv-category active"
+            data-category="all">
 
-Tous
+            Tous
 
-</button>
+        </button>
 
-<!-- Les catégories seront générées par index.js -->
+        <!--
+        Les catégories seront générées
+        dynamiquement par trending.js
+        -->
 
-</div>
+    </div>
 
 </section>
+
 
 <!-- ==========================================
 Main
 ========================================== -->
 
-<main class="nv-home">
+<main
+    id="mainContent"
+    class="nv-home nv-trending-main">
 
 
+    <!-- ==========================================
+    Trending Header
+    ========================================== -->
 
-<!-- Notification -->
-    <div id="notification" class="notification"></div>
+    <section
+        class="nv-trending-header">
+
+        <div class="nv-trending-heading">
+
+            <span class="nv-trending-icon">
+
+                <i class="fa-solid fa-fire"></i>
+
+            </span>
+
+            <div>
+
+                <h1>
+                    Tendances
+                </h1>
+
+                <p>
+                    Les contenus les plus populaires sur NetView
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Trending Videos
+    ========================================== -->
+
+    <section
+        id="trendingVideosSection"
+        class="nv-trending-section">
+
+        <div class="nv-section-header">
+
+            <div>
+
+                <h2>
+                    Vidéos tendance
+                </h2>
+
+                <p>
+                    Les vidéos les plus populaires
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trendingVideos"
+            class="nv-trending-video-list">
+
+            <!--
+            Généré dynamiquement par trending.js
+            -->
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Trending Shorts
+    ========================================== -->
+
+    <section
+        id="trendingShortsSection"
+        class="nv-trending-section">
+
+        <div class="nv-section-header">
+
+            <div>
+
+                <h2>
+                    Shorts tendance
+                </h2>
+
+                <p>
+                    Les Shorts les plus populaires
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trendingShorts"
+            class="nv-shorts-grid">
+
+            <!--
+            Généré dynamiquement par trending.js
+            Scroll horizontal via trending.css
+            -->
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Trending Lives
+    ========================================== -->
+
+    <section
+        id="trendingLivesSection"
+        class="nv-trending-section">
+
+        <div class="nv-section-header">
+
+            <div>
+
+                <h2>
+                    Lives tendance
+                </h2>
+
+                <p>
+                    Les directs les plus regardés
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trendingLives"
+            class="nv-horizontal-scroll">
+
+            <!--
+            Généré dynamiquement par trending.js
+            Scroll horizontal
+            -->
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Sponsored Products
+    ========================================== -->
+
+    <section
+        id="trendingProductsSection"
+        class="nv-trending-section">
+
+        <div class="nv-section-header">
+
+            <div>
+
+                <h2>
+                    Produits sponsorisés tendance
+                </h2>
+
+                <p>
+                    Les produits populaires
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trendingProducts"
+            class="nv-horizontal-scroll">
+
+            <!--
+            Généré dynamiquement par trending.js
+            Scroll horizontal
+            -->
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Trending Ranking
+    ========================================== -->
+
+    <section
+        id="trendingRankingSection"
+        class="nv-trending-section">
+
+        <div class="nv-section-header">
+
+            <div>
+
+                <h2>
+                    Classement des tendances
+                </h2>
+
+                <p>
+                    Les contenus les plus performants
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trendingRanking"
+            class="nv-trending-ranking">
+
+            <!--
+            Généré dynamiquement par trending.js
+            -->
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Skeleton Loaders
+    ========================================== -->
+
+    <section
+        id="trendingSkeleton"
+        class="nv-trending-skeleton"
+        hidden
+        aria-hidden="true">
+
+        <div class="nv-skeleton nv-skeleton-trending"></div>
+
+        <div class="nv-skeleton nv-skeleton-trending"></div>
+
+        <div class="nv-skeleton nv-skeleton-trending"></div>
+
+    </section>
+
+
+    <!-- ==========================================
+    Empty State
+    ========================================== -->
+
+    <section
+        id="trendingEmpty"
+        class="nv-empty-state"
+        hidden>
+
+        <div class="nv-empty-icon">
+
+            <i class="fa-solid fa-fire"></i>
+
+        </div>
+
+        <h2>
+            Aucune tendance disponible
+        </h2>
+
+        <p>
+            Les contenus populaires apparaîtront ici
+            lorsqu'ils seront disponibles.
+        </p>
+
+        <a
+            href="index.html"
+            class="nv-button">
+
+            Retour à l'accueil
+
+        </a>
+
+    </section>
+
+</main>
 
 
 <!-- ==========================================
-Scripts
+Full Page Loader
+========================================== -->
+
+<div
+    id="pageLoader"
+    class="nv-page-loader"
+    hidden
+    aria-hidden="true">
+
+    <div class="nv-loader">
+
+        <span></span>
+
+        <span></span>
+
+        <span></span>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+Context Menu
+========================================== -->
+
+<div
+    id="contextMenu"
+    class="nv-context-menu"
+    hidden>
+
+    <button
+        type="button"
+        data-action="save">
+
+        <i class="fa-regular fa-clock"></i>
+
+        <span>
+            Enregistrer
+        </span>
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="share">
+
+        <i class="fa-solid fa-share"></i>
+
+        <span>
+            Partager
+        </span>
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="not-interested">
+
+        <i class="fa-solid fa-ban"></i>
+
+        <span>
+            Pas intéressé
+        </span>
+
+    </button>
+
+</div>
+
+
+<!-- ==========================================
+Notification
+========================================== -->
+
+<div
+    id="notification"
+    class="notification"
+    role="status"
+    aria-live="polite">
+</div>
+
+
+<!-- ==========================================
+Trending JavaScript
 ========================================== -->
 
 <script
