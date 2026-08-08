@@ -1,157 +1,201 @@
 /* ==========================================
-   NetView
-   trending.css
-   PARTIE 1
-   ========================================== */
+    NetView
+    index.css
+    Partie 1 — Layout général + Header + Sidebar
+========================================== */
 
 
 /* ==========================================
-   Trending Main
-   ========================================== */
-
-.nv-trending-main {
-
-    width: 100%;
-
-    min-height: calc(100vh - 120px);
-
-    padding: 28px 32px 60px;
-
-    position: relative;
-
-    z-index: 1;
-
+   NetView Background
+========================================== */
+/* --- Animated Background --- */
+.nv-home-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--nv-bg-main, #0f172a);
 }
 
-
-/* ==========================================
-   Trending Header
-   ========================================== */
-
-.nv-trending-header {
-
-    width: 100%;
-
-    margin-bottom: 28px;
-
-}
-
-
-.nv-trending-heading {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 16px;
-
-}
-
-
-.nv-trending-icon {
-
-    width: 52px;
-
-    height: 52px;
-
-    min-width: 52px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
+.nv-orb {
+    position: absolute;
     border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: floatOrb 20s infinite alternate ease-in-out;
+}
+
+.nv-orb.one {
+    width: 400px;
+    height: 400px;
+    background: var(--nv-primary, #2563eb);
+    top: -100px;
+    left: -100px;
+}
+
+.nv-orb.two {
+    width: 500px;
+    height: 500px;
+    background: #9333ea;
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.nv-orb.three {
+    width: 300px;
+    height: 300px;
+    background: #06b6d4;
+    top: 40%;
+    left: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes floatOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(50px, 50px) scale(1.1);
+    }
+}
+
+/* --- Main Layout --- */
+.nv-home {
+    padding: calc(var(--nv-header-height, 64px) + 20px) 24px 40px 24px;
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+@media (min-width: 1024px) {
+    .nv-home {
+        padding-left: calc(var(--nv-sidebar-width, 240px) + 24px);
+    }
+}
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width:600px){
+
+
+    .nv-orb.one{
+
+        width:280px;
+
+        height:280px;
+
+    }
+
+
+    .nv-orb.two{
+
+        width:250px;
+
+        height:250px;
+
+    }
+
+
+    .nv-orb.three{
+
+        width:220px;
+
+        height:220px;
+
+    }
+
+
+}
+/* ==========================================
+   Body
+========================================== */
+
+body{
+
+    min-height:100vh;
+
+    overflow-x:hidden;
 
     background:
-        rgba(37, 99, 235, 0.12);
 
-    color: #2563EB;
+        var(--nv-background);
 
-    font-size: 23px;
+    color:
 
-}
+        var(--nv-text);
 
-
-.nv-trending-heading h1 {
-
-    margin: 0;
-
-    font-size: 30px;
-
-    line-height: 1.2;
-
-    font-weight: 700;
-
-    color: var(--nv-text-primary, #111827);
+    position:relative;
 
 }
 
-
-.nv-trending-heading p {
-
-    margin: 6px 0 0;
-
-    font-size: 14px;
-
-    color: var(--nv-text-secondary, #6B7280);
-
-}
 
 
 /* ==========================================
-   Sections
-   ========================================== */
+   Header
+========================================== */
 
-.nv-trending-section {
+.nv-header{
 
-    width: 100%;
+    position:fixed;
 
-    margin-bottom: 42px;
+    top:0;
 
-}
+    left:0;
 
+    right:0;
 
-.nv-section-header {
+    height:64px;
 
-    display: flex;
+    display:flex;
 
-    align-items: center;
+    align-items:center;
 
-    justify-content: space-between;
+    justify-content:space-between;
 
-    gap: 16px;
+    padding:
 
-    margin-bottom: 18px;
+        0 16px;
 
-}
+    background:
 
+        var(--nv-surface);
 
-.nv-section-header h2 {
+    border-bottom:
 
-    margin: 0;
+        1px solid var(--nv-border);
 
-    font-size: 21px;
-
-    line-height: 1.3;
-
-    font-weight: 700;
-
-    color: var(--nv-text-primary, #111827);
+    z-index:1000;
 
 }
 
 
-.nv-section-header p {
 
-    margin: 5px 0 0;
+/* ==========================================
+   Header Left
+========================================== */
 
-    font-size: 13px;
+.nv-header-left{
 
-    color: var(--nv-text-secondary, #6B7280);
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    flex-shrink:0;
 
 }
+
+
+
 .nv-logo{
 
     display:flex;
@@ -172,1833 +216,606 @@
 }
 
 
+
 /* ==========================================
-   Trending Videos
-   EXACTEMENT 3 PAR LIGNE DESKTOP
-   ========================================== */
+   Header Center
+========================================== */
 
-.nv-trending-video-list {
+.nv-header-center{
 
-    width: 100%;
+    flex:1;
 
-    display: grid;
+    display:flex;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    justify-content:center;
 
-    gap: 28px 20px;
+    padding:0 40px;
 
 }
 
 
-/* ==========================================
-   Trending Video Card
-   ========================================== */
 
-.nv-trending-video-card {
+.nv-search-form{
 
-    min-width: 0;
+    display:flex;
 
-    position: relative;
+    width:100%;
 
-    border-radius: 14px;
+    max-width:640px;
 
-    overflow: hidden;
+    height:40px;
 
-    background:
-        var(--nv-card-background, #ffffff);
+}
+
+
+
+.nv-search-input{
+
+    flex:1;
 
     border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
 
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease;
+        1px solid var(--nv-border);
 
-}
+    border-right:none;
 
+    border-radius:
 
-.nv-trending-video-card:hover {
+        20px 0 0 20px;
 
-    transform: translateY(-3px);
+    padding:
 
-    box-shadow:
-        0 12px 30px
-        rgba(0, 0, 0, 0.09);
-
-}
-
-
-/* ==========================================
-   Video Thumbnail
-   ========================================== */
-
-.nv-trending-video-thumbnail {
-
-    display: block;
-
-    width: 100%;
-
-    aspect-ratio: 16 / 9;
-
-    position: relative;
-
-    overflow: hidden;
+        0 18px;
 
     background:
-        #E5E7EB;
 
-}
-
-
-.nv-trending-video-thumbnail img {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.3s ease;
-
-}
-
-
-.nv-trending-video-card:hover
-.nv-trending-video-thumbnail img {
-
-    transform: scale(1.035);
-
-}
-
-
-/* ==========================================
-   Duration
-   ========================================== */
-
-.nv-trending-video-duration {
-
-    position: absolute;
-
-    right: 8px;
-
-    bottom: 8px;
-
-    padding: 3px 6px;
-
-    border-radius: 4px;
-
-    background:
-        rgba(0, 0, 0, 0.82);
-
-    color: #ffffff;
-
-    font-size: 11px;
-
-    line-height: 1.2;
-
-    font-weight: 600;
-
-}
-
-
-/* ==========================================
-   Ranking Number
-   ========================================== */
-
-.nv-trending-rank {
-
-    position: absolute;
-
-    top: 10px;
-
-    left: 10px;
-
-    width: 34px;
-
-    height: 34px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background:
-        #2563EB;
-
-    color: #ffffff;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    box-shadow:
-        0 4px 12px
-        rgba(0, 0, 0, 0.18);
-
-}
-
-
-/* ==========================================
-   Video Content
-   ========================================== */
-
-.nv-trending-video-content {
-
-    display: grid;
-
-    grid-template-columns:
-        auto minmax(0, 1fr) auto;
-
-    gap: 11px;
-
-    padding: 13px;
-
-}
-
-
-.nv-trending-video-avatar {
-
-    width: 38px;
-
-    height: 38px;
-
-    min-width: 38px;
-
-    border-radius: 50%;
-
-    overflow: hidden;
-
-}
-
-
-.nv-trending-video-avatar img {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-}
-
-
-.nv-trending-video-info {
-
-    min-width: 0;
-
-}
-
-
-.nv-trending-video-title {
-
-    margin: 0;
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 2;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-
-    font-size: 15px;
-
-    line-height: 1.35;
-
-    font-weight: 650;
+        var(--nv-background);
 
     color:
-        var(--nv-text-primary, #111827);
+
+        var(--nv-text);
+
+    outline:none;
 
 }
 
 
-.nv-trending-video-channel {
 
-    display: block;
+.nv-search-input:focus{
 
-    margin-top: 6px;
+    border-color:
 
-    font-size: 13px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
+        var(--nv-primary);
 
 }
 
 
-.nv-trending-video-meta {
 
-    margin-top: 4px;
+.nv-search-button{
 
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-.nv-trending-video-menu {
-
-    width: 34px;
-
-    height: 34px;
-
-    border: 0;
-
-    background: transparent;
-
-    border-radius: 50%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-    cursor: pointer;
-
-}
-
-
-.nv-trending-video-menu:hover {
-
-    background:
-        rgba(0, 0, 0, 0.06);
-
-    color:
-        var(--nv-text-primary, #111827);
-
-}
-
-
-/* ==========================================
-   Shorts
-   SCROLL HORIZONTAL
-   ========================================== */
-
-#trendingShorts {
-
-    width: 100%;
-
-    display: flex;
-
-    gap: 16px;
-
-    overflow-x: auto;
-
-    overflow-y: hidden;
-
-    padding: 4px 2px 12px;
-
-    scroll-behavior: smooth;
-
-    scroll-snap-type: x proximity;
-
-    scrollbar-width: thin;
-
-    -webkit-overflow-scrolling: touch;
-
-}
-
-
-#trendingShorts::-webkit-scrollbar {
-
-    height: 6px;
-
-}
-
-
-#trendingShorts::-webkit-scrollbar-thumb {
-
-    border-radius: 20px;
-
-    background:
-        rgba(107, 114, 128, 0.35);
-
-}
-
-
-/* ==========================================
-   Short Card
-   ========================================== */
-
-.nv-trending-short-card {
-
-    flex:
-        0 0 190px;
-
-    width: 190px;
-
-    scroll-snap-align: start;
-
-    border-radius: 14px;
-
-    overflow: hidden;
-
-    background:
-        var(--nv-card-background, #ffffff);
+    width:64px;
 
     border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
 
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease;
+        1px solid var(--nv-border);
 
-}
+    border-radius:
 
-
-.nv-trending-short-card:hover {
-
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 24px
-        rgba(0, 0, 0, 0.09);
-
-}
-
-
-/* ==========================================
-   Short Thumbnail
-   ========================================== */
-
-.nv-trending-short-thumbnail {
-
-    width: 100%;
-
-    aspect-ratio: 9 / 16;
-
-    position: relative;
-
-    overflow: hidden;
+        0 20px 20px 0;
 
     background:
-        #E5E7EB;
 
-}
-
-
-.nv-trending-short-thumbnail img {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.3s ease;
-
-}
-
-
-.nv-trending-short-card:hover
-.nv-trending-short-thumbnail img {
-
-    transform: scale(1.035);
-
-}
-
-
-.nv-trending-short-info {
-
-    padding: 11px;
-
-}
-
-
-.nv-trending-short-info h3 {
-
-    margin: 0;
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 2;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-
-    font-size: 14px;
-
-    line-height: 1.35;
-
-    font-weight: 650;
+        var(--nv-surface-hover);
 
     color:
-        var(--nv-text-primary, #111827);
+
+        var(--nv-text);
+
+    cursor:pointer;
 
 }
 
-
-.nv-trending-short-meta {
-
-    margin-top: 6px;
-
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
 
 
 /* ==========================================
-   General Horizontal Scroll
-   Lives / Products
-   ========================================== */
+   Header Right
+========================================== */
 
-.nv-horizontal-scroll {
+.nv-header-right{
 
-    width: 100%;
+    display:flex;
 
-    display: flex;
+    align-items:center;
 
-    gap: 18px;
+    gap:12px;
 
-    overflow-x: auto;
-
-    overflow-y: hidden;
-
-    padding: 4px 2px 12px;
-
-    scroll-behavior: smooth;
-
-    scrollbar-width: thin;
-
-    -webkit-overflow-scrolling: touch;
+    flex-shrink:0;
 
 }
 
 
-.nv-horizontal-scroll::-webkit-scrollbar {
 
-    height: 6px;
+.nv-icon-button{
+
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:transparent;
+
+    border:none;
+
+    color:var(--nv-text);
+
+    cursor:pointer;
+
+    font-size:18px;
 
 }
 
 
-.nv-horizontal-scroll::-webkit-scrollbar-thumb {
-
-    border-radius: 20px;
+.nv-icon-button:hover{
 
     background:
-        rgba(107, 114, 128, 0.35);
+
+        var(--nv-surface-hover);
 
 }
+
+
+
+.nv-avatar-button{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+}
+
+
+
+.nv-avatar-button img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
 
 
 /* ==========================================
-   Base Responsive
-   ========================================== */
+   Bouton S'identifier
+========================================== */
 
-@media (max-width: 1100px) {
+.nv-login-button{
 
-    .nv-trending-main {
+    height:40px;
 
-        padding-left: 24px;
+    padding:
 
-        padding-right: 24px;
+        0 18px;
+
+    border-radius:
+
+        20px;
+
+    border:
+
+        1px solid var(--nv-primary);
+
+    background:
+
+        transparent;
+
+    color:
+
+        var(--nv-primary);
+
+    font-weight:
+
+        600;
+
+    cursor:pointer;
+
+    white-space:nowrap;
+
+}
+
+
+
+.nv-login-button:hover{
+
+    background:
+
+        rgba(37,99,235,.12);
+
+}
+
+
+
+/* ==========================================
+   Sidebar
+========================================== */
+
+.nv-sidebar{
+
+    position:fixed;
+
+    top:64px;
+
+    left:0;
+
+    bottom:0;
+
+    width:72px;
+
+    background:
+
+        var(--nv-surface);
+
+    border-right:
+
+        1px solid var(--nv-border);
+
+    overflow:hidden;
+
+    z-index:900;
+
+    transition:
+
+        width .3s ease;
+
+}
+
+
+
+.nv-sidebar.active{
+
+    width:240px;
+
+}
+
+
+
+.nv-sidebar-nav{
+
+    padding:
+
+        12px;
+
+}
+
+
+
+.nv-sidebar a{
+
+    height:44px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:
+
+        0 14px;
+
+    border-radius:
+
+        12px;
+
+    color:
+
+        var(--nv-text);
+
+    text-decoration:none;
+
+    white-space:nowrap;
+
+}
+
+
+
+.nv-sidebar a:hover{
+
+    background:
+
+        var(--nv-surface-hover);
+
+}
+
+
+
+.nv-sidebar i{
+
+    width:24px;
+
+    text-align:center;
+
+    font-size:18px;
+
+}
+
+
+
+/* ==========================================
+   Overlay Mobile
+========================================== */
+
+.nv-sidebar-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+
+        rgba(0,0,0,.5);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+
+        .3s ease;
+
+    z-index:850;
+
+}
+
+
+
+.nv-sidebar-overlay.active{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+
+/* ==========================================
+   Responsive Header
+========================================== */
+
+@media(max-width:900px){
+
+    .nv-header-center{
+
+        padding:0 10px;
 
     }
 
 
-    .nv-trending-video-list {
+    .nv-logo img{
 
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-
-        gap: 20px 16px;
+        width:100px;
 
     }
 
 }
 
 
-@media (max-width: 800px) {
 
-    .nv-trending-main {
+@media(max-width:650px){
 
-        padding:
-            22px 18px 50px;
-
-    }
-
-
-    .nv-trending-video-list {
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 18px 14px;
-
-    }
-
-
-    .nv-trending-heading h1 {
-
-        font-size: 26px;
-
-    }
-
-}
-
-
-@media (max-width: 560px) {
-
-    .nv-trending-main {
+    .nv-header{
 
         padding:
-            18px 12px 40px;
+
+            0 10px;
 
     }
 
 
-    .nv-trending-heading {
+    .nv-header-center{
 
-        gap: 12px;
-
-    }
-
-
-    .nv-trending-icon {
-
-        width: 44px;
-
-        height: 44px;
-
-        min-width: 44px;
-
-        font-size: 19px;
+        display:none;
 
     }
 
 
-    .nv-trending-heading h1 {
+    .nv-sidebar{
 
-        font-size: 23px;
-
-    }
-
-
-    .nv-trending-heading p {
-
-        font-size: 12px;
+        width:0;
 
     }
 
 
-    .nv-section-header h2 {
+    .nv-sidebar.active{
 
-        font-size: 18px;
-
-    }
-
-
-    .nv-section-header p {
-
-        font-size: 12px;
+        width:240px;
 
     }
 
 
-    .nv-trending-video-list {
+    .nv-login-button{
 
-        grid-template-columns:
-            1fr;
+        padding:
 
-        gap: 18px;
+            0 12px;
 
-    }
-
-
-    .nv-trending-short-card {
-
-        flex-basis: 165px;
-
-        width: 165px;
+        font-size:14px;
 
     }
 
 }
 /* ==========================================
    NetView
-   trending.css
-   PARTIE 2
-   ========================================== */
+   index.css
+   Partie 2 — Catégories + Flux principal + Cartes
+========================================== */
 
 
 /* ==========================================
-   LIVE CARDS
-   ========================================== */
+   Categories Bar
+========================================== */
 
-.nv-trending-live-card {
+.nv-categories{
 
-    flex: 0 0 320px;
+    position:fixed;
 
-    width: 320px;
+    top:64px;
 
-    position: relative;
+    left:0;
 
-    overflow: hidden;
+    right:0;
 
-    border-radius: 14px;
+    height:48px;
+
+    display:flex;
+
+    align-items:center;
 
     background:
-        var(--nv-card-background, #ffffff);
 
-    border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
+        var(--nv-background);
 
-    scroll-snap-align: start;
+    z-index:800;
 
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease;
+    padding-left:
+
+        88px;
 
 }
 
 
-.nv-trending-live-card:hover {
 
-    transform: translateY(-3px);
+.nv-categories-scroll{
 
-    box-shadow:
-        0 12px 28px
-        rgba(0, 0, 0, 0.10);
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
 
 }
+
+
+.nv-categories-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
 
 
 /* ==========================================
-   LIVE THUMBNAIL
-   ========================================== */
+   Category Button
+========================================== */
 
-.nv-trending-live-thumbnail {
+.nv-category{
 
-    width: 100%;
+    flex-shrink:0;
 
-    aspect-ratio: 16 / 9;
+    height:32px;
 
-    position: relative;
+    padding:
 
-    overflow: hidden;
+        0 16px;
 
-    background: #E5E7EB;
+    border:none;
 
-}
+    border-radius:
 
-
-.nv-trending-live-thumbnail img {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.3s ease;
-
-}
-
-
-.nv-trending-live-card:hover
-.nv-trending-live-thumbnail img {
-
-    transform: scale(1.035);
-
-}
-
-
-/* ==========================================
-   LIVE BADGE
-   ========================================== */
-
-.nv-live-badge {
-
-    position: absolute;
-
-    top: 10px;
-
-    left: 10px;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    padding: 5px 9px;
-
-    border-radius: 5px;
-
-    background: #DC2626;
-
-    color: #FFFFFF;
-
-    font-size: 11px;
-
-    line-height: 1;
-
-    font-weight: 800;
-
-    letter-spacing: 0.3px;
-
-}
-
-
-.nv-live-badge::before {
-
-    content: "";
-
-    width: 6px;
-
-    height: 6px;
-
-    border-radius: 50%;
-
-    background: #FFFFFF;
-
-    animation:
-        nv-live-pulse 1.4s infinite;
-
-}
-
-
-@keyframes nv-live-pulse {
-
-    0%,
-    100% {
-
-        opacity: 1;
-
-        transform: scale(1);
-
-    }
-
-    50% {
-
-        opacity: 0.35;
-
-        transform: scale(0.75);
-
-    }
-
-}
-
-
-/* ==========================================
-   LIVE VIEWERS
-   ========================================== */
-
-.nv-live-viewers {
-
-    position: absolute;
-
-    right: 9px;
-
-    bottom: 9px;
-
-    padding: 4px 7px;
-
-    border-radius: 4px;
+        16px;
 
     background:
-        rgba(0, 0, 0, 0.78);
 
-    color: #FFFFFF;
-
-    font-size: 11px;
-
-    font-weight: 600;
-
-}
-
-
-/* ==========================================
-   LIVE CONTENT
-   ========================================== */
-
-.nv-trending-live-content {
-
-    display: grid;
-
-    grid-template-columns:
-        auto minmax(0, 1fr) auto;
-
-    gap: 11px;
-
-    padding: 13px;
-
-}
-
-
-.nv-trending-live-avatar {
-
-    width: 38px;
-
-    height: 38px;
-
-    min-width: 38px;
-
-    border-radius: 50%;
-
-    overflow: hidden;
-
-}
-
-
-.nv-trending-live-avatar img {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-}
-
-
-.nv-trending-live-info {
-
-    min-width: 0;
-
-}
-
-
-.nv-trending-live-title {
-
-    margin: 0;
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 2;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-
-    font-size: 14px;
-
-    line-height: 1.35;
-
-    font-weight: 650;
+        var(--nv-surface);
 
     color:
-        var(--nv-text-primary, #111827);
+
+        var(--nv-text);
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    transition:.2s ease;
 
 }
 
 
-.nv-trending-live-channel {
 
-    display: block;
-
-    margin-top: 5px;
-
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-/* ==========================================
-   SPONSORED PRODUCTS
-   ========================================== */
-
-.nv-trending-product-card {
-
-    flex: 0 0 240px;
-
-    width: 240px;
-
-    overflow: hidden;
-
-    position: relative;
-
-    scroll-snap-align: start;
-
-    border-radius: 14px;
+.nv-category:hover{
 
     background:
-        var(--nv-card-background, #FFFFFF);
 
-    border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
-
-    transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease;
+        var(--nv-surface-hover);
 
 }
 
 
-.nv-trending-product-card:hover {
 
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 12px 28px
-        rgba(0, 0, 0, 0.10);
-
-}
-
-
-/* ==========================================
-   PRODUCT IMAGE
-   ========================================== */
-
-.nv-trending-product-image {
-
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    position: relative;
-
-    background: #E5E7EB;
-
-}
-
-
-.nv-trending-product-image img {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.3s ease;
-
-}
-
-
-.nv-trending-product-card:hover
-.nv-trending-product-image img {
-
-    transform: scale(1.04);
-
-}
-
-
-/* ==========================================
-   SPONSORED BADGE
-   ========================================== */
-
-.nv-sponsored-badge {
-
-    position: absolute;
-
-    top: 10px;
-
-    left: 10px;
-
-    padding: 5px 8px;
-
-    border-radius: 5px;
+.nv-category.active{
 
     background:
-        rgba(17, 24, 39, 0.88);
 
-    color: #FFFFFF;
+        var(--nv-primary);
 
-    font-size: 10px;
-
-    line-height: 1;
-
-    font-weight: 700;
+    color:white;
 
 }
+
 
 
 /* ==========================================
-   PRODUCT CONTENT
-   ========================================== */
+   Main Layout
+========================================== */
 
-.nv-trending-product-content {
+.nv-home{
 
-    padding: 13px;
+    padding-top:
 
-}
+        112px;
 
+    padding-left:
 
-.nv-trending-product-title {
+        96px;
 
-    margin: 0;
+    padding-right:
 
-    display: -webkit-box;
+        24px;
 
-    -webkit-line-clamp: 2;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-
-    font-size: 14px;
-
-    line-height: 1.35;
-
-    font-weight: 650;
-
-    color:
-        var(--nv-text-primary, #111827);
+    min-height:100vh;
 
 }
 
-
-.nv-trending-product-seller {
-
-    margin-top: 6px;
-
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-.nv-trending-product-price {
-
-    margin-top: 8px;
-
-    font-size: 16px;
-
-    font-weight: 750;
-
-    color: #2563EB;
-
-}
 
 
 /* ==========================================
-   RANKING
-   ========================================== */
+   Section
+========================================== */
 
-.nv-trending-ranking {
+.nv-section{
 
-    width: 100%;
+    width:100%;
 
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 10px;
-
-}
-
-
-.nv-trending-ranking-item {
-
-    width: 100%;
-
-    min-height: 76px;
-
-    display: grid;
-
-    grid-template-columns:
-        48px 90px minmax(0, 1fr) auto;
-
-    align-items: center;
-
-    gap: 14px;
-
-    padding: 10px 14px;
-
-    border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
-
-    border-radius: 12px;
-
-    background:
-        var(--nv-card-background, #FFFFFF);
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-
-}
-
-
-.nv-trending-ranking-item:hover {
-
-    transform: translateX(3px);
-
-    background:
-        var(--nv-card-hover, #F9FAFB);
-
-}
-
-
-/* ==========================================
-   RANK NUMBER
-   ========================================== */
-
-.nv-ranking-number {
-
-    width: 42px;
-
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 10px;
-
-    background:
-        rgba(37, 99, 235, 0.10);
-
-    color: #2563EB;
-
-    font-size: 16px;
-
-    font-weight: 800;
-
-}
-
-
-/* ==========================================
-   RANKING THUMBNAIL
-   ========================================== */
-
-.nv-ranking-thumbnail {
-
-    width: 90px;
-
-    aspect-ratio: 16 / 9;
-
-    overflow: hidden;
-
-    border-radius: 7px;
-
-    background: #E5E7EB;
-
-}
-
-
-.nv-ranking-thumbnail img {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-
-}
-
-
-/* ==========================================
-   RANKING INFORMATION
-   ========================================== */
-
-.nv-ranking-info {
-
-    min-width: 0;
-
-}
-
-
-.nv-ranking-title {
-
-    margin: 0;
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 2;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-
-    font-size: 14px;
-
-    font-weight: 650;
-
-    line-height: 1.35;
-
-    color:
-        var(--nv-text-primary, #111827);
-
-}
-
-
-.nv-ranking-meta {
-
-    margin-top: 5px;
-
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-.nv-ranking-stats {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    white-space: nowrap;
-
-    font-size: 12px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-/* ==========================================
-   EMPTY STATE
-   ========================================== */
-
-.nv-empty-state {
-
-    width: 100%;
-
-    min-height: 300px;
-
-    padding: 40px 20px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-
-}
-
-
-.nv-empty-state[hidden] {
-
-    display: none;
-
-}
-
-
-.nv-empty-icon {
-
-    width: 64px;
-
-    height: 64px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    margin-bottom: 18px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(37, 99, 235, 0.10);
-
-    color: #2563EB;
-
-    font-size: 25px;
-
-}
-
-
-.nv-empty-state h2 {
-
-    margin: 0;
-
-    font-size: 20px;
-
-    color:
-        var(--nv-text-primary, #111827);
-
-}
-
-
-.nv-empty-state p {
-
-    max-width: 450px;
-
-    margin: 8px 0 20px;
-
-    font-size: 14px;
-
-    line-height: 1.5;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-/* ==========================================
-   PAGE LOADER
-   ========================================== */
-
-.nv-page-loader {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9999;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-        rgba(255, 255, 255, 0.82);
-
-    backdrop-filter:
-        blur(6px);
-
-}
-
-
-.nv-page-loader[hidden] {
-
-    display: none;
-
-}
-
-
-.nv-loader {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-}
-
-
-.nv-loader span {
-
-    width: 9px;
-
-    height: 9px;
-
-    border-radius: 50%;
-
-    background: #2563EB;
-
-    animation:
-        nv-trending-loader 1s infinite ease-in-out;
-
-}
-
-
-.nv-loader span:nth-child(2) {
-
-    animation-delay: 0.15s;
-
-}
-
-
-.nv-loader span:nth-child(3) {
-
-    animation-delay: 0.30s;
-
-}
-
-
-@keyframes nv-trending-loader {
-
-    0%,
-    80%,
-    100% {
-
-        opacity: 0.35;
-
-        transform: translateY(0);
-
-    }
-
-    40% {
-
-        opacity: 1;
-
-        transform: translateY(-7px);
-
-    }
-
-}
-
-
-/* ==========================================
-   SKELETON
-   ========================================== */
-
-.nv-trending-skeleton {
-
-    width: 100%;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-    gap: 20px;
-
-}
-
-
-.nv-skeleton {
-
-    position: relative;
-
-    overflow: hidden;
-
-    border-radius: 12px;
-
-    background:
-        #E5E7EB;
-
-}
-
-
-.nv-skeleton::after {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    transform:
-        translateX(-100%);
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,0.55),
-            transparent
-        );
-
-    animation:
-        nv-trending-shimmer 1.4s infinite;
-
-}
-
-
-@keyframes nv-trending-shimmer {
-
-    100% {
-
-        transform:
-            translateX(100%);
-
-    }
-
-}
-
-
-.nv-skeleton-trending {
-
-    height: 220px;
-
-}
-
-
-/* ==========================================
-   CONTEXT MENU
-   ========================================== */
-
-.nv-context-menu {
-
-    position: fixed;
-
-    z-index: 10000;
-
-    min-width: 210px;
-
-    padding: 7px;
-
-    border:
-        1px solid
-        var(--nv-border-color, #E5E7EB);
-
-    border-radius: 10px;
-
-    background:
-        var(--nv-card-background, #FFFFFF);
-
-    box-shadow:
-        0 14px 35px
-        rgba(0, 0, 0, 0.16);
-
-}
-
-
-.nv-context-menu[hidden] {
-
-    display: none;
-
-}
-
-
-.nv-context-menu button {
-
-    width: 100%;
-
-    min-height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
-
-    padding: 8px 10px;
-
-    border: 0;
-
-    border-radius: 7px;
-
-    background: transparent;
-
-    color:
-        var(--nv-text-primary, #111827);
-
-    font-size: 13px;
-
-    text-align: left;
-
-    cursor: pointer;
-
-}
-
-
-.nv-context-menu button:hover {
-
-    background:
-        rgba(37, 99, 235, 0.08);
-
-}
-
-
-.nv-context-menu button i {
-
-    width: 18px;
-
-    color:
-        var(--nv-text-secondary, #6B7280);
-
-}
-
-
-/* ==========================================
-   FINAL RESPONSIVE
-   ========================================== */
-
-@media (max-width: 800px) {
-
-    .nv-trending-live-card {
-
-        flex-basis: 285px;
-
-        width: 285px;
-
-    }
-
-
-    .nv-trending-product-card {
-
-        flex-basis: 210px;
-
-        width: 210px;
-
-    }
-
-
-    .nv-trending-ranking-item {
-
-        grid-template-columns:
-            42px 80px minmax(0, 1fr);
-
-        gap: 10px;
-
-    }
-
-
-    .nv-ranking-stats {
-
-        grid-column: 3;
-
-    }
-
-
-    .nv-trending-skeleton {
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-    }
-
-}
-
-
-@media (max-width: 560px) {
-
-    .nv-trending-live-card {
-
-        flex-basis: 260px;
-
-        width: 260px;
-
-    }
-
-
-    .nv-trending-product-card {
-
-        flex-basis: 185px;
-
-        width: 185px;
-
-    }
-
-
-    .nv-trending-ranking-item {
-
-        grid-template-columns:
-            38px 70px minmax(0, 1fr);
-
-        padding: 9px;
-
-    }
-
-
-    .nv-ranking-number {
-
-        width: 34px;
-
-        height: 34px;
-
-        font-size: 13px;
-
-    }
-
-
-    .nv-ranking-thumbnail {
-
-        width: 70px;
-
-    }
-
-
-    .nv-ranking-title {
-
-        font-size: 13px;
-
-    }
-
-
-    .nv-ranking-meta {
-
-        font-size: 11px;
-
-    }
-
-
-    .nv-ranking-stats {
-
-        display: none;
-
-    }
-
-
-    .nv-trending-skeleton {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .nv-skeleton-trending {
-
-        height: 190px;
-
-    }
-
-}
-
-
-/* ==========================================
-   ACCESSIBILITY
-   ========================================== */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .nv-trending-video-card,
-    .nv-trending-short-card,
-    .nv-trending-live-card,
-    .nv-trending-product-card,
-    .nv-trending-ranking-item,
-    .nv-trending-video-thumbnail img,
-    .nv-trending-short-thumbnail img,
-    .nv-trending-live-thumbnail img,
-    .nv-trending-product-image img {
-
-        transition: none;
-
-    }
-
-
-    .nv-live-badge::before,
-    .nv-loader span,
-    .nv-skeleton::after {
-
-        animation: none;
-
-    }
+    margin-bottom:32px;
 
 }
