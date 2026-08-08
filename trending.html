@@ -141,7 +141,6 @@ NetView Background
 
 </div>
 
-
 <!-- ==========================================
 Header
 ========================================== -->
@@ -230,413 +229,38 @@ Mobile Overlay
     class="nv-sidebar-overlay">
 
 </div>
-
-
-
 <!-- ==========================================
 Categories
 ========================================== -->
 
-<section
-    class="nv-categories"
-    aria-label="Catégories">
+<section class="nv-categories">
 
+<div
+    class="nv-categories-scroll">
 
-    <div
-        class="nv-categories-scroll">
+<button
+    class="nv-category active">
 
+Tous
 
-        <button
-            class="nv-category active"
-            type="button"
-            data-category="">
+</button>
 
-            Tous
+<!-- Les catégories seront générées par index.js -->
 
-        </button>
-
-
-        <!-- Les catégories seront générées par trending.js -->
-
-
-    </div>
-
+</div>
 
 </section>
-
 
 <!-- ==========================================
 Main
 ========================================== -->
 
-<main
-    id="mainContent"
-    class="nv-home nv-trending-main">
+<main class="nv-home">
 
-<!-- ==========================================
-Trending Header
-========================================== -->
 
-<section
-    class="nv-trending-header">
 
-    <div class="nv-trending-heading">
-
-        <span
-            class="nv-trending-icon">
-
-            <i class="fa-solid fa-fire"></i>
-
-        </span>
-
-        <div>
-
-            <h1>
-                Tendances
-            </h1>
-
-            <p>
-                Les contenus les plus regardés sur NetView
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================
-Trending Videos
-========================================== -->
-
-<section
-    class="nv-trending-section"
-    id="trendingVideosSection">
-
-    <div
-        class="nv-section-header">
-
-        <div>
-
-            <h2>
-                Vidéos tendance
-            </h2>
-
-            <p>
-                Les vidéos qui attirent le plus l'attention
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingVideos"
-        class="nv-trending-video-list">
-
-        <!--
-        Les vidéos tendance seront générées
-        dynamiquement par trending.js
-        -->
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================
-Trending Shorts
-========================================== -->
-
-<section
-    class="nv-trending-section"
-    id="trendingShortsSection">
-
-    <div
-        class="nv-section-header">
-
-        <div>
-
-            <h2>
-                Shorts tendance
-            </h2>
-
-            <p>
-                Les Shorts les plus populaires
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingShorts"
-        class="nv-shorts-grid">
-
-        <!--
-        Shorts générés par trending.js
-        -->
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================
-Trending Lives
-========================================== -->
-
-<section
-    class="nv-trending-section"
-    id="trendingLivesSection">
-
-    <div
-        class="nv-section-header">
-
-        <div>
-
-            <h2>
-                Lives tendance
-            </h2>
-
-            <p>
-                Les directs les plus regardés
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingLives"
-        class="nv-horizontal-scroll">
-
-        <!--
-        Lives générés par trending.js
-        -->
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================
-Sponsored Products
-========================================== -->
-
-<section
-    class="nv-trending-section"
-    id="trendingProductsSection">
-
-    <div
-        class="nv-section-header">
-
-        <div>
-
-            <h2>
-                Produits sponsorisés tendance
-            </h2>
-
-            <p>
-                Découvrez les produits populaires de la communauté
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingProducts"
-        class="nv-horizontal-scroll">
-
-        <!--
-        Produits générés par trending.js
-        -->
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================
-Trending Ranking
-========================================== -->
-
-<section
-    class="nv-trending-section"
-    id="trendingRankingSection">
-
-    <div
-        class="nv-section-header">
-
-        <div>
-
-            <h2>
-                Classement des tendances
-            </h2>
-
-            <p>
-                Les contenus les plus performants actuellement
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingRanking"
-        class="nv-trending-ranking">
-
-        <!--
-        Classement généré par trending.js
-        -->
-
-    </div>
-
-</section>
-  
-</main>
-<!-- ==========================================
-Skeleton Loaders
-========================================== -->
-
-<section
-    id="trendingSkeleton"
-    class="nv-trending-skeleton"
-    hidden
-    aria-hidden="true">
-
-    <div class="nv-skeleton nv-skeleton-trending"></div>
-
-    <div class="nv-skeleton nv-skeleton-trending"></div>
-
-    <div class="nv-skeleton nv-skeleton-trending"></div>
-
-</section>
-
-
-<!-- ==========================================
-Empty State
-========================================== -->
-
-<section
-    id="trendingEmpty"
-    class="nv-empty-state"
-    hidden>
-
-    <div class="nv-empty-icon">
-
-        <i class="fa-solid fa-fire"></i>
-
-    </div>
-
-    <h2>
-        Aucune tendance disponible
-    </h2>
-
-    <p>
-        Les contenus populaires apparaîtront ici
-        lorsqu'ils seront disponibles.
-    </p>
-
-    <a
-        href="index.html"
-        class="nv-button">
-
-        Retour à l'accueil
-
-    </a>
-
-</section>
-
-
-<!-- ==========================================
-Full Page Loader
-========================================== -->
-
-<div
-    id="pageLoader"
-    class="nv-page-loader"
-    hidden
-    aria-hidden="true">
-
-    <div class="nv-loader">
-
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-</div>
-
-
-<!-- ==========================================
-Context Menu
-========================================== -->
-
-<div
-    id="contextMenu"
-    class="nv-context-menu"
-    hidden>
-
-    <button
-        type="button"
-        data-action="save">
-
-        <i class="fa-regular fa-clock"></i>
-
-        <span>
-            Enregistrer
-        </span>
-
-    </button>
-
-
-    <button
-        type="button"
-        data-action="share">
-
-        <i class="fa-solid fa-share"></i>
-
-        <span>
-            Partager
-        </span>
-
-    </button>
-
-
-    <button
-        type="button"
-        data-action="not-interested">
-
-        <i class="fa-solid fa-ban"></i>
-
-        <span>
-            Pas intéressé
-        </span>
-
-    </button>
-
-</div>
-
-
-<!-- ==========================================
-Notification
-========================================== -->
-
-<div
-    id="notification"
-    class="notification"
-    role="status"
-    aria-live="polite">
-</div>
+<!-- Notification -->
+    <div id="notification" class="notification"></div>
 
 
 <!-- ==========================================
