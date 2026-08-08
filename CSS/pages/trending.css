@@ -152,6 +152,24 @@
     color: var(--nv-text-secondary, #6B7280);
 
 }
+.nv-logo{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+.nv-logo img{
+
+    width:120px;
+
+    height:auto;
+
+    object-fit:contain;
+
+}
 
 
 /* ==========================================
