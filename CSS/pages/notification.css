@@ -3,8 +3,6 @@
    notification.css
    Page Notifications
    ========================================================= */
-
-
 /* =========================================================
    PAGE
    ========================================================= */
@@ -19,7 +17,818 @@
     min-height: 100vh;
 }
 
+/* =========================================================
+   NETVIEW NOTIFICATION
+   HEADER + SIDEBAR
+   ========================================================= */
 
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.nv-layout {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 64px);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.nv-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 20px;
+
+    background: #0B1220;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+/* =========================================================
+   HEADER LEFT
+   ========================================================= */
+
+.nv-header-left {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 220px;
+}
+
+
+/* =========================================================
+   MENU BUTTON
+   ========================================================= */
+
+.nv-icon-button {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #FFFFFF;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.nv-icon-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #60A5FA;
+}
+
+.nv-icon-button:active {
+    transform: scale(0.94);
+}
+
+.nv-icon-button:focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.nv-logo {
+    display: inline-flex;
+    align-items: center;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+}
+
+.nv-logo img {
+    display: block;
+
+    width: auto;
+    height: 34px;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   HEADER CENTER
+   ========================================================= */
+
+.nv-header-center {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+
+    min-width: 0;
+
+    padding: 0 24px;
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH
+   ========================================================= */
+
+.nv-search-form {
+    width: min(100%, 620px);
+
+    height: 42px;
+
+    display: flex;
+    align-items: stretch;
+
+    overflow: hidden;
+
+    background: #111827;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 24px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.nv-search-form:focus-within {
+    border-color: rgba(37, 99, 235, 0.75);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+
+    background: #151F30;
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+   ========================================================= */
+
+.nv-search-input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    padding: 0 18px;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #FFFFFF;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nv-search-input::placeholder {
+    color: #94A3B8;
+}
+
+.nv-search-input::-webkit-search-cancel-button {
+    filter: invert(1);
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+   ========================================================= */
+
+.nv-search-button {
+    width: 52px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #C5CEDB;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nv-search-button:hover {
+    background: rgba(37, 99, 235, 0.16);
+
+    color: #FFFFFF;
+}
+
+.nv-search-button:active {
+    background: rgba(37, 99, 235, 0.25);
+}
+
+.nv-search-button:focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: -2px;
+}
+
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.nv-header-right {
+    min-width: 220px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   Ces éléments sont générés par notification.js
+   ========================================================= */
+
+.nv-header-right button,
+.nv-header-right a {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 42px;
+    height: 42px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #FFFFFF;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nv-header-right button:hover,
+.nv-header-right a:hover {
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #60A5FA;
+}
+
+.nv-header-right button:active,
+.nv-header-right a:active {
+    transform: scale(0.94);
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+.nv-notification-badge,
+.notification-count,
+.nv-badge {
+    position: absolute;
+
+    top: 2px;
+    right: 1px;
+
+    min-width: 17px;
+    height: 17px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 4px;
+
+    border-radius: 999px;
+
+    background: #EF4444;
+
+    color: #FFFFFF;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    border: 2px solid #0B1220;
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.nv-header-avatar {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid rgba(255, 255, 255, 0.10);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.nv-sidebar {
+    position: fixed;
+
+    top: 64px;
+    left: 0;
+    bottom: 0;
+
+    z-index: 900;
+
+    width: 248px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 14px 10px;
+
+    background: #0B1220;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    scrollbar-width: thin;
+    scrollbar-color: #253045 transparent;
+
+    transition:
+        width 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* =========================================================
+   SIDEBAR SCROLLBAR
+   ========================================================= */
+
+.nv-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nv-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nv-sidebar::-webkit-scrollbar-thumb {
+    background: #253045;
+
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   SIDEBAR NAV
+   ========================================================= */
+
+.nv-sidebar-nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+/* =========================================================
+   SIDEBAR ITEMS
+   ========================================================= */
+
+.nv-sidebar-item {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 0 14px;
+
+    border-radius: 10px;
+
+    color: #C5CEDB;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nv-sidebar-item:hover {
+    background: #1F2937;
+
+    color: #FFFFFF;
+}
+
+.nv-sidebar-item.active {
+    background: rgba(37, 99, 235, 0.16);
+
+    color: #60A5FA;
+
+    font-weight: 600;
+}
+
+.nv-sidebar-item i {
+    width: 20px;
+
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   SIDEBAR BADGE
+   ========================================================= */
+
+.nv-sidebar-badge {
+    margin-left: auto;
+
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 5px;
+
+    border-radius: 999px;
+
+    background: #2563EB;
+
+    color: #FFFFFF;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SIDEBAR DIVIDER
+   ========================================================= */
+
+.nv-sidebar-divider {
+    height: 1px;
+
+    margin: 10px 8px;
+
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.nv-main-content {
+    flex: 1;
+
+    min-width: 0;
+
+    margin-left: 248px;
+
+    padding-top: 64px;
+
+    min-height: 100vh;
+
+    background: #0B1220;
+
+    transition:
+        margin-left 0.25s ease;
+}
+
+
+/* =========================================================
+   SIDEBAR OVERLAY
+   ========================================================= */
+
+.nv-sidebar-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 64px 0 0 0;
+
+    z-index: 850;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+
+/* =========================================================
+   NOTIFICATION SEARCH
+   Recherche uniquement dans les notifications
+   ========================================================= */
+
+.notifications-search {
+    width: 100%;
+
+    max-width: 520px;
+
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 14px;
+
+    gap: 10px;
+
+    background: #111827;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 12px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.notifications-search:focus-within {
+    border-color: rgba(37, 99, 235, 0.70);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.notifications-search > i {
+    flex-shrink: 0;
+
+    color: #94A3B8;
+
+    font-size: 14px;
+}
+
+.notification-search-input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #FFFFFF;
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.notification-search-input::placeholder {
+    color: #94A3B8;
+}
+
+.notification-search-clear {
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #94A3B8;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.notification-search-clear:hover {
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #FFFFFF;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .nv-header-left {
+        min-width: auto;
+    }
+
+    .nv-header-right {
+        min-width: auto;
+    }
+
+    .nv-header-center {
+        padding: 0 12px;
+    }
+
+    .nv-sidebar {
+        width: 220px;
+    }
+
+    .nv-main-content {
+        margin-left: 220px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .nv-header {
+        height: 60px;
+
+        padding: 0 10px;
+    }
+
+    .nv-header-left {
+        gap: 6px;
+    }
+
+    .nv-logo img {
+        height: 30px;
+    }
+
+    .nv-header-center {
+        display: none;
+    }
+
+    .nv-header-right {
+        margin-left: auto;
+    }
+
+    .nv-sidebar {
+        top: 60px;
+
+        width: 280px;
+
+        transform: translateX(-100%);
+
+        box-shadow:
+            10px 0 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .nv-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .nv-sidebar-overlay {
+        inset: 60px 0 0 0;
+    }
+
+    .nv-sidebar-overlay.active {
+        display: block;
+    }
+
+    .nv-main-content {
+        margin-left: 0;
+
+        padding-top: 60px;
+    }
+
+    .nv-layout {
+        min-height: calc(100vh - 60px);
+    }
+
+    .notifications-search {
+        max-width: none;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .nv-header {
+        padding: 0 6px;
+    }
+
+    .nv-icon-button,
+    .nv-header-right button,
+    .nv-header-right a {
+        min-width: 40px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .nv-logo img {
+        height: 28px;
+    }
+
+    .nv-header-right {
+        gap: 2px;
+    }
+
+    .notifications-search {
+        height: 42px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nv-header *,
+    .nv-sidebar *,
+    .nv-main-content,
+    .nv-sidebar {
+        transition: none !important;
+        animation: none !important;
+    }
+}
 /* =========================================================
    MAIN LAYOUT
    ========================================================= */
