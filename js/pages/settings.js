@@ -35,6 +35,7 @@ import { supabase } from "../core/supabase.js";
 
 const currentEmail = document.getElementById("currentEmail");
 const createdAt = document.getElementById("createdAt");
+const accountTypeElement = document.getElementById("account_type");
 const editProfileButton = document.getElementById("editProfileButton");
 const notification = document.getElementById("notification");
 
@@ -56,6 +57,7 @@ const removeAccountButton = document.getElementById("removeAccountButton");
 let currentUser = null;
 let currentProfile = null;
 let currentSettings = null;
+let currentAccountType = "user";
 
 let isSavingPreferences = false;
 
@@ -88,7 +90,8 @@ async function init() {
 
         await Promise.all([
             loadProfileData(),
-            loadSettingsData()
+            loadSettingsData(),
+            loadAccountType()
         ]);
         
         fillPage();
@@ -136,6 +139,16 @@ async function loadSettingsData() {
     };
 }
 
+async function loadAccountType() {
+    try {
+        const role = await getRole();
+        currentAccountType = role || "user";
+    } catch (error) {
+        console.error("Erreur chargement type de compte :", error);
+        currentAccountType = "user";
+    }
+}
+
 
 // ==========================================
 // Remplissage de la page
@@ -153,37 +166,17 @@ function fillPage() {
             : "--";
     }
 
+    if (accountTypeElement) {
+        accountTypeElement.textContent = currentAccountType.toUpperCase();
+    }
+
     if (themeSelect) themeSelect.value = currentSettings?.theme ?? "dark";
     if (autoplayToggle) autoplayToggle.checked = currentSettings?.autoplay ?? true;
     if (emailNotificationsToggle) emailNotificationsToggle.checked = currentSettings?.email_notifications ?? true;
     if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings?.push_notifications ?? true;
 }
 
-// Fonction pour charger les infos de profil
-async function loadUserSettings() {
-    try {
-        const user = await refreshUser();
-        if (!user) return;
 
-        // Récupérer le type de compte (qui est maintenant stocké dans profiles)
-        const accountType = await getRole();
-
-        // Mise à jour du DOM
-        const accountTypeElement = document.getElementById("account_type");
-        if (accountTypeElement) {
-            // Affiche la valeur (ex: "pro" ou "user")
-            // .toUpperCase() permet de l'afficher proprement en majuscules
-            accountTypeElement.textContent = accountType ? accountType.toUpperCase() : "USER";
-        }
-    } catch (error) {
-        console.error("Erreur lors du chargement des paramètres :", error);
-    }
-}
-
-// Initialisation au chargement de la page
-document.addEventListener("DOMContentLoaded", () => {
-    loadUserSettings();
-});
 // ==========================================
 // Préférences
 // ==========================================
