@@ -44,151 +44,102 @@
     <!-- Application -->
     <div id="app" class="app">
 
-        <!-- HEADER -->
-        <header id="site-header" class="site-header">
-            <div class="header-inner">
-                <!-- Mobile menu -->
-                <button type="button" class="header-menu-button" id="mobile-menu-button" aria-label="Ouvrir le menu" aria-expanded="false">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-
-                <!-- Logo -->
-                <a href="index.html" class="brand" aria-label="NetView - Accueil">
-                    <img src="NetView.png" alt="NetView" class="brand-logo">
-                </a>
-
-                <!-- Search -->
-                <form class="header-search" id="global-search-form" role="search">
-                    <div class="search-input-wrapper">
-                        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
-                        <input type="search" id="global-search-input" name="q" class="search-input" placeholder="Rechercher sur NetView" autocomplete="off" aria-label="Rechercher sur NetView">
-                        <button type="button" class="search-clear-button" id="search-clear-button" aria-label="Effacer la recherche" hidden>
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <button type="submit" class="search-submit-button" aria-label="Rechercher">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-
-                <!-- Header actions -->
-                <div class="header-actions">
-                    <!-- Search mobile -->
-                    <button type="button" class="header-action-button mobile-search-button" id="mobile-search-button" aria-label="Rechercher">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-
+    
                     <!-- Create -->
                     <a href="publish.html" class="header-action-button create-button" aria-label="Créer">
                         <i class="fa-solid fa-plus"></i>
                         <span>Créer</span>
                     </a>
 
-                    <!-- Notifications -->
-                    <button type="button" class="header-action-button notification-button active" id="header-notification-button" aria-label="Notifications" aria-current="page">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="notification-count" id="header-notification-count" hidden>0</span>
-                    </button>
+        <!-- ==========================================
+Header
+========================================== -->
 
-                    <!-- Profile -->
-                    <button type="button" class="header-profile-button" id="header-profile-button" aria-label="Ouvrir le menu du profil" aria-expanded="false">
-                        <img id="header-avatar" class="header-avatar" src="images/default-avatar.png" alt="Profil">
-                    </button>
-                </div>
-            </div>
+<header class="nv-header">
 
-            <!-- Mobile search -->
-            <div class="mobile-search-container" id="mobile-search-container" hidden>
-                <form id="mobile-search-form" class="mobile-search-form" role="search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" id="mobile-search-input" placeholder="Rechercher sur NetView" autocomplete="off">
-                    <button type="button" id="mobile-search-close" aria-label="Fermer la recherche">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </form>
-            </div>
-        </header>
+    <div class="nv-header-left">
 
-        <!-- MAIN LAYOUT -->
-        <div class="main-layout">
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            aria-label="Menu">
 
-            <!-- SIDEBAR -->
-            <aside id="sidebar" class="sidebar" aria-label="Navigation principale">
-                <nav class="sidebar-navigation">
-                    <a href="index.html" class="sidebar-item">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Accueil</span>
-                    </a>
-                    <a href="shorts.html" class="sidebar-item">
-                        <i class="fa-solid fa-clapperboard"></i>
-                        <span>Shorts</span>
-                    </a>
-                    <a href="subscriptions.html" class="sidebar-item">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <span>Abonnements</span>
-                    </a>
-                    <a href="notification.html" class="sidebar-item active" aria-current="page">
-                        <i class="fa-solid fa-bell"></i>
-                        <span>Notifications</span>
-                        <span class="sidebar-badge" id="sidebar-notification-count" hidden>0</span>
-                    </a>
-                    <a href="library.html" class="sidebar-item">
-                        <i class="fa-solid fa-photo-film"></i>
-                        <span>Bibliothèque</span>
-                    </a>
-                    <a href="library.html#history" class="sidebar-item">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                        <span>Historique</span>
-                    </a>
-                    <a href="library.html#watch-later" class="sidebar-item">
-                        <i class="fa-regular fa-clock"></i>
-                        <span>À regarder plus tard</span>
-                    </a>
-                    <a href="playlist.html" class="sidebar-item">
-                        <i class="fa-solid fa-list"></i>
-                        <span>Playlists</span>
-                    </a>
+            <i class="fa-solid fa-bars"></i>
 
-                    <div class="sidebar-divider"></div>
+        </button>
 
-                    <a href="mes-channel.html" class="sidebar-item">
-                        <i class="fa-solid fa-tv"></i>
-                        <span>Mes chaînes</span>
-                    </a>
-                    <a href="lives.html" class="sidebar-item">
-                        <i class="fa-solid fa-tower-broadcast"></i>
-                        <span>Lives</span>
-                    </a>
-                    <a href="netview-shop.html" class="sidebar-item">
-                        <i class="fa-solid fa-store"></i>
-                        <span>NetView Shop</span>
-                    </a>
+        <a
+            href="index.html"
+            class="nv-logo">
 
-                    <div class="sidebar-divider"></div>
+            <img
+                src="NetView.png"
+                alt="NetView">
 
-                    <a href="studio.html" class="sidebar-item">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>Studio</span>
-                    </a>
-                    <a href="messages.html" class="sidebar-item">
-                        <i class="fa-regular fa-message"></i>
-                        <span>Messages</span>
-                    </a>
-                </nav>
+        </a>
 
-                <!-- Sidebar footer -->
-                <div class="sidebar-footer">
-                    <a href="settings.html" class="sidebar-item">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Paramètres</span>
-                    </a>
-                    <a href="help.html" class="sidebar-item">
-                        <i class="fa-regular fa-circle-question"></i>
-                        <span>Aide</span>
-                    </a>
-                </div>
-            </aside>
+    </div>
 
+    <div class="nv-header-center">
+
+        <form
+            id="searchForm"
+            class="nv-search-form">
+
+            <input
+                id="searchInput"
+                class="nv-search-input"
+                type="search"
+                placeholder="Rechercher">
+
+            <button
+                class="nv-search-button"
+                type="submit">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <div
+        id="headerRight"
+        class="nv-header-right">
+
+        <!-- Rempli dynamiquement par index.js -->
+
+    </div>
+
+</header>
+
+<!-- ==========================================
+Sidebar
+========================================== -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar">
+
+    <nav class="nv-sidebar-nav">
+
+        <!-- Généré par index.js -->
+
+    </nav>
+
+</aside>
+
+<!-- ==========================================
+Mobile Overlay
+========================================== -->
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay">
+
+</div>
+                   
             <!-- PAGE CONTENT -->
             <main id="main-content" class="page-content">
 
