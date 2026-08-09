@@ -1305,7 +1305,6 @@
             button.addEventListener(
                 "click",
                 () => {
-
                     const filter =
                         button.dataset.filter ||
                         "all";
@@ -1313,23 +1312,10 @@
                     state.activeFilter =
                         filter;
 
-                    filters.forEach(
-                        item => {
-
-                            const active =
-                                item === button;
-
-                            item.classList.toggle(
-                                "active",
-                                active
-                            );
-
-                            item.setAttribute(
-                                "aria-selected",
-                                String(active)
-                            );
-                        }
+                    filters.forEach(btn =>
+                        btn.classList.remove("active")
                     );
+                    button.classList.add("active");
 
                     applyNotificationFilter();
                     renderNotifications();
@@ -1339,1043 +1325,196 @@
     }
 
     function applyNotificationFilter() {
-        let result =
-            [...state.notifications];
-
-        switch (state.activeFilter) {
-
-            case "unread":
-                result =
-                    result.filter(
-                        notification =>
-                            !notification.is_read
-                    );
-                break;
-
-            case "mentions":
-                result =
-                    result.filter(
-                        notification =>
-                            getNotificationCategory(
-                                notification
-                            ) === "mentions"
-                    );
-                break;
-
-            case "activity":
-                result =
-                    result.filter(
-                        notification =>
-                            getNotificationCategory(
-                                notification
-                            ) === "activity"
-                    );
-                break;
-
-            case "netview":
-                result =
-                    result.filter(
-                        notification =>
-                            getNotificationCategory(
-                                notification
-                            ) === "netview"
-                    );
-                break;
-
-            case "all":
-            default:
-                break;
-        }
-
-        const query =
-            state.searchQuery
-                .trim()
-                .toLowerCase();
-
-        if (query) {
-            result =
-                result.filter(
-                    notification => {
-
-                        const title =
-                            String(
-                                notification.title || ""
-                            ).toLowerCase();
-
-                        const message =
-                            String(
-                                notification.message || ""
-                            ).toLowerCase();
-
-                        const type =
-                            String(
-                                notification.type || ""
-                            ).toLowerCase();
-
-                        return (
-                            title.includes(query) ||
-                            message.includes(query) ||
-                            type.includes(query)
-                        );
-                    }
-                );
-        }
-
-        state.filteredNotifications =
-            result;
-    }
-
-    /* =========================================================
-       RENDU
-       ========================================================= */
-
-    function renderNotifications() {
-        const list =
-            $("#notifications-list");
-
-        if (!list) {
-            return;
-        }
-
-        const loading =
-            $("#notifications-loading");
-
-        if (loading) {
-            loading.remove();
-        }
-
-        if (state.loading) {
-            renderLoading(list);
-            return;
-        }
-
-        if (
-            state.filteredNotifications.length === 0
-        ) {
-            list.innerHTML =
-                createEmptyState();
-
-            return;
-        }
-
-        list.innerHTML =
-            state.filteredNotifications
-                .map(
-                    createNotificationHTML
-                )
-                .join("");
-
-        bindNotificationItems();
-    }
-
-    function renderLoading(list) {
-        list.innerHTML = `
-            <div class="notifications-loading">
-
-                ${Array.from(
-                    { length: 5 },
-                    () => `
-                        <article
-                            class="notification-skeleton">
-
-                            <div
-                                class="skeleton skeleton-avatar">
-                            </div>
-
-                            <div
-                                class="skeleton-content">
-
-                                <div
-                                    class="skeleton skeleton-line skeleton-line-large">
-                                </div>
-
-                                <div
-                                    class="skeleton skeleton-line skeleton-line-medium">
-                                </div>
-
-                                <div
-                                    class="skeleton skeleton-line skeleton-line-small">
-                                </div>
-
-                            </div>
-
-                            <div
-                                class="skeleton skeleton-thumbnail">
-                            </div>
-
-                        </article>
-                    `
-                ).join("")}
-
-            </div>
-        `;
-    }
-
-    function createNotificationHTML(notification) {
-        const type =
-            getNotificationIcon(
-                notification.type
-            );
-
-        const unread =
-            !notification.is_read;
-
-        return `
-            <article
-                class="
-                    notification-item
-                    ${unread ? "unread" : ""}
-                    notification-type-${escapeHTML(type.className)}
-                "
-                data-notification-id="${escapeHTML(notification.id)}"
-                data-read="${notification.is_read ? "true" : "false"}"
-                tabindex="0"
-                role="article">
-
-                <div
-                    class="notification-icon ${escapeHTML(type.className)}">
-
-                    <i
-                        class="fa-solid ${escapeHTML(type.icon)}"
-                        aria-hidden="true">
-                    </i>
-
-                </div>
-
-                <div class="notification-content">
-
-                    <div class="notification-title-row">
-
-                        <h2 class="notification-title">
-                            ${escapeHTML(
-                                notification.title ||
-                                "Notification NetView"
-                            )}
-                        </h2>
-
-                        ${
-                            unread
-                                ? `
-                                    <span
-                                        class="notification-unread-dot"
-                                        aria-label="Non lue">
-                                    </span>
-                                `
-                                : ""
-                        }
-
-                    </div>
-
-                    <p class="notification-message">
-                        ${escapeHTML(
-                            notification.message || ""
-                        )}
-                    </p>
-
-                    <time
-                        class="notification-time"
-                        datetime="${escapeHTML(
-                            notification.created_at || ""
-                        )}">
-
-                        ${escapeHTML(
-                            formatDate(
-                                notification.created_at
-                            )
-                        )}
-
-                    </time>
-
-                </div>
-
-                <div class="notification-actions">
-
-                    ${
-                        unread
-                            ? `
-                                <button
-                                    type="button"
-                                    class="notification-action mark-read"
-                                    data-action="read"
-                                    aria-label="Marquer comme lu"
-                                    title="Marquer comme lu">
-
-                                    <i class="fa-solid fa-check"></i>
-
-                                </button>
-                            `
-                            : `
-                                <button
-                                    type="button"
-                                    class="notification-action mark-unread"
-                                    data-action="unread"
-                                    aria-label="Marquer comme non lu"
-                                    title="Marquer comme non lu">
-
-                                    <i class="fa-regular fa-envelope"></i>
-
-                                </button>
-                            `
-                    }
-
-                    <button
-                        type="button"
-                        class="notification-action delete-notification"
-                        data-action="delete"
-                        aria-label="Supprimer"
-                        title="Supprimer">
-
-                        <i class="fa-solid fa-xmark"></i>
-
-                    </button>
-
-                </div>
-
-            </article>
-        `;
-    }
-
-    function createEmptyState() {
-        let icon =
-            "fa-bell-slash";
-
-        let title =
-            "Aucune notification";
-
-        let message =
-            "Vous n'avez aucune notification pour le moment.";
+        let list = [...state.notifications];
 
         if (state.activeFilter === "unread") {
-            icon = "fa-envelope-open";
-            title = "Tout est lu";
-            message =
-                "Vous n'avez aucune notification non lue.";
-        }
-
-        if (state.activeFilter === "mentions") {
-            icon = "fa-at";
-            title = "Aucune mention";
-            message =
-                "Vous n'avez reçu aucune mention.";
-        }
-
-        if (state.activeFilter === "activity") {
-            icon = "fa-bolt";
-            title = "Aucune activité";
-            message =
-                "Aucune nouvelle activité à afficher.";
-        }
-
-        if (state.activeFilter === "netview") {
-            icon = "fa-circle-info";
-            title = "Aucune notification NetView";
-            message =
-                "Vous n'avez aucune notification de NetView.";
+            list = list.filter(n => !n.is_read);
+        } else if (state.activeFilter === "mentions") {
+            list = list.filter(n => getNotificationCategory(n) === "mentions");
+        } else if (state.activeFilter === "netview") {
+            list = list.filter(n => getNotificationCategory(n) === "netview");
         }
 
         if (state.searchQuery) {
-            icon = "fa-magnifying-glass";
-            title = "Aucun résultat";
-            message =
-                "Aucune notification ne correspond à votre recherche.";
+            const query = state.searchQuery.toLowerCase();
+            list = list.filter(n => {
+                const title = String(n.title || "").toLowerCase();
+                const msg = String(n.message || "").toLowerCase();
+                return title.includes(query) || msg.includes(query);
+            });
         }
 
-        return `
-            <div class="notifications-empty">
-
-                <div class="notifications-empty-icon">
-                    <i
-                        class="fa-solid ${icon}"
-                        aria-hidden="true">
-                    </i>
-                </div>
-
-                <h2>
-                    ${escapeHTML(title)}
-                </h2>
-
-                <p>
-                    ${escapeHTML(message)}
-                </p>
-
-            </div>
-        `;
+        state.filteredNotifications = list;
     }
 
     /* =========================================================
        ACTIONS NOTIFICATIONS
        ========================================================= */
 
-    function bindNotificationItems() {
-        const items =
-            $$(".notification-item");
-
-        items.forEach(item => {
-
-            item.addEventListener(
-                "click",
-                event => {
-
-                    if (
-                        event.target.closest(
-                            ".notification-action"
-                        )
-                    ) {
-                        return;
-                    }
-
-                    const id =
-                        item.dataset.notificationId;
-
-                    if (id) {
-                        markNotificationAsRead(
-                            id
-                        );
-                    }
-                }
-            );
-
-            item.addEventListener(
-                "keydown",
-                event => {
-
-                    if (
-                        event.key !== "Enter" &&
-                        event.key !== " "
-                    ) {
-                        return;
-                    }
-
-                    if (
-                        event.target.closest(
-                            ".notification-action"
-                        )
-                    ) {
-                        return;
-                    }
-
-                    event.preventDefault();
-
-                    const id =
-                        item.dataset.notificationId;
-
-                    if (id) {
-                        markNotificationAsRead(
-                            id
-                        );
-                    }
-                }
-            );
-        });
-
-        $$(".notification-action")
-            .forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-                        const item =
-                            button.closest(
-                                ".notification-item"
-                            );
-
-                        if (!item) {
-                            return;
-                        }
-
-                        const id =
-                            item.dataset.notificationId;
-
-                        const action =
-                            button.dataset.action;
-
-                        if (!id) {
-                            return;
-                        }
-
-                        if (action === "read") {
-                            markNotificationAsRead(
-                                id
-                            );
-                        }
-
-                        if (action === "unread") {
-                            markNotificationAsUnread(
-                                id
-                            );
-                        }
-
-                        if (action === "delete") {
-                            deleteNotification(
-                                id
-                            );
-                        }
-                    }
-                );
-            });
-    }
-
-    async function markNotificationAsRead(id) {
-        const notification =
-            state.notifications.find(
-                item => item.id === id
-            );
-
-        if (!notification) {
-            return;
-        }
-
-        if (notification.is_read) {
-            return;
-        }
-
-        notification.is_read = true;
-
-        updateNotificationCounters();
-
-        applyNotificationFilter();
-        renderNotifications();
-
-        const client =
-            getSupabaseClient();
-
-        if (!client || !state.user) {
-            return;
-        }
+    async function markAsRead(notificationId) {
+        const client = getSupabaseClient();
+        if (!client || !state.user) return;
 
         try {
-            const {
-                error
-            } = await client
+            const { error } = await client
                 .from("notifications")
-                .update({
-                    is_read: true
-                })
-                .eq("id", id)
+                .update({ is_read: true })
+                .eq("id", notificationId)
                 .eq("user_id", state.user.id);
 
-            if (error) {
-                throw error;
+            if (error) throw error;
+
+            const notif = state.notifications.find(n => n.id === notificationId);
+            if (notif) {
+                notif.is_read = true;
             }
 
-        } catch (error) {
-            console.error(
-                "Erreur marquage notification :",
-                error
-            );
-
-            notification.is_read = false;
-
             updateNotificationCounters();
-
             applyNotificationFilter();
             renderNotifications();
-        }
-    }
-
-    async function markNotificationAsUnread(id) {
-        const notification =
-            state.notifications.find(
-                item => item.id === id
-            );
-
-        if (!notification) {
-            return;
-        }
-
-        notification.is_read = false;
-
-        updateNotificationCounters();
-
-        applyNotificationFilter();
-        renderNotifications();
-
-        const client =
-            getSupabaseClient();
-
-        if (!client || !state.user) {
-            return;
-        }
-
-        try {
-            const {
-                error
-            } = await client
-                .from("notifications")
-                .update({
-                    is_read: false
-                })
-                .eq("id", id)
-                .eq("user_id", state.user.id);
-
-            if (error) {
-                throw error;
-            }
-
         } catch (error) {
-            console.error(
-                "Erreur notification non lue :",
-                error
-            );
-
-            notification.is_read = true;
-
-            updateNotificationCounters();
-
-            applyNotificationFilter();
-            renderNotifications();
-        }
-    }
-
-    async function deleteNotification(id) {
-        const index =
-            state.notifications.findIndex(
-                item => item.id === id
-            );
-
-        if (index === -1) {
-            return;
-        }
-
-        const removed =
-            state.notifications[index];
-
-        state.notifications.splice(
-            index,
-            1
-        );
-
-        updateNotificationCounters();
-
-        applyNotificationFilter();
-        renderNotifications();
-
-        const client =
-            getSupabaseClient();
-
-        if (!client || !state.user) {
-            return;
-        }
-
-        try {
-            const {
-                error
-            } = await client
-                .from("notifications")
-                .delete()
-                .eq("id", id)
-                .eq("user_id", state.user.id);
-
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            console.error(
-                "Erreur suppression notification :",
-                error
-            );
-
-            state.notifications.splice(
-                index,
-                0,
-                removed
-            );
-
-            updateNotificationCounters();
-
-            applyNotificationFilter();
-            renderNotifications();
-
-            showToast(
-                "Impossible de supprimer la notification.",
-                "error"
-            );
+            console.error("Erreur marquage notification :", error);
+            showToast("Impossible de modifier la notification.", "error");
         }
     }
 
     async function markAllAsRead() {
-        const unread =
-            state.notifications.filter(
-                notification =>
-                    !notification.is_read
-            );
-
-        if (unread.length === 0) {
-            return;
-        }
-
-        state.notifications.forEach(
-            notification => {
-                notification.is_read = true;
-            }
-        );
-
-        updateNotificationCounters();
-
-        applyNotificationFilter();
-        renderNotifications();
-
-        const client =
-            getSupabaseClient();
-
-        if (!client || !state.user) {
-            return;
-        }
+        const client = getSupabaseClient();
+        if (!client || !state.user) return;
 
         try {
-            const {
-                error
-            } = await client
+            const { error } = await client
                 .from("notifications")
-                .update({
-                    is_read: true
-                })
+                .update({ is_read: true })
                 .eq("user_id", state.user.id)
                 .eq("is_read", false);
 
-            if (error) {
-                throw error;
-            }
+            if (error) throw error;
 
-            showToast(
-                "Toutes les notifications sont maintenant lues.",
-                "success"
-            );
+            state.notifications.forEach(n => {
+                n.is_read = true;
+            });
 
+            updateNotificationCounters();
+            applyNotificationFilter();
+            renderNotifications();
+            showToast("Toutes les notifications ont été lues.", "success");
         } catch (error) {
-            console.error(
-                "Erreur marquage global :",
-                error
-            );
-
-            await loadNotifications();
-
-            showToast(
-                "Impossible de marquer toutes les notifications.",
-                "error"
-            );
+            console.error("Erreur marquage global :", error);
+            showToast("Impossible de tout marquer comme lu.", "error");
         }
     }
 
-    /* =========================================================
-       RECHERCHE DANS LES NOTIFICATIONS
-       ========================================================= */
-
-    function createNotificationSearch() {
-        const toolbar =
-            $(".notifications-toolbar");
-
-        if (!toolbar) {
-            return;
-        }
-
-        if (
-            $("#notification-local-search")
-        ) {
-            return;
-        }
-
-        const searchWrapper =
-            document.createElement("div");
-
-        searchWrapper.id =
-            "notification-local-search";
-
-        searchWrapper.className =
-            "notification-local-search";
-
-        searchWrapper.innerHTML = `
-            <i
-                class="fa-solid fa-magnifying-glass"
-                aria-hidden="true">
-            </i>
-
-            <input
-                id="notificationSearchInput"
-                type="search"
-                placeholder="Rechercher dans les notifications"
-                autocomplete="off"
-                aria-label="Rechercher dans les notifications">
-
-            <button
-                type="button"
-                id="notificationSearchClear"
-                aria-label="Effacer"
-                hidden>
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-        `;
-
-        const settingsLink =
-            $(".notification-settings-link");
-
-        if (settingsLink) {
-            toolbar.insertBefore(
-                searchWrapper,
-                settingsLink
-            );
-        } else {
-            toolbar.appendChild(
-                searchWrapper
-            );
-        }
-
-        const input =
-            $("#notificationSearchInput");
-
-        const clear =
-            $("#notificationSearchClear");
-
-        input?.addEventListener(
-            "input",
-            () => {
-
-                state.searchQuery =
-                    input.value || "";
-
-                clear.hidden =
-                    !state.searchQuery;
-
-                applyNotificationFilter();
-                renderNotifications();
-            }
-        );
-
-        clear?.addEventListener(
-            "click",
-            () => {
-
-                input.value = "";
-                state.searchQuery = "";
-                clear.hidden = true;
-
-                applyNotificationFilter();
-                renderNotifications();
-
-                input.focus();
-            }
-        );
-    }
-
-    /* =========================================================
-       TEMPS RÉEL SUPABASE
-       ========================================================= */
-
-    function subscribeToNotifications() {
-        const client =
-            getSupabaseClient();
-
-        if (!client || !state.user) {
-            return;
-        }
+    async function deleteNotification(notificationId) {
+        const client = getSupabaseClient();
+        if (!client || !state.user) return;
 
         try {
-            state.notificationChannel =
-                client
-                    .channel(
-                        `notifications-${state.user.id}`
-                    )
-                    .on(
-                        "postgres_changes",
-                        {
-                            event: "INSERT",
-                            schema: "public",
-                            table: "notifications",
-                            filter:
-                                `user_id=eq.${state.user.id}`
-                        },
-                        payload => {
+            const { error } = await client
+                .from("notifications")
+                .delete()
+                .eq("id", notificationId)
+                .eq("user_id", state.user.id);
 
-                            if (!payload?.new) {
-                                return;
-                            }
+            if (error) throw error;
 
-                            const exists =
-                                state.notifications.some(
-                                    notification =>
-                                        notification.id ===
-                                        payload.new.id
-                                );
+            state.notifications = state.notifications.filter(n => n.id !== notificationId);
 
-                            if (exists) {
-                                return;
-                            }
-
-                            state.notifications.unshift(
-                                payload.new
-                            );
-
-                            updateNotificationCounters();
-
-                            applyNotificationFilter();
-                            renderNotifications();
-
-                            showToast(
-                                payload.new.title ||
-                                "Nouvelle notification",
-                                "info"
-                            );
-                        }
-                    )
-                    .on(
-                        "postgres_changes",
-                        {
-                            event: "UPDATE",
-                            schema: "public",
-                            table: "notifications",
-                            filter:
-                                `user_id=eq.${state.user.id}`
-                        },
-                        payload => {
-
-                            if (!payload?.new) {
-                                return;
-                            }
-
-                            const index =
-                                state.notifications.findIndex(
-                                    notification =>
-                                        notification.id ===
-                                        payload.new.id
-                                );
-
-                            if (index === -1) {
-                                return;
-                            }
-
-                            state.notifications[index] =
-                                payload.new;
-
-                            updateNotificationCounters();
-
-                            applyNotificationFilter();
-                            renderNotifications();
-                        }
-                    )
-                    .on(
-                        "postgres_changes",
-                        {
-                            event: "DELETE",
-                            schema: "public",
-                            table: "notifications",
-                            filter:
-                                `user_id=eq.${state.user.id}`
-                        },
-                        payload => {
-
-                            const id =
-                                payload?.old?.id;
-
-                            if (!id) {
-                                return;
-                            }
-
-                            state.notifications =
-                                state.notifications.filter(
-                                    notification =>
-                                        notification.id !==
-                                        id
-                                );
-
-                            updateNotificationCounters();
-
-                            applyNotificationFilter();
-                            renderNotifications();
-                        }
-                    )
-                    .subscribe();
-
+            updateNotificationCounters();
+            applyNotificationFilter();
+            renderNotifications();
+            showToast("Notification supprimée.", "info");
         } catch (error) {
-            console.error(
-                "Erreur Realtime notifications :",
-                error
-            );
+            console.error("Erreur suppression notification :", error);
+            showToast("Impossible de supprimer la notification.", "error");
         }
     }
 
     /* =========================================================
-       BOUTON TOUT MARQUER COMME LU
+       AFFICHAGE
        ========================================================= */
 
-    function bindMarkAllButton() {
-        const button =
-            $("#mark-all-read-button");
+    function renderNotifications() {
+        const container = $("#notifications-container");
+        if (!container) return;
 
-        if (!button) {
+        if (state.loading) {
+            container.innerHTML = `
+                <div class="nv-loading-state">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Chargement des notifications...</p>
+                </div>
+            `;
             return;
         }
 
-        button.addEventListener(
-            "click",
-            markAllAsRead
-        );
-    }
+        if (state.filteredNotifications.length === 0) {
+            container.innerHTML = `
+                <div class="nv-empty-state">
+                    <i class="fa-regular fa-bell-slash"></i>
+                    <h3>Aucune notification</h3>
+                    <p>Vous n'avez aucune notification pour le moment.</p>
+                </div>
+            `;
+            return;
+        }
 
-    /* =========================================================
-       CLIC EXTÉRIEUR
-       ========================================================= */
+        container.innerHTML = state.filteredNotifications.map(n => {
+            const { icon, className } = getNotificationIcon(n.type);
+            const timeAgo = formatDate(n.created_at);
 
-    function bindGlobalEvents() {
-        document.addEventListener(
-            "click",
-            event => {
+            return `
+                <div class="notification-item ${n.is_read ? "" : "unread"}" data-id="${escapeHTML(n.id)}">
+                    <div class="notification-icon ${className}">
+                        <i class="fa-solid ${icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header-row">
+                            <h4 class="notification-title">${escapeHTML(n.title || "Notification")}</h4>
+                            <span class="notification-time">${escapeHTML(timeAgo)}</span>
+                        </div>
+                        <p class="notification-message">${escapeHTML(n.message || "")}</p>
+                    </div>
+                    <div class="notification-actions">
+                        ${!n.is_read ? `
+                            <button type="button" class="nv-icon-button mark-read-btn" title="Marquer comme lu" data-id="${escapeHTML(n.id)}">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        ` : ""}
+                        <button type="button" class="nv-icon-button delete-notif-btn" title="Supprimer" data-id="${escapeHTML(n.id)}">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
 
-                const profileButton =
-                    $("#headerProfileButton");
+        // Bind item actions
+        $$(".mark-read-btn", container).forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = btn.dataset.id;
+                markAsRead(id);
+            });
+        });
 
-                const profileMenu =
-                    $("#netview-profile-menu");
+        $$(".delete-notif-btn", container).forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = btn.dataset.id;
+                deleteNotification(id);
+            });
+        });
 
-                if (
-                    profileMenu &&
-                    profileButton &&
-                    !profileMenu.contains(event.target) &&
-                    !profileButton.contains(event.target)
-                ) {
-                    closeProfileMenu();
+        $$(".notification-item", container).forEach(item => {
+            item.addEventListener("click", () => {
+                const id = item.dataset.id;
+                const notif = state.notifications.find(n => n.id === id);
+                if (notif && !notif.is_read) {
+                    markAsRead(id);
                 }
-            }
-        );
-
-        document.addEventListener(
-            "keydown",
-            event => {
-
-                if (event.key === "Escape") {
-                    closeProfileMenu();
-                    closeSidebar();
-                    closeMobileSearch();
-                }
-            }
-        );
-
-        window.addEventListener(
-            "resize",
-            () => {
-
-                if (window.innerWidth > 900) {
-                    closeSidebar();
-                }
-            }
-        );
-    }
-
-    /* =========================================================
-       AUTHENTIFICATION
-       ========================================================= */
-
-    function redirectToAuth() {
-        const currentUrl =
-            `${window.location.pathname}${window.location.search}${window.location.hash}`;
-
-        window.location.href =
-            `auth.html?redirect=${encodeURIComponent(currentUrl)}`;
+            });
+        });
     }
 
     /* =========================================================
@@ -2383,94 +1522,66 @@
        ========================================================= */
 
     async function init() {
-        try {
-            state.user =
-                await getCurrentUser();
+        const client = getSupabaseClient();
+        if (!client) {
+            console.error("NetView : Supabase client manquant.");
+            state.loading = false;
+            renderNotifications();
+            return;
+        }
 
-            if (!state.user) {
-                redirectToAuth();
-                return;
-            }
-
+        state.user = await getCurrentUser();
+        if (state.user) {
             await loadProfile();
+        }
 
-            createHeader();
-            createSidebar();
+        createHeader();
+        createSidebar();
+        bindSearch();
+        bindNotificationFilters();
 
-            bindSearch();
-            bindNotificationFilters();
-            bindMarkAllButton();
-            createNotificationSearch();
-            bindGlobalEvents();
+        const markAllButton = $("#mark-all-read-button");
+        if (markAllButton) {
+            markAllButton.addEventListener("click", markAllAsRead);
+        }
 
-            await loadNotifications();
+        const searchInput = $("#notification-search-input");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                state.searchQuery = e.target.value;
+                applyNotificationFilter();
+                renderNotifications();
+            });
+        }
 
-            subscribeToNotifications();
+        await loadNotifications();
 
-        } catch (error) {
-            console.error(
-                "Erreur initialisation notification.js :",
-                error
-            );
+        // Realtime subscription if available
+        if (client && state.user) {
+            client
+                .channel("public:notifications")
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "INSERT",
+                        schema: "public",
+                        table: "notifications",
+                        filter: `user_id=eq.${state.user.id}`
+                    },
+                    (payload) => {
+                        if (payload.new) {
+                            state.notifications.unshift(payload.new);
+                            updateNotificationCounters();
+                            applyNotificationFilter();
+                            renderNotifications();
+                            showToast("Nouvelle notification reçue !", "info");
+                        }
+                    }
+                )
+                .subscribe();
         }
     }
 
-    /* =========================================================
-       VISIBILITÉ DE LA PAGE
-       ========================================================= */
-
-    document.addEventListener(
-        "visibilitychange",
-        () => {
-
-            if (
-                document.visibilityState ===
-                "visible" &&
-                state.user
-            ) {
-                loadNotifications();
-            }
-        }
-    );
-
-    /* =========================================================
-       EXPOSITION API
-       ========================================================= */
-
-    window.NetViewNotifications = {
-        reload: loadNotifications,
-
-        markAllAsRead,
-
-        markAsRead:
-            markNotificationAsRead,
-
-        markAsUnread:
-            markNotificationAsUnread,
-
-        delete:
-            deleteNotification,
-
-        getUnreadCount
-    };
-
-    /* =========================================================
-       START
-       ========================================================= */
-
-    if (
-        document.readyState ===
-        "loading"
-    ) {
-        document.addEventListener(
-            "DOMContentLoaded",
-            init,
-            {
-                once: true
-            }
-        );
-    } else {
-        init();
-    }
+    document.addEventListener("DOMContentLoaded", init);
 
 })();
