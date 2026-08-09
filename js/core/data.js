@@ -199,8 +199,12 @@ export async function rpc(
 // ==========================================
 
 export async function getDevices() {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return { data: [], error: null };
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        return [];
+    }
 
     const { data, error } = await supabase
         .from("devices")
@@ -208,14 +212,25 @@ export async function getDevices() {
         .eq("user_id", user.id)
         .order("last_seen", { ascending: false });
 
+    if (error) {
+        console.error("Erreur récupération appareils :", error);
+        return [];
+    }
+
     return data || [];
 }
 
-export async function deleteDevice(
-    deviceId
-) {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return { error: "Non connecté" };
+
+export async function deleteDevice(deviceId) {
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        return {
+            data: null,
+            error: new Error("Non connecté")
+        };
+    }
 
     return await supabase
         .from("devices")
@@ -224,145 +239,287 @@ export async function deleteDevice(
         .eq("user_id", user.id);
 }
 
-export async function deleteOtherDevices(
-    currentDeviceId
-) {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return { error: "Non connecté" };
+
+export async function deleteOtherDevices(currentDeviceId) {
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        return {
+            data: null,
+            error: new Error("Non connecté")
+        };
+    }
 
     return await supabase
         .from("devices")
         .delete()
-        .neq("id", currentDeviceId)
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .neq("id", currentDeviceId);
 }
+
 
 // ==========================================
 // Profile & Roles
 // ==========================================
 
 export async function getProfile() {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return null;
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
 
-    // 1. Récupération du profil principal
-    const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-    if (profileError) {
-        console.error("Erreur chargement profil:", profileError.message);
+    if (userError || !user) {
         return null;
     }
 
-    // 2. Récupération du rôle associé via user_roles et roles
-    const { data: userRoleData } = await supabase
-        .from("user_roles")
-        .select(`
-            roles (
-                name
-            )
-        `)
-        .eq("user_id", user.id)
-        .maybeSingle();
+    const { data: profileData, error: profileError } =
+        await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
 
-    let roleName = "Utilisateur";
-    if (userRoleData && userRoleData.roles) {
-        roleName = Array.isArray(userRoleData.roles) 
-            ? (userRoleData.roles[0]?.name || "Utilisateur") 
-            : (userRoleData.roles.name || "Utilisateur");
+    if (profileError) {
+        console.error(
+            "Erreur chargement profil :",
+            profileError.message
+        );
+
+        return null;
+    }
+
+    /*
+     * Le schéma utilise :
+     *
+     * user_roles.user_id
+     * user_roles.role_id
+     * roles.id
+     * roles.name
+     *
+     * et NON user_roles.role.
+     */
+
+    const { data: roleData, error: roleError } =
+        await supabase
+            .from("user_roles")
+            .select(`
+                role_id,
+                roles (
+                    id,
+                    name,
+                    description
+                )
+            `)
+            .eq("user_id", user.id);
+
+    if (roleError) {
+        console.error(
+            "Erreur chargement rôle :",
+            roleError.message
+        );
+    }
+
+    const roles = (roleData || [])
+        .map(item => item.roles)
+        .filter(Boolean);
+
+    const roleNames = roles.map(role => role.name);
+
+    let role = "user";
+
+    if (roleNames.includes("pro")) {
+        role = "pro";
+    } else if (roleNames.includes("creator")) {
+        role = "creator";
+    } else if (roleNames.includes("user")) {
+        role = "user";
+    } else if (roleNames.length > 0) {
+        role = roleNames[0];
     }
 
     return {
         ...profileData,
-        role: roleName
+
+        role,
+
+        roles,
+
+        roleNames
     };
 }
 
-export async function updateProfile(
-    values
-) {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return { error: "Non connecté" };
+
+export async function updateProfile(values) {
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        return {
+            data: null,
+            error: new Error("Non connecté")
+        };
+    }
 
     return await supabase
         .from("profiles")
         .update(values)
-        .eq("id", user.id);
+        .eq("id", user.id)
+        .select()
+        .single();
 }
+
 
 // ==========================================
 // User Settings
 // ==========================================
 
 export async function getUserSettings() {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return null;
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
 
-    const { data } = await supabase
+    if (userError || !user) {
+        return null;
+    }
+
+    const { data, error } = await supabase
         .from("user_settings")
         .select("*")
         .eq("user_id", user.id)
         .maybeSingle();
 
+    if (error) {
+        console.error(
+            "Erreur récupération paramètres :",
+            error.message
+        );
+
+        return null;
+    }
+
     return data;
 }
 
-export async function updateUserSettings(
-    values
-) {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return { error: "Non connecté" };
+
+export async function updateUserSettings(values) {
+    const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError || !user) {
+        return {
+            data: null,
+            error: new Error("Non connecté")
+        };
+    }
 
     return await supabase
         .from("user_settings")
         .update(values)
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .select()
+        .single();
 }
+
 
 // ==========================================
 // Videos
 // ==========================================
 
-export async function getVideos({ category, page, search }) {
+export async function getVideos({
+    category = null,
+    page = 1,
+    search = null
+} = {}) {
+
+    const limit = 12;
+
+    const from = Math.max(0, (page - 1) * limit);
+    const to = from + limit - 1;
+
     let query = supabase
-        .from('videos')
+        .from("videos")
         .select(`
             *,
             channels (
+                id,
                 name,
                 handle,
-                avatar_url
+                avatar_url,
+                verified,
+                subscribers_count
+            ),
+            video_categories (
+                id,
+                name
             )
-        `);
+        `)
+        .eq("status", "published")
+        .eq("visibility", "public");
 
-    // Filtrer par recherche si présente
-    if (search) {
-        query = query.ilike('title', `%${search}%`);
+    if (search && search.trim()) {
+        const searchValue = search.trim();
+
+        query = query.or(
+            `title.ilike.%${searchValue}%,description.ilike.%${searchValue}%`
+        );
     }
 
-    // Gestion de la pagination (optionnelle selon votre implémentation)
-    const limit = 12;
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-    query = query.range(from, to);
+    if (category && category !== "Tous") {
+        query = query.eq(
+            "category_id",
+            category
+        );
+    }
+
+    query = query
+        .order("published_at", {
+            ascending: false,
+            nullsFirst: false
+        })
+        .order("created_at", {
+            ascending: false
+        })
+        .range(from, to);
 
     const { data, error } = await query;
 
     if (error) {
-        console.error("Erreur Supabase getVideos:", error);
+        console.error(
+            "Erreur Supabase getVideos :",
+            error
+        );
+
         return [];
     }
 
-    // Transformer les données pour s'adapter à votre rendu HTML
-    return data.map(video => ({
+    return (data || []).map(video => ({
         ...video,
-        channelName: video.channels?.name || 'Chaîne inconnue',
-        channelAvatar: video.channels?.avatar_url || 'images/default-avatar.png'
+
+        channelName:
+            video.channels?.name ||
+            "Chaîne inconnue",
+
+        channelHandle:
+            video.channels?.handle ||
+            null,
+
+        channelAvatar:
+            video.channels?.avatar_url ||
+            "images/default-avatar.png",
+
+        channelVerified:
+            video.channels?.verified ||
+            false,
+
+        subscribersCount:
+            video.channels?.subscribers_count ||
+            0,
+
+        categoryName:
+            video.video_categories?.name ||
+            null
     }));
 }
+
+
 // ==========================================
 // Shorts
 // ==========================================
@@ -370,13 +527,24 @@ export async function getVideos({ category, page, search }) {
 export async function getShorts(options = {}) {
     let query = supabase
         .from("shorts")
-        .select("*")
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        );
+        .select(`
+            *,
+            channels (
+                id,
+                name,
+                handle,
+                avatar_url,
+                verified,
+                subscribers_count
+            )
+        `)
+        .order("published_at", {
+            ascending: false,
+            nullsFirst: false
+        })
+        .order("created_at", {
+            ascending: false
+        });
 
     if (options.category && options.category !== "Tous") {
         query = query.eq(
@@ -387,11 +555,18 @@ export async function getShorts(options = {}) {
 
     const { data, error } = await query;
 
-    if (error)
+    if (error) {
+        console.error(
+            "Erreur récupération Shorts :",
+            error
+        );
+
         throw error;
+    }
 
     return data || [];
 }
+
 
 // ==========================================
 // Lives
@@ -400,23 +575,35 @@ export async function getShorts(options = {}) {
 export async function getLives() {
     const { data, error } = await supabase
         .from("lives")
-        .select("*")
-        .eq(
-            "status",
-            "live"
-        )
-        .order(
-            "started_at",
-            {
-                ascending: false
-            }
+        .select(`
+            *,
+            channels (
+                id,
+                name,
+                handle,
+                avatar_url,
+                verified,
+                subscribers_count
+            )
+        `)
+        .eq("status", "live")
+        .eq("visibility", "public")
+        .order("started_at", {
+            ascending: false
+        });
+
+    if (error) {
+        console.error(
+            "Erreur récupération lives :",
+            error
         );
 
-    if (error)
         throw error;
+    }
 
     return data || [];
 }
+
 
 // ==========================================
 // Sponsored Products
@@ -425,23 +612,32 @@ export async function getLives() {
 export async function getSponsoredProducts() {
     const { data, error } = await supabase
         .from("products")
-        .select("*")
-        .eq(
-            "is_sponsored",
-            true
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
+        .select(`
+            *,
+            stores (
+                id,
+                name,
+                slug,
+                logo_path,
+                owner_id
+            )
+        `)
+        .eq("is_sponsored", "TRUE")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (error) {
+        console.error(
+            "Erreur récupération produits sponsorisés :",
+            error
         );
 
-    if (error)
         throw error;
+    }
 
     return data || [];
-} 
+}
 // ==========================================
 // Search
 // ==========================================
@@ -449,248 +645,270 @@ export async function getSponsoredProducts() {
 const SEARCH_LIMIT = 20;
 
 
+// ==========================================
+// Search Videos
+// ==========================================
 
 export async function searchVideos(
     query,
     page = 1
-){
+) {
+    const search = String(query || "").trim();
 
-    const from =
-        (page - 1) * SEARCH_LIMIT;
+    if (!search) {
+        return [];
+    }
 
-    const to =
-        from + SEARCH_LIMIT - 1;
+    const from = (page - 1) * SEARCH_LIMIT;
+    const to = from + SEARCH_LIMIT - 1;
 
-    const { data, error } =
-        await supabase
+    const { data, error } = await supabase
         .from("videos")
         .select(`
             *,
-            profiles:user_id(
-                username,
-                avatar_url
+            channels (
+                id,
+                name,
+                handle,
+                avatar_url,
+                verified,
+                subscribers_count
+            ),
+            video_categories (
+                id,
+                name
             )
         `)
         .or(
-            `title.ilike.%${query}%,description.ilike.%${query}%`
+            `title.ilike.%${search}%,description.ilike.%${search}%`
         )
-        .eq(
-            "status",
-            "published"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        )
-        .range(
-            from,
-            to
+        .eq("status", "published")
+        .eq("visibility", "public")
+        .order("published_at", {
+            ascending: false,
+            nullsFirst: false
+        })
+        .range(from, to);
+
+    if (error) {
+        console.error(
+            "Erreur recherche vidéos :",
+            error
         );
 
-    if(error){
-
         throw error;
-
     }
 
     return data || [];
-
 }
 
 
-
-
+// ==========================================
+// Search Shorts
+// ==========================================
 
 export async function searchShorts(
     query,
     page = 1
-){
+) {
+    const search = String(query || "").trim();
 
-    const from =
-        (page - 1) * SEARCH_LIMIT;
+    if (!search) {
+        return [];
+    }
 
-    const to =
-        from + SEARCH_LIMIT - 1;
+    const from = (page - 1) * SEARCH_LIMIT;
+    const to = from + SEARCH_LIMIT - 1;
 
-    const { data, error } =
-        await supabase
+    const { data, error } = await supabase
         .from("shorts")
         .select(`
             *,
-            profiles:user_id(
-                username,
-                avatar_url
+            channels (
+                id,
+                name,
+                handle,
+                avatar_url,
+                verified,
+                subscribers_count
             )
         `)
         .or(
-            `title.ilike.%${query}%,description.ilike.%${query}%`
+            `title.ilike.%${search}%,description.ilike.%${search}%`
         )
-        .eq(
-            "status",
-            "published"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        )
-        .range(
-            from,
-            to
+        .order("published_at", {
+            ascending: false,
+            nullsFirst: false
+        })
+        .range(from, to);
+
+    if (error) {
+        console.error(
+            "Erreur recherche Shorts :",
+            error
         );
 
-    if(error){
-
         throw error;
-
     }
 
     return data || [];
-
 }
 
 
-
-
+// ==========================================
+// Search Channels
+// ==========================================
 
 export async function searchChannels(
     query,
     page = 1
-){
+) {
+    const search = String(query || "").trim();
 
-    const from =
-        (page - 1) * SEARCH_LIMIT;
+    if (!search) {
+        return [];
+    }
 
-    const to =
-        from + SEARCH_LIMIT - 1;
+    const from = (page - 1) * SEARCH_LIMIT;
+    const to = from + SEARCH_LIMIT - 1;
 
-    const { data, error } =
-        await supabase
+    const { data, error } = await supabase
         .from("channels")
-        .select("*")
+        .select(`
+            *,
+            profiles:owner_id (
+                id,
+                username,
+                display_name,
+                avatar_url,
+                verified
+            )
+        `)
         .or(
-            `name.ilike.%${query}%,description.ilike.%${query}%`
+            `name.ilike.%${search}%,description.ilike.%${search}%,handle.ilike.%${search}%`
         )
-        .order(
-            "subscribers",
-            {
-                ascending:false
-            }
-        )
-        .range(
-            from,
-            to
+        .order("subscribers_count", {
+            ascending: false
+        })
+        .range(from, to);
+
+    if (error) {
+        console.error(
+            "Erreur recherche chaînes :",
+            error
         );
 
-    if(error){
-
         throw error;
-
     }
 
     return data || [];
-
 }
 
 
-
-
+// ==========================================
+// Search Lives
+// ==========================================
 
 export async function searchLives(
     query,
     page = 1
-){
+) {
+    const search = String(query || "").trim();
 
-    const from =
-        (page - 1) * SEARCH_LIMIT;
+    if (!search) {
+        return [];
+    }
 
-    const to =
-        from + SEARCH_LIMIT - 1;
+    const from = (page - 1) * SEARCH_LIMIT;
+    const to = from + SEARCH_LIMIT - 1;
 
-    const { data, error } =
-        await supabase
+    const { data, error } = await supabase
         .from("lives")
         .select(`
             *,
-            channels(
+            channels (
+                id,
                 name,
-                avatar_url
+                handle,
+                avatar_url,
+                verified,
+                subscribers_count
             )
         `)
         .or(
-            `title.ilike.%${query}%,description.ilike.%${query}%`
+            `title.ilike.%${search}%,description.ilike.%${search}%,category.ilike.%${search}%`
         )
-        .eq(
-            "status",
-            "live"
-        )
-        .order(
-            "started_at",
-            {
-                ascending:false
-            }
-        )
-        .range(
-            from,
-            to
+        .eq("status", "live")
+        .eq("visibility", "public")
+        .order("started_at", {
+            ascending: false
+        })
+        .range(from, to);
+
+    if (error) {
+        console.error(
+            "Erreur recherche lives :",
+            error
         );
 
-    if(error){
-
         throw error;
-
     }
 
     return data || [];
-
 }
 
 
-
-
+// ==========================================
+// Search Products
+// ==========================================
 
 export async function searchProducts(
     query,
     page = 1
-){
+) {
+    const search = String(query || "").trim();
 
-    const from =
-        (page - 1) * SEARCH_LIMIT;
+    if (!search) {
+        return [];
+    }
 
-    const to =
-        from + SEARCH_LIMIT - 1;
+    const from = (page - 1) * SEARCH_LIMIT;
+    const to = from + SEARCH_LIMIT - 1;
 
-    const { data, error } =
-        await supabase
+    const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(`
+            *,
+            stores (
+                id,
+                name,
+                slug,
+                logo_path,
+                owner_id
+            ),
+            product_categories (
+                id,
+                name,
+                icon
+            )
+        `)
         .or(
-            `name.ilike.%${query}%,description.ilike.%${query}%`
+            `title.ilike.%${search}%,description.ilike.%${search}%,short_description.ilike.%${search}%`
         )
-        .eq(
-            "status",
-            "published"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        )
-        .range(
-            from,
-            to
+        .eq("status", "published")
+        .order("created_at", {
+            ascending: false
+        })
+        .range(from, to);
+
+    if (error) {
+        console.error(
+            "Erreur recherche produits :",
+            error
         );
 
-    if(error){
-
         throw error;
-
     }
 
     return data || [];
-
 }
