@@ -1464,7 +1464,750 @@
 
     </div>
 
+<!-- ==========================================
+     NetView
+     notification.html
+     PARTIE 2 / 2
+========================================== -->
 
+        <!-- ==========================================
+             Notifications Content
+        =========================================== -->
+
+        <main
+            id="notifications-main"
+            class="notifications-main"
+            role="main"
+        >
+
+            <!-- Page Header -->
+
+            <section
+                class="notifications-header"
+                aria-labelledby="notifications-title"
+            >
+
+                <div class="notifications-header-content">
+
+                    <div class="notifications-header-icon">
+                        <i
+                            class="fa-solid fa-bell"
+                            aria-hidden="true"
+                        ></i>
+                    </div>
+
+                    <div>
+
+                        <h1 id="notifications-title">
+                            Notifications
+                        </h1>
+
+                        <p>
+                            Retrouvez toutes vos activités récentes sur NetView.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="notifications-header-actions">
+
+                    <button
+                        type="button"
+                        id="mark-all-read-btn"
+                        class="notifications-action-btn"
+                        aria-label="Marquer toutes les notifications comme lues"
+                    >
+
+                        <i
+                            class="fa-solid fa-check-double"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Tout marquer comme lu
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        id="notification-settings-btn"
+                        class="notifications-action-btn"
+                        aria-label="Paramètres des notifications"
+                    >
+
+                        <i
+                            class="fa-solid fa-gear"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Paramètres
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 Notification Filters
+            =========================================== -->
+
+            <section
+                class="notifications-filters"
+                aria-label="Filtres des notifications"
+            >
+
+                <div
+                    class="notifications-filter-list"
+                    role="tablist"
+                    aria-label="Types de notifications"
+                >
+
+                    <button
+                        type="button"
+                        class="notification-filter active"
+                        data-filter="all"
+                        role="tab"
+                        aria-selected="true"
+                    >
+
+                        <i
+                            class="fa-solid fa-inbox"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Toutes
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="unread"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-envelope"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Non lues
+                        </span>
+
+                        <span
+                            id="unread-count"
+                            class="notification-filter-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="videos"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-play"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Vidéos
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="channels"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-tv"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Chaînes
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="live"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-tower-broadcast"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Live
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="marketplace"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-store"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Boutique
+                        </span>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="notification-filter"
+                        data-filter="system"
+                        role="tab"
+                        aria-selected="false"
+                    >
+
+                        <i
+                            class="fa-solid fa-circle-info"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            NetView
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 Notification List
+            =========================================== -->
+
+            <section
+                id="notifications-section"
+                class="notifications-section"
+                aria-label="Liste des notifications"
+            >
+
+                <!-- Loading -->
+
+                <div
+                    id="notifications-loader"
+                    class="notifications-loader"
+                    aria-live="polite"
+                    hidden
+                >
+
+                    <div class="notification-skeleton"></div>
+                    <div class="notification-skeleton"></div>
+                    <div class="notification-skeleton"></div>
+                    <div class="notification-skeleton"></div>
+                    <div class="notification-skeleton"></div>
+
+                </div>
+
+
+                <!-- Notifications -->
+
+                <div
+                    id="notifications-list"
+                    class="notifications-list"
+                    aria-live="polite"
+                    aria-busy="false"
+                ></div>
+
+
+                <!-- Empty State -->
+
+                <div
+                    id="notifications-empty"
+                    class="notifications-empty"
+                    hidden
+                >
+
+                    <div class="notifications-empty-icon">
+
+                        <i
+                            class="fa-regular fa-bell-slash"
+                            aria-hidden="true"
+                        ></i>
+
+                    </div>
+
+                    <h2>
+                        Aucune notification
+                    </h2>
+
+                    <p>
+                        Vous êtes à jour. Les nouvelles activités apparaîtront ici.
+                    </p>
+
+                </div>
+
+
+                <!-- Error State -->
+
+                <div
+                    id="notifications-error"
+                    class="notifications-error"
+                    hidden
+                >
+
+                    <div class="notifications-error-icon">
+
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            aria-hidden="true"
+                        ></i>
+
+                    </div>
+
+                    <h2>
+                        Impossible de charger les notifications
+                    </h2>
+
+                    <p id="notifications-error-message">
+                        Une erreur est survenue lors du chargement de vos notifications.
+                    </p>
+
+                    <button
+                        type="button"
+                        id="notifications-retry-btn"
+                        class="notifications-retry-btn"
+                    >
+
+                        <i
+                            class="fa-solid fa-rotate-right"
+                            aria-hidden="true"
+                        ></i>
+
+                        Réessayer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 Infinite Loading
+            =========================================== -->
+
+            <div
+                id="notifications-load-more"
+                class="notifications-load-more"
+                hidden
+            >
+
+                <div
+                    class="notifications-load-more-spinner"
+                    aria-hidden="true"
+                ></div>
+
+                <span>
+                    Chargement des notifications...
+                </span>
+
+            </div>
+
+
+            <!-- ==========================================
+                 End Of Notifications
+            =========================================== -->
+
+            <div
+                id="notifications-end"
+                class="notifications-end"
+                hidden
+            >
+
+                <i
+                    class="fa-solid fa-check"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Vous avez consulté toutes vos notifications.
+                </span>
+
+            </div>
+
+        </main>
+
+
+        <!-- ==========================================
+             Notification Detail Modal
+        =========================================== -->
+
+        <div
+            id="notification-modal"
+            class="notification-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="notification-modal-title"
+            hidden
+        >
+
+            <div
+                class="notification-modal-overlay"
+                data-close-notification-modal
+            ></div>
+
+            <div class="notification-modal-container">
+
+                <div class="notification-modal-header">
+
+                    <h2 id="notification-modal-title">
+                        Notification
+                    </h2>
+
+                    <button
+                        type="button"
+                        id="close-notification-modal"
+                        class="notification-modal-close"
+                        aria-label="Fermer"
+                    >
+
+                        <i
+                            class="fa-solid fa-xmark"
+                            aria-hidden="true"
+                        ></i>
+
+                    </button>
+
+                </div>
+
+                <div
+                    id="notification-modal-content"
+                    class="notification-modal-content"
+                ></div>
+
+                <div class="notification-modal-footer">
+
+                    <button
+                        type="button"
+                        id="notification-modal-dismiss"
+                        class="notification-modal-dismiss"
+                    >
+                        Fermer
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             Notification Context Menu
+        =========================================== -->
+
+        <div
+            id="notification-context-menu"
+            class="notification-context-menu"
+            role="menu"
+            hidden
+        >
+
+            <button
+                type="button"
+                data-notification-action="read"
+                role="menuitem"
+            >
+
+                <i
+                    class="fa-solid fa-check"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Marquer comme lu
+                </span>
+
+            </button>
+
+            <button
+                type="button"
+                data-notification-action="unread"
+                role="menuitem"
+            >
+
+                <i
+                    class="fa-solid fa-envelope"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Marquer comme non lu
+                </span>
+
+            </button>
+
+            <button
+                type="button"
+                data-notification-action="delete"
+                role="menuitem"
+            >
+
+                <i
+                    class="fa-solid fa-trash"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Supprimer
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             Confirmation Modal
+        =========================================== -->
+
+        <div
+            id="notification-confirm-modal"
+            class="notification-confirm-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="notification-confirm-title"
+            hidden
+        >
+
+            <div class="notification-confirm-container">
+
+                <div class="notification-confirm-icon">
+
+                    <i
+                        class="fa-solid fa-circle-question"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+                <h2 id="notification-confirm-title">
+                    Confirmer l'action
+                </h2>
+
+                <p id="notification-confirm-message">
+                    Voulez-vous vraiment effectuer cette action ?
+                </p>
+
+                <div class="notification-confirm-actions">
+
+                    <button
+                        type="button"
+                        id="notification-confirm-cancel"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="button"
+                        id="notification-confirm-action"
+                    >
+                        Confirmer
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             Toast
+        =========================================== -->
+
+        <div
+            id="notification-toast"
+            class="notification-toast"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            hidden
+        >
+
+            <div
+                id="notification-toast-icon"
+                class="notification-toast-icon"
+            ></div>
+
+            <div
+                id="notification-toast-message"
+                class="notification-toast-message"
+            ></div>
+
+            <button
+                type="button"
+                id="notification-toast-close"
+                class="notification-toast-close"
+                aria-label="Fermer la notification"
+            >
+
+                <i
+                    class="fa-solid fa-xmark"
+                    aria-hidden="true"
+                ></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             Accessibility Live Region
+        =========================================== -->
+
+        <div
+            id="notifications-live-region"
+            class="sr-only"
+            aria-live="polite"
+            aria-atomic="true"
+        ></div>
+
+
+        <!-- ==========================================
+             Footer
+        =========================================== -->
+
+        <footer
+            id="site-footer"
+            class="site-footer"
+        >
+
+            <div class="footer-container">
+
+                <div class="footer-brand">
+
+                    <a
+                        href="index.html"
+                        class="footer-logo"
+                        aria-label="NetView - Accueil"
+                    >
+
+                        <img
+                            src="images/NetView.png"
+                            alt="NetView"
+                        >
+
+                    </a>
+
+                    <p>
+                        NetView — vidéos, lives, créateurs, communauté et marketplace.
+                    </p>
+
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="help.html">
+                        Aide
+                    </a>
+
+                    <a href="privacy.html">
+                        Confidentialité
+                    </a>
+
+                    <a href="conditions-utilisation.html">
+                        Conditions
+                    </a>
+
+                    <a href="regles-communautaires.html">
+                        Règles communautaires
+                    </a>
+
+                    <a href="contact.html">
+                        Contact
+                    </a>
+
+                </div>
+
+                <div class="footer-copyright">
+
+                    <span>
+                        © <span id="footer-year">2026</span> NetView.
+                    </span>
+
+                    <span>
+                        Tous droits réservés.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+
+    <!-- ==========================================
+         Global Modal Container
+    =========================================== -->
+
+    <div
+        id="global-modal-container"
+        class="global-modal-container"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- ==========================================
+         Global Toast Container
+    =========================================== -->
+
+    <div
+        id="global-toast-container"
+        class="global-toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+</body>
+
+</html>
     <!-- ==========================================
          PAGE SCRIPTS
     =========================================== -->
