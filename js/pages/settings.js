@@ -6,7 +6,9 @@
 import {
     getSession,
     getUser,
-    signOut
+    signOut,
+    refreshUser,
+    getRole
 } from "../core/auth.js";
 
 import {
@@ -157,7 +159,31 @@ function fillPage() {
     if (pushNotificationsToggle) pushNotificationsToggle.checked = currentSettings?.push_notifications ?? true;
 }
 
+// Fonction pour charger les infos de profil
+async function loadUserSettings() {
+    try {
+        const user = await refreshUser();
+        if (!user) return;
 
+        // Récupérer le type de compte (qui est maintenant stocké dans profiles)
+        const accountType = await getRole();
+
+        // Mise à jour du DOM
+        const accountTypeElement = document.getElementById("account_type");
+        if (accountTypeElement) {
+            // Affiche la valeur (ex: "pro" ou "user")
+            // .toUpperCase() permet de l'afficher proprement en majuscules
+            accountTypeElement.textContent = accountType ? accountType.toUpperCase() : "USER";
+        }
+    } catch (error) {
+        console.error("Erreur lors du chargement des paramètres :", error);
+    }
+}
+
+// Initialisation au chargement de la page
+document.addEventListener("DOMContentLoaded", () => {
+    loadUserSettings();
+});
 // ==========================================
 // Préférences
 // ==========================================
