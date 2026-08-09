@@ -4,6 +4,9 @@
     Partie 1 — Layout général + Header + Sidebar
 ========================================== */
 
+/* ==========================================
+   NetView Background
+========================================== */
 /* --- Animated Background --- */
 .nv-home-background {
     position: fixed;
@@ -62,7 +65,7 @@
 
 /* --- Main Layout --- */
 .nv-home {
-    padding: calc(var(--nv-header-height, 64px) + 48px) 24px 40px 24px;
+    padding: calc(var(--nv-header-height, 64px) + 20px) 24px 40px 24px;
     max-width: 1800px;
     margin: 0 auto;
     display: flex;
@@ -75,323 +78,416 @@
         padding-left: calc(var(--nv-sidebar-width, 240px) + 24px);
     }
 }
-
 /* ==========================================
-   Mobile Background & Body
+   Mobile
 ========================================== */
-@media(max-width: 600px) {
-    .nv-orb.one {
-        width: 280px;
-        height: 280px;
+
+@media(max-width:600px){
+    .nv-orb.one{
+        width:280px;
+        height:280px;
     }
-    .nv-orb.two {
-        width: 250px;
-        height: 250px;
+    .nv-orb.two{
+        width:250px;
+        height:250px;
     }
-    .nv-orb.three {
-        width: 220px;
-        height: 220px;
+    .nv-orb.three{
+        width:220px;
+        height:220px;
     }
 }
+/* ==========================================
+   Body
+========================================== */
 
-body {
-    min-height: 100vh;
-    overflow-x: hidden;
-    background: var(--nv-background);
-    color: var(--nv-text);
-    position: relative;
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+    background:var(--nv-background);
+    color:var(--nv-text);
+    position:relative;
 }
 
 /* ==========================================
    Header
 ========================================== */
-.nv-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    background: var(--nv-surface);
-    border-bottom: 1px solid var(--nv-border);
-    z-index: 1000;
+
+.nv-header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    background:var(--nv-surface);
+    border-bottom:1px solid var(--nv-border);
+    z-index:1000;
 }
 
-.nv-header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
+/* ==========================================
+   Header Left
+========================================== */
+
+.nv-header-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-shrink:0;
 }
 
-.nv-logo {
-    display: flex;
-    align-items: center;
+.nv-logo{
+    display:flex;
+    align-items:center;
 }
 
-.nv-logo img {
-    width: 120px;
-    height: auto;
-    object-fit: contain;
+.nv-logo img{
+    width:120px;
+    height:auto;
+    object-fit:contain;
 }
 
-.nv-header-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 0 40px;
+/* ==========================================
+   Header Center
+========================================== */
+
+.nv-header-center{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    padding:0 40px;
 }
 
-.nv-search-form {
-    display: flex;
-    width: 100%;
-    max-width: 640px;
-    height: 40px;
+.nv-search-form{
+    display:flex;
+    width:100%;
+    max-width:640px;
+    height:40px;
 }
 
-.nv-search-input {
-    flex: 1;
-    border: 1px solid var(--nv-border);
-    border-right: none;
-    border-radius: 20px 0 0 20px;
-    padding: 0 18px;
-    background: var(--nv-background);
-    color: var(--nv-text);
-    outline: none;
+.nv-search-input{
+    flex:1;
+    border:1px solid var(--nv-border);
+    border-right:none;
+    border-radius:20px 0 0 20px;
+    padding:0 18px;
+    background:var(--nv-background);
+    color:var(--nv-text);
+    outline:none;
 }
 
-.nv-search-input:focus {
-    border-color: var(--nv-primary);
+.nv-search-input:focus{
+    border-color:var(--nv-primary);
 }
 
-.nv-search-button {
-    width: 64px;
-    border: 1px solid var(--nv-border);
-    border-radius: 0 20px 20px 0;
-    background: var(--nv-surface-hover);
-    color: var(--nv-text);
-    cursor: pointer;
+.nv-search-button{
+    width:64px;
+    border:1px solid var(--nv-border);
+    border-radius:0 20px 20px 0;
+    background:var(--nv-surface-hover);
+    color:var(--nv-text);
+    cursor:pointer;
 }
 
-.nv-header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
+/* ==========================================
+   Header Right
+========================================== */
+
+.nv-header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-shrink:0;
 }
 
-.nv-icon-button {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: transparent;
-    border: none;
-    color: var(--nv-text);
-    cursor: pointer;
-    font-size: 18px;
+.nv-icon-button{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:transparent;
+    border:none;
+    color:var(--nv-text);
+    cursor:pointer;
+    font-size:18px;
 }
 
-.nv-icon-button:hover {
-    background: var(--nv-surface-hover);
+.nv-icon-button:hover{
+    background:var(--nv-surface-hover);
 }
 
-.nv-avatar-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
+.nv-avatar-button{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    overflow:hidden;
 }
 
-.nv-avatar-button img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.nv-avatar-button img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-.nv-login-button {
-    height: 40px;
-    padding: 0 18px;
-    border-radius: 20px;
-    border: 1px solid var(--nv-primary);
-    background: transparent;
-    color: var(--nv-primary);
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
+/* ==========================================
+   Bouton S'identifier
+========================================== */
+
+.nv-login-button{
+    height:40px;
+    padding:0 18px;
+    border-radius:20px;
+    border:1px solid var(--nv-primary);
+    background:transparent;
+    color:var(--nv-primary);
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
 }
 
-.nv-login-button:hover {
-    background: rgba(37, 99, 235, .12);
+.nv-login-button:hover{
+    background:rgba(37,99,235,.12);
 }
 
 /* ==========================================
    Sidebar
 ========================================== */
-.nv-sidebar {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    bottom: 0;
-    width: 72px;
-    background: var(--nv-surface);
-    border-right: 1px solid var(--nv-border);
-    overflow: hidden;
-    z-index: 900;
-    transition: width .3s ease, transform .3s ease;
+
+.nv-sidebar{
+    position:fixed;
+    top:64px;
+    left:0;
+    bottom:0;
+    width:72px;
+    background:var(--nv-surface);
+    border-right:1px solid var(--nv-border);
+    overflow:hidden;
+    z-index:900;
+    transition:width .3s ease;
 }
 
-.nv-sidebar.active {
-    width: 240px;
+.nv-sidebar.active{
+    width:240px;
 }
 
-.nv-sidebar-nav {
-    padding: 12px;
+.nv-sidebar-nav{
+    padding:12px;
 }
 
-.nv-sidebar a {
-    height: 44px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 0 14px;
-    border-radius: 12px;
-    color: var(--nv-text);
-    text-decoration: none;
-    white-space: nowrap;
+.nv-sidebar a{
+    height:44px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:0 14px;
+    border-radius:12px;
+    color:var(--nv-text);
+    text-decoration:none;
+    white-space:nowrap;
 }
 
-.nv-sidebar a:hover {
-    background: var(--nv-surface-hover);
+.nv-sidebar a:hover{
+    background:var(--nv-surface-hover);
 }
 
-.nv-sidebar i {
-    width: 24px;
-    text-align: center;
-    font-size: 18px;
+.nv-sidebar i{
+    width:24px;
+    text-align:center;
+    font-size:18px;
 }
 
-.nv-sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, .5);
-    opacity: 0;
-    visibility: hidden;
-    transition: .3s ease;
-    z-index: 850;
+/* ==========================================
+   Overlay Mobile
+========================================== */
+
+.nv-sidebar-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    opacity:0;
+    visibility:hidden;
+    transition:.3s ease;
+    z-index:850;
 }
 
-.nv-sidebar-overlay.active {
-    opacity: 1;
-    visibility: visible;
+.nv-sidebar-overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+/* ==========================================
+   Responsive Header
+========================================== */
+
+@media(max-width:900px){
+    .nv-header-center{
+        padding:0 10px;
+    }
+    .nv-logo img{
+        width:100px;
+    }
+}
+
+@media(max-width:650px){
+    .nv-header{
+        padding:0 10px;
+    }
+    .nv-header-center{
+        display:none;
+    }
+    .nv-sidebar{
+        width:0;
+    }
+    .nv-sidebar.active{
+        width:240px;
+    }
+    .nv-login-button{
+        padding:0 12px;
+        font-size:14px;
+    }
 }
 
 /* ==========================================
     NetView
     index.css
-    Partie 2 — Catégories + Grilles & Cartes
+    Partie 2 — Catégories + Flux principal + Cartes
 ========================================== */
 
-/* --- Categories Bar --- */
-.nv-categories {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    background: var(--nv-background);
-    z-index: 800;
-    padding-left: 88px;
-    padding-right: 16px;
-    border-bottom: 1px solid var(--nv-border);
+/* ==========================================
+   Categories Bar
+========================================== */
+
+.nv-categories{
+    position:fixed;
+    top:64px;
+    left:0;
+    right:0;
+    height:48px;
+    display:flex;
+    align-items:center;
+    background:var(--nv-background);
+    z-index:800;
+    padding-left:88px;
 }
 
-.nv-categories-scroll {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
+.nv-categories-scroll{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    overflow-x:auto;
+    scrollbar-width:none;
 }
 
-.nv-categories-scroll::-webkit-scrollbar {
-    display: none;
+.nv-categories-scroll::-webkit-scrollbar{
+    display:none;
 }
 
-.nv-category {
-    flex-shrink: 0;
-    height: 32px;
-    padding: 0 16px;
-    border: none;
-    border-radius: 16px;
-    background: var(--nv-surface);
-    color: var(--nv-text);
-    cursor: pointer;
-    font-size: 14px;
-    transition: .2s ease;
+/* ==========================================
+   Category Button
+========================================== */
+
+.nv-category{
+    flex-shrink:0;
+    height:32px;
+    padding:0 16px;
+    border:none;
+    border-radius:16px;
+    background:var(--nv-surface);
+    color:var(--nv-text);
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s ease;
 }
 
-.nv-category:hover {
-    background: var(--nv-surface-hover);
+.nv-category:hover{
+    background:var(--nv-surface-hover);
 }
 
-.nv-category.active {
-    background: var(--nv-primary);
-    color: white;
+.nv-category.active{
+    background:var(--nv-primary);
+    color:white;
 }
 
-/* --- Section Headers --- */
-.nv-section {
-    width: 100%;
-    margin-bottom: 32px;
+/* ==========================================
+   Main Layout
+========================================== */
+
+.nv-home{
+    padding-top:112px;
+    padding-left:96px;
+    padding-right:24px;
+    min-height:100vh;
+}
+
+/* ==========================================
+   Section
+========================================== */
+
+.nv-section{
+    width:100%;
+    margin-bottom:32px;
 }
 
 .nv-section-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 16px;
 }
 
 .nv-section-title {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--nv-text);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-/* --- Videos Grids --- */
+/* ==========================================
+   Style Cartes Vidéos - Grille Style YouTube (6 par ligne)
+   ========================================== */
+
 .nv-video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px 16px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px 12px;
     width: 100%;
 }
 
 @media (min-width: 1800px) {
-    .nv-video-grid { grid-template-columns: repeat(6, 1fr); }
+    .nv-video-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
 }
+
 @media (min-width: 1500px) and (max-width: 1799px) {
-    .nv-video-grid { grid-template-columns: repeat(5, 1fr); }
+    .nv-video-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
+
 @media (min-width: 1100px) and (max-width: 1499px) {
-    .nv-video-grid { grid-template-columns: repeat(4, 1fr); }
+    .nv-video-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
+
 @media (min-width: 768px) and (max-width: 1099px) {
-    .nv-video-grid { grid-template-columns: repeat(3, 1fr); }
+    .nv-video-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
+
 @media (max-width: 767px) {
-    .nv-video-grid { grid-template-columns: repeat(2, 1fr); gap: 12px 8px; }
+    .nv-video-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 8px;
+    }
 }
 
 .nv-video-card {
@@ -399,20 +495,16 @@ body {
     flex-direction: column;
     background: transparent;
     cursor: pointer;
+    font-family: "Roboto", Arial, sans-serif;
     border: none;
     padding: 0;
-    transition: transform .25s ease;
-}
-
-.nv-video-card:hover {
-    transform: translateY(-4px);
 }
 
 .nv-video-thumbnail {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background-color: var(--nv-surface);
+    background-color: #0f0f0f;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -454,7 +546,7 @@ body {
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
-    background-color: var(--nv-surface);
+    background-color: #272727;
 }
 
 .nv-video-avatar img {
@@ -473,7 +565,7 @@ body {
 .nv-video-title {
     font-size: 0.88rem;
     font-weight: 500;
-    color: var(--nv-text);
+    color: #f1f1f1;
     line-height: 1.35;
     margin: 0 0 4px 0;
     display: -webkit-box;
@@ -485,7 +577,7 @@ body {
 
 .nv-video-channel {
     font-size: 0.8rem;
-    color: var(--nv-text-secondary);
+    color: #aaa;
     text-decoration: none;
     margin-bottom: 1px;
     white-space: nowrap;
@@ -498,92 +590,30 @@ body {
     align-items: center;
     gap: 4px;
     font-size: 0.8rem;
-    color: var(--nv-text-secondary);
+    color: #aaa;
 }
 
-/* --- Shorts Grid --- */
-.nv-shorts-grid {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(150px, 1fr));
-    gap: 16px;
-}
+/* ==========================================
+   Ultra-Styled Product Card (NetView Store)
+========================================== */
 
-.nv-short-card {
-    position: relative;
-    cursor: pointer;
-    transition: transform .25s ease;
-}
-
-.nv-short-card:hover {
-    transform: translateY(-4px);
-}
-
-.nv-short-thumbnail {
-    aspect-ratio: 9 / 16;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--nv-surface);
-}
-
-.nv-short-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.nv-short-info {
-    margin-top: 10px;
-}
-
-.nv-short-title {
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--nv-text);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.nv-short-meta {
-    color: var(--nv-text-secondary);
-    font-size: 0.8rem;
-    margin-top: 2px;
-}
-
-/* --- Horizontal Scroll (Lives & Products) --- */
-.nv-horizontal-scroll {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 8px;
-}
-
-.nv-horizontal-scroll::-webkit-scrollbar {
-    display: none;
-}
-
-.nv-horizontal-scroll .nv-live-card,
-.nv-horizontal-scroll .nv-product-card {
-    flex: 0 0 280px;
-}
-
-/* --- Product Card --- */
 .nv-product-card {
     position: relative;
-    background: var(--nv-surface);
-    border: 1px solid var(--nv-border);
+    background: var(--nv-surface, #1e293b);
+    border: 1px solid var(--nv-border, rgba(255, 255, 255, 0.08));
     border-radius: 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 240px; /* Largeur fixe pour le scroll horizontal */
+    flex-shrink: 0;
 }
 
 .nv-product-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(37, 99, 235, 0.15);
     border-color: rgba(37, 99, 235, 0.4);
 }
 
@@ -592,18 +622,13 @@ body {
     width: 100%;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    background: var(--nv-background);
+    background: #0f172a;
 }
 
 .nv-product-thumbnail img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.nv-product-card:hover .nv-product-thumbnail img {
-    transform: scale(1.08);
 }
 
 .nv-product-content {
@@ -617,27 +642,115 @@ body {
 .nv-product-title {
     font-size: 15px;
     font-weight: 600;
-    color: var(--nv-text);
+    color: var(--nv-text, #f8fafc);
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
     margin: 0;
 }
 
 .nv-product-price {
     font-size: 18px;
     font-weight: 700;
+    color: var(--nv-text, #f8fafc);
+}
+
+/* ==========================================
+   Shorts
+========================================== */
+
+.nv-shorts-grid{
+    display:grid;
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
+    gap:16px;
+}
+
+.nv-short-card{
+    position:relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.nv-short-thumbnail{
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--nv-surface);
+}
+
+.nv-short-thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.nv-short-info{
+    margin-top:10px;
+}
+
+.nv-short-title{
+    font-size:14px;
+    font-weight: 500;
     color: var(--nv-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================
+   Lives Cards
+========================================== */
+.nv-live-card {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--nv-surface);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--nv-border);
+}
+
+.nv-live-thumbnail {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #0f0f0f;
+}
+
+.nv-live-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================
+   Horizontal Scroll
+========================================== */
+
+.nv-horizontal-scroll{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:8px;
+}
+
+.nv-horizontal-scroll::-webkit-scrollbar{
+    display:none;
 }
 
 /* ==========================================
     NetView
     index.css
-    Partie 3 — Skeletons + États + Menus + Animations
+    Partie 3 — Loaders + États + Menus + Skeletons
 ========================================== */
 
-/* --- Skeleton Loaders Modernes --- */
+/* ==========================================
+   Skeleton Loaders & Shimmer Animations
+========================================== */
+
 .nv-skeleton {
     background: linear-gradient(
         90deg,
@@ -655,204 +768,217 @@ body {
     100% { background-position: -200% 0; }
 }
 
-/* Skeletons spécifiques par type de contenu */
+/* Squelette de Carte Vidéo */
 .nv-skeleton-card {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
 }
+
 .nv-skeleton-card .nv-skeleton-thumbnail {
     width: 100%;
     aspect-ratio: 16 / 9;
 }
+
 .nv-skeleton-card .nv-skeleton-details {
     display: flex;
     gap: 10px;
 }
+
 .nv-skeleton-card .nv-skeleton-avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     flex-shrink: 0;
 }
+
 .nv-skeleton-card .nv-skeleton-lines {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
+
 .nv-skeleton-card .nv-skeleton-line {
     height: 12px;
     width: 100%;
 }
+
 .nv-skeleton-card .nv-skeleton-line.short {
     width: 60%;
 }
 
-/* Skeletons Shorts */
+/* Squelette de Short */
 .nv-skeleton-short {
-    aspect-ratio: 9 / 16;
-    border-radius: 12px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* Skeletons Horizontal Items (Lives / Products) */
-.nv-skeleton-horizontal {
-    flex: 0 0 280px;
+.nv-skeleton-short .nv-skeleton-thumb {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+}
+
+.nv-skeleton-short .nv-skeleton-line {
+    height: 12px;
+    width: 80%;
+}
+
+/* Squelette de Live / Produit (Horizontal) */
+.nv-skeleton-live,
+.nv-skeleton-product {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nv-skeleton-live .nv-skeleton-thumb,
+.nv-skeleton-product .nv-skeleton-thumb {
+    width: 100%;
     aspect-ratio: 16 / 9;
     border-radius: 12px;
 }
 
-/* --- Empty State --- */
-.nv-empty-state {
-    width: 100%;
-    min-height: 250px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: var(--nv-text-secondary);
+.nv-skeleton-live .nv-skeleton-line,
+.nv-skeleton-product .nv-skeleton-line {
+    height: 14px;
+    width: 90%;
 }
 
-.nv-empty-state.active {
-    display: flex;
+/* ==========================================
+   Empty State
+========================================== */
+
+.nv-empty-state{
+    width:100%;
+    min-height:250px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--nv-text-secondary);
 }
 
-.nv-empty-state i {
-    font-size: 48px;
-    margin-bottom: 16px;
-    color: var(--nv-primary);
+.nv-empty-state i{
+    font-size:48px;
+    margin-bottom:16px;
+    color:var(--nv-primary);
 }
 
-.nv-empty-state h3 {
-    color: var(--nv-text);
-    margin-bottom: 8px;
+.nv-empty-state h3{
+    color:var(--nv-text);
+    margin-bottom:8px;
 }
 
-/* --- Context Menu --- */
-.nv-context-menu {
-    position: fixed;
-    display: none;
-    min-width: 220px;
-    background: var(--nv-surface);
-    border: 1px solid var(--nv-border);
-    border-radius: 12px;
-    padding: 8px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
-    z-index: 2000;
+/* ==========================================
+   Context Menu
+========================================== */
+
+.nv-context-menu{
+    position:fixed;
+    display:none;
+    min-width:220px;
+    background:var(--nv-surface);
+    border:1px solid var(--nv-border);
+    border-radius:12px;
+    padding:8px;
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+    z-index:2000;
 }
 
-.nv-context-menu.active {
-    display: block;
-    animation: nvMenuShow .2s ease;
+.nv-context-menu.active{
+    display:block;
+    animation:nvMenuShow .2s ease;
 }
 
-.nv-context-menu button {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: none;
-    background: transparent;
-    color: var(--nv-text);
-    border-radius: 8px;
-    cursor: pointer;
-    padding: 0 12px;
+.nv-context-menu button{
+    width:100%;
+    height:40px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:none;
+    background:transparent;
+    color:var(--nv-text);
+    border-radius:8px;
+    cursor:pointer;
 }
 
-.nv-context-menu button:hover {
-    background: var(--nv-surface-hover);
+.nv-context-menu button:hover{
+    background:var(--nv-surface-hover);
 }
 
-@keyframes nvMenuShow {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
+@keyframes nvMenuShow{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* --- Toast Notification --- */
-#notification {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    z-index: 4000;
-}
-
-.notification {
-    animation: nvNotificationIn .3s ease;
-}
-
-@keyframes nvNotificationIn {
-    from {
-        opacity: 0;
-        transform: translateX(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* --- Content Entry Animation --- */
-.nv-video-card,
-.nv-short-card,
-.nv-live-card,
-.nv-product-card {
-    animation: nvContentAppear .4s ease;
-}
-
-@keyframes nvContentAppear {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    to{
+        opacity:1;
+        transform:translateY(0);
     }
 }
 
 /* ==========================================
-   Responsive Breakpoints Généraux
+   Toast Adaptation
 ========================================== */
-@media (max-width: 1200px) {
-    .nv-shorts-grid {
+
+#notification{
+    position:fixed;
+    top:80px;
+    right:20px;
+    z-index:4000;
+}
+
+.notification{
+    animation:nvNotificationIn .3s ease;
+}
+
+@keyframes nvNotificationIn{
+    from{
+        opacity:0;
+        transform:translateX(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+/* ==========================================
+   Responsive Breakpoints
+========================================== */
+
+@media(max-width:1200px){
+    .nv-shorts-grid{
         grid-template-columns: repeat(5, 1fr);
     }
 }
 
-@media (max-width: 900px) {
-    .nv-categories {
-        padding-left: 16px;
+@media(max-width:900px){
+    .nv-categories{
+        padding-left:16px;
     }
-    .nv-home {
-        padding-left: 16px;
-        padding-right: 16px;
+    .nv-home{
+        padding-left:16px;
+        padding-right:16px;
     }
-    .nv-shorts-grid {
+    .nv-shorts-grid{
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (max-width: 600px) {
-    .nv-shorts-grid {
+@media(max-width:600px){
+    .nv-shorts-grid{
         grid-template-columns: repeat(2, 1fr);
     }
-    .nv-home {
-        padding-top: 112px;
-    }
-    .nv-category {
-        padding: 0 14px;
-    }
-    #notification {
-        left: 16px;
-        right: 16px;
+    .nv-home{
+        padding-top:112px;
     }
 }
