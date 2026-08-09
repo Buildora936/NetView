@@ -1,475 +1,112 @@
 <!DOCTYPE html>
-
 <html lang="fr">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-<meta
-    name="description"
-    content="NetView - Regardez des vidéos, des Shorts, des Lives et découvrez des créateurs.">
-
-<meta
-    name="theme-color"
-    content="#2563EB">
-
-<title>
-
-Accueil • NetView
-
-</title>
-
-<!-- ==========================================
-Favicon
-========================================== -->
-
-<link
-    rel="icon"
-    href="NetView_icone.png">
-
-<!-- ==========================================
-Font Awesome
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-<!-- ==========================================
-Core CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/core/reset.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/variables.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/typography.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/animations.css">
-
-<!-- ==========================================
-Components
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/components/header.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/sidebar.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/buttons.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/cards.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/modal.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/toast.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/loader.css">
-
-<!-- ==========================================
-Page CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/pages/index.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NetView - Regardez des vidéos, des Shorts, des Lives et découvrez des créateurs.">
+    <meta name="theme-color" content="#2563EB">
+    <title>Accueil • NetView</title>
+    
+    <link rel="icon" href="NetView_icone.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="CSS/core/reset.css">
+    <link rel="stylesheet" href="CSS/core/variables.css">
+    <link rel="stylesheet" href="CSS/core/typography.css">
+    <link rel="stylesheet" href="CSS/core/utilities.css">
+    <link rel="stylesheet" href="CSS/core/animations.css">
+    <link rel="stylesheet" href="CSS/components/header.css">
+    <link rel="stylesheet" href="CSS/components/sidebar.css">
+    <link rel="stylesheet" href="CSS/components/buttons.css">
+    <link rel="stylesheet" href="CSS/components/cards.css">
+    <link rel="stylesheet" href="CSS/components/modal.css">
+    <link rel="stylesheet" href="CSS/components/toast.css">
+    <link rel="stylesheet" href="CSS/pages/index.css">
 </head>
-
 <body>
-<!-- ==========================================
-Animated Background
-========================================== -->
 
-<div
-    class="nv-home-background">
-
+<!-- Animated Background -->
+<div class="nv-home-background">
     <div class="nv-orb one"></div>
-
     <div class="nv-orb two"></div>
-
     <div class="nv-orb three"></div>
-
 </div>
-<!-- ==========================================
-Header
-========================================== -->
 
 <header class="nv-header">
-
     <div class="nv-header-left">
-
-        <button
-            id="menuButton"
-            class="nv-icon-button"
-            aria-label="Menu">
-
-            <i class="fa-solid fa-bars"></i>
-
-        </button>
-
-        <a
-            href="index.html"
-            class="nv-logo">
-
-            <img
-                src="NetView.png"
-                alt="NetView">
-
-        </a>
-
+        <button id="menuButton" class="nv-icon-button" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+        <a href="index.html" class="nv-logo"><img src="NetView.png" alt="NetView"></a>
     </div>
-
     <div class="nv-header-center">
-
-        <form
-            id="searchForm"
-            class="nv-search-form">
-
-            <input
-                id="searchInput"
-                class="nv-search-input"
-                type="search"
-                placeholder="Rechercher">
-
-            <button
-                class="nv-search-button"
-                type="submit">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-            </button>
-
+        <form id="searchForm" class="nv-search-form">
+            <input id="searchInput" class="nv-search-input" type="search" placeholder="Rechercher">
+            <button class="nv-search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-
     </div>
-
-    <div
-        id="headerRight"
-        class="nv-header-right">
-
-        <!-- Rempli dynamiquement par index.js -->
-
-    </div>
-
+    <div id="headerRight" class="nv-header-right"></div>
 </header>
 
-<!-- ==========================================
-Sidebar
-========================================== -->
-
-<aside
-    id="sidebar"
-    class="nv-sidebar">
-
-    <nav class="nv-sidebar-nav">
-
-        <!-- Généré par index.js -->
-
-    </nav>
-
+<aside id="sidebar" class="nv-sidebar">
+    <nav class="nv-sidebar-nav"></nav>
 </aside>
+<div id="sidebarOverlay" class="nv-sidebar-overlay"></div>
 
-<!-- ==========================================
-Mobile Overlay
-========================================== -->
-
-<div
-    id="sidebarOverlay"
-    class="nv-sidebar-overlay">
-
-</div>
-<!-- ==========================================
-Categories
-========================================== -->
-
+<!-- Categories -->
 <section class="nv-categories">
-
-<div
-    class="nv-categories-scroll">
-
-<button
-    class="nv-category active">
-
-Tous
-
-</button>
-
-<!-- Les catégories seront générées par index.js -->
-
-</div>
-
+    <div class="nv-categories-scroll">
+        <button class="nv-category active" data-id="all">Tous</button>
+        <button class="nv-category" data-id="7181bcae-641e-40c4-b724-e08a9f1f89b2">Gaming</button>
+        <button class="nv-category" data-id="5c5fc86d-8856-48d1-9141-b487e7ce8be7">Education</button>
+        <button class="nv-category" data-id="24daf138-9a7f-46c9-9134-21e6dcc60449">Music</button>
+        <button class="nv-category" data-id="20569f83-28c9-4a95-a8a5-581d5d279102">Technology</button>
+        <button class="nv-category" data-id="2ade09db-6ffb-4977-bc62-b5b6baa8802b">Entertainment</button>
+        <button class="nv-category" data-id="6a0c6ab0-2761-42c0-8574-783f906ee193">Sports</button>
+        <button class="nv-category" data-id="2901c2ca-7c96-4646-8e11-f3d63af49dca">News</button>
+        <button class="nv-category" data-id="d5694410-ef76-40d0-9ada-5b7c43d5e816">Comedy</button>
+        <button class="nv-category" data-id="660e8bf7-4e2f-4b35-810f-d3d97903953f">Business</button>
+        <button class="nv-category" data-id="39db2a19-23bf-403f-8edb-0ce577923c3f">Lifestyle</button>
+    </div>
 </section>
-
-<!-- ==========================================
-Main
-========================================== -->
 
 <main class="nv-home">
 
-<!-- ==========================================
-Videos Section
-========================================== -->
-
-<section
-    class="nv-section">
-
-<div
-    id="videosGrid"
-    class="nv-video-grid">
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Shorts
-========================================== -->
-
-<section
-    class="nv-section nv-shorts-section">
-
-<div
-    class="nv-section-header">
-
-<div
-    class="nv-section-title">
-
-<i class="fa-solid fa-bolt"></i>
-
-
-
-</div>
-
-</div>
-
-<div
-    id="shortsGrid"
-    class="nv-shorts-grid">
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Videos Feed
-========================================== -->
-
-<section
-    class="nv-section">
-
-<div
-    id="videosFeed"
-    class="nv-video-grid">
-
-</div>
-
-</section>
-
-<!-- ==========================================
-Sponsored Products
-========================================== -->
-
-<section
-    class="nv-section nv-products-section">
-
-<div
-    class="nv-section-header">
-
-<div
-    class="nv-section-title">
-
-<i class="fa-solid fa-store"></i>
-
-
-</div>
-
-</div>
-
-<div
-    id="productsContainer"
-    class="nv-horizontal-scroll">
-
-</div>
-
-</section>
-<!-- ==========================================
-Videos Feed Continue
-========================================== -->
-
-<section
-    class="nv-section">
-
-<div
-    id="videosFeedContinue"
-    class="nv-video-grid">
-
-</div>
-
-</section>
-
-
-<!-- ==========================================
-Lives
-========================================== -->
-
-<section
-    class="nv-section nv-lives-section">
-
-<div
-    class="nv-section-header">
-
-<div
-    class="nv-section-title">
-
-<i class="fa-solid fa-tower-broadcast"></i>
-
-</div>
-
-</div>
-
-
-<div
-    id="livesContainer"
-    class="nv-horizontal-scroll">
-
-</div>
-
-</section>
-
-
-<!-- ==========================================
-Shorts Continue
-========================================== -->
-
-<section
-    class="nv-section nv-shorts-section">
-
-<div
-    class="nv-section-header">
-
-<div
-    class="nv-section-title">
-
-<i class="fa-solid fa-bolt"></i>
-
-</div>
-
-</div>
-
-
-<div
-    id="shortsGridContinue"
-    class="nv-shorts-grid">
-
-</div>
-
-</section>
-
-
-<!-- ==========================================
-Videos Feed Before Infinite Scroll
-========================================== -->
-
-<section
-    class="nv-section">
-
-<div
-    id="videosBeforeInfinite"
-    class="nv-video-grid">
-
-</div>
-
-</section>
-</section>
-<!-- ==========================================
-Infinite Scroll Loader
-========================================== -->
-
-<div
-    id="infiniteLoader"
-    class="nv-infinite-loader">
-
-</div>
-
-
-<!-- ==========================================
-Skeleton Loaders
-========================================== -->
-
-<div
-    id="skeletonContainer"
-    class="nv-skeleton-container">
-
-</div>
-
-
-<!-- ==========================================
-Empty States
-========================================== -->
-
-<div
-    id="emptyState"
-    class="nv-empty-state">
-
-</div>
-
-
-<!-- ==========================================
-Context Menus
-========================================== -->
-
-<div
-    id="contextMenu"
-    class="nv-context-menu">
-
-</div>
-
-
-
-<!-- Notification -->
-    <div id="notification" class="notification"></div>
-
-<!-- ==========================================
-Scripts
-========================================== -->
-
-<script
-    type="module"
-    src="js/pages/index.js">
-</script>
-
-
+    <!-- Videos Section -->
+    <section class="nv-section">
+        <div id="videosGrid" class="nv-video-grid">
+            <!-- SKELETON: Remplacer par des copies de card-skeleton -->
+            <div class="nv-skeleton-card">...</div> 
+        </div>
+    </section>
+
+    <!-- Shorts -->
+    <section class="nv-section nv-shorts-section">
+        <div class="nv-section-header"><div class="nv-section-title"><i class="fa-solid fa-bolt"></i> Shorts</div></div>
+        <div id="shortsGrid" class="nv-shorts-grid">
+            <div class="nv-skeleton-short">...</div>
+        </div>
+    </section>
+
+    <!-- Lives -->
+    <section class="nv-section nv-lives-section">
+        <div class="nv-section-header"><div class="nv-section-title"><i class="fa-solid fa-tower-broadcast"></i> Lives</div></div>
+        <div id="livesContainer" class="nv-horizontal-scroll">
+            <div class="nv-skeleton-live">...</div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="nv-section nv-products-section">
+        <div class="nv-section-header"><div class="nv-section-title"><i class="fa-solid fa-store"></i> Produits</div></div>
+        <div id="productsContainer" class="nv-horizontal-scroll">
+            <div class="nv-skeleton-product">...</div>
+        </div>
+    </section>
+
+</main>
+
+<div id="emptyState" class="nv-empty-state"></div>
+<div id="contextMenu" class="nv-context-menu"></div>
+<div id="notification" class="notification"></div>
+
+<script type="module" src="js/pages/index.js"></script>
 </body>
-
 </html>
