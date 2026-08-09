@@ -364,3 +364,285 @@ export async function updateRole(role){
     );
 
 }
+// ==========================================
+// Profile
+// ==========================================
+
+export async function createProfile({
+    username,
+    display_name,
+    country,
+    language = "fr"
+}) {
+    const user = await refreshUser();
+
+    if (!user) {
+        throw new Error("Utilisateur introuvable");
+    }
+
+    // ==========================================
+    // Vérifier si le profil existe déjà
+    // ==========================================
+
+    const { data: existingProfile, error: existingError } =
+        await supabase
+            .from("profiles")
+            .select("id")
+            .eq("id", user.id)
+            .maybeSingle();
+
+    if (existingError) {
+        throw existingError;
+    }
+
+    if (existingProfile) {
+        return true;
+    }
+
+    // ==========================================
+    // Création du profil
+    // ==========================================
+
+    const { error: profileError } =
+        await supabase
+            .from("profiles")
+            .insert({
+                id: user.id,
+                username,
+                display_name,
+                email: user.email,
+                country,
+                language
+            });
+
+    if (profileError) {
+        throw profileError;
+    }
+
+    // ==========================================
+    // Paramètres par défaut
+    // ==========================================
+
+    const { error: settingsError } =
+        await supabase
+            .from("user_settings")
+            .insert({
+                user_id: user.id
+            });
+
+    if (
+        settingsError &&
+        settingsError.code !== "23505"
+    ) {
+        throw settingsError;
+    }
+
+    // ==========================================
+    // Rôle USER par défaut
+    // ==========================================
+
+    const { data: userRole } =
+        await supabase
+            .from("roles")
+            .select("id")
+            .eq("name", "user")
+            .maybeSingle();
+
+    if (!userRole) {
+        throw new Error(
+            "Le rôle 'user' n'existe pas dans la table roles."
+        );
+    }
+
+    const { error: roleError } =
+        await supabase
+            .from("user_roles")
+            .insert({
+                user_id: user.id,
+                role_id: userRole.id
+            });
+
+    if (
+        roleError &&
+        roleError.code !== "23505"
+    ) {
+        throw roleError;
+    }
+
+    return true;
+}
+
+
+// ==========================================
+// Roles
+// ==========================================
+
+export async function getRole() {
+    const user = await refreshUser();
+
+    if (!user) {
+        return null;
+    }
+
+    const { data, error } =
+        await supabase
+            .from("user_roles")
+            .select(`
+                role_id,
+                roles (
+                    id,
+                    name,
+                    description
+                )
+            `)
+            .eq("user_id", user.id);
+
+    if (error) {
+        console.error(
+            "Erreur récupération rôle :",
+            error.message
+        );
+
+        return "user";
+    }
+
+    const roles = (data || [])
+        .map(item => item.roles)
+        .filter(Boolean);
+
+    /*
+     * Priorité :
+     *
+     * pro
+     * creator
+     * user
+     */
+
+    if (
+        roles.some(role => role.name === "pro")
+    ) {
+        return "pro";
+    }
+
+    if (
+        roles.some(role => role.name === "creator")
+    ) {
+        return "creator";
+    }
+
+    if (
+        roles.some(role => role.name === "user")
+    ) {
+        return "user";
+    }
+
+    return "user";
+}
+
+
+export async function isUser() {
+    return (await getRole()) === "user";
+}
+
+
+export async function isCreator() {
+    return (await getRole()) === "creator";
+}
+
+
+export async function isPro() {
+    return (await getRole()) === "pro";
+}
+
+
+// ==========================================
+// Update Role
+// ==========================================
+
+export async function updateRole(role) {
+    const user = await refreshUser();
+
+    if (!user) {
+        throw new Error("Utilisateur non connecté");
+    }
+
+    const allowedRoles = [
+        "user",
+        "creator",
+        "pro"
+    ];
+
+    if (!allowedRoles.includes(role)) {
+        throw new Error(
+            `Rôle invalide : ${role}`
+        );
+    }
+
+    // Récupération du rôle dans la table roles
+    const { data: roleData, error: roleError } =
+        await supabase
+            .from("roles")
+            .select("id, name")
+            .eq("name", role)
+            .maybeSingle();
+
+    if (roleError) {
+        throw roleError;
+    }
+
+    if (!roleData) {
+        throw new Error(
+            `Le rôle "${role}" n'existe pas dans la table roles.`
+        );
+    }
+
+    /*
+     * On récupère le rôle actuel.
+     */
+
+    const { data: currentRoles, error: currentError } =
+        await supabase
+            .from("user_roles")
+            .select(`
+                role_id,
+                roles (
+                    id,
+                    name
+                )
+            `)
+            .eq("user_id", user.id);
+
+    if (currentError) {
+        throw currentError;
+    }
+
+    /*
+     * Pour NetView :
+     *
+     * USER     → rôle user
+     * CREATOR  → rôle creator
+     * PRO      → rôle pro
+     *
+     * On supprime les rôles existants
+     * puis on attribue le nouveau rôle.
+     */
+
+    if (currentRoles && currentRoles.length > 0) {
+        const { error: deleteError } =
+            await supabase
+                .from("user_roles")
+                .delete()
+                .eq("user_id", user.id);
+
+        if (deleteError) {
+            throw deleteError;
+        }
+    }
+
+    return await supabase
+        .from("user_roles")
+        .insert({
+            user_id: user.id,
+            role_id: roleData.id
+        });
+}
