@@ -879,3 +879,20 @@ export async function searchProducts(
 
     return data || [];
 }
+// ==========================================
+// Video Categories
+// ==========================================
+
+export async function getVideoCategories() {
+    const { data, error } = await supabase
+        .from("video_categories")
+        .select("*")
+        .order("name", { ascending: true });
+
+    if (error) {
+        console.error("Erreur récupération catégories :", error);
+        return [];
+    }
+
+    return data || [];
+}
