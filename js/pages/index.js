@@ -966,67 +966,33 @@ async function loadSponsoredProducts(){
 // ==========================================
 
 
-// ==========================================
-// Render Videos
-// ==========================================
-
 function renderVideos(){
-
+    // On cible uniquement les conteneurs réellement présents dans votre HTML principal
     const containers = [
-
-        videosGrid,
-
-        videosFeed,
-
-        videosFeedContinue,
-
-        videosBeforeInfinite
-
+        document.getElementById("videosGrid"),
+        document.getElementById("videosBeforeInfinite")
     ];
 
-
-    containers.forEach(container=>{
-
-        if(!container)
-            return;
-
-        container.innerHTML = "";
-
+    containers.forEach(container => {
+        if(container){
+            container.innerHTML = "";
+        }
     });
 
-
-    if(!videos.length){
-
+    if(!videos || !videos.length){
         return;
-
     }
 
+    videos.forEach(video => {
+        const card = createVideoCard(video);
 
-    videos.forEach(video=>{
-
-        const card =
-            createVideoCard(
-                video
-            );
-
-
-        containers.forEach(container=>{
-
+        containers.forEach(container => {
             if(container){
-
-                container.appendChild(
-                    card.cloneNode(true)
-                );
-
+                container.appendChild(card.cloneNode(true));
             }
-
         });
-
     });
-
 }
-
-
 
 // ==========================================
 // Render Shorts
