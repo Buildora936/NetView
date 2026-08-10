@@ -1158,22 +1158,27 @@ function renderProducts(){
 // Video Card
 // ==========================================
 
+
 function createVideoCard(video) {
     const article = document.createElement("article");
     article.className = "nv-video-card";
     article.dataset.id = video.id || "";
     
     article.innerHTML = `
-        <div class="nv-video-thumbnail">
-            <img src="${video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
-            <span class="nv-video-duration">${video.duration || '0:00'}</span>
-        </div>
+        <a href="player.html?id=${video.id || ''}" class="nv-video-link-wrapper">
+            <div class="nv-video-thumbnail">
+                <img src="${video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
+                <span class="nv-video-duration">${video.duration || '0:00'}</span>
+            </div>
+        </a>
         <div class="nv-video-content">
             <div class="nv-video-avatar">
                 <img src="${video.channelAvatar || 'images/default-avatar.png'}" alt="${video.channelName || ''}" loading="lazy">
             </div>
             <div class="nv-video-info">
-                <h3 class="nv-video-title">${video.title || ''}</h3>
+                <h3 class="nv-video-title">
+                    <a href="player.html?id=${video.id || ''}">${video.title || ''}</a>
+                </h3>
                 <a href="#" class="nv-video-channel">${video.channelName || ''}</a>
                 <div class="nv-video-meta">
                     <span>${formatViews(video.views || 0)} vues</span>
