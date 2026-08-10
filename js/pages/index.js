@@ -753,7 +753,24 @@ function showUserSidebar(){
 
 }
 
+// ==========================================
+// Redirection vers la page de recherche
+// ==========================================
 
+function handleSearchSubmit(event) {
+    if (event) {
+        event.preventDefault(); // Empêche le rechargement de la page par défaut
+    }
+
+    if (!searchInput) return;
+
+    const query = searchInput.value.trim();
+
+    if (query) {
+        // Redirige vers search.html avec le paramètre 'q' encodé proprement
+        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+    }
+}
 // ==========================================
 // Accueil
 // Chargement des données
@@ -2296,9 +2313,16 @@ function formatDate(date){
 }
 
 
+// Dans votre fonction addEventListeners() :
 
+if (searchForm) {
+    searchForm.addEventListener("submit", handleSearchSubmit);
+}
 
-
+// Si vous avez aussi un bouton de recherche séparé qui ne déclenche pas le 'submit' du formulaire :
+if (searchButton) {
+    searchButton.addEventListener("click", handleSearchSubmit);
+}
 // ==========================================
 
 // Notification
