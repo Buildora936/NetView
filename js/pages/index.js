@@ -19,7 +19,8 @@ import{
     getVideos,
     getShorts,
     getLives,
-    getSponsoredProducts
+    getSponsoredProducts,
+    getVideoCategories
 }from "../core/data.js";
 
 import{
@@ -270,20 +271,14 @@ async function init(){
 
         fillSidebar();
 
-        renderCategories([
-            "Tous",
-            "Gaming",
-            "Education",
-            "Music",
-            "Technology",
-            "Entertainment",
-            "Sports",
-            "News",
-            "Comedy",
-            "Business",
-            "Lifestyle"
-        ]);
-
+       async function loadCategories() {
+    const categories = await getVideoCategories();
+    
+    // Si vous voulez garder "Tous" au début :
+    const allCategories = [{ id: "all", name: "Tous" }, ...categories];
+    
+    renderCategories(allCategories);
+}
         await loadHomeContent();
 
         addEventListeners();
