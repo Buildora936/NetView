@@ -257,7 +257,33 @@ body {
 .nv-login-button:hover {
     background: rgba(37, 99, 235, .12);
 }
+/* Conteneur principal de la sidebar */
+.nv-sidebar {
+    /* Assurez-vous qu'elle a une hauteur fixe ou maximale basée sur la vue */
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden; /* Empêche la sidebar entière de dépasser */
+    display: flex;
+    flex-direction: column;
+}
 
+/* La zone de navigation interne qui doit défiler */
+.nv-sidebar-nav {
+    overflow-y: auto;   /* Active le défilement vertical si le contenu est trop long */
+    flex-grow: 1;       poids flexible pour prendre l'espace disponible
+    scrollbar-width: thin; /* Optionnel : rend la barre de scroll plus fine (Firefox) */
+}
+
+/* Optionnel : pour les navigateurs basés sur Webkit (Chrome, Safari, Edge) pour affiner la barre de défilement */
+.nv-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nv-sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
 /* ==========================================
    Sidebar
 ========================================== */
@@ -279,9 +305,6 @@ body {
     animation: nvSidebarOpen .3s ease;
 }
 
-.nv-sidebar-nav {
-    padding: 12px;
-}
 
 .nv-sidebar a {
     height: 44px;
