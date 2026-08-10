@@ -421,8 +421,8 @@ body {
 }
 
 .nv-category.active {
-    background: red;
-    color: yellow;
+    background: var(--nv-primary);
+    color: white;
 }
 
 /* ==========================================
