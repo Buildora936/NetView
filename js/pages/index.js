@@ -302,31 +302,7 @@ async function loadCategories() {
     
     renderCategories(allCategories);
 }
-function renderCategories(categories) {
-    if (!categoriesContainer) return;
 
-    categoriesContainer.innerHTML = "";
-
-    categories.forEach(cat => {
-        const button = document.createElement("button");
-        button.className = `nv-category-chip ${cat.name === currentCategory ? "active" : ""}`;
-        button.textContent = cat.name;
-        button.dataset.id = cat.id;
-
-        button.addEventListener("click", () => {
-            // Gestion de la classe active
-            categoriesContainer.querySelectorAll(".nv-category-chip").forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
-
-            // Mise à jour de la catégorie courante et rechargement des vidéos
-            currentCategory = cat.name === "Tous" ? "Tous" : cat.id;
-            currentPage = 1;
-            loadHomeContent();
-        });
-
-        categoriesContainer.appendChild(button);
-    });
-}
 // ==========================================
 // Vérification Session
 // ==========================================
@@ -1373,45 +1349,31 @@ function createProductCard(product) {
 // Charger les catégories
 // ==========================================
 
-function renderCategories(categories){
-
-    if(!categoriesContainer)
-        return;
+function renderCategories(categories) {
+    if (!categoriesContainer) return;
 
     categoriesContainer.innerHTML = "";
 
-    categories.forEach(category=>{
+    categories.forEach(cat => {
+        const button = document.createElement("button");
+        button.className = `nv-category-chip ${cat.name === currentCategory ? "active" : ""}`;
+        button.textContent = cat.name;
+        button.dataset.id = cat.id;
 
-        const button =
-            document.createElement(
-                "button"
-            );
+        button.addEventListener("click", () => {
+            // Gestion de la classe active
+            categoriesContainer.querySelectorAll(".nv-category-chip").forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
 
-        button.className =
-            "nv-category";
+            // Mise à jour de la catégorie courante et rechargement des vidéos
+            currentCategory = cat.name === "Tous" ? "Tous" : cat.id;
+            currentPage = 1;
+            loadHomeContent();
+        });
 
-        if(category === currentCategory){
-
-            button.classList.add(
-                "active"
-            );
-
-        }
-
-        button.textContent =
-            category;
-
-        button.dataset.category =
-            category;
-
-        categoriesContainer.appendChild(
-            button
-        );
-
+        categoriesContainer.appendChild(button);
     });
-
 }
-
 
 // ==========================================
 // Recherche
