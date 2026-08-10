@@ -424,7 +424,6 @@ export async function updateUserSettings(values) {
 // ==========================================
 
 export async function getVideos({
-    category = null,
     page = 1,
     search = null
 } = {}) {
@@ -453,24 +452,12 @@ export async function getVideos({
         .eq("status", "published")
         .eq("visibility", "public");
 
-    // Recherche textuelle
+    // Recherche textuelle optionnelle
     if (search && search.trim()) {
         const searchValue = search.trim();
         query = query.or(
             `title.ilike.%${searchValue}%,description.ilike.%${searchValue}%`
         );
-    }
-
-    // Filtrage par catégorie (prend en compte l'ID ou ignore si c'est "Tous" / vide)
-    if (category && category !== "Tous") {
-        // Si la valeur ressemble à un UUID, on filtre par ID, sinon par nom de catégorie
-        const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(category);
-        
-        if (isUuid) {
-            query = query.eq("category_id", category);
-        } else {
-            query = query.eq("video_categories.name", category);
-        }
     }
 
     query = query
