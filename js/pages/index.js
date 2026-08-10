@@ -256,7 +256,6 @@ document.addEventListener(
 // ==========================================
 // Init
 // ==========================================
-
 async function init(){
 
     try{
@@ -271,14 +270,9 @@ async function init(){
 
         fillSidebar();
 
-       async function loadCategories() {
-    const categories = await getVideoCategories();
-    
-    // Si vous voulez garder "Tous" au début :
-    const allCategories = [{ id: "all", name: "Tous" }, ...categories];
-    
-    renderCategories(allCategories);
-}
+        // ➕ Appel de la fonction pour charger et afficher les catégories
+        await loadCategories();
+
         await loadHomeContent();
 
         addEventListeners();
@@ -299,7 +293,40 @@ async function init(){
 
 }
 
+// Définition de loadCategories en dehors de init()
+async function loadCategories() {
+    const categories = await getVideoCategories();
+    
+    // Ajout de "Tous" au début de la liste
+    const allCategories = [{ id: "Tous", name: "Tous" }, ...categories];
+    
+    renderCategories(allCategories);
+}
+function renderCategories(categories) {
+    if (!categoriesContainer) return;
 
+    categoriesContainer.innerHTML = "";
+
+    categories.forEach(cat => {
+        const button = document.createElement("button");
+        button.className = `nv-category-chip ${cat.name === currentCategory ? "active" : ""}`;
+        button.textContent = cat.name;
+        button.dataset.id = cat.id;
+
+        button.addEventListener("click", () => {
+            // Gestion de la classe active
+            categoriesContainer.querySelectorAll(".nv-category-chip").forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            // Mise à jour de la catégorie courante et rechargement des vidéos
+            currentCategory = cat.name === "Tous" ? "Tous" : cat.id;
+            currentPage = 1;
+            loadHomeContent();
+        });
+
+        categoriesContainer.appendChild(button);
+    });
+}
 // ==========================================
 // Vérification Session
 // ==========================================
