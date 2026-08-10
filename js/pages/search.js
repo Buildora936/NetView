@@ -1,4 +1,18 @@
-import { getSession } from "../core/auth.js";
+// ==========================================
+// NetView
+// search.js
+// Partie 1
+// Imports + DOM + Variables globales
+// ==========================================
+// ==========================================
+// Core Imports
+// ==========================================
+import {
+    formatDate
+} from "../core/utils.js";
+import {
+    getSession
+} from "../core/auth.js";
 
 import {
     searchVideos,
@@ -14,7 +28,10 @@ import {
     showToast
 } from "../core/ui.js";
 
-import { navigate } from "../core/navigation.js";
+import {
+    navigate
+} from "../core/navigation.js";
+
 // ==========================================
 // DOM Elements
 // ==========================================
@@ -108,6 +125,7 @@ const notification =
 document.getElementById(
     "notification"
 );
+
 // ==========================================
 // Variables Globales
 // ==========================================
@@ -133,64 +151,101 @@ let isMobile = false;
 let searchTimeout = null;
 
 let currentSearchController = null;
+
 // ==========================================
 // Responsive Search State
 // ==========================================
-
 const mobileBreakpoint = 768;
 // ==========================================
 // Initialisation
 // ==========================================
+
+
 async function init(){
 
-   await checkSession();
+
+    await checkSession();
+
 
     setupSearchBar();
 
+
     addEventListeners();
+
 
     loadInitialSearch();
 
+
 }
 
-// Lancement automatique au chargement du module
-init();
+
+
+
 
 // ==========================================
 // Vérification session
 // ==========================================
+
+
 async function checkSession(){
+
 
     const session =
         await getSession();
 
+
     if(session){
+
+
         currentUser =
             session.user;
+
+
     }
 
+
 }
+
+
+
+
 
 // ==========================================
 // Gestion des deux barres de recherche
 // Desktop / Mobile
 // ==========================================
+
+
 function setupSearchBar(){
 
+
     updateSearchBarVisibility();
+
+
 
     window.addEventListener(
         "resize",
         updateSearchBarVisibility
     );
 
+
 }
+
+
+
+
 
 function updateSearchBarVisibility(){
 
+
     isMobile =
         window.innerWidth <= mobileBreakpoint;
+
+
+
     if(isMobile){
+
+
         if(searchForm){
 
             searchForm.style.display =
@@ -198,10 +253,12 @@ function updateSearchBarVisibility(){
 
         }
 
+
         if(mobileSearchForm){
 
             mobileSearchForm.style.display =
                 "flex";
+
         }
 
 
@@ -231,6 +288,12 @@ function updateSearchBarVisibility(){
 
 }
 
+
+
+
+
+
+
 // ==========================================
 // Recherche initiale
 // ==========================================
@@ -244,7 +307,8 @@ function loadInitialSearch(){
             window.location.search
         );
 
-   const query =
+
+    const query =
         params.get("q");
 
 
@@ -255,14 +319,12 @@ function loadInitialSearch(){
             query;
 
 
-        if(searchInput){
-            searchInput.value = query;
-        }
+        searchInput.value =
+            query;
 
 
-        if(mobileSearchInput){
-            mobileSearchInput.value = query;
-        }
+        mobileSearchInput.value =
+            query;
 
 
         executeSearch();
@@ -272,6 +334,10 @@ function loadInitialSearch(){
 
 
 }
+
+
+
+
 
 // ==========================================
 // Recherche principale
@@ -556,6 +622,10 @@ async function searchAll(){
 }
 
 
+
+
+
+
 // ==========================================
 // Chargement visuel
 // ==========================================
@@ -584,8 +654,6 @@ function showSearchLoading(){
 
 }
 
-
-
 function hideSearchLoading(){
 
 
@@ -593,29 +661,21 @@ function hideSearchLoading(){
 
         searchSkeleton.hidden =
             true;
-
     }
 
-
 }
+
 
 // ==========================================
 // Nettoyage résultats
 // ==========================================
-
-
 function clearResults(){
 
+    searchResults.innerHTML =
+        "";
 
-    if(searchResults){
-        searchResults.innerHTML = "";
-    }
-
-
-    if(searchEmpty){
-        searchEmpty.hidden = false;
-    }
-
+    searchEmpty.hidden =
+        false;
 
 }
 // ==========================================
@@ -748,10 +808,8 @@ function addEventListeners(){
 
 
 
-                if(searchInput){
-                    searchInput.value =
-                        searchQuery;
-                }
+                searchInput.value =
+                    searchQuery;
 
 
 
@@ -1156,6 +1214,10 @@ function closeSidebar(){
 }
 
 
+
+
+
+
 // ==========================================
 // Scroll infini
 // ==========================================
@@ -1204,6 +1266,45 @@ function handleInfiniteScroll(){
 
 
 
+async function loadMoreResults(){
+
+
+    currentPage++;
+
+
+
+    loading = true;
+
+
+
+    try{
+
+
+        const more =
+            await executeSearch();
+
+
+
+    }
+
+    catch(error){
+
+
+        console.error(error);
+
+
+    }
+
+    finally{
+
+
+        loading = false;
+
+
+    }
+
+
+}
 // ==========================================
 // Rendu des résultats
 // ==========================================
@@ -1224,9 +1325,7 @@ function renderSearchResults(){
 
 
 
-    if(searchEmpty){
-        searchEmpty.hidden = true;
-    }
+    searchEmpty.hidden = true;
 
 
 
@@ -1236,9 +1335,7 @@ function renderSearchResults(){
         searchResultsData.length === 0
     ){
 
-        if(searchEmpty){
-            searchEmpty.hidden = false;
-        }
+        searchEmpty.hidden = false;
 
         return;
 
@@ -1273,6 +1370,8 @@ function renderSearchResults(){
         break;
 
 
+
+
         case "channels":
 
 
@@ -1281,6 +1380,8 @@ function renderSearchResults(){
             );
 
         break;
+
+
 
 
         case "lives":
@@ -1293,6 +1394,8 @@ function renderSearchResults(){
         break;
 
 
+
+
         case "products":
 
 
@@ -1302,7 +1405,11 @@ function renderSearchResults(){
 
         break;
 
+
+
+
         default:
+
 
             renderAllResults(
                 searchResultsData
@@ -1316,6 +1423,13 @@ function renderSearchResults(){
 
 
 }
+
+
+
+
+
+
+
 // ==========================================
 // Tout afficher
 // ==========================================
@@ -1465,13 +1579,6 @@ function createSectionTitle(title){
 // ==========================================
 
 
-function formatDate(dateString) {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-}
-
-
 function renderVideos(videos){
 
 
@@ -1495,7 +1602,7 @@ function renderVideos(videos){
 <article class="nv-search-video-card">
 
 
-<a class="nv-search-video-thumbnail" href="watch.html?id=${video.id || ''}">
+<a class="nv-search-video-thumbnail">
 
 
 <img
@@ -2420,41 +2527,38 @@ function removeEventListeners(){
 // Nettoyage complet page
 // ==========================================
 
-
 function cleanup(){
-
 
 
     removeEventListeners();
 
-
-
     closeContextMenu();
-
-
 
     clearSearch();
 
-
-
     if(currentSearchController){
-
 
         currentSearchController.abort();
 
         currentSearchController = null;
 
-
     }
 
+
 }
+
 
 // ==========================================
 // Avant fermeture page
 // ==========================================
 
-
 window.addEventListener(
     "beforeunload",
     cleanup
 );
+
+// ==========================================
+// Lancement
+// ==========================================
+
+init();
