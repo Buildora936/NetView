@@ -430,7 +430,6 @@ export async function getVideos({
 } = {}) {
 
     const limit = 12;
-
     const from = Math.max(0, (page - 1) * limit);
     const to = from + limit - 1;
 
@@ -454,19 +453,24 @@ export async function getVideos({
         .eq("status", "published")
         .eq("visibility", "public");
 
+    // Recherche textuelle
     if (search && search.trim()) {
         const searchValue = search.trim();
-
         query = query.or(
             `title.ilike.%${searchValue}%,description.ilike.%${searchValue}%`
         );
     }
 
+    // Filtrage par catégorie (prend en compte l'ID ou ignore si c'est "Tous" / vide)
     if (category && category !== "Tous") {
-        query = query.eq(
-            "category_id",
-            category
-        );
+        // Si la valeur ressemble à un UUID, on filtre par ID, sinon par nom de catégorie
+        const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(category);
+        
+        if (isUuid) {
+            query = query.eq("category_id", category);
+        } else {
+            query = query.eq("video_categories.name", category);
+        }
     }
 
     query = query
@@ -482,44 +486,20 @@ export async function getVideos({
     const { data, error } = await query;
 
     if (error) {
-        console.error(
-            "Erreur Supabase getVideos :",
-            error
-        );
-
+        console.error("Erreur Supabase getVideos :", error);
         return [];
     }
 
     return (data || []).map(video => ({
         ...video,
-
-        channelName:
-            video.channels?.name ||
-            "Chaîne inconnue",
-
-        channelHandle:
-            video.channels?.handle ||
-            null,
-
-        channelAvatar:
-            video.channels?.avatar_url ||
-            "images/default-avatar.png",
-
-        channelVerified:
-            video.channels?.verified ||
-            false,
-
-        subscribersCount:
-            video.channels?.subscribers_count ||
-            0,
-
-        categoryName:
-            video.video_categories?.name ||
-            null
+        channelName: video.channels?.name || "Chaîne inconnue",
+        channelHandle: video.channels?.handle || null,
+        channelAvatar: video.channels?.avatar_url || "images/default-avatar.png",
+        channelVerified: video.channels?.verified || false,
+        subscribersCount: video.channels?.subscribers_count || 0,
+        categoryName: video.video_categories?.name || null
     }));
 }
-
-
 // ==========================================
 // Shorts
 // ==========================================
