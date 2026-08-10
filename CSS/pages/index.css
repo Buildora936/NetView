@@ -19,7 +19,7 @@
 }
 
 /* ==========================================
-   NetView Background
+    NetView Background
 ========================================== */
 .nv-home-background {
     position: fixed;
@@ -93,7 +93,7 @@
 }
 
 /* ==========================================
-   Mobile Background & Body
+    Mobile Background & Body
 ========================================== */
 @media(max-width: 600px) {
     .nv-orb.one {
@@ -119,7 +119,7 @@ body {
 }
 
 /* ==========================================
-   Header
+    Header
 ========================================== */
 .nv-header {
     position: fixed;
@@ -137,7 +137,7 @@ body {
 }
 
 /* ==========================================
-   Header Left
+    Header Left
 ========================================== */
 .nv-header-left {
     display: flex;
@@ -158,7 +158,7 @@ body {
 }
 
 /* ==========================================
-   Header Center
+    Header Center
 ========================================== */
 .nv-header-center {
     flex: 1;
@@ -199,7 +199,7 @@ body {
 }
 
 /* ==========================================
-   Header Right
+    Header Right
 ========================================== */
 .nv-header-right {
     display: flex;
@@ -240,7 +240,7 @@ body {
 }
 
 /* ==========================================
-   Bouton S'identifier
+    Bouton S'identifier
 ========================================== */
 .nv-login-button {
     height: 40px;
@@ -257,35 +257,9 @@ body {
 .nv-login-button:hover {
     background: rgba(37, 99, 235, .12);
 }
-/* Conteneur principal de la sidebar */
-.nv-sidebar {
-    /* Assurez-vous qu'elle a une hauteur fixe ou maximale basée sur la vue */
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    overflow: hidden; /* Empêche la sidebar entière de dépasser */
-    display: flex;
-    flex-direction: column;
-}
 
-/* La zone de navigation interne qui doit défiler */
-.nv-sidebar-nav {
-    overflow-y: auto;   /* Active le défilement vertical si le contenu est trop long */
-    flex-grow: 1;       poids flexible pour prendre l'espace disponible
-    scrollbar-width: thin; /* Optionnel : rend la barre de scroll plus fine (Firefox) */
-}
-
-/* Optionnel : pour les navigateurs basés sur Webkit (Chrome, Safari, Edge) pour affiner la barre de défilement */
-.nv-sidebar-nav::-webkit-scrollbar {
-    width: 6px;
-}
-
-.nv-sidebar-nav::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-}
 /* ==========================================
-   Sidebar
+    Sidebar
 ========================================== */
 .nv-sidebar {
     position: fixed;
@@ -298,6 +272,9 @@ body {
     overflow: hidden;
     z-index: 900;
     transition: width .3s ease, transform .3s ease;
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
 }
 
 .nv-sidebar.active {
@@ -305,6 +282,26 @@ body {
     animation: nvSidebarOpen .3s ease;
 }
 
+/* La zone de navigation interne qui doit défiler */
+.nv-sidebar-nav {
+    overflow-y: auto;   /* Active le défilement vertical si le contenu est trop long */
+    flex-grow: 1;       /* Poids flexible pour prendre l'espace disponible */
+    scrollbar-width: thin; /* Optionnel : rend la barre de scroll plus fine (Firefox) */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 8px;
+}
+
+/* Optionnel : pour les navigateurs basés sur Webkit (Chrome, Safari, Edge) pour affiner la barre de défilement */
+.nv-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nv-sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
 
 .nv-sidebar a {
     height: 44px;
@@ -338,7 +335,7 @@ body {
 }
 
 /* ==========================================
-   Overlay Mobile
+    Overlay Mobile
 ========================================== */
 .nv-sidebar-overlay {
     position: fixed;
@@ -356,7 +353,7 @@ body {
 }
 
 /* ==========================================
-   Responsive Header & Sidebar
+    Responsive Header & Sidebar
 ========================================== */
 @media(max-width: 900px) {
     .nv-header-center {
@@ -393,7 +390,7 @@ body {
 ========================================== */
 
 /* ==========================================
-   Categories Bar
+    Categories Bar
 ========================================== */
 .nv-categories {
     position: fixed;
@@ -424,9 +421,10 @@ body {
 }
 
 /* ==========================================
-   Category Button
+    Category Button
 ========================================== */
-.nv-category {
+.nv-category,
+.nv-category-chip {
     flex-shrink: 0;
     height: 32px;
     padding: 0 16px;
@@ -439,17 +437,19 @@ body {
     transition: .2s ease;
 }
 
-.nv-category:hover {
+.nv-category:hover,
+.nv-category-chip:hover {
     background: var(--nv-surface-hover);
 }
 
-.nv-category.active {
+.nv-category.active,
+.nv-category-chip.active {
     background: var(--nv-primary);
     color: white;
 }
 
 /* ==========================================
-   Section
+    Section
 ========================================== */
 .nv-section {
     width: 100%;
@@ -457,10 +457,11 @@ body {
 }
 
 /* ==========================================
-   Grille Style YouTube (6 par ligne)
+    Grille Style YouTube (6 par ligne)
 ========================================== */
 .nv-videos-grid,
-.nv-videos-feed {
+.nv-videos-feed,
+.nv-video-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 16px 12px;
@@ -468,19 +469,19 @@ body {
 }
 
 @media (min-width: 1800px) {
-    .nv-videos-grid, .nv-videos-feed { grid-template-columns: repeat(6, 1fr); }
+    .nv-videos-grid, .nv-videos-feed, .nv-video-grid { grid-template-columns: repeat(6, 1fr); }
 }
 @media (min-width: 1500px) and (max-width: 1799px) {
-    .nv-videos-grid, .nv-videos-feed { grid-template-columns: repeat(5, 1fr); }
+    .nv-videos-grid, .nv-videos-feed, .nv-video-grid { grid-template-columns: repeat(5, 1fr); }
 }
 @media (min-width: 1100px) and (max-width: 1499px) {
-    .nv-videos-grid, .nv-videos-feed { grid-template-columns: repeat(4, 1fr); }
+    .nv-videos-grid, .nv-videos-feed, .nv-video-grid { grid-template-columns: repeat(4, 1fr); }
 }
 @media (min-width: 768px) and (max-width: 1099px) {
-    .nv-videos-grid, .nv-videos-feed { grid-template-columns: repeat(3, 1fr); }
+    .nv-videos-grid, .nv-videos-feed, .nv-video-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 767px) {
-    .nv-videos-grid, .nv-videos-feed { grid-template-columns: repeat(2, 1fr); gap: 12px 8px; }
+    .nv-videos-grid, .nv-videos-feed, .nv-video-grid { grid-template-columns: repeat(2, 1fr); gap: 12px 8px; }
 }
 
 .nv-video-card {
@@ -623,7 +624,7 @@ body {
 }
 
 /* ==========================================
-   Ultra-Styled Product Card (NetView Store)
+    Ultra-Styled Product Card (NetView Store)
 ========================================== */
 .nv-product-card {
     position: relative;
@@ -842,7 +843,7 @@ body {
 }
 
 /* ==========================================
-   Shorts
+    Shorts
 ========================================== */
 .nv-shorts-grid {
     display: grid;
@@ -882,7 +883,7 @@ body {
 }
 
 /* ==========================================
-   Horizontal Scroll (Lives + Produits)
+    Horizontal Scroll (Lives + Produits)
 ========================================== */
 .nv-horizontal-scroll {
     display: flex;
@@ -903,7 +904,7 @@ body {
 }
 
 /* ==========================================
-   Responsive Desktop & Tablet & Mobile
+    Responsive Desktop & Tablet & Mobile
 ========================================== */
 @media(max-width: 1200px) {
     .nv-video-grid {
@@ -952,7 +953,8 @@ body {
     .nv-home {
         padding-top: 112px;
     }
-    .nv-category {
+    .nv-category,
+    .nv-category-chip {
         padding: 0 14px;
     }
 }
@@ -964,7 +966,7 @@ body {
 ========================================== */
 
 /* ==========================================
-   Skeleton Loaders & Shimmer Animations
+    Skeleton Loaders & Shimmer Animations
 ========================================== */
 .nv-skeleton {
     background: linear-gradient(
@@ -1064,7 +1066,7 @@ body {
 }
 
 /* ==========================================
-   Empty State
+    Empty State
 ========================================== */
 .nv-empty-state {
     width: 100%;
@@ -1089,7 +1091,7 @@ body {
 }
 
 /* ==========================================
-   Context Menu
+    Context Menu
 ========================================== */
 .nv-context-menu {
     position: fixed;
@@ -1138,7 +1140,7 @@ body {
 }
 
 /* ==========================================
-   Full Screen Loader
+    Full Screen Loader
 ========================================== */
 .nv-page-loader {
     position: fixed;
@@ -1171,7 +1173,7 @@ body {
 }
 
 /* ==========================================
-   Toast / Notifications
+    Toast / Notifications
 ========================================== */
 #notification {
     position: fixed;
@@ -1196,7 +1198,7 @@ body {
 }
 
 /* ==========================================
-   Card Hover Animations
+    Card Hover Animations
 ========================================== */
 .nv-video-card,
 .nv-short-card,
@@ -1213,7 +1215,7 @@ body {
 }
 
 /* ==========================================
-   Content Appearance Animation
+    Content Appearance Animation
 ========================================== */
 .nv-video-card,
 .nv-short-card,
@@ -1234,7 +1236,7 @@ body {
 }
 
 /* ==========================================
-   Final Breakpoints
+    Final Breakpoints
 ========================================== */
 @media(max-width: 768px) {
     .nv-page-loader {
