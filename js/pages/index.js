@@ -270,6 +270,20 @@ async function init(){
 
         fillSidebar();
 
+        renderCategories([
+            "Tous",
+            "Gaming",
+            "Education",
+            "Music",
+            "Technology",
+            "Entertainment",
+            "Sports",
+            "News",
+            "Comedy",
+            "Business",
+            "Lifestyle"
+        ]);
+
         await loadHomeContent();
 
         addEventListeners();
@@ -1151,20 +1165,20 @@ function createVideoCard(video) {
     
     article.innerHTML = `
         <div class="nv-video-thumbnail">
-            <img src="${video.thumbnailUrl || video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
+            <img src="${video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
             <span class="nv-video-duration">${video.duration || '0:00'}</span>
         </div>
         <div class="nv-video-content">
             <div class="nv-video-avatar">
-                <img src="${video.channelAvatar || video.avatar_url || 'default-avatar.jpg'}" alt="${video.channelName || ''}" loading="lazy">
+                <img src="${video.channelAvatar || 'images/default-avatar.png'}" alt="${video.channelName || ''}" loading="lazy">
             </div>
             <div class="nv-video-info">
                 <h3 class="nv-video-title">${video.title || ''}</h3>
-                <a href="#" class="nv-video-channel">${video.channelName || video.channel_name || ''}</a>
+                <a href="#" class="nv-video-channel">${video.channelName || ''}</a>
                 <div class="nv-video-meta">
                     <span>${formatViews(video.views || 0)} vues</span>
                     <span>•</span>
-                    <span>${video.timeAgo || video.created_at || 'Il y a un moment'}</span>
+                    <span>${formatDate(video.published_at || video.created_at)}</span>
                 </div>
             </div>
             <button class="nv-icon-button nv-video-menu-btn nv-video-menu" data-video="${video.id || ''}" aria-label="Action menu">
@@ -1281,7 +1295,7 @@ function createLiveCard(live){
 
                 <p>
 
-                    ${live.channel_name}
+                    ${live.channels?.name || 'Chaîne inconnue'}
 
                 </p>
 
@@ -1440,481 +1454,6 @@ async function changeCategory(category){
         });
 
 }
-
-
-// ==========================================
-// Événements
-// ==========================================
-
-function addEventListeners(){
-
-    // ======================================
-    // Sidebar
-    // ======================================
-
-    menuButton?.addEventListener(
-        "click",
-        toggleSidebar
-    );
-
-    sidebarOverlay?.addEventListener(
-        "click",
-        closeSidebar
-    );
-
-
-    // ======================================
-    // Recherche
-    // ======================================
-
-    searchForm?.addEventListener(
-        "submit",
-        async(event)=>{
-
-            event.preventDefault();
-
-            await searchVideos(
-                searchInput.value
-            );
-
-        }
-    );
-
-
-    searchInput?.addEventListener(
-        "keydown",
-        async(event)=>{
-
-            if(event.key !== "Enter")
-                return;
-
-            event.preventDefault();
-
-            await searchVideos(
-                searchInput.value
-            );
-
-        }
-    );
-
-
-    // ======================================
-    // Catégories
-    // ======================================
-
-    categoriesContainer?.addEventListener(
-        "click",
-        async(event)=>{
-
-            const button =
-                event.target.closest(
-                    ".nv-category"
-                );
-
-            if(!button)
-                return;
-
-            await changeCategory(
-                button.dataset.category
-            );
-
-        }
-    );
-
-
-    // ======================================
-    // Header (délégation)
-    // ======================================
-
-    headerRight?.addEventListener(
-        "click",
-        async(event)=>{
-
-            const login =
-                event.target.closest(
-                    "#loginButton"
-                );
-
-            if(login){
-
-                navigate(
-                    "auth.html"
-                );
-
-                return;
-
-            }
-
-
-            const upload =
-                event.target.closest(
-                    "#uploadButton"
-                );
-
-            if(upload){
-
-                navigate(
-                    "publish.html"
-                );
-
-                return;
-
-            }
-
-
-            const notifications =
-                event.target.closest(
-                    "#notificationsButton"
-                );
-
-            if(notifications){
-
-                navigate(
-                    "notification.html"
-                );
-
-                return;
-
-            }
-
-        }
-    );
-
-
-    // ======================================
-    // Sidebar (délégation)
-    // ======================================
-
-    sidebarNav?.addEventListener(
-        "click",
-        async(event)=>{
-
-            const logout =
-                event.target.closest(
-                    "#logoutButton"
-                );
-
-            if(!logout)
-                return;
-
-            event.preventDefault();
-
-            await signOut();
-
-            navigate(
-                "auth.html"
-            );
-
-        }
-    );
-
-
-    // ======================================
-    // Menus vidéos
-    // ======================================
-
-    document.addEventListener(
-        "click",
-        event=>{
-
-            const menu =
-                event.target.closest(
-                    ".nv-video-menu"
-                );
-
-            if(menu){
-
-                openContextMenu(
-                    menu.dataset.video,
-                    event.pageX,
-                    event.pageY
-                );
-
-                return;
-
-            }
-
-            closeContextMenu();
-
-        }
-    );
-
-
-    // ======================================
-    // Infinite Scroll
-    // ======================================
-
-    window.addEventListener(
-        "scroll",
-        handleInfiniteScroll
-    );
-
-
-    // ======================================
-    // Responsive
-    // ======================================
-
-    window.addEventListener(
-        "resize",
-        ()=>{
-
-            if(window.innerWidth > 900){
-
-                sidebarOverlay
-                    ?.classList.remove(
-                        "active"
-                    );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// Infinite Scroll
-// ==========================================
-
-async function handleInfiniteScroll(){
-
-    if(isLoading)
-        return;
-
-    if(!hasMoreVideos)
-        return;
-
-    const scrollPosition =
-
-        window.innerHeight +
-
-        window.scrollY;
-
-
-    const pageHeight =
-
-        document.body.offsetHeight;
-
-
-    if(scrollPosition < pageHeight - 600)
-        return;
-
-
-    isLoading = true;
-
-    currentPage++;
-
-    try{
-
-        const data =
-            await getVideos({
-
-                page:
-                    currentPage,
-
-                category:
-                    currentCategory,
-
-                search:
-                    searchQuery
-
-            });
-
-        if(!data || !data.length){
-
-            hasMoreVideos =
-                false;
-
-            return;
-
-        }
-
-        videos.push(
-            ...data
-        );
-
-        renderVideos();
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-    }
-
-    finally{
-
-        isLoading = false;
-
-    }
-
-}
-
-
-// ==========================================
-// Context Menu
-// ==========================================
-
-function openContextMenu(
-    videoId,
-    x,
-    y
-){
-
-    if(!contextMenu)
-        return;
-
-    contextMenu.dataset.video =
-        videoId;
-
-    contextMenu.style.left =
-        `${x}px`;
-
-    contextMenu.style.top =
-        `${y}px`;
-
-    contextMenu.classList.add(
-        "active"
-    );
-
-}
-
-
-function closeContextMenu(){
-
-    contextMenu?.classList.remove(
-        "active"
-    );
-
-}
-
-
-// ==========================================
-// Utilitaires
-// ==========================================
-
-
-// ==========================================
-// Format Vues
-// ==========================================
-
-function formatViews(views){
-
-    views =
-        Number(views) || 0;
-
-    if(views >= 1000000000){
-
-        return (
-            (views / 1000000000)
-            .toFixed(1)
-            .replace(".0","") +
-            " Md"
-        );
-
-    }
-
-    if(views >= 1000000){
-
-        return (
-            (views / 1000000)
-            .toFixed(1)
-            .replace(".0","") +
-            " M"
-        );
-
-    }
-
-    if(views >= 1000){
-
-        return (
-            (views / 1000)
-            .toFixed(1)
-            .replace(".0","") +
-            " k"
-        );
-
-    }
-
-    return views.toString();
-
-}
-
-
-// ==========================================
-// Format Date
-// ==========================================
-
-function formatDate(date){
-
-    if(!date)
-        return "";
-
-    const value =
-        new Date(date);
-
-    if(isNaN(value))
-        return "";
-
-    return value.toLocaleDateString(
-        "fr-FR",
-        {
-
-            day:"2-digit",
-
-            month:"short",
-
-            year:"numeric"
-
-        }
-
-    );
-
-}
-
-
-// ==========================================
-// Notification
-// ==========================================
-
-function showNotification(
-
-    message,
-
-    type="success"
-
-){
-
-    if(!notification)
-        return;
-
-    notification.className =
-        `notification ${type}`;
-
-    notification.textContent =
-        message;
-
-    notification.classList.add(
-        "show"
-    );
-
-    clearTimeout(
-        notification.timer
-    );
-
-    notification.timer =
-        setTimeout(()=>{
-
-            notification.classList.remove(
-                "show"
-            );
-
-        },3000);
-
-}
-
 
 // ==========================================
 // Empty State
