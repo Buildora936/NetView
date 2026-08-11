@@ -1125,6 +1125,28 @@ function renderProducts(){
 // Création des cartes
 // ==========================================
 
+// ==========================================
+// Utils (Fonction de formatage du temps)
+// ==========================================
+function formatDuration(totalSeconds) {
+    if (!totalSeconds || isNaN(totalSeconds) || totalSeconds < 0) {
+        return "00:00";
+    }
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const paddedMinutes = String(minutes).padStart(2, '0');
+    const paddedSeconds = String(seconds).padStart(2, '0');
+
+    if (hours > 0) {
+        const paddedHours = String(hours).padStart(2, '0');
+        return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+    }
+
+    return `${paddedMinutes}:${paddedSeconds}`;
+}
 
 // ==========================================
 // Video Card
@@ -1135,6 +1157,8 @@ function createVideoCard(video) {
     const article = document.createElement("article");
     article.className = "nv-video-card";
     article.dataset.id = video.id || "";
+
+    const formattedDuration = formatDuration(video.duration);
     
     article.innerHTML = `
         <a href="player.html?id=${video.id || ''}" class="nv-video-link-wrapper">
