@@ -8,7 +8,7 @@
 // ==========================================
 // Core Imports
 // ==========================================
-import { getSession } from "../core/auth.js";
+import { getSession, getUser, getProfile, signOut } from "../core/auth.js";
 import {
     searchVideos,
     searchShorts,
@@ -39,6 +39,7 @@ const mobileSearchInput = document.getElementById("mobileSearchInput");
 
 // Sidebar
 const sidebar = document.getElementById("sidebar");
+const sidebarNav = document.querySelector(".nv-sidebar-nav");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
 
 // Header User
@@ -61,6 +62,7 @@ const notification = document.getElementById("notification");
 // Variables Globales
 // ==========================================
 let currentUser = null;
+let currentProfile = null;
 let searchQuery = "";
 let currentType = "all";
 let searchResultsData = [];
@@ -82,456 +84,252 @@ const mobileBreakpoint = 768;
 // ==========================================
 async function init() {
     await checkSession();
-        await loadProfile();
-        fillHeader();
-        fillSidebar();
+    await loadProfile();
+    fillHeader();
+    fillSidebar();
     setupSearchBar();
     addEventListeners();
     loadInitialSearch();
 }
 
 // ==========================================
-// Vérification session
-// ==========================================
-// ==========================================
 // Vérification Session
 // ==========================================
-
-async function checkSession(){
-
-    try{
-
-        const session =
-            await getSession();
-
-        if(!session){
-
+async function checkSession() {
+    try {
+        const session = await getSession();
+        if (!session) {
             currentUser = null;
-
             return;
-
         }
-
-        currentUser =
-            await getUser();
-
-    }
-
-    catch(error){
-
+        currentUser = await getUser();
+    } catch (error) {
         console.error(error);
-
         currentUser = null;
-
     }
-
 }
-
 
 // ==========================================
 // Chargement Profil
 // ==========================================
-
-async function loadProfile(){
-
-    if(!currentUser){
-
+async function loadProfile() {
+    if (!currentUser) {
         currentProfile = null;
-
         return;
-
     }
 
-    try{
-
-        currentProfile =
-            await getProfile(
-                currentUser.id
-            );
-
-    }
-
-    catch(error){
-
+    try {
+        currentProfile = await getProfile(currentUser.id);
+    } catch (error) {
         console.error(error);
-
         currentProfile = null;
-
     }
-
 }
-
 
 // ==========================================
 // Header
 // ==========================================
-
-function fillHeader(){
-
+function fillHeader() {
     updateHeader();
-
 }
-
 
 // ==========================================
 // Sidebar
 // ==========================================
-
-function fillSidebar(){
-
+function fillSidebar() {
     updateSidebar();
-
 }
-
 
 // ==========================================
 // Toggle Sidebar
 // ==========================================
-
-function toggleSidebar(){
-
-    if(sidebarOpen){
-
+function toggleSidebar() {
+    if (sidebarOpen) {
         closeSidebar();
-
-    }
-
-    else{
-
+    } else {
         openSidebar();
-
     }
-
 }
-
 
 // ==========================================
 // Open Sidebar
 // ==========================================
-
-function openSidebar(){
-
+function openSidebar() {
     sidebarOpen = true;
-
-    sidebar.classList.add(
-        "active"
-    );
-
-    sidebarOverlay?.classList.add(
-        "active"
-    );
-
+    sidebar.classList.add("active");
+    sidebarOverlay?.classList.add("active");
 }
-
 
 // ==========================================
 // Close Sidebar
 // ==========================================
-
-function closeSidebar(){
-
+function closeSidebar() {
     sidebarOpen = false;
-
-    sidebar.classList.remove(
-        "active"
-    );
-
-    sidebarOverlay?.classList.remove(
-        "active"
-    );
-
+    sidebar.classList.remove("active");
+    sidebarOverlay?.classList.remove("active");
 }
-
 
 // ==========================================
 // Update Header
 // ==========================================
-
-function updateHeader(){
-
-    if(currentUser){
-
+function updateHeader() {
+    if (currentUser) {
         showUserHeader();
-
-    }
-
-    else{
-
+    } else {
         showGuestHeader();
-
     }
-
 }
-
 
 // ==========================================
 // Update Sidebar
 // ==========================================
-
-function updateSidebar(){
-
-    if(currentUser){
-
+function updateSidebar() {
+    if (currentUser) {
         showUserSidebar();
-
-    }
-
-    else{
-
+    } else {
         showGuestSidebar();
-
     }
-
 }
-
 
 // ==========================================
 // Guest Header
 // ==========================================
-
-function showGuestHeader(){
-
-    if(!headerRight)
-        return;
+function showGuestHeader() {
+    if (!headerRight) return;
 
     headerRight.innerHTML = `
-
         <button
             id="loginButton"
             class="nv-login-button">
-
             <i class="fa-regular fa-user"></i>
-
-            <span>
-
-                S'identifier
-
-            </span>
-
+            <span>S'identifier</span>
         </button>
-
     `;
-
 }
-
 
 // ==========================================
 // User Header
 // ==========================================
-
-function showUserHeader(){
-
-    if(!headerRight)
-        return;
+function showUserHeader() {
+    if (!headerRight) return;
 
     headerRight.innerHTML = `
-
         <button
             id="uploadButton"
             class="nv-icon-button"
             title="Publier">
-
             <i class="fa-solid fa-plus nv-plus-icon"></i>
-
         </button>
-
         <button
             id="notificationsButton"
             class="nv-icon-button">
-
             <i class="fa-regular fa-bell"></i>
-
             <span
                 id="notificationBadge"
                 class="nv-badge">
-
             </span>
-
         </button>
-
         <a
             href="settings.html"
             class="nv-avatar-button">
-
             <img
                 id="headerAvatar"
-                src="${
-                    currentProfile?.avatar_url ||
-                    "images/default-avatar.png"
-                }"
+                src="${currentProfile?.avatar_url || 'images/default-avatar.png'}"
                 alt="Avatar">
-
         </a>
-
     `;
-
 }
-
 
 // ==========================================
 // Guest Sidebar
 // ==========================================
-
-function showGuestSidebar(){
-
-    if(!sidebarNav)
-        return;
+function showGuestSidebar() {
+    if (!sidebarNav) return;
 
     sidebarNav.innerHTML = `
-
         <a href="index.html">
-
             <i class="fa-solid fa-house"></i>
-
             <span>Accueil</span>
-
         </a>
-
         <a href="shorts.html">
-
             <i class="fa-solid fa-bolt"></i>
-
             <span>Shorts</span>
-
         </a>
-
         <a href="lives.html">
-
             <i class="fa-solid fa-tower-broadcast"></i>
-
             <span>Lives</span>
-
         </a>
-
         <a href="search.html">
-
             <i class="fa-solid fa-magnifying-glass"></i>
-
             <span>Explorer</span>
-
         </a>
-
         <a href="netview-shop.html">
-
             <i class="fa-solid fa-store"></i>
-
             <span>Boutique</span>
-
         </a>
-
         <hr>
-
         <a href="auth.html">
-
             <i class="fa-regular fa-user"></i>
-
             <span>S'identifier</span>
-
         </a>
-
     `;
-
 }
-
 
 // ==========================================
 // User Sidebar
 // ==========================================
-
-function showUserSidebar(){
-
-    if(!sidebarNav)
-        return;
+function showUserSidebar() {
+    if (!sidebarNav) return;
 
     sidebarNav.innerHTML = `
-
         <a href="index.html">
-
             <i class="fa-solid fa-house"></i>
-
             <span>Accueil</span>
-
         </a>
-
         <a href="shorts.html">
-
             <i class="fa-solid fa-bolt"></i>
-
             <span>Shorts</span>
-
         </a>
-
         <a href="subscriptions.html">
-
             <i class="fa-solid fa-tv"></i>
-
             <span>Abonnements</span>
-
         </a>
-
         <a href="playlist.html">
-
             <i class="fa-solid fa-list"></i>
-
             <span>Playlists</span>
-
         </a>
-
         <a href="history.html">
-
             <i class="fa-solid fa-clock-rotate-left"></i>
-
             <span>Historique</span>
-
         </a>
-
         <a href="watch-later.html">
-
             <i class="fa-regular fa-clock"></i>
-
             <span>À regarder</span>
-
         </a>
-
         <a href="liked-videos.html">
-
             <i class="fa-solid fa-thumbs-up"></i>
-
             <span>J'aime</span>
-
         </a>
-
         <hr>
-
         <a href="lives.html">
-
             <i class="fa-solid fa-tower-broadcast"></i>
-
             <span>Lives</span>
-
         </a>
-
         <a href="netview-shop.html">
-
             <i class="fa-solid fa-store"></i>
-
             <span>Boutique</span>
-
         </a>
-
         <a href="settings.html">
-
             <i class="fa-solid fa-gear"></i>
-
             <span>Paramètres</span>
-
         </a>
-
-    
+        <hr>
+        <a href="#" id="logoutButton">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Déconnexion</span>
+        </a>
     `;
-
 }
-
 
 // ==========================================
 // Gestion des deux barres de recherche
@@ -642,6 +440,7 @@ async function searchAll() {
 function showSearchLoading() {
     if (searchSkeleton) searchSkeleton.hidden = false;
     if (searchResults) searchResults.innerHTML = "";
+    if (searchEmpty) searchEmpty.hidden = true;
 }
 
 function hideSearchLoading() {
@@ -654,6 +453,7 @@ function hideSearchLoading() {
 function clearResults() {
     if (searchResults) searchResults.innerHTML = "";
     if (searchEmpty) searchEmpty.hidden = false;
+    if (searchSkeleton) searchSkeleton.hidden = true;
 }
 
 // ==========================================
@@ -719,188 +519,40 @@ function addEventListeners() {
         });
     });
 
-    // ======================================
     // Sidebar
-    // ======================================
-
-    menuButton?.addEventListener(
-        "click",
-        toggleSidebar
-    );
-
-    sidebarOverlay?.addEventListener(
-        "click",
-        closeSidebar
-    );
-// ======================================
+    menuButton?.addEventListener("click", toggleSidebar);
+    sidebarOverlay?.addEventListener("click", closeSidebar);
 
     // Header (délégation)
-
-    // ======================================
-
-
-
-    headerRight?.addEventListener(
-
-        "click",
-
-        async(event)=>{
-
-
-
-            const login =
-
-                event.target.closest(
-
-                    "#loginButton"
-
-                );
-
-
-
-            if(login){
-
-
-
-                navigate(
-
-                    "auth.html"
-
-                );
-
-
-
-                return;
-
-
-
-            }
-
-
-
-
-
-            const upload =
-
-                event.target.closest(
-
-                    "#uploadButton"
-
-                );
-
-
-
-            if(upload){
-
-
-
-                navigate(
-
-                    "publish.html"
-
-                );
-
-
-
-                return;
-
-
-
-            }
-
-
-
-
-
-            const notifications =
-
-                event.target.closest(
-
-                    "#notificationsButton"
-
-                );
-
-
-
-            if(notifications){
-
-
-
-                navigate(
-
-                    "notification.html"
-
-                );
-
-
-
-                return;
-
-
-
-            }
-
-
-
+    headerRight?.addEventListener("click", async (event) => {
+        const login = event.target.closest("#loginButton");
+        if (login) {
+            navigate("auth.html");
+            return;
         }
 
-    );
+        const upload = event.target.closest("#uploadButton");
+        if (upload) {
+            navigate("publish.html");
+            return;
+        }
 
-
-
-
-
-    // ======================================
+        const notifications = event.target.closest("#notificationsButton");
+        if (notifications) {
+            navigate("notification.html");
+            return;
+        }
+    });
 
     // Sidebar (délégation)
+    sidebarNav?.addEventListener("click", async (event) => {
+        const logout = event.target.closest("#logoutButton");
+        if (!logout) return;
 
-    // ======================================
-
-
-
-    sidebarNav?.addEventListener(
-
-        "click",
-
-        async(event)=>{
-
-
-
-            const logout =
-
-                event.target.closest(
-
-                    "#logoutButton"
-
-                );
-
-
-
-            if(!logout)
-
-                return;
-
-
-
-            event.preventDefault();
-
-
-
-            await signOut();
-
-
-
-            navigate(
-
-                "auth.html"
-
-            );
-
-
-
-        }
-
-    );
+        event.preventDefault();
+        await signOut();
+        navigate("auth.html");
+    });
 
     // Fermeture menu contextuel
     document.addEventListener("click", event => {
@@ -923,6 +575,8 @@ function autoSearch(value) {
         if (searchQuery.length >= 2) {
             updateUrl();
             executeSearch();
+        } else if (searchQuery.length === 0) {
+            clearResults();
         }
     }, 500);
 }
@@ -944,7 +598,7 @@ function updateUrl() {
 // Scroll infini
 // ==========================================
 function handleInfiniteScroll() {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore || !searchQuery) return;
 
     const scrollPosition = window.innerHeight + window.scrollY;
     const pageHeight = document.body.offsetHeight;
@@ -1044,25 +698,36 @@ function renderSearchResults() {
 // Tout afficher
 // ==========================================
 function renderAllResults(data) {
+    let hasAnyData = false;
+
     if (data.videos?.length) {
         createSectionTitle("Vidéos");
         renderVideos(data.videos);
+        hasAnyData = true;
     }
     if (data.shorts?.length) {
         createSectionTitle("Shorts");
         renderShorts(data.shorts);
+        hasAnyData = true;
     }
     if (data.channels?.length) {
         createSectionTitle("Chaînes");
         renderChannels(data.channels);
+        hasAnyData = true;
     }
     if (data.lives?.length) {
         createSectionTitle("Lives");
         renderLives(data.lives);
+        hasAnyData = true;
     }
     if (data.products?.length) {
         createSectionTitle("Produits");
         renderProducts(data.products);
+        hasAnyData = true;
+    }
+
+    if (!hasAnyData && searchEmpty) {
+        searchEmpty.hidden = false;
     }
 }
 
@@ -1080,13 +745,14 @@ function createSectionTitle(title) {
 // Vidéos
 // ==========================================
 function renderVideos(videos) {
+    if (!videos || videos.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-videos";
 
     videos.forEach(video => {
         container.innerHTML += `
             <article class="nv-search-video-card">
-                <a class="nv-search-video-thumbnail">
+                <a class="nv-search-video-thumbnail" href="watch.html?id=${video.id || ''}">
                     <img src="${video.thumbnail_url || ''}" alt="${video.title || 'Vidéo'}">
                     <span class="nv-search-duration">${video.duration || ""}</span>
                 </a>
@@ -1106,6 +772,7 @@ function renderVideos(videos) {
 // Shorts
 // ==========================================
 function renderShorts(shorts) {
+    if (!shorts || shorts.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-shorts-grid";
 
@@ -1129,6 +796,7 @@ function renderShorts(shorts) {
 // Chaînes
 // ==========================================
 function renderChannels(channels) {
+    if (!channels || channels.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-channels";
 
@@ -1153,6 +821,7 @@ function renderChannels(channels) {
 // Lives
 // ==========================================
 function renderLives(lives) {
+    if (!lives || lives.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-live-scroll";
 
@@ -1177,6 +846,7 @@ function renderLives(lives) {
 // Produits
 // ==========================================
 function renderProducts(products) {
+    if (!products || products.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-products-grid";
 
@@ -1234,6 +904,15 @@ function showInfiniteLoader() {
 
 function hideInfiniteLoader() {
     if (searchLoader) searchLoader.hidden = true;
+}
+
+// ==========================================
+// Format Date Utilitaire
+// ==========================================
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 
 // ==========================================
