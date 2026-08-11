@@ -285,8 +285,8 @@ body {
 /* La zone de navigation interne qui doit défiler */
 .nv-sidebar-nav {
     overflow-y: auto;   /* Active le défilement vertical si le contenu est trop long */
-    flex-grow: 1;       /* Poids flexible pour prendre l'espace disponible */
-    scrollbar-width: thin; /* Optionnel : rend la barre de scroll plus fine (Firefox) */
+    flex-grow: 0;       /* Poids flexible pour prendre l'espace disponible */
+    scrollbar-height: thin; /* Optionnel : rend la barre de scroll plus fine (Firefox) */
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -295,7 +295,7 @@ body {
 
 /* Optionnel : pour les navigateurs basés sur Webkit (Chrome, Safari, Edge) pour affiner la barre de défilement */
 .nv-sidebar-nav::-webkit-scrollbar {
-    width: 6px;
+    height: 6px;
 }
 
 .nv-sidebar-nav::-webkit-scrollbar-thumb {
