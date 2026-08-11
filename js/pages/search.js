@@ -325,10 +325,7 @@ function showUserSidebar() {
             <span>Paramètres</span>
         </a>
         <hr>
-        <a href="#" id="logoutButton">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Déconnexion</span>
-        </a>
+    
     `;
 }
 
