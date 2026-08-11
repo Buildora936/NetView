@@ -3,12 +3,9 @@
    search.css
    Partie 1
 ========================================== */
-
-
 /* ==========================================
    Search Page Layout
 ========================================== */
-
 
 .nv-search-page{
 
@@ -36,17 +33,11 @@
 .nv-search-header{
 
     width:100%;
-
     padding:
-
         1.5rem
-
         2rem
-
         1rem;
-
 }
-
 
 
 .nv-search-header h1{
@@ -63,19 +54,14 @@
 
     font-weight:
 
-        var(--nv-bold);
+     var(--nv-bold);
 
 }
-
-
-
 
 
 /* ==========================================
    Search Box
 ========================================== */
-
-
 .nv-search-box{
 
     display:flex;
@@ -139,9 +125,6 @@
         var(--nv-primary);
 
 }
-
-
-
 
 
 .nv-search-box button{
@@ -216,8 +199,6 @@
 
 }
 
-
-
 /* ==========================================
    Header Left
 ========================================== */
@@ -254,7 +235,6 @@
     object-fit:contain;
 
 }
-
 
 
 /* ==========================================
@@ -792,12 +772,7 @@
     color:
 
         var(--nv-text);
-
 }
-
-
-
-
 
 .nv-search-filter.active{
 
@@ -808,9 +783,6 @@
     color:white;
 
 }
-
-
-
 
 
 /* ==========================================
@@ -1766,13 +1738,9 @@
 }
 
 
-
-
-
 /* ==========================================
    Full Page Loader
 ========================================== */
-
 
 .nv-page-loader{
 
@@ -1798,15 +1766,11 @@
 
 }
 
-
-
 .nv-page-loader[hidden]{
 
     display:none;
 
 }
-
-
 
 .nv-loader{
 
@@ -1831,22 +1795,15 @@
 }
 
 
-
 @keyframes nv-spin{
 
-
 to{
-
     transform:rotate(360deg);
 
 }
 
 
 }
-
-
-
-
 
 /* ==========================================
    Result Animations
@@ -1860,8 +1817,6 @@ to{
         nv-result-show .35s ease;
 
 }
-
-
 
 @keyframes nv-result-show{
 
@@ -1890,10 +1845,6 @@ to{
 
 }
 
-
-
-
-
 /* ==========================================
    Notification Compatibility
 ========================================== */
@@ -1910,15 +1861,9 @@ to{
     z-index:3000;
 
 }
-
-
-
-
-
 /* ==========================================
    Infinite Scroll Loader
 ========================================== */
-
 
 .nv-search-loader{
 
@@ -1931,8 +1876,6 @@ to{
     padding:2rem;
 
 }
-
-
 
 .nv-search-loader .nv-spinner{
 
@@ -1955,19 +1898,10 @@ to{
         nv-spin 1s linear infinite;
 
 }
-
-
-
-
-
 /* ==========================================
    Responsive Final
 ========================================== */
-
-
 @media(max-width:768px){
-
-
 .nv-search-skeleton{
 
     padding:
@@ -1975,8 +1909,6 @@ to{
         1rem;
 
 }
-
-
 
 .nv-skeleton-image{
 
@@ -1986,36 +1918,21 @@ to{
 
 }
 
-
-
 .nv-context-menu{
 
     min-width:180px;
 
 }
-
-
-
 #notification{
 
     left:15px;
-
     right:15px;
-
     bottom:15px;
-
 }
 
-
-
 }
-
-
-
-
 
 @media(max-width:480px){
-
 
 .nv-search-filter{
 
@@ -2031,8 +1948,6 @@ to{
 
 }
 
-
-
 .nv-search-product-card{
 
     border-radius:
@@ -2041,23 +1956,15 @@ to{
 
 }
 
-
-
 .nv-empty-state{
 
     min-height:220px;
 
 }
 
-
-
 .nv-empty-state i{
-
     font-size:
-
         2.5rem;
-
 }
-
 
 }
