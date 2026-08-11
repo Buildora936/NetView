@@ -719,7 +719,189 @@ function addEventListeners() {
         });
     });
 
-   
+    // ======================================
+    // Sidebar
+    // ======================================
+
+    menuButton?.addEventListener(
+        "click",
+        toggleSidebar
+    );
+
+    sidebarOverlay?.addEventListener(
+        "click",
+        closeSidebar
+    );
+// ======================================
+
+    // Header (délégation)
+
+    // ======================================
+
+
+
+    headerRight?.addEventListener(
+
+        "click",
+
+        async(event)=>{
+
+
+
+            const login =
+
+                event.target.closest(
+
+                    "#loginButton"
+
+                );
+
+
+
+            if(login){
+
+
+
+                navigate(
+
+                    "auth.html"
+
+                );
+
+
+
+                return;
+
+
+
+            }
+
+
+
+
+
+            const upload =
+
+                event.target.closest(
+
+                    "#uploadButton"
+
+                );
+
+
+
+            if(upload){
+
+
+
+                navigate(
+
+                    "publish.html"
+
+                );
+
+
+
+                return;
+
+
+
+            }
+
+
+
+
+
+            const notifications =
+
+                event.target.closest(
+
+                    "#notificationsButton"
+
+                );
+
+
+
+            if(notifications){
+
+
+
+                navigate(
+
+                    "notification.html"
+
+                );
+
+
+
+                return;
+
+
+
+            }
+
+
+
+        }
+
+    );
+
+
+
+
+
+    // ======================================
+
+    // Sidebar (délégation)
+
+    // ======================================
+
+
+
+    sidebarNav?.addEventListener(
+
+        "click",
+
+        async(event)=>{
+
+
+
+            const logout =
+
+                event.target.closest(
+
+                    "#logoutButton"
+
+                );
+
+
+
+            if(!logout)
+
+                return;
+
+
+
+            event.preventDefault();
+
+
+
+            await signOut();
+
+
+
+            navigate(
+
+                "auth.html"
+
+            );
+
+
+
+        }
+
+    );
+
     // Fermeture menu contextuel
     document.addEventListener("click", event => {
         if (contextMenu && !contextMenu.contains(event.target)) {
