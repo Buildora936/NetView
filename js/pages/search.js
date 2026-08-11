@@ -288,17 +288,9 @@ function updateSearchBarVisibility(){
 
 }
 
-
-
-
-
-
-
 // ==========================================
 // Recherche initiale
 // ==========================================
-
-
 function loadInitialSearch(){
 
 
@@ -335,17 +327,11 @@ function loadInitialSearch(){
 
 }
 
-
-
-
-
 // ==========================================
 // Recherche principale
 // ==========================================
 
-
 async function executeSearch(){
-
 
     if(!searchQuery.trim()){
 
@@ -359,45 +345,24 @@ async function executeSearch(){
     }
 
 
-
     if(loading) return;
-
-
 
     loading = true;
 
-
-
     currentPage = 1;
-
-
 
     hasMore = true;
 
-
-
     searchResultsData = [];
-
-
 
     showSearchLoading();
 
-
-
     try{
-
-
-        let results = [];
-
-
+  let results = [];
 
         switch(currentType){
 
-
-
             case "videos":
-
-
                 results =
                     await searchVideos(
                         searchQuery,
@@ -727,13 +692,6 @@ function changeFilter(type){
 
 
 }
-
-
-
-
-
-
-
 // ==========================================
 // Gestion des événements
 // ==========================================
@@ -742,11 +700,9 @@ function changeFilter(type){
 function addEventListeners(){
 
 
-
     // ======================================
     // Recherche Header Desktop
     // ======================================
-
 
     if(searchForm){
 
@@ -779,10 +735,6 @@ function addEventListeners(){
 
 
     }
-
-
-
-
 
     // ======================================
     // Recherche Mobile
