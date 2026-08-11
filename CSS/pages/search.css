@@ -413,17 +413,17 @@ body {
 /* ==========================================
     Shorts
 ========================================== */
-.nv-shorts-grid {
+nv-search-shorts-grid {
     display: grid;
     grid-template-columns: repeat(6, minmax(150px, 1fr));
     gap: 16px;
 }
 
-.nv-short-card {
+nv-search-short-card {
     position: relative;
 }
 
-.nv-short-thumbnail {
+nv-search-short-thumbnail {
     aspect-ratio: 9 / 16;
     border-radius: 12px;
     overflow: hidden;
@@ -436,12 +436,12 @@ body {
     object-fit: cover;
 }
 
-.nv-short-info {
+nv-search-short-info {
     margin-top: 10px;
 }
 
 .nv-short-title {
-    font-size: 15px;
+    font-size: 12px;
     color: var(--nv-text);
 }
 
