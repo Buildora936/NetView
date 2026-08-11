@@ -1,8 +1,8 @@
 // ==========================================
 // NetView
 // search.js
-// Partie 1
-// Imports + DOM + Variables globales
+// Partie 1 & 2
+// Imports + DOM + Variables globales + Logique complète
 // ==========================================
 
 // ==========================================
