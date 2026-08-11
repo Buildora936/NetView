@@ -8,8 +8,9 @@
 // ==========================================
 // Core Imports
 // ==========================================
-import { getSession, getUser, getProfile, signOut } from "../core/auth.js";
+import { getSession, getUser, signOut } from "../core/auth.js";
 import {
+    getProfile,
     searchVideos,
     searchShorts,
     searchChannels,
