@@ -264,10 +264,9 @@ export async function deleteOtherDevices(currentDeviceId) {
 // ==========================================
 
 export async function getProfile() {
-    const { data: { user }, error: userError } =
-        await supabase.auth.getUser();
+    const user = await refreshUser();
 
-    if (userError || !user) {
+    if (!user) {
         return null;
     }
 
@@ -278,93 +277,24 @@ export async function getProfile() {
             .eq("id", user.id)
             .single();
 
-    if (profileError) {
+    if (profileError || !profileData) {
         console.error(
             "Erreur chargement profil :",
-            profileError.message
+            profileError?.message || "Profil introuvable"
         );
 
         return null;
     }
 
-    /*
-     * Le schéma utilise :
-     *
-     * user_roles.user_id
-     * user_roles.role_id
-     * roles.id
-     * roles.name
-     *
-     * et NON user_roles.role.
-     */
-
-    const { data: roleData, error: roleError } =
-        await supabase
-            .from("user_roles")
-            .select(`
-                role_id,
-                roles (
-                    id,
-                    name,
-                    description
-                )
-            `)
-            .eq("user_id", user.id);
-
-    if (roleError) {
-        console.error(
-            "Erreur chargement rôle :",
-            roleError.message
-        );
-    }
-
-    const roles = (roleData || [])
-        .map(item => item.roles)
-        .filter(Boolean);
-
-    const roleNames = roles.map(role => role.name);
-
-    let role = "user";
-
-    if (roleNames.includes("pro")) {
-        role = "pro";
-    } else if (roleNames.includes("creator")) {
-        role = "creator";
-    } else if (roleNames.includes("user")) {
-        role = "user";
-    } else if (roleNames.length > 0) {
-        role = roleNames[0];
-    }
+    // Le rôle est directement stocké dans account_type ('user' ou 'pro')
+    const role = profileData.account_type || "user";
 
     return {
         ...profileData,
-
         role,
-
-        roles,
-
-        roleNames
+        roles: [role],
+        roleNames: [role]
     };
-}
-
-
-export async function updateProfile(values) {
-    const { data: { user }, error: userError } =
-        await supabase.auth.getUser();
-
-    if (userError || !user) {
-        return {
-            data: null,
-            error: new Error("Non connecté")
-        };
-    }
-
-    return await supabase
-        .from("profiles")
-        .update(values)
-        .eq("id", user.id)
-        .select()
-        .single();
 }
 
 
