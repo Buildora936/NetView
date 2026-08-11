@@ -876,7 +876,7 @@ function renderChannels(channels) {
                 </div>
                 <div>
                     <h3>${channel.name || "Chaîne"}</h3>
-                    <p>${channel.subscribers || 0} abonnés</p>
+                    <p>${channel.subscribers_count || 0} abonnés</p>
                 </div>
             </article>
         `;
