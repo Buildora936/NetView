@@ -742,22 +742,64 @@ function createSectionTitle(title) {
 // ==========================================
 // Vidéos
 // ==========================================
+// ==========================================
+// Utils (Fonction de formatage du temps)
+// ==========================================
+function formatDuration(totalSeconds) {
+    if (!totalSeconds || isNaN(totalSeconds) || totalSeconds < 0) {
+        return "00:00";
+    }
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const paddedMinutes = String(minutes).padStart(2, '0');
+    const paddedSeconds = String(seconds).padStart(2, '0');
+
+    if (hours > 0) {
+        const paddedHours = String(hours).padStart(2, '0');
+        return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+    }
+
+    return `${paddedMinutes}:${paddedSeconds}`;
+}
+
+// ==========================================
+// Vidéos (Mise à jour avec la structure index.js)
+// ==========================================
 function renderVideos(videos) {
     if (!videos || videos.length === 0) return;
     const container = document.createElement("div");
     container.className = "nv-search-videos";
 
     videos.forEach(video => {
+        const formattedDuration = formatDuration(video.duration);
+        
         container.innerHTML += `
-            <article class="nv-search-video-card">
-                <a class="nv-search-video-thumbnail" href="watch.html?id=${video.id || ''}">
-                    <img src="${video.thumbnail_url || ''}" alt="${video.title || 'Vidéo'}">
-                    <span class="nv-search-duration">${video.duration || ""}</span>
+            <article class="nv-search-video-card" data-id="${video.id || ''}">
+                <a class="nv-search-video-thumbnail" href="player.html?id=${video.id || ''}">
+                    <img src="${video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || 'Vidéo'}" loading="lazy">
+                    <span class="nv-search-duration">${formattedDuration}</span>
                 </a>
-                <div class="nv-search-video-info">
-                    <h3 class="nv-search-video-title">${video.title || "Sans titre"}</h3>
-                    <p class="nv-search-video-channel">${video.channel_name || "NetView"}</p>
-                    <p class="nv-search-video-meta">${video.views || 0} vues • ${formatDate(video.created_at)}</p>
+                <div class="nv-search-video-content">
+                    <div class="nv-search-video-avatar">
+                        <img src="${video.channelAvatar || 'images/default-avatar.png'}" alt="${video.channelName || video.channel_name || ''}" loading="lazy">
+                    </div>
+                    <div class="nv-search-video-info">
+                        <h3 class="nv-search-video-title">
+                            <a href="player.html?id=${video.id || ''}">${video.title || "Sans titre"}</a>
+                        </h3>
+                        <a href="#" class="nv-search-video-channel">${video.channelName || video.channel_name || "NetView"}</a>
+                        <div class="nv-search-video-meta">
+                            <span>${formatViews(video.views || 0)} vues</span>
+                            <span>•</span>
+                            <span>${formatDate(video.published_at || video.created_at)}</span>
+                        </div>
+                    </div>
+                    <button class="nv-icon-button nv-video-menu-btn nv-video-menu" data-video="${video.id || ''}" aria-label="Action menu">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
                 </div>
             </article>
         `;
@@ -765,7 +807,6 @@ function renderVideos(videos) {
 
     searchResults.appendChild(container);
 }
-
 // ==========================================
 // Shorts
 // ==========================================
