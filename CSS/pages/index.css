@@ -15,7 +15,7 @@
     --nv-text-secondary: #94a3b8;
     --nv-primary: #2563eb;
     --nv-header-height: 64px;
-    --nv-sidebar-width: 240px;
+    --nv-sidebar-width: 72px; /* Largeur fixe de la sidebar repliée/fixe */
 }
 
 /* ==========================================
@@ -79,16 +79,18 @@
 /* --- Main Layout --- */
 .nv-home {
     padding: calc(var(--nv-header-height) + 20px) 24px 40px 24px;
-    max-width: 1800px;
-    margin: 0 auto;
+    max-width: none; /* Supprime la limite fixe pour occuper toute la largeur */
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 32px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @media (min-width: 1024px) {
     .nv-home {
-        padding-left: calc(var(--nv-sidebar-width) + 24px);
+        padding-left: calc(var(--nv-sidebar-width) + 24px); /* Aligne proprement par rapport à la sidebar fixe */
     }
 }
 
