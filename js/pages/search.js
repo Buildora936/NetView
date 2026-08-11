@@ -82,6 +82,9 @@ const mobileBreakpoint = 768;
 // ==========================================
 async function init() {
     await checkSession();
+        await loadProfile();
+        fillHeader();
+        fillSidebar();
     setupSearchBar();
     addEventListeners();
     loadInitialSearch();
