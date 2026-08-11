@@ -413,30 +413,30 @@ body {
 /* ==========================================
     Shorts
 ========================================== */
-nv-search-shorts-grid {
+.nv-search-shorts-grid {
     display: grid;
     grid-template-columns: repeat(6, minmax(150px, 1fr));
     gap: 16px;
 }
 
-nv-search-short-card {
+.nv-search-short-card {
     position: relative;
 }
 
-nv-search-short-thumbnail {
+.nv-search-short-thumbnail {
     aspect-ratio: 9 / 16;
     border-radius: 12px;
     overflow: hidden;
     background: var(--nv-surface);
 }
 
-.nv-short-thumbnail img {
+.nv-search-short-thumbnai img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-nv-search-short-info {
+.nv-search-short-info {
     margin-top: 10px;
 }
 
