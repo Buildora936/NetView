@@ -1164,7 +1164,7 @@ function createVideoCard(video) {
         <a href="player.html?id=${video.id || ''}" class="nv-video-link-wrapper">
             <div class="nv-video-thumbnail">
                 <img src="${video.thumbnail_url || 'default-thumb.jpg'}" alt="${video.title || ''}" loading="lazy">
-                <span class="nv-video-duration">${video.duration || '0:00'}</span>
+                <span class="nv-video-duration">${formattedDuration}</span>
             </div>
         </a>
         <div class="nv-video-content">
