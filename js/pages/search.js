@@ -772,43 +772,6 @@ function formatViews(views){
 }
 
 // ==========================================
-// Format Date (Temps Relatif)
-// ==========================================
-
-function formatDate(dateString) {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now - date) / 1000);
-
-    if (isNaN(seconds) || seconds < 0) return '';
-
-    const intervals = {
-        année: 31536000,
-        mois: 2592000,
-        semaine: 604800,
-        jour: 86400,
-        heure: 3600,
-        minute: 60
-    };
-
-    if (seconds < intervals.minute) {
-        return "À l'instant";
-    }
-
-    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-        const count = Math.floor(seconds / secondsInUnit);
-        if (count >= 1) {
-            const plural = count > 1 && unit !== 'mois' ? 's' : '';
-            return `Il y a ${count} ${unit}${plural}`;
-        }
-    }
-
-    return "À l'instant";
-}
-
-// ==========================================
 // Utils (Fonction de formatage du temps)
 // ==========================================
 function formatDuration(totalSeconds) {
