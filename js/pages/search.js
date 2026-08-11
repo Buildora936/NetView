@@ -90,12 +90,445 @@ async function init() {
 // ==========================================
 // Vérification session
 // ==========================================
-async function checkSession() {
-    const session = await getSession();
-    if (session) {
-        currentUser = session.user;
+// ==========================================
+// Vérification Session
+// ==========================================
+
+async function checkSession(){
+
+    try{
+
+        const session =
+            await getSession();
+
+        if(!session){
+
+            currentUser = null;
+
+            return;
+
+        }
+
+        currentUser =
+            await getUser();
+
     }
+
+    catch(error){
+
+        console.error(error);
+
+        currentUser = null;
+
+    }
+
 }
+
+
+// ==========================================
+// Chargement Profil
+// ==========================================
+
+async function loadProfile(){
+
+    if(!currentUser){
+
+        currentProfile = null;
+
+        return;
+
+    }
+
+    try{
+
+        currentProfile =
+            await getProfile(
+                currentUser.id
+            );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        currentProfile = null;
+
+    }
+
+}
+
+
+// ==========================================
+// Header
+// ==========================================
+
+function fillHeader(){
+
+    updateHeader();
+
+}
+
+
+// ==========================================
+// Sidebar
+// ==========================================
+
+function fillSidebar(){
+
+    updateSidebar();
+
+}
+
+
+// ==========================================
+// Toggle Sidebar
+// ==========================================
+
+function toggleSidebar(){
+
+    if(sidebarOpen){
+
+        closeSidebar();
+
+    }
+
+    else{
+
+        openSidebar();
+
+    }
+
+}
+
+
+// ==========================================
+// Open Sidebar
+// ==========================================
+
+function openSidebar(){
+
+    sidebarOpen = true;
+
+    sidebar.classList.add(
+        "active"
+    );
+
+    sidebarOverlay?.classList.add(
+        "active"
+    );
+
+}
+
+
+// ==========================================
+// Close Sidebar
+// ==========================================
+
+function closeSidebar(){
+
+    sidebarOpen = false;
+
+    sidebar.classList.remove(
+        "active"
+    );
+
+    sidebarOverlay?.classList.remove(
+        "active"
+    );
+
+}
+
+
+// ==========================================
+// Update Header
+// ==========================================
+
+function updateHeader(){
+
+    if(currentUser){
+
+        showUserHeader();
+
+    }
+
+    else{
+
+        showGuestHeader();
+
+    }
+
+}
+
+
+// ==========================================
+// Update Sidebar
+// ==========================================
+
+function updateSidebar(){
+
+    if(currentUser){
+
+        showUserSidebar();
+
+    }
+
+    else{
+
+        showGuestSidebar();
+
+    }
+
+}
+
+
+// ==========================================
+// Guest Header
+// ==========================================
+
+function showGuestHeader(){
+
+    if(!headerRight)
+        return;
+
+    headerRight.innerHTML = `
+
+        <button
+            id="loginButton"
+            class="nv-login-button">
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>
+
+                S'identifier
+
+            </span>
+
+        </button>
+
+    `;
+
+}
+
+
+// ==========================================
+// User Header
+// ==========================================
+
+function showUserHeader(){
+
+    if(!headerRight)
+        return;
+
+    headerRight.innerHTML = `
+
+        <button
+            id="uploadButton"
+            class="nv-icon-button"
+            title="Publier">
+
+            <i class="fa-solid fa-plus nv-plus-icon"></i>
+
+        </button>
+
+        <button
+            id="notificationsButton"
+            class="nv-icon-button">
+
+            <i class="fa-regular fa-bell"></i>
+
+            <span
+                id="notificationBadge"
+                class="nv-badge">
+
+            </span>
+
+        </button>
+
+        <a
+            href="settings.html"
+            class="nv-avatar-button">
+
+            <img
+                id="headerAvatar"
+                src="${
+                    currentProfile?.avatar_url ||
+                    "images/default-avatar.png"
+                }"
+                alt="Avatar">
+
+        </a>
+
+    `;
+
+}
+
+
+// ==========================================
+// Guest Sidebar
+// ==========================================
+
+function showGuestSidebar(){
+
+    if(!sidebarNav)
+        return;
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Accueil</span>
+
+        </a>
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>Shorts</span>
+
+        </a>
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>Lives</span>
+
+        </a>
+
+        <a href="search.html">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <span>Explorer</span>
+
+        </a>
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>Boutique</span>
+
+        </a>
+
+        <hr>
+
+        <a href="auth.html">
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>S'identifier</span>
+
+        </a>
+
+    `;
+
+}
+
+
+// ==========================================
+// User Sidebar
+// ==========================================
+
+function showUserSidebar(){
+
+    if(!sidebarNav)
+        return;
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Accueil</span>
+
+        </a>
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>Shorts</span>
+
+        </a>
+
+        <a href="subscriptions.html">
+
+            <i class="fa-solid fa-tv"></i>
+
+            <span>Abonnements</span>
+
+        </a>
+
+        <a href="playlist.html">
+
+            <i class="fa-solid fa-list"></i>
+
+            <span>Playlists</span>
+
+        </a>
+
+        <a href="history.html">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            <span>Historique</span>
+
+        </a>
+
+        <a href="watch-later.html">
+
+            <i class="fa-regular fa-clock"></i>
+
+            <span>À regarder</span>
+
+        </a>
+
+        <a href="liked-videos.html">
+
+            <i class="fa-solid fa-thumbs-up"></i>
+
+            <span>J'aime</span>
+
+        </a>
+
+        <hr>
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>Lives</span>
+
+        </a>
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>Boutique</span>
+
+        </a>
+
+        <a href="settings.html">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>Paramètres</span>
+
+        </a>
+
+    
+    `;
+
+}
+
 
 // ==========================================
 // Gestion des deux barres de recherche
@@ -283,15 +716,7 @@ function addEventListeners() {
         });
     });
 
-    // Menu sidebar
-    if (menuButton) {
-        menuButton.addEventListener("click", toggleSidebar);
-    }
-
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener("click", closeSidebar);
-    }
-
+   
     // Fermeture menu contextuel
     document.addEventListener("click", event => {
         if (contextMenu && !contextMenu.contains(event.target)) {
@@ -328,29 +753,6 @@ function updateUrl() {
         url.searchParams.delete("q");
     }
     window.history.pushState({}, "", url);
-}
-
-// ==========================================
-// Sidebar
-// ==========================================
-function toggleSidebar() {
-    sidebarOpen = !sidebarOpen;
-    if (sidebarOpen) {
-        openSidebar();
-    } else {
-        closeSidebar();
-    }
-}
-
-function openSidebar() {
-    if (sidebar) sidebar.classList.add("active");
-    if (sidebarOverlay) sidebarOverlay.classList.add("active");
-}
-
-function closeSidebar() {
-    sidebarOpen = false;
-    if (sidebar) sidebar.classList.remove("active");
-    if (sidebarOverlay) sidebarOverlay.classList.remove("active");
 }
 
 // ==========================================
