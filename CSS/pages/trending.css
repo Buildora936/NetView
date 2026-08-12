@@ -400,45 +400,6 @@ body {
         padding-right: 16px;
     }
 }
-/* =========================================================
-   NetView — Trending / Media Cards
-   Videos • Shorts • Products
-   ========================================================= */
-
-/* =========================================================
-   1. VARIABLES
-   ========================================================= */
-
-:root {
-    --nv-blue: #2563eb;
-    --nv-blue-dark: #1d4ed8;
-    --nv-blue-light: #60a5fa;
-
-    --nv-bg: #f8fafc;
-    --nv-card: #ffffff;
-    --nv-text: #0f172a;
-    --nv-muted: #64748b;
-    --nv-border: #e2e8f0;
-
-    --nv-radius-sm: 10px;
-    --nv-radius-md: 14px;
-    --nv-radius-lg: 18px;
-
-    --nv-shadow-sm:
-        0 2px 8px rgba(15, 23, 42, .06);
-
-    --nv-shadow-md:
-        0 8px 25px rgba(15, 23, 42, .10);
-
-    --nv-shadow-lg:
-        0 18px 45px rgba(15, 23, 42, .15);
-
-    --nv-transition:
-        .25s cubic-bezier(.4, 0, .2, 1);
-
-    --nv-transition-fast:
-        .18s ease;
-}
 
 
 /* =========================================================
