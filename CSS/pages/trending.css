@@ -974,7 +974,28 @@ body {
     font-size: 12px;
     font-weight: 600;
 }
+.nv-short-avatar {
+    display: inline-block;
 
+    max-width: 100%;
+
+    margin-top: 5px;
+
+    color: var(--nv-muted);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    text-decoration: none;
+}
+
+.nv-short-avatar:hover {
+    color: var(--nv-blue);
+}
 
 /* =========================================================
    16. PRODUCTS CONTAINER
