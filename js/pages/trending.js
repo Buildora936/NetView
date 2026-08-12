@@ -1783,3 +1783,978 @@ function openContextMenu(
     contextMenu.hidden = false;
 
     const x =
+        Math.min(
+            event.clientX,
+            window.innerWidth -
+                contextMenu.offsetWidth -
+                10
+        );
+
+    const y =
+        Math.min(
+            event.clientY,
+            window.innerHeight -
+                contextMenu.offsetHeight -
+                10
+        );
+
+    contextMenu.style.left =
+        `${Math.max(10, x)}px`;
+
+    contextMenu.style.top =
+        `${Math.max(10, y)}px`;
+
+    contextMenu
+        .querySelectorAll("button")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    handleContextAction(
+                        button.dataset.action,
+                        video
+                    );
+
+                    closeContextMenu();
+                }
+            );
+        });
+}
+
+
+function handleContextAction(
+    action,
+    video
+) {
+
+    if (!video?.id) {
+        return;
+    }
+
+    if (action === "watch") {
+
+        navigate(
+            `player.html?id=${encodeURIComponent(video.id)}`
+        );
+
+        return;
+    }
+
+    if (action === "channel") {
+
+        const handle =
+            video.channelHandle ||
+            video.channels?.handle ||
+            video.handle;
+
+        if (handle) {
+
+            navigate(
+                `channel.html?handle=${encodeURIComponent(handle)}`
+            );
+
+        } else {
+
+            navigate(
+                `player.html?id=${encodeURIComponent(video.id)}`
+            );
+        }
+
+        return;
+    }
+
+    if (action === "share") {
+
+        shareVideo(video);
+    }
+}
+
+
+async function shareVideo(video) {
+
+    const url =
+        `${window.location.origin}/player.html?id=${encodeURIComponent(video.id)}`;
+
+    try {
+
+        if (
+            navigator.share
+        ) {
+
+            await navigator.share({
+                title:
+                    video.title ||
+                    "Vidéo NetView",
+                url
+            });
+
+        } else if (
+            navigator.clipboard
+        ) {
+
+            await navigator.clipboard.writeText(
+                url
+            );
+
+            showToast(
+                "Lien copié."
+            );
+        }
+
+    } catch (error) {
+
+        if (
+            error?.name !==
+            "AbortError"
+        ) {
+
+            console.error(
+                "NetView — erreur partage :",
+                error
+            );
+        }
+    }
+}
+
+
+function closeContextMenu() {
+
+    if (!contextMenu) {
+        return;
+    }
+
+    contextMenu.hidden = true;
+    contextMenu.innerHTML = "";
+}
+
+
+// ==========================================
+// Événements
+// ==========================================
+
+function addEventListeners() {
+
+    // --------------------------------------
+    // Menu
+    // --------------------------------------
+
+    menuButton?.addEventListener(
+        "click",
+        toggleSidebar
+    );
+
+    sidebarOverlay?.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    // --------------------------------------
+    // Recherche
+    // --------------------------------------
+
+    searchForm?.addEventListener(
+        "submit",
+        handleSearchSubmit
+    );
+
+
+    // --------------------------------------
+    // Catégories
+    // --------------------------------------
+
+    categoriesContainer?.addEventListener(
+        "click",
+        handleCategoryClick
+    );
+
+
+    // --------------------------------------
+    // Sidebar
+    // --------------------------------------
+
+    sidebarNav?.addEventListener(
+        "click",
+        handleSidebarClick
+    );
+
+
+    // --------------------------------------
+    // Fermeture menu contextuel
+    // --------------------------------------
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                contextMenu &&
+                !contextMenu.hidden &&
+                !contextMenu.contains(event.target)
+            ) {
+                closeContextMenu();
+            }
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                closeContextMenu();
+
+                if (sidebarOpen) {
+                    closeSidebar();
+                }
+            }
+        }
+    );
+
+
+    // --------------------------------------
+    // Redimensionnement
+    // --------------------------------------
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (
+                window.innerWidth >= 1024 &&
+                sidebarOpen
+            ) {
+                closeSidebar();
+            }
+        }
+    );
+}
+
+
+// ==========================================
+// Catégorie
+// ==========================================
+
+async function handleCategoryClick(
+    event
+) {
+
+    const button =
+        event.target.closest(
+            ".nv-category"
+        );
+
+    if (!button) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const category =
+        button.dataset.category;
+
+    currentCategory =
+        category || "all";
+
+    updateCategoryButtons();
+
+    await loadTrendingContent();
+}
+
+
+// ==========================================
+// Sidebar events
+// ==========================================
+
+async function handleSidebarClick(
+    event
+) {
+
+    const logout =
+        event.target.closest(
+            "#logoutButton"
+        );
+
+    if (!logout) {
+        return;
+    }
+
+    event.preventDefault();
+
+    try {
+
+        await signOut();
+
+        currentUser = null;
+        currentProfile = null;
+
+        navigate("auth.html");
+
+    } catch (error) {
+
+        console.error(
+            "NetView — erreur déconnexion :",
+            error
+        );
+
+        showToast(
+            "Impossible de vous déconnecter."
+        );
+    }
+}
+
+
+// ==========================================
+// Recherche
+// ==========================================
+
+function handleSearchSubmit(event) {
+
+    event.preventDefault();
+
+    if (!searchInput) {
+        return;
+    }
+
+    const query =
+        searchInput.value.trim();
+
+    if (!query) {
+        return;
+    }
+
+    navigate(
+        `search.html?q=${encodeURIComponent(query)}`
+    );
+}
+
+
+// ==========================================
+// Sidebar
+// ==========================================
+
+function toggleSidebar() {
+
+    if (sidebarOpen) {
+        closeSidebar();
+    } else {
+        openSidebar();
+    }
+}
+
+
+function openSidebar() {
+
+    if (!sidebar) {
+        return;
+    }
+
+    sidebarOpen = true;
+
+    sidebar.classList.add(
+        "active"
+    );
+
+    sidebarOverlay?.classList.add(
+        "active"
+    );
+
+    document.body.classList.add(
+        "nv-sidebar-open"
+    );
+}
+
+
+function closeSidebar() {
+
+    sidebarOpen = false;
+
+    sidebar?.classList.remove(
+        "active"
+    );
+
+    sidebarOverlay?.classList.remove(
+        "active"
+    );
+
+    document.body.classList.remove(
+        "nv-sidebar-open"
+    );
+}
+
+
+// ==========================================
+// Skeleton
+// ==========================================
+
+function showTrendingSkeleton() {
+
+    if (trendingSkeleton) {
+        trendingSkeleton.hidden = false;
+    }
+
+    if (mainContent) {
+        mainContent.classList.add(
+            "nv-is-loading"
+        );
+    }
+}
+
+
+function hideTrendingSkeleton() {
+
+    if (trendingSkeleton) {
+        trendingSkeleton.hidden = true;
+    }
+
+    if (mainContent) {
+        mainContent.classList.remove(
+            "nv-is-loading"
+        );
+    }
+}
+
+
+// ==========================================
+// Loader global
+// ==========================================
+
+function showPageLoader() {
+
+    try {
+        showLoader();
+    } catch (error) {
+        console.warn(
+            "NetView — showLoader indisponible :",
+            error
+        );
+    }
+
+    if (pageLoader) {
+        pageLoader.hidden = false;
+    }
+}
+
+
+function hidePageLoader() {
+
+    try {
+        hideLoader();
+    } catch (error) {
+        console.warn(
+            "NetView — hideLoader indisponible :",
+            error
+        );
+    }
+
+    if (pageLoader) {
+        pageLoader.hidden = true;
+    }
+}
+
+
+// ==========================================
+// État vide / erreur
+// ==========================================
+
+function showErrorState() {
+
+    trendingVideos = [];
+    trendingShorts = [];
+    trendingLives = [];
+    trendingProducts = [];
+
+    renderAllTrending();
+
+    if (trendingEmpty) {
+
+        trendingEmpty.hidden = false;
+
+        const message =
+            trendingEmpty.querySelector(
+                ".nv-empty-message"
+            );
+
+        if (message) {
+            message.textContent =
+                "Impossible de charger les tendances pour le moment.";
+        }
+    }
+}
+
+
+// ==========================================
+// Score Shorts
+// ==========================================
+
+function calculateShortScore(short) {
+
+    const views =
+        toNumber(
+            short.views ??
+            short.view_count ??
+            short.views_count
+        );
+
+    const likes =
+        toNumber(
+            short.likes ??
+            short.likes_count ??
+            short.like_count
+        );
+
+    const comments =
+        toNumber(
+            short.comments ??
+            short.comments_count ??
+            short.comment_count
+        );
+
+    const ageHours =
+        getAgeHours(
+            short.published_at ||
+            short.created_at
+        );
+
+    const freshness =
+        Math.max(
+            0,
+            168 - ageHours
+        );
+
+    return (
+        views +
+        likes * 8 +
+        comments * 12 +
+        freshness * 80
+    );
+}
+
+
+// ==========================================
+// Score Lives
+// ==========================================
+
+function calculateLiveScore(live) {
+
+    const viewers =
+        toNumber(
+            live.viewers_count ??
+            live.viewer_count ??
+            live.current_viewers ??
+            live.viewers
+        );
+
+    const likes =
+        toNumber(
+            live.likes ??
+            live.likes_count
+        );
+
+    const ageHours =
+        getAgeHours(
+            live.started_at ||
+            live.created_at
+        );
+
+    const freshness =
+        Math.max(
+            0,
+            48 - ageHours
+        );
+
+    return (
+        viewers * 20 +
+        likes * 5 +
+        freshness * 100
+    );
+}
+
+
+// ==========================================
+// Format durée
+// ==========================================
+
+function formatDuration(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "";
+    }
+
+    let totalSeconds =
+        Number(value);
+
+    if (!Number.isFinite(totalSeconds)) {
+
+        const text =
+            String(value);
+
+        if (
+            /^\d{1,2}:\d{2}(:\d{2})?$/
+                .test(text)
+        ) {
+            return text;
+        }
+
+        return "";
+    }
+
+    totalSeconds =
+        Math.max(
+            0,
+            Math.floor(totalSeconds)
+        );
+
+    const hours =
+        Math.floor(
+            totalSeconds / 3600
+        );
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
+
+    if (hours > 0) {
+
+        return [
+            String(hours).padStart(2, "0"),
+            String(minutes).padStart(2, "0"),
+            String(seconds).padStart(2, "0")
+        ].join(":");
+    }
+
+    return [
+        String(minutes).padStart(2, "0"),
+        String(seconds).padStart(2, "0")
+    ].join(":");
+}
+
+
+// ==========================================
+// Format vues
+// ==========================================
+
+function formatViews(
+    value
+) {
+
+    const views =
+        toNumber(value);
+
+    if (views >= 1_000_000_000) {
+
+        return (
+            formatCompactNumber(
+                views / 1_000_000_000
+            ) +
+            " Md"
+        );
+    }
+
+    if (views >= 1_000_000) {
+
+        return (
+            formatCompactNumber(
+                views / 1_000_000
+            ) +
+            " M"
+        );
+    }
+
+    if (views >= 1_000) {
+
+        return (
+            formatCompactNumber(
+                views / 1_000
+            ) +
+            " k"
+        );
+    }
+
+    return String(views);
+}
+
+
+function formatCompactNumber(
+    value
+) {
+
+    return Number(value)
+        .toFixed(1)
+        .replace(/\.0$/, "");
+}
+
+
+// ==========================================
+// Format prix
+// ==========================================
+
+function formatPrice(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "Prix indisponible";
+    }
+
+    const number =
+        Number(value);
+
+    if (!Number.isFinite(number)) {
+        return String(value);
+    }
+
+    return new Intl.NumberFormat(
+        "fr-FR",
+        {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ).format(number);
+}
+
+
+// ==========================================
+// Format date
+// ==========================================
+
+function formatDate(
+    dateString
+) {
+
+    if (!dateString) {
+        return "Il y a un moment";
+    }
+
+    const date =
+        new Date(dateString);
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return "Il y a un moment";
+    }
+
+    const now =
+        new Date();
+
+    const diff =
+        now.getTime() -
+        date.getTime();
+
+    const diffSeconds =
+        Math.floor(
+            diff / 1000
+        );
+
+    if (diffSeconds < 60) {
+        return "À l'instant";
+    }
+
+    const diffMinutes =
+        Math.floor(
+            diffSeconds / 60
+        );
+
+    if (diffMinutes < 60) {
+        return `Il y a ${diffMinutes} min`;
+    }
+
+    const diffHours =
+        Math.floor(
+            diffMinutes / 60
+        );
+
+    if (diffHours < 24) {
+        return `Il y a ${diffHours} h`;
+    }
+
+    const diffDays =
+        Math.floor(
+            diffHours / 24
+        );
+
+    if (diffDays === 1) {
+        return "Hier";
+    }
+
+    if (diffDays < 7) {
+        return `Il y a ${diffDays} jours`;
+    }
+
+    const diffWeeks =
+        Math.floor(
+            diffDays / 7
+        );
+
+    if (diffDays < 30) {
+        return `Il y a ${diffWeeks} sem.`;
+    }
+
+    const diffMonths =
+        Math.floor(
+            diffDays / 30
+        );
+
+    if (diffDays < 365) {
+        return `Il y a ${diffMonths} mois`;
+    }
+
+    const diffYears =
+        Math.floor(
+            diffDays / 365
+        );
+
+    return `Il y a ${diffYears} an${diffYears > 1 ? "s" : ""}`;
+}
+
+
+// ==========================================
+// Utilitaires numériques
+// ==========================================
+
+function toNumber(
+    value
+) {
+
+    const number =
+        Number(value);
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+}
+
+
+function getDateValue(
+    date
+) {
+
+    if (!date) {
+        return 0;
+    }
+
+    const timestamp =
+        new Date(date).getTime();
+
+    return Number.isFinite(timestamp)
+        ? timestamp
+        : 0;
+}
+
+
+function getAgeHours(
+    date
+) {
+
+    const timestamp =
+        getDateValue(date);
+
+    if (!timestamp) {
+        return 999999;
+    }
+
+    const difference =
+        Date.now() -
+        timestamp;
+
+    return Math.max(
+        0,
+        difference /
+            (1000 * 60 * 60)
+    );
+}
+
+
+// ==========================================
+// URL chaîne
+// ==========================================
+
+function getChannelUrl(
+    video
+) {
+
+    const handle =
+        video.channelHandle ||
+        video.channels?.handle;
+
+    if (handle) {
+
+        return `channel.html?handle=${encodeURIComponent(handle)}`;
+    }
+
+    const channelId =
+        video.channel_id ||
+        video.channels?.id;
+
+    if (channelId) {
+
+        return `channel.html?id=${encodeURIComponent(channelId)}`;
+    }
+
+    return "channel.html";
+}
+
+
+// ==========================================
+// Protection HTML
+// ==========================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function escapeAttribute(
+    value
+) {
+
+    return escapeHTML(value);
+}
+
+
+// ==========================================
+// Nettoyage à la fermeture de page
+// ==========================================
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        closeContextMenu();
+        closeSidebar();
+
+    }
+);
