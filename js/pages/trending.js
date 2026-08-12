@@ -1,6 +1,6 @@
 // ==========================================
 // NetView
-// pages/trending.js
+// trending.js
 // ==========================================
 
 import {
@@ -13,13 +13,15 @@ import {
     getProfile,
     getVideos,
     getShorts,
+    getLives,
     getSponsoredProducts,
     getVideoCategories
 } from "../core/data.js";
 
 import {
     showLoader,
-    hideLoader
+    hideLoader,
+    showToast
 } from "../core/ui.js";
 
 import {
@@ -30,6 +32,9 @@ import {
 // ==========================================
 // DOM
 // ==========================================
+
+const mainContent =
+    document.getElementById("mainContent");
 
 const menuButton =
     document.getElementById("menuButton");
@@ -52,23 +57,50 @@ const searchForm =
 const searchInput =
     document.getElementById("searchInput");
 
+const trendingVideosSection =
+    document.getElementById("trendingVideosSection");
+
 const trendingVideosContainer =
     document.getElementById("trendingVideos");
+
+const trendingShortsSection =
+    document.getElementById("trendingShortsSection");
 
 const trendingShortsContainer =
     document.getElementById("trendingShorts");
 
+const trendingLivesSection =
+    document.getElementById("trendingLivesSection");
+
+const trendingLivesContainer =
+    document.getElementById("trendingLives");
+
+const trendingProductsSection =
+    document.getElementById("trendingProductsSection");
+
 const trendingProductsContainer =
     document.getElementById("trendingProducts");
 
-const moreTrendingVideosContainer =
-    document.getElementById("moreTrendingVideos");
+const trendingRankingSection =
+    document.getElementById("trendingRankingSection");
+
+const trendingRankingContainer =
+    document.getElementById("trendingRanking");
 
 const trendingSkeleton =
     document.getElementById("trendingSkeleton");
 
 const trendingEmpty =
     document.getElementById("trendingEmpty");
+
+const pageLoader =
+    document.getElementById("pageLoader");
+
+const contextMenu =
+    document.getElementById("contextMenu");
+
+const notification =
+    document.getElementById("notification");
 
 const categoriesContainer =
     document.querySelector(".nv-categories-scroll");
@@ -83,11 +115,17 @@ let currentProfile = null;
 
 let trendingVideos = [];
 let trendingShorts = [];
+let trendingLives = [];
 let trendingProducts = [];
 
-let sidebarOpen = false;
+let videoCategories = [];
+
 let currentCategory = "all";
+
+let sidebarOpen = false;
 let isLoading = false;
+
+let activeVideoId = null;
 
 
 // ==========================================
@@ -102,7 +140,7 @@ document.addEventListener(
 
 async function init() {
     try {
-        showLoader();
+        showPageLoader();
 
         await checkSession();
         await loadProfile();
@@ -118,13 +156,15 @@ async function init() {
     } catch (error) {
 
         console.error(
-            "Erreur initialisation tendances :",
+            "NetView — erreur initialisation trending :",
             error
         );
 
+        showErrorState();
+
     } finally {
 
-        hideLoader();
+        hidePageLoader();
     }
 }
 
@@ -137,21 +177,19 @@ async function checkSession() {
 
     try {
 
-        const session =
-            await getSession();
+        const session = await getSession();
 
         if (!session) {
             currentUser = null;
             return;
         }
 
-        currentUser =
-            await getUser();
+        currentUser = await getUser();
 
     } catch (error) {
 
         console.error(
-            "Erreur vérification session :",
+            "NetView — erreur session :",
             error
         );
 
@@ -173,17 +211,12 @@ async function loadProfile() {
 
     try {
 
-        /*
-         * getProfile() récupère lui-même
-         * l'utilisateur connecté.
-         */
-        currentProfile =
-            await getProfile();
+        currentProfile = await getProfile();
 
     } catch (error) {
 
         console.error(
-            "Erreur chargement profil :",
+            "NetView — erreur profil :",
             error
         );
 
@@ -198,43 +231,34 @@ async function loadProfile() {
 
 function updateHeader() {
 
-    if (!currentUser) {
-        showGuestHeader();
+    if (!headerRight) {
         return;
     }
 
-    showUserHeader();
+    if (!currentUser) {
+        renderGuestHeader();
+    } else {
+        renderUserHeader();
+    }
 }
 
 
-function showGuestHeader() {
-
-    if (!headerRight) return;
+function renderGuestHeader() {
 
     headerRight.innerHTML = `
         <button
+            type="button"
             id="loginButton"
             class="nv-login-button"
-            type="button"
         >
             <i class="fa-regular fa-user"></i>
             <span>S'identifier</span>
         </button>
     `;
-
-    const loginButton =
-        document.getElementById("loginButton");
-
-    loginButton?.addEventListener(
-        "click",
-        () => navigate("auth.html")
-    );
 }
 
 
-function showUserHeader() {
-
-    if (!headerRight) return;
+function renderUserHeader() {
 
     const avatar =
         currentProfile?.avatar_url ||
@@ -242,19 +266,19 @@ function showUserHeader() {
 
     headerRight.innerHTML = `
         <button
+            type="button"
             id="uploadButton"
             class="nv-icon-button"
-            type="button"
             title="Publier"
             aria-label="Publier"
         >
-            <i class="fa-solid fa-plus nv-plus-icon"></i>
+            <i class="fa-solid fa-plus"></i>
         </button>
 
         <button
+            type="button"
             id="notificationsButton"
             class="nv-icon-button"
-            type="button"
             title="Notifications"
             aria-label="Notifications"
         >
@@ -269,22 +293,34 @@ function showUserHeader() {
         <a
             href="settings.html"
             class="nv-avatar-button"
-            aria-label="Paramètres du compte"
+            aria-label="Mon compte"
         >
             <img
                 id="headerAvatar"
                 src="${escapeAttribute(avatar)}"
                 alt="Avatar"
+                loading="lazy"
             >
         </a>
     `;
 
-    document
-        .getElementById("uploadButton")
-        ?.addEventListener(
-            "click",
-            () => navigate("publish.html")
+    const uploadButton =
+        document.getElementById("uploadButton");
+
+    uploadButton?.addEventListener(
+        "click",
+        () => navigate("publish.html")
+    );
+
+    const notificationsButton =
+        document.getElementById(
+            "notificationsButton"
         );
+
+    notificationsButton?.addEventListener(
+        "click",
+        () => navigate("notification.html")
+    );
 }
 
 
@@ -294,17 +330,19 @@ function showUserHeader() {
 
 function updateSidebar() {
 
+    if (!sidebarNav) {
+        return;
+    }
+
     if (currentUser) {
-        showUserSidebar();
+        renderUserSidebar();
     } else {
-        showGuestSidebar();
+        renderGuestSidebar();
     }
 }
 
 
-function showGuestSidebar() {
-
-    if (!sidebarNav) return;
+function renderGuestSidebar() {
 
     sidebarNav.innerHTML = `
         <a href="index.html">
@@ -320,6 +358,7 @@ function showGuestSidebar() {
         <a
             href="trending.html"
             class="active"
+            aria-current="page"
         >
             <i class="fa-solid fa-fire"></i>
             <span>Tendances</span>
@@ -331,7 +370,7 @@ function showGuestSidebar() {
         </a>
 
         <a href="search.html">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-compass"></i>
             <span>Explorer</span>
         </a>
 
@@ -350,9 +389,7 @@ function showGuestSidebar() {
 }
 
 
-function showUserSidebar() {
-
-    if (!sidebarNav) return;
+function renderUserSidebar() {
 
     sidebarNav.innerHTML = `
         <a href="index.html">
@@ -368,6 +405,7 @@ function showUserSidebar() {
         <a
             href="trending.html"
             class="active"
+            aria-current="page"
         >
             <i class="fa-solid fa-fire"></i>
             <span>Tendances</span>
@@ -412,57 +450,229 @@ function showUserSidebar() {
 
 
 // ==========================================
+// Catégories
+// ==========================================
+
+async function loadCategoriesList() {
+
+    if (!categoriesContainer) {
+        return;
+    }
+
+    try {
+
+        videoCategories =
+            await getVideoCategories();
+
+        renderCategories(videoCategories);
+
+    } catch (error) {
+
+        console.error(
+            "NetView — erreur catégories :",
+            error
+        );
+
+        renderCategories([]);
+    }
+}
+
+
+function renderCategories(categories) {
+
+    if (!categoriesContainer) {
+        return;
+    }
+
+    categoriesContainer.innerHTML = "";
+
+    const allButton =
+        document.createElement("button");
+
+    allButton.type = "button";
+    allButton.className =
+        "nv-category active";
+
+    allButton.dataset.category = "all";
+    allButton.textContent = "Tous";
+
+    categoriesContainer.appendChild(
+        allButton
+    );
+
+    const uniqueCategories = [];
+    const usedNames = new Set();
+
+    for (const category of categories || []) {
+
+        const name =
+            String(
+                category?.name || ""
+            ).trim();
+
+        if (!name) {
+            continue;
+        }
+
+        const key = name.toLowerCase();
+
+        if (usedNames.has(key)) {
+            continue;
+        }
+
+        usedNames.add(key);
+
+        uniqueCategories.push({
+            ...category,
+            name
+        });
+    }
+
+    uniqueCategories.forEach(
+        category => {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+
+            button.className =
+                "nv-category";
+
+            button.dataset.category =
+                category.id ||
+                category.name;
+
+            button.dataset.categoryName =
+                category.name;
+
+            button.textContent =
+                category.name;
+
+            if (
+                currentCategory !== "all" &&
+                (
+                    String(category.id) ===
+                        String(currentCategory) ||
+                    category.name ===
+                        currentCategory
+                )
+            ) {
+                button.classList.add("active");
+            }
+
+            categoriesContainer.appendChild(
+                button
+            );
+        }
+    );
+
+    updateCategoryButtons();
+}
+
+
+function updateCategoryButtons() {
+
+    if (!categoriesContainer) {
+        return;
+    }
+
+    categoriesContainer
+        .querySelectorAll(".nv-category")
+        .forEach(button => {
+
+            const category =
+                button.dataset.category;
+
+            const categoryName =
+                button.dataset.categoryName;
+
+            const active =
+                currentCategory === "all"
+                    ? category === "all"
+                    : (
+                        category ===
+                            String(currentCategory) ||
+                        categoryName ===
+                            currentCategory
+                    );
+
+            button.classList.toggle(
+                "active",
+                active
+            );
+        });
+}
+
+
+// ==========================================
 // Chargement des tendances
 // ==========================================
 
 async function loadTrendingContent() {
 
-    if (isLoading) return;
+    if (isLoading) {
+        return;
+    }
 
     try {
 
         isLoading = true;
 
-        if (trendingSkeleton) {
-            trendingSkeleton.hidden = false;
-        }
+        showTrendingSkeleton();
 
         const [
             videosData,
             shortsData,
+            livesData,
             productsData
         ] = await Promise.all([
-            loadTrendingVideos(),
-            loadTrendingShorts(),
-            loadTrendingProducts()
+            getVideos(),
+            getShorts(),
+            getLives(),
+            getSponsoredProducts()
         ]);
 
         trendingVideos =
-            Array.isArray(videosData)
-                ? videosData
-                : [];
+            prepareTrendingVideos(
+                Array.isArray(videosData)
+                    ? videosData
+                    : []
+            );
 
         trendingShorts =
-            Array.isArray(shortsData)
-                ? shortsData
-                : [];
+            prepareTrendingShorts(
+                Array.isArray(shortsData)
+                    ? shortsData
+                    : []
+            );
+
+        trendingLives =
+            prepareTrendingLives(
+                Array.isArray(livesData)
+                    ? livesData
+                    : []
+            );
 
         trendingProducts =
-            Array.isArray(productsData)
-                ? productsData
-                : [];
+            prepareTrendingProducts(
+                Array.isArray(productsData)
+                    ? productsData
+                    : []
+            );
 
         renderAllTrending();
 
     } catch (error) {
 
         console.error(
-            "Erreur chargement tendances :",
+            "NetView — erreur chargement tendances :",
             error
         );
 
         trendingVideos = [];
         trendingShorts = [];
+        trendingLives = [];
         trendingProducts = [];
 
         renderAllTrending();
@@ -471,280 +681,258 @@ async function loadTrendingContent() {
 
         isLoading = false;
 
-        if (trendingSkeleton) {
-            trendingSkeleton.hidden = true;
-        }
+        hideTrendingSkeleton();
     }
 }
 
 
 // ==========================================
-// Vidéos tendance
+// Préparation vidéos
 // ==========================================
 
-async function loadTrendingVideos() {
+function prepareTrendingVideos(videos) {
 
-    const videos =
-        await getVideos({
-            page: 1
-        });
+    let result = videos.filter(
+        video =>
+            video &&
+            video.id &&
+            isPublicPublishedVideo(video)
+    );
 
-    if (!Array.isArray(videos)) {
-        return [];
+    if (currentCategory !== "all") {
+
+        result = result.filter(
+            video =>
+                matchesCategory(
+                    video,
+                    currentCategory
+                )
+        );
     }
 
-    let filtered =
-        [...videos];
+    return result
+        .map(video => ({
+            ...video,
+            trendingScore:
+                calculateVideoScore(video)
+        }))
+        .sort(
+            (a, b) =>
+                b.trendingScore -
+                a.trendingScore
+        );
+}
 
-    /*
-     * getVideos() récupère déjà uniquement :
-     *
-     * status = published
-     * visibility = public
-     *
-     * On filtre ensuite la catégorie
-     * côté interface.
-     */
+
+function isPublicPublishedVideo(video) {
+
+    const status =
+        video.status;
+
+    const visibility =
+        video.visibility;
+
     if (
-        currentCategory &&
-        currentCategory !== "all"
+        status &&
+        status !== "published"
     ) {
-
-        filtered =
-            filtered.filter(video => {
-
-                const categoryId =
-                    video.video_category_id ||
-                    video.category_id;
-
-                const categoryName =
-                    video.categoryName ||
-                    video.category ||
-                    "";
-
-                return (
-                    String(categoryId) ===
-                    String(currentCategory)
-                ) ||
-                String(categoryName).toLowerCase() ===
-                    String(currentCategory).toLowerCase()
-                );
-            });
+        return false;
     }
 
-    /*
-     * Classement tendance :
-     *
-     * 1. vues
-     * 2. likes
-     * 3. date de publication
-     *
-     * Le score favorise les contenus
-     * qui ont à la fois de l'engagement
-     * et de la popularité.
-     */
-    filtered.sort((a, b) => {
+    if (
+        visibility &&
+        visibility !== "public"
+    ) {
+        return false;
+    }
 
-        const scoreA =
-            calculateTrendingScore(a);
-
-        const scoreB =
-            calculateTrendingScore(b);
-
-        return scoreB - scoreA;
-    });
-
-    return filtered;
+    return true;
 }
 
 
-function calculateTrendingScore(video) {
+function calculateVideoScore(video) {
 
     const views =
-        Number(
+        toNumber(
             video.views ??
-            video.views_count ??
-            0
+            video.view_count ??
+            video.views_count
         );
 
     const likes =
-        Number(
+        toNumber(
             video.likes ??
             video.likes_count ??
-            0
+            video.like_count
         );
 
     const comments =
-        Number(
+        toNumber(
             video.comments ??
             video.comments_count ??
-            0
+            video.comment_count
         );
 
-    const shares =
-        Number(
-            video.shares ??
-            video.shares_count ??
-            0
-        );
-
-    const publishedAt =
+    const publishedDate =
         video.published_at ||
         video.created_at;
 
-    let freshness = 0;
+    const ageHours =
+        getAgeHours(publishedDate);
 
-    if (publishedAt) {
-
-        const ageHours =
-            Math.max(
-                1,
-                (
-                    Date.now() -
-                    new Date(publishedAt).getTime()
-                ) / 3600000
-            );
-
-        /*
-         * Les contenus récents ont
-         * un bonus de fraîcheur.
-         */
-        freshness =
-            10000 /
-            Math.pow(ageHours, 0.35);
-    }
+    const freshness =
+        Math.max(
+            0,
+            168 - ageHours
+        );
 
     return (
-        Math.log10(views + 1) * 100 +
-        Math.log10(likes + 1) * 50 +
-        Math.log10(comments + 1) * 30 +
-        Math.log10(shares + 1) * 40 +
-        freshness
+        views * 1 +
+        likes * 8 +
+        comments * 12 +
+        freshness * 100
     );
 }
 
 
 // ==========================================
-// Shorts tendance
+// Préparation Shorts
 // ==========================================
 
-async function loadTrendingShorts() {
+function prepareTrendingShorts(shorts) {
 
-    const options = {};
+    let result = shorts.filter(
+        short =>
+            short &&
+            short.id
+    );
+
+    if (currentCategory !== "all") {
+
+        result = result.filter(
+            short =>
+                matchesCategory(
+                    short,
+                    currentCategory
+                )
+        );
+    }
+
+    return result
+        .map(short => ({
+            ...short,
+            trendingScore:
+                calculateShortScore(short)
+        }))
+        .sort(
+            (a, b) =>
+                b.trendingScore -
+                a.trendingScore
+        );
+}
+
+
+// ==========================================
+// Préparation Lives
+// ==========================================
+
+function prepareTrendingLives(lives) {
+
+    let result = lives.filter(
+        live =>
+            live &&
+            live.id
+    );
+
+    if (currentCategory !== "all") {
+
+        result = result.filter(
+            live =>
+                matchesCategory(
+                    live,
+                    currentCategory
+                )
+        );
+    }
+
+    return result
+        .map(live => ({
+            ...live,
+            trendingScore:
+                calculateLiveScore(live)
+        }))
+        .sort(
+            (a, b) =>
+                b.trendingScore -
+                a.trendingScore
+        );
+}
+
+
+// ==========================================
+// Préparation Produits
+// ==========================================
+
+function prepareTrendingProducts(products) {
+
+    return products
+        .filter(
+            product =>
+                product &&
+                product.id
+        )
+        .sort(
+            (a, b) =>
+                getDateValue(
+                    b.created_at
+                ) -
+                getDateValue(
+                    a.created_at
+                )
+        );
+}
+
+
+// ==========================================
+// Catégorie
+// ==========================================
+
+function matchesCategory(
+    item,
+    category
+) {
 
     if (
-        currentCategory &&
-        currentCategory !== "all"
+        !category ||
+        category === "all"
     ) {
-
-        options.category =
-            currentCategory;
+        return true;
     }
 
-    try {
+    const wanted =
+        String(category)
+            .trim()
+            .toLowerCase();
 
-        const shorts =
-            await getShorts(options);
+    const values = [
+        item.category,
+        item.category_id,
+        item.category_name,
+        item.categoryName,
+        item.video_category_id,
+        item.video_category_name,
+        item.video_categories?.id,
+        item.video_categories?.name
+    ];
 
-        if (!Array.isArray(shorts)) {
-            return [];
-        }
-
-        return [...shorts].sort(
-            (a, b) =>
-                calculateShortScore(b) -
-                calculateShortScore(a)
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Erreur chargement Shorts tendance :",
-            error
-        );
-
-        return [];
-    }
-}
-
-
-function calculateShortScore(short) {
-
-    const views =
-        Number(
-            short.views ??
-            short.views_count ??
-            0
-        );
-
-    const likes =
-        Number(
-            short.likes ??
-            short.likes_count ??
-            0
-        );
-
-    const comments =
-        Number(
-            short.comments ??
-            short.comments_count ??
-            0
-        );
-
-    return (
-        Math.log10(views + 1) * 100 +
-        Math.log10(likes + 1) * 60 +
-        Math.log10(comments + 1) * 30
+    return values.some(
+        value =>
+            value !== null &&
+            value !== undefined &&
+            String(value)
+                .trim()
+                .toLowerCase() === wanted
     );
-}
-
-
-// ==========================================
-// Produits tendance
-// ==========================================
-
-async function loadTrendingProducts() {
-
-    try {
-
-        const products =
-            await getSponsoredProducts();
-
-        if (!Array.isArray(products)) {
-            return [];
-        }
-
-        /*
-         * getSponsoredProducts() retourne
-         * les produits sponsorisés publiés.
-         *
-         * On conserve les plus récents.
-         */
-        return [...products]
-            .sort((a, b) => {
-
-                const dateA =
-                    new Date(
-                        a.created_at || 0
-                    ).getTime();
-
-                const dateB =
-                    new Date(
-                        b.created_at || 0
-                    ).getTime();
-
-                return dateB - dateA;
-            });
-
-    } catch (error) {
-
-        console.error(
-            "Erreur produits tendance :",
-            error
-        );
-
-        return [];
-    }
 }
 
 
@@ -757,6 +945,7 @@ function renderAllTrending() {
     const hasContent =
         trendingVideos.length > 0 ||
         trendingShorts.length > 0 ||
+        trendingLives.length > 0 ||
         trendingProducts.length > 0;
 
     if (trendingEmpty) {
@@ -766,13 +955,62 @@ function renderAllTrending() {
 
     renderTrendingVideos();
     renderTrendingShorts();
+    renderTrendingLives();
     renderTrendingProducts();
-    renderMoreTrendingVideos();
+    renderTrendingRanking();
+
+    toggleSections();
 }
 
 
 // ==========================================
-// Vidéos principales
+// Sections
+// ==========================================
+
+function toggleSections() {
+
+    toggleSection(
+        trendingVideosSection,
+        trendingVideos.length > 0
+    );
+
+    toggleSection(
+        trendingShortsSection,
+        trendingShorts.length > 0
+    );
+
+    toggleSection(
+        trendingLivesSection,
+        trendingLives.length > 0
+    );
+
+    toggleSection(
+        trendingProductsSection,
+        trendingProducts.length > 0
+    );
+
+    toggleSection(
+        trendingRankingSection,
+        trendingVideos.length > 0
+    );
+}
+
+
+function toggleSection(
+    section,
+    visible
+) {
+
+    if (!section) {
+        return;
+    }
+
+    section.hidden = !visible;
+}
+
+
+// ==========================================
+// Vidéos
 // ==========================================
 
 function renderTrendingVideos() {
@@ -783,14 +1021,10 @@ function renderTrendingVideos() {
 
     trendingVideosContainer.innerHTML = "";
 
-    if (!trendingVideos.length) {
-        return;
-    }
+    const videos =
+        trendingVideos.slice(0, 12);
 
-    const mainVideos =
-        trendingVideos.slice(0, 5);
-
-    mainVideos.forEach(
+    videos.forEach(
         (video, index) => {
 
             const card =
@@ -799,97 +1033,9 @@ function renderTrendingVideos() {
                     index + 1
                 );
 
-            trendingVideosContainer
-                .appendChild(card);
-        }
-    );
-}
-
-
-// ==========================================
-// Shorts
-// ==========================================
-
-function renderTrendingShorts() {
-
-    if (!trendingShortsContainer) {
-        return;
-    }
-
-    trendingShortsContainer.innerHTML = "";
-
-    if (!trendingShorts.length) {
-        return;
-    }
-
-    trendingShorts.forEach(short => {
-
-        const card =
-            createShortCard(short);
-
-        trendingShortsContainer
-            .appendChild(card);
-    });
-}
-
-
-// ==========================================
-// Produits
-// ==========================================
-
-function renderTrendingProducts() {
-
-    if (!trendingProductsContainer) {
-        return;
-    }
-
-    trendingProductsContainer.innerHTML = "";
-
-    if (!trendingProducts.length) {
-        return;
-    }
-
-    trendingProducts.forEach(product => {
-
-        const card =
-            createProductCard(product);
-
-        trendingProductsContainer
-            .appendChild(card);
-    });
-}
-
-
-// ==========================================
-// Plus de vidéos
-// ==========================================
-
-function renderMoreTrendingVideos() {
-
-    if (!moreTrendingVideosContainer) {
-        return;
-    }
-
-    moreTrendingVideosContainer.innerHTML = "";
-
-    if (trendingVideos.length <= 5) {
-        return;
-    }
-
-    const remainingVideos =
-        trendingVideos.slice(5);
-
-    remainingVideos.forEach(
-        (video, index) => {
-
-            const card =
-                createTrendingVideoCard(
-                    video,
-                    index + 6
-                );
-
-            moreTrendingVideosContainer
-                .appendChild(card);
+            trendingVideosContainer.appendChild(
+                card
+            );
         }
     );
 }
@@ -911,38 +1057,53 @@ function createTrendingVideoCard(
         "nv-video-card nv-trending-card";
 
     article.dataset.id =
-        video.id || "";
-
-    const videoId =
-        video.id || "";
+        video.id;
 
     const title =
-        video.title || "Vidéo sans titre";
+        video.title ||
+        "Vidéo sans titre";
 
     const thumbnail =
-        video.thumbnailUrl ||
         video.thumbnail_url ||
+        video.thumbnailUrl ||
         "images/default-thumbnail.jpg";
 
     const avatar =
         video.channelAvatar ||
+        video.channels?.avatar_url ||
         video.avatar_url ||
         "images/default-avatar.png";
 
     const channelName =
         video.channelName ||
+        video.channels?.name ||
         video.channel_name ||
-        "Chaîne inconnue";
+        "Chaîne NetView";
+
+    const channelHandle =
+        video.channelHandle ||
+        video.channels?.handle ||
+        video.handle ||
+        "";
+
+    const views =
+        toNumber(
+            video.views ??
+            video.view_count ??
+            video.views_count
+        );
+
+    const likes =
+        toNumber(
+            video.likes ??
+            video.likes_count ??
+            video.like_count
+        );
 
     const duration =
         formatDuration(
             video.duration
         );
-
-    const views =
-        video.views ??
-        video.views_count ??
-        0;
 
     const publishedAt =
         video.published_at ||
@@ -954,8 +1115,9 @@ function createTrendingVideoCard(
         </div>
 
         <a
-            href="player.html?id=${encodeURIComponent(videoId)}"
+            href="player.html?id=${encodeURIComponent(video.id)}"
             class="nv-video-link-wrapper"
+            aria-label="${escapeAttribute(title)}"
         >
             <div class="nv-video-thumbnail">
 
@@ -965,60 +1127,83 @@ function createTrendingVideoCard(
                     loading="lazy"
                 >
 
-                <span class="nv-video-duration">
-                    ${escapeHTML(duration)}
-                </span>
+                ${
+                    duration
+                        ? `
+                            <span class="nv-video-duration">
+                                ${duration}
+                            </span>
+                        `
+                        : ""
+                }
 
             </div>
         </a>
 
         <div class="nv-video-content">
 
-            <div class="nv-video-avatar">
-
+            <a
+                href="${getChannelUrl(video)}"
+                class="nv-video-avatar"
+                aria-label="${escapeAttribute(channelName)}"
+            >
                 <img
                     src="${escapeAttribute(avatar)}"
                     alt="${escapeAttribute(channelName)}"
                     loading="lazy"
                 >
-
-            </div>
+            </a>
 
             <div class="nv-video-info">
 
                 <h3 class="nv-video-title">
-
                     <a
-                        href="player.html?id=${encodeURIComponent(videoId)}"
+                        href="player.html?id=${encodeURIComponent(video.id)}"
                     >
                         ${escapeHTML(title)}
                     </a>
-
                 </h3>
 
                 <a
-                    href="channel.html?handle=${encodeURIComponent(
-                        video.channelHandle || ""
-                    )}"
+                    href="${getChannelUrl(video)}"
                     class="nv-video-channel"
                 >
                     ${escapeHTML(channelName)}
+                    ${
+                        video.channelVerified ||
+                        video.channels?.verified ||
+                        video.verified
+                            ? `
+                                <i
+                                    class="fa-solid fa-circle-check"
+                                    aria-label="Vérifié"
+                                ></i>
+                            `
+                            : ""
+                    }
                 </a>
 
                 <div class="nv-video-meta">
 
                     <span>
-                        ${escapeHTML(
-                            formatViews(views)
-                        )} vues
+                        ${formatViews(views)} vues
                     </span>
+
+                    ${
+                        likes > 0
+                            ? `
+                                <span>•</span>
+                                <span>
+                                    ${formatViews(likes)} j'aime
+                                </span>
+                            `
+                            : ""
+                    }
 
                     <span>•</span>
 
                     <span>
-                        ${escapeHTML(
-                            formatDate(publishedAt)
-                        )}
+                        ${formatDate(publishedAt)}
                     </span>
 
                 </div>
@@ -1026,10 +1211,11 @@ function createTrendingVideoCard(
             </div>
 
             <button
-                class="nv-icon-button nv-video-menu-btn nv-video-menu"
                 type="button"
-                data-video="${escapeAttribute(videoId)}"
-                aria-label="Actions"
+                class="nv-icon-button nv-video-menu-btn nv-video-menu"
+                data-video="${escapeAttribute(video.id)}"
+                aria-label="Plus d'options"
+                title="Plus d'options"
             >
                 <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
@@ -1037,13 +1223,54 @@ function createTrendingVideoCard(
         </div>
     `;
 
+    const menuButton =
+        article.querySelector(
+            ".nv-video-menu-btn"
+        );
+
+    menuButton?.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            activeVideoId =
+                video.id;
+
+            openContextMenu(
+                event,
+                video
+            );
+        }
+    );
+
     return article;
 }
 
 
 // ==========================================
-// Carte Short
+// Shorts
 // ==========================================
+
+function renderTrendingShorts() {
+
+    if (!trendingShortsContainer) {
+        return;
+    }
+
+    trendingShortsContainer.innerHTML = "";
+
+    trendingShorts
+        .slice(0, 12)
+        .forEach(short => {
+
+            trendingShortsContainer.appendChild(
+                createShortCard(short)
+            );
+        });
+}
+
 
 function createShortCard(short) {
 
@@ -1054,10 +1281,7 @@ function createShortCard(short) {
         "nv-short-card";
 
     article.dataset.id =
-        short.id || "";
-
-    const shortId =
-        short.id || "";
+        short.id;
 
     const title =
         short.title ||
@@ -1066,16 +1290,32 @@ function createShortCard(short) {
     const thumbnail =
         short.thumbnail_url ||
         short.thumbnailUrl ||
+        short.video_thumbnail_url ||
         "images/default-thumbnail.jpg";
 
+    const avatar =
+        short.channelAvatar ||
+        short.channels?.avatar_url ||
+        short.avatar_url ||
+        "images/default-avatar.png";
+
+    const channelName =
+        short.channelName ||
+        short.channels?.name ||
+        short.channel_name ||
+        "Chaîne NetView";
+
     const views =
-        short.views ??
-        short.views_count ??
-        0;
+        toNumber(
+            short.views ??
+            short.view_count ??
+            short.views_count
+        );
 
     article.innerHTML = `
         <a
-            href="player.html?short=${encodeURIComponent(shortId)}"
+            href="player.html?short=${encodeURIComponent(short.id)}"
+            class="nv-short-link"
         >
 
             <div class="nv-short-thumbnail">
@@ -1090,15 +1330,29 @@ function createShortCard(short) {
 
             <div class="nv-short-info">
 
-                <h3>
-                    ${escapeHTML(title)}
-                </h3>
+                <div class="nv-short-avatar">
+                    <img
+                        src="${escapeAttribute(avatar)}"
+                        alt="${escapeAttribute(channelName)}"
+                        loading="lazy"
+                    >
+                </div>
 
-                <p>
-                    ${escapeHTML(
-                        formatViews(views)
-                    )} vues
-                </p>
+                <div>
+
+                    <h3>
+                        ${escapeHTML(title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(channelName)}
+                    </p>
+
+                    <p>
+                        ${formatViews(views)} vues
+                    </p>
+
+                </div>
 
             </div>
 
@@ -1110,8 +1364,147 @@ function createShortCard(short) {
 
 
 // ==========================================
-// Carte produit
+// Lives
 // ==========================================
+
+function renderTrendingLives() {
+
+    if (!trendingLivesContainer) {
+        return;
+    }
+
+    trendingLivesContainer.innerHTML = "";
+
+    trendingLives
+        .slice(0, 12)
+        .forEach(live => {
+
+            trendingLivesContainer.appendChild(
+                createLiveCard(live)
+            );
+        });
+}
+
+
+function createLiveCard(live) {
+
+    const article =
+        document.createElement("article");
+
+    article.className =
+        "nv-live-card";
+
+    article.dataset.id =
+        live.id;
+
+    const title =
+        live.title ||
+        "Live sans titre";
+
+    const thumbnail =
+        live.thumbnail_url ||
+        live.thumbnailUrl ||
+        live.cover_url ||
+        "images/default-thumbnail.jpg";
+
+    const avatar =
+        live.channelAvatar ||
+        live.channels?.avatar_url ||
+        live.avatar_url ||
+        "images/default-avatar.png";
+
+    const channelName =
+        live.channelName ||
+        live.channels?.name ||
+        live.channel_name ||
+        "Chaîne NetView";
+
+    const viewers =
+        toNumber(
+            live.viewers_count ??
+            live.viewer_count ??
+            live.current_viewers ??
+            live.viewers
+        );
+
+    article.innerHTML = `
+        <a
+            href="live.html?id=${encodeURIComponent(live.id)}"
+            class="nv-live-link"
+        >
+
+            <div class="nv-live-thumbnail">
+
+                <img
+                    src="${escapeAttribute(thumbnail)}"
+                    alt="${escapeAttribute(title)}"
+                    loading="lazy"
+                >
+
+                <span class="nv-live-badge">
+                    <i class="fa-solid fa-circle"></i>
+                    EN DIRECT
+                </span>
+
+            </div>
+
+            <div class="nv-live-content">
+
+                <img
+                    class="nv-live-avatar"
+                    src="${escapeAttribute(avatar)}"
+                    alt="${escapeAttribute(channelName)}"
+                    loading="lazy"
+                >
+
+                <div class="nv-live-info">
+
+                    <h3>
+                        ${escapeHTML(title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(channelName)}
+                    </p>
+
+                    <span>
+                        ${formatViews(viewers)}
+                        spectateurs
+                    </span>
+
+                </div>
+
+            </div>
+
+        </a>
+    `;
+
+    return article;
+}
+
+
+// ==========================================
+// Produits sponsorisés
+// ==========================================
+
+function renderTrendingProducts() {
+
+    if (!trendingProductsContainer) {
+        return;
+    }
+
+    trendingProductsContainer.innerHTML = "";
+
+    trendingProducts
+        .slice(0, 12)
+        .forEach(product => {
+
+            trendingProductsContainer.appendChild(
+                createProductCard(product)
+            );
+        });
+}
+
 
 function createProductCard(product) {
 
@@ -1122,7 +1515,7 @@ function createProductCard(product) {
         "nv-product-card";
 
     article.dataset.id =
-        product.id || "";
+        product.id;
 
     const title =
         product.title ||
@@ -1132,50 +1525,28 @@ function createProductCard(product) {
         product.thumbnail_path ||
         product.preview_path ||
         product.image_url ||
+        product.thumbnail_url ||
         "images/default-product.jpg";
 
-    const badge =
-        product.badge ||
-        "";
+    const storeName =
+        product.stores?.name ||
+        product.store_name ||
+        "Boutique NetView";
 
     const category =
-        product.category ||
-        product.category_name ||
         product.product_categories?.name ||
-        "Produit";
+        product.category ||
+        "";
 
     const price =
-        formatProductPrice(
+        formatPrice(
             product.price
         );
 
     article.innerHTML = `
-        <div class="nv-product-badge-container">
-
-            ${
-                badge
-                    ? `
-                        <span class="nv-product-badge">
-                            ${escapeHTML(badge)}
-                        </span>
-                    `
-                    : ""
-            }
-
-            <button
-                class="nv-product-wishlist"
-                type="button"
-                aria-label="Ajouter aux favoris"
-            >
-                <i class="fa-regular fa-heart"></i>
-            </button>
-
-        </div>
-
         <a
-            href="product.html?id=${encodeURIComponent(
-                product.id || ""
-            )}"
+            href="product.html?id=${encodeURIComponent(product.id)}"
+            class="nv-product-link"
         >
 
             <div class="nv-product-thumbnail">
@@ -1186,45 +1557,52 @@ function createProductCard(product) {
                     loading="lazy"
                 >
 
+                <span class="nv-product-sponsored">
+                    Sponsorisé
+                </span>
+
             </div>
 
-        </a>
+            <div class="nv-product-content">
 
-        <div class="nv-product-content">
+                ${
+                    category
+                        ? `
+                            <span
+                                class="nv-product-category-tag"
+                            >
+                                ${escapeHTML(category)}
+                            </span>
+                        `
+                        : ""
+                }
 
-            <div class="nv-product-category-tag">
-                ${escapeHTML(category)}
-            </div>
+                <h3 class="nv-product-title">
+                    ${escapeHTML(title)}
+                </h3>
 
-            <h3 class="nv-product-title">
-                ${escapeHTML(title)}
-            </h3>
+                <p class="nv-product-store">
+                    ${escapeHTML(storeName)}
+                </p>
 
-            <div class="nv-product-footer">
+                <div class="nv-product-footer">
 
-                <div class="nv-product-price-box">
+                    <strong class="nv-product-price">
+                        ${price}
+                    </strong>
 
-                    <span class="nv-product-price">
-                        ${escapeHTML(price)}
+                    <span
+                        class="nv-product-buy-btn"
+                    >
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        Acheter
                     </span>
 
                 </div>
 
-                <button
-                    class="nv-product-buy-btn"
-                    type="button"
-                    data-product="${escapeAttribute(
-                        product.id || ""
-                    )}"
-                    aria-label="Acheter le produit"
-                >
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span>Acheter</span>
-                </button>
-
             </div>
 
-        </div>
+        </a>
     `;
 
     return article;
@@ -1232,611 +1610,176 @@ function createProductCard(product) {
 
 
 // ==========================================
-// Catégories
+// Classement
 // ==========================================
 
-async function loadCategoriesList() {
+function renderTrendingRanking() {
 
-    if (!categoriesContainer) {
+    if (!trendingRankingContainer) {
         return;
     }
 
-    try {
+    trendingRankingContainer.innerHTML = "";
 
-        const categories =
-            await getVideoCategories();
+    const ranking =
+        trendingVideos.slice(0, 10);
 
-        renderCategories(
-            Array.isArray(categories)
-                ? categories
-                : []
-        );
+    ranking.forEach(
+        (video, index) => {
 
-    } catch (error) {
-
-        console.error(
-            "Erreur chargement catégories :",
-            error
-        );
-    }
-}
-
-
-function renderCategories(categories) {
-
-    if (!categoriesContainer) {
-        return;
-    }
-
-    categoriesContainer.innerHTML = "";
-
-    const allButton =
-        document.createElement("button");
-
-    allButton.type = "button";
-    allButton.className =
-        "nv-category";
-
-    if (currentCategory === "all") {
-        allButton.classList.add("active");
-    }
-
-    allButton.dataset.category = "all";
-    allButton.textContent = "Tous";
-
-    categoriesContainer
-        .appendChild(allButton);
-
-
-    categories.forEach(category => {
-
-        if (!category) return;
-
-        const id =
-            category.id ||
-            category.name;
-
-        const name =
-            category.name ||
-            "Catégorie";
-
-        const button =
-            document.createElement("button");
-
-        button.type = "button";
-
-        button.className =
-            "nv-category";
-
-        if (
-            String(currentCategory) ===
-            String(id)
-        ) {
-            button.classList.add("active");
-        }
-
-        button.dataset.category =
-            id;
-
-        button.textContent =
-            name;
-
-        categoriesContainer
-            .appendChild(button);
-    });
-}
-
-
-// ==========================================
-// Événements
-// ==========================================
-
-function addEventListeners() {
-
-    menuButton?.addEventListener(
-        "click",
-        toggleSidebar
-    );
-
-    sidebarOverlay?.addEventListener(
-        "click",
-        closeSidebar
-    );
-
-    searchForm?.addEventListener(
-        "submit",
-        handleSearchSubmit
-    );
-
-
-    categoriesContainer?.addEventListener(
-        "click",
-        async event => {
-
-            const button =
-                event.target.closest(
-                    ".nv-category"
+            const item =
+                createRankingItem(
+                    video,
+                    index + 1
                 );
 
-            if (!button) return;
-
-            const category =
-                button.dataset.category;
-
-            if (!category) return;
-
-            if (
-                category ===
-                currentCategory
-            ) {
-                return;
-            }
-
-            currentCategory =
-                category;
-
-            categoriesContainer
-                .querySelectorAll(
-                    ".nv-category"
-                )
-                .forEach(item => {
-
-                    item.classList.toggle(
-                        "active",
-                        item === button
-                    );
-                });
-
-            await loadTrendingContent();
-        }
-    );
-
-
-    sidebarNav?.addEventListener(
-        "click",
-        async event => {
-
-            const logout =
-                event.target.closest(
-                    "#logoutButton"
-                );
-
-            if (!logout) {
-                return;
-            }
-
-            event.preventDefault();
-
-            try {
-
-                await signOut();
-
-                currentUser = null;
-                currentProfile = null;
-
-                navigate("auth.html");
-
-            } catch (error) {
-
-                console.error(
-                    "Erreur déconnexion :",
-                    error
-                );
-            }
-        }
-    );
-
-
-    /*
-     * Actions produits.
-     */
-    document.addEventListener(
-        "click",
-        event => {
-
-            const buyButton =
-                event.target.closest(
-                    ".nv-product-buy-btn"
-                );
-
-            if (buyButton) {
-
-                const productId =
-                    buyButton.dataset.product;
-
-                if (productId) {
-
-                    navigate(
-                        `product.html?id=${encodeURIComponent(
-                            productId
-                        )}`
-                    );
-                }
-
-                return;
-            }
-
-
-            const wishlistButton =
-                event.target.closest(
-                    ".nv-product-wishlist"
-                );
-
-            if (wishlistButton) {
-
-                if (!currentUser) {
-
-                    navigate("auth.html");
-                    return;
-                }
-
-                /*
-                 * Le système de favoris produit
-                 * sera connecté au module marketplace.
-                 */
-                wishlistButton.classList.toggle(
-                    "active"
-                );
-
-                const icon =
-                    wishlistButton.querySelector(
-                        "i"
-                    );
-
-                icon?.classList.toggle(
-                    "fa-regular"
-                );
-
-                icon?.classList.toggle(
-                    "fa-solid"
-                );
-            }
+            trendingRankingContainer.appendChild(
+                item
+            );
         }
     );
 }
 
 
-// ==========================================
-// Recherche
-// ==========================================
-
-function handleSearchSubmit(event) {
-
-    event?.preventDefault();
-
-    if (!searchInput) {
-        return;
-    }
-
-    const query =
-        searchInput.value.trim();
-
-    if (!query) {
-        return;
-    }
-
-    navigate(
-        `search.html?q=${encodeURIComponent(
-            query
-        )}`
-    );
-}
-
-
-// ==========================================
-// Sidebar
-// ==========================================
-
-function toggleSidebar() {
-
-    if (sidebarOpen) {
-        closeSidebar();
-    } else {
-        openSidebar();
-    }
-}
-
-
-function openSidebar() {
-
-    sidebarOpen = true;
-
-    sidebar?.classList.add(
-        "active"
-    );
-
-    sidebarOverlay?.classList.add(
-        "active"
-    );
-
-    menuButton?.setAttribute(
-        "aria-expanded",
-        "true"
-    );
-}
-
-
-function closeSidebar() {
-
-    sidebarOpen = false;
-
-    sidebar?.classList.remove(
-        "active"
-    );
-
-    sidebarOverlay?.classList.remove(
-        "active"
-    );
-
-    menuButton?.setAttribute(
-        "aria-expanded",
-        "false"
-    );
-}
-
-
-// ==========================================
-// Formatage durée
-// ==========================================
-
-function formatDuration(
-    totalSeconds
+function createRankingItem(
+    video,
+    rank
 ) {
 
-    if (
-        totalSeconds === null ||
-        totalSeconds === undefined ||
-        totalSeconds === ""
-    ) {
-        return "00:00";
-    }
+    const item =
+        document.createElement("article");
 
-    /*
-     * PostgreSQL peut retourner
-     * certaines durées sous forme
-     * de nombre ou de chaîne.
-     */
-    const numeric =
-        Number(totalSeconds);
+    item.className =
+        "nv-ranking-item";
 
-    if (
-        !Number.isFinite(numeric) ||
-        numeric < 0
-    ) {
-        return "00:00";
-    }
+    item.dataset.id =
+        video.id;
 
-    const total =
-        Math.floor(numeric);
+    const title =
+        video.title ||
+        "Vidéo sans titre";
 
-    const hours =
-        Math.floor(
-            total / 3600
+    const thumbnail =
+        video.thumbnail_url ||
+        video.thumbnailUrl ||
+        "images/default-thumbnail.jpg";
+
+    const avatar =
+        video.channelAvatar ||
+        video.channels?.avatar_url ||
+        video.avatar_url ||
+        "images/default-avatar.png";
+
+    const channelName =
+        video.channelName ||
+        video.channels?.name ||
+        video.channel_name ||
+        "Chaîne NetView";
+
+    const views =
+        toNumber(
+            video.views ??
+            video.view_count ??
+            video.views_count
         );
 
-    const minutes =
-        Math.floor(
-            (total % 3600) / 60
-        );
+    item.innerHTML = `
+        <a
+            href="player.html?id=${encodeURIComponent(video.id)}"
+            class="nv-ranking-link"
+        >
 
-    const seconds =
-        total % 60;
+            <span class="nv-ranking-position">
+                ${rank}
+            </span>
 
-    const mm =
-        String(minutes)
-            .padStart(2, "0");
+            <div class="nv-ranking-thumbnail">
+                <img
+                    src="${escapeAttribute(thumbnail)}"
+                    alt="${escapeAttribute(title)}"
+                    loading="lazy"
+                >
+            </div>
 
-    const ss =
-        String(seconds)
-            .padStart(2, "0");
+            <div class="nv-ranking-info">
 
-    if (hours > 0) {
+                <h3>
+                    ${escapeHTML(title)}
+                </h3>
 
-        const hh =
-            String(hours)
-                .padStart(2, "0");
+                <div class="nv-ranking-channel">
 
-        return `${hh}:${mm}:${ss}`;
-    }
+                    <img
+                        src="${escapeAttribute(avatar)}"
+                        alt="${escapeAttribute(channelName)}"
+                        loading="lazy"
+                    >
 
-    return `${mm}:${ss}`;
+                    <span>
+                        ${escapeHTML(channelName)}
+                    </span>
+
+                </div>
+
+                <span class="nv-ranking-views">
+                    ${formatViews(views)} vues
+                </span>
+
+            </div>
+
+        </a>
+    `;
+
+    return item;
 }
 
 
 // ==========================================
-// Formatage vues
+// Menu contextuel vidéo
 // ==========================================
 
-function formatViews(views) {
+function openContextMenu(
+    event,
+    video
+) {
 
-    const value =
-        Number(views) || 0;
-
-    if (value >= 1_000_000_000) {
-
-        return (
-            value / 1_000_000_000
-        )
-            .toFixed(1)
-            .replace(".0", "") +
-            " Md";
+    if (!contextMenu) {
+        return;
     }
 
-    if (value >= 1_000_000) {
+    const videoId =
+        video?.id;
 
-        return (
-            value / 1_000_000
-        )
-            .toFixed(1)
-            .replace(".0", "") +
-            " M";
+    if (!videoId) {
+        return;
     }
 
-    if (value >= 1_000) {
+    contextMenu.innerHTML = `
+        <button
+            type="button"
+            data-action="watch"
+        >
+            <i class="fa-solid fa-play"></i>
+            Regarder
+        </button>
 
-        return (
-            value / 1_000
-        )
-            .toFixed(1)
-            .replace(".0", "") +
-            " k";
-    }
+        <button
+            type="button"
+            data-action="share"
+        >
+            <i class="fa-solid fa-share"></i>
+            Partager
+        </button>
 
-    return String(value);
-}
+        <button
+            type="button"
+            data-action="channel"
+        >
+            <i class="fa-solid fa-user"></i>
+            Voir la chaîne
+        </button>
+    `;
 
+    contextMenu.hidden = false;
 
-// ==========================================
-// Formatage date
-// ==========================================
-
-function formatDate(dateString) {
-
-    if (!dateString) {
-        return "Il y a un moment";
-    }
-
-    const date =
-        new Date(dateString);
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-        return "Il y a un moment";
-    }
-
-    const now =
-        new Date();
-
-    const diffTime =
-        Math.max(
-            0,
-            now.getTime() -
-            date.getTime()
-        );
-
-    const diffMinutes =
-        Math.floor(
-            diffTime /
-            (1000 * 60)
-        );
-
-    const diffHours =
-        Math.floor(
-            diffTime /
-            (1000 * 60 * 60)
-        );
-
-    const diffDays =
-        Math.floor(
-            diffTime /
-            (1000 * 60 * 60 * 24)
-        );
-
-    if (diffMinutes < 1) {
-        return "À l'instant";
-    }
-
-    if (diffMinutes < 60) {
-        return `Il y a ${diffMinutes} min`;
-    }
-
-    if (diffHours < 24) {
-        return `Il y a ${diffHours} h`;
-    }
-
-    if (diffDays === 1) {
-        return "Hier";
-    }
-
-    if (diffDays < 7) {
-        return `Il y a ${diffDays} jours`;
-    }
-
-    if (diffDays < 30) {
-
-        const weeks =
-            Math.floor(
-                diffDays / 7
-            );
-
-        return `Il y a ${weeks} semaine${
-            weeks > 1 ? "s" : ""
-        }`;
-    }
-
-    if (diffDays < 365) {
-
-        const months =
-            Math.floor(
-                diffDays / 30
-            );
-
-        return `Il y a ${months} mois`;
-    }
-
-    const years =
-        Math.floor(
-            diffDays / 365
-        );
-
-    return `Il y a ${years} an${
-        years > 1 ? "s" : ""
-    }`;
-}
-
-
-// ==========================================
-// Formatage prix
-// ==========================================
-
-function formatProductPrice(price) {
-
-    if (
-        price === null ||
-        price === undefined ||
-        price === ""
-    ) {
-        return "0,00 €";
-    }
-
-    const numeric =
-        Number(price);
-
-    if (
-        !Number.isFinite(numeric)
-    ) {
-        return String(price);
-    }
-
-    return new Intl.NumberFormat(
-        "fr-FR",
-        {
-            style: "currency",
-            currency: "EUR"
-        }
-    ).format(numeric);
-}
-
-
-// ==========================================
-// Sécurité HTML
-// ==========================================
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-
-function escapeAttribute(value) {
-
-    return escapeHTML(value);
-}
+    const x =
