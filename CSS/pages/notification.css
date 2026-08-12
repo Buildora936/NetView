@@ -128,23 +128,15 @@
    ========================================================= */
 
 .nv-logo {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-
-    text-decoration: none;
-
-    flex-shrink: 0;
 }
 
 .nv-logo img {
-    display: block;
-
-    width: auto;
-    height: 90px;
-
+    width: 120px;
+    height: auto;
     object-fit: contain;
 }
-
 
 /* =========================================================
    HEADER CENTER
