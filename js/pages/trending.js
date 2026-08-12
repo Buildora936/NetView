@@ -1755,7 +1755,11 @@ function openContextMenu(
     }
 
     contextMenu.innerHTML = `
-        <button
+       <div
+    id="contextMenu"
+    class="nv-context-menu"
+    hidden>
+            <button
             type="button"
             data-action="watch"
         >
@@ -1777,7 +1781,8 @@ function openContextMenu(
         >
             <i class="fa-solid fa-user"></i>
             Voir la chaîne
-        </button>
+        </button> </div>
+
     `;
 
     contextMenu.hidden = false;
