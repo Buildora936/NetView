@@ -1150,209 +1150,540 @@
     font-size: 13px;
 }
 
-
 /* =========================================================
-   NOTIFICATIONS SECTION
+   NETVIEW — NOTIFICATION CARDS
+   Premium / Modern / Detailed
    ========================================================= */
 
-.notifications-section {
-    width: 100%;
-}
+/* =========================================================
+   NOTIFICATION LIST
+   ========================================================= */
 
 .notifications-list {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 
     width: 100%;
 }
 
 
 /* =========================================================
-   NOTIFICATION ITEM
+   NOTIFICATION CARD
    ========================================================= */
 
 .notification-item {
     position: relative;
 
     display: flex;
-    align-items: flex-start;
-    gap: 15px;
+    align-items: center;
 
     width: 100%;
-    min-height: 86px;
+    min-height: 92px;
 
-    padding: 16px 18px;
+    padding: 15px 18px 15px 20px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    overflow: hidden;
 
-    background: transparent;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(17, 24, 39, 0.96),
+            rgba(15, 23, 42, 0.92)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.065);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    isolation: isolate;
 
     transition:
-        background 180ms ease,
-        transform 180ms ease;
-}
-
-.notification-item:first-child {
-    border-top: 1px solid rgba(255, 255, 255, 0.055);
-}
-
-.notification-item:hover {
-    background: rgba(255, 255, 255, 0.025);
+        background 220ms ease,
+        border-color 220ms ease,
+        box-shadow 220ms ease,
+        transform 220ms ease;
 }
 
 
 /* =========================================================
-   UNREAD NOTIFICATION
+   TOP LIGHT EFFECT
+   ========================================================= */
+
+.notification-item::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.09),
+            transparent
+        );
+
+    opacity: 0.65;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LEFT BLUE ACCENT
+   ========================================================= */
+
+.notification-item::after {
+    content: "";
+
+    position: absolute;
+
+    top: 14px;
+    bottom: 14px;
+    left: 0;
+
+    width: 2px;
+
+    border-radius: 0 4px 4px 0;
+
+    background: #2563EB;
+
+    opacity: 0;
+
+    transform: scaleY(0.35);
+
+    transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.notification-item:hover {
+    transform: translateY(-1px);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25, 35, 54, 0.98),
+            rgba(17, 27, 46, 0.96)
+        );
+
+    border-color:
+        rgba(96, 165, 250, 0.16);
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.18),
+        0 0 0 1px rgba(37, 99, 235, 0.025),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* =========================================================
+   UNREAD CARD
    ========================================================= */
 
 .notification-item.unread {
     background:
         linear-gradient(
-            90deg,
-            rgba(37, 99, 235, 0.075),
-            rgba(37, 99, 235, 0.015)
+            135deg,
+            rgba(24, 39, 68, 0.98),
+            rgba(15, 27, 49, 0.96)
         );
+
+    border-color:
+        rgba(37, 99, 235, 0.16);
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.notification-item.unread::after {
+    opacity: 1;
+
+    transform: scaleY(1);
 }
 
 .notification-item.unread:hover {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(37, 99, 235, 0.11),
-            rgba(37, 99, 235, 0.025)
-        );
+    border-color:
+        rgba(37, 99, 235, 0.28);
+
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.20),
+        0 0 24px rgba(37, 99, 235, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 
 /* =========================================================
-   NOTIFICATION AVATAR
+   UNREAD GLOW
+   ========================================================= */
+
+.notification-item.unread::before {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(37, 99, 235, 0.25),
+            rgba(96, 165, 250, 0.12),
+            transparent
+        );
+
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   AVATAR WRAPPER
+   ========================================================= */
+
+.notification-avatar-wrapper {
+    position: relative;
+
+    width: 52px;
+    height: 52px;
+
+    flex: 0 0 52px;
+
+    margin-right: 15px;
+}
+
+
+/* =========================================================
+   AVATAR
    ========================================================= */
 
 .notification-avatar {
-    position: relative;
+    width: 52px;
+    height: 52px;
 
-    width: 48px;
-    height: 48px;
-
-    flex: 0 0 48px;
+    display: block;
 
     border-radius: 50%;
 
     object-fit: cover;
 
-    background: #1F2937;
+    background:
+        linear-gradient(
+            135deg,
+            #1E293B,
+            #111827
+        );
 
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.075);
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 220ms ease,
+        border-color 220ms ease,
+        box-shadow 220ms ease;
+}
+
+.notification-item:hover .notification-avatar {
+    transform: scale(1.035);
+
+    border-color:
+        rgba(96, 165, 250, 0.25);
+
+    box-shadow:
+        0 5px 16px rgba(0, 0, 0, 0.22);
 }
 
 
 /* =========================================================
-   NOTIFICATION ICON
+   NOTIFICATION TYPE BADGE
    ========================================================= */
 
-.notification-icon {
-    width: 46px;
-    height: 46px;
+.notification-type-badge {
+    position: absolute;
 
-    flex: 0 0 46px;
+    right: -3px;
+    bottom: -2px;
+
+    width: 22px;
+    height: 22px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 14px;
+    border: 2px solid #111827;
 
-    background: rgba(37, 99, 235, 0.12);
+    border-radius: 50%;
+
+    background: #2563EB;
+
+    color: #FFFFFF;
+
+    font-size: 9px;
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.notification-type-badge.like {
+    background: #EF4444;
+}
+
+.notification-type-badge.comment {
+    background: #2563EB;
+}
+
+.notification-type-badge.follow {
+    background: #8B5CF6;
+}
+
+.notification-type-badge.video {
+    background: #2563EB;
+}
+
+.notification-type-badge.live {
+    background: #DC2626;
+}
+
+.notification-type-badge.success {
+    background: #16A34A;
+}
+
+.notification-type-badge.warning {
+    background: #D97706;
+}
+
+.notification-type-badge.error {
+    background: #DC2626;
+}
+
+.notification-type-badge.premium {
+    background: #7C3AED;
+}
+
+.notification-type-badge i {
+    line-height: 1;
+}
+
+
+/* =========================================================
+   NOTIFICATION ICON
+   Used when no avatar exists
+   ========================================================= */
+
+.notification-icon {
+    width: 52px;
+    height: 52px;
+
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 15px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0.18),
+            rgba(37, 99, 235, 0.07)
+        );
+
+    border: 1px solid rgba(96, 165, 250, 0.12);
+
     color: #60A5FA;
 
-    font-size: 17px;
+    font-size: 18px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035),
+        0 4px 14px rgba(0, 0, 0, 0.10);
+
+    transition:
+        transform 220ms ease,
+        border-color 220ms ease;
+}
+
+.notification-item:hover .notification-icon {
+    transform: scale(1.035);
+
+    border-color:
+        rgba(96, 165, 250, 0.22);
 }
 
 .notification-icon.success {
-    background: rgba(34, 197, 94, 0.12);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.17),
+            rgba(34, 197, 94, 0.06)
+        );
+
     color: #4ADE80;
 }
 
 .notification-icon.warning {
-    background: rgba(245, 158, 11, 0.12);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(245, 158, 11, 0.17),
+            rgba(245, 158, 11, 0.06)
+        );
+
     color: #FBBF24;
 }
 
 .notification-icon.error {
-    background: rgba(239, 68, 68, 0.12);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(239, 68, 68, 0.17),
+            rgba(239, 68, 68, 0.06)
+        );
+
     color: #F87171;
 }
 
 .notification-icon.info {
-    background: rgba(6, 182, 212, 0.12);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(6, 182, 212, 0.17),
+            rgba(6, 182, 212, 0.06)
+        );
+
     color: #22D3EE;
 }
 
 .notification-icon.premium {
-    background: rgba(139, 92, 246, 0.12);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(139, 92, 246, 0.18),
+            rgba(139, 92, 246, 0.06)
+        );
+
     color: #A78BFA;
 }
 
 
 /* =========================================================
-   NOTIFICATION BODY
+   CONTENT
    ========================================================= */
 
 .notification-content {
     flex: 1;
+
     min-width: 0;
 
     display: flex;
     flex-direction: column;
+
+    justify-content: center;
+
     gap: 5px;
-}
 
-.notification-title {
-    margin: 0;
-
-    color: #FFFFFF;
-
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.4;
-}
-
-.notification-message {
-    margin: 0;
-
-    color: #C5CEDB;
-
-    font-size: 13px;
-    line-height: 1.5;
-
-    overflow-wrap: anywhere;
-}
-
-.notification-time {
-    color: #64748B;
-
-    font-size: 11px;
-    font-weight: 500;
+    padding-right: 14px;
 }
 
 
 /* =========================================================
-   NOTIFICATION THUMBNAIL
+   TITLE
    ========================================================= */
 
-.notification-thumbnail {
-    width: 96px;
-    height: 60px;
+.notification-title {
+    margin: 0;
 
-    flex: 0 0 96px;
+    color: #F8FAFC;
 
-    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
 
-    object-fit: cover;
+    line-height: 1.4;
 
-    background: #1F2937;
+    letter-spacing: -0.005em;
 
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow-wrap: anywhere;
+}
+
+.notification-item:not(.unread) .notification-title {
+    color: #E2E8F0;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.notification-message {
+    margin: 0;
+
+    color: #AAB7C8;
+
+    font-size: 13px;
+    font-weight: 450;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
+}
+
+.notification-item:hover .notification-message {
+    color: #BAC6D6;
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+.notification-time {
+    display: inline-flex;
+    align-items: center;
+
+    width: fit-content;
+
+    margin-top: 1px;
+
+    color: #64748B;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+.notification-time::before {
+    content: "";
+
+    width: 4px;
+    height: 4px;
+
+    margin-right: 7px;
+
+    border-radius: 50%;
+
+    background: #475569;
 }
 
 
@@ -1364,7 +1695,7 @@
     position: absolute;
 
     top: 50%;
-    left: 4px;
+    left: 7px;
 
     width: 6px;
     height: 6px;
@@ -1373,51 +1704,522 @@
 
     border-radius: 50%;
 
-    background: #2563EB;
+    background: #3B82F6;
 
     box-shadow:
-        0 0 8px rgba(37, 99, 235, 0.45);
+        0 0 0 3px rgba(37, 99, 235, 0.08),
+        0 0 10px rgba(37, 99, 235, 0.55);
+
+    animation:
+        notificationUnreadPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes notificationUnreadPulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 3px rgba(37, 99, 235, 0.07),
+            0 0 8px rgba(37, 99, 235, 0.35);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 5px rgba(37, 99, 235, 0.035),
+            0 0 14px rgba(37, 99, 235, 0.55);
+    }
 }
 
 
 /* =========================================================
-   NOTIFICATION ACTIONS
+   THUMBNAIL
+   ========================================================= */
+
+.notification-thumbnail {
+    position: relative;
+
+    width: 108px;
+    height: 66px;
+
+    flex: 0 0 108px;
+
+    display: block;
+
+    overflow: hidden;
+
+    border-radius: 11px;
+
+    object-fit: cover;
+
+    background: #1F2937;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.16);
+
+    transition:
+        transform 220ms ease,
+        border-color 220ms ease,
+        box-shadow 220ms ease;
+}
+
+.notification-item:hover .notification-thumbnail {
+    transform: scale(1.025);
+
+    border-color:
+        rgba(96, 165, 250, 0.18);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   THUMBNAIL OVERLAY
+   ========================================================= */
+
+.notification-thumbnail-wrapper {
+    position: relative;
+
+    width: 108px;
+    height: 66px;
+
+    flex: 0 0 108px;
+
+    overflow: hidden;
+
+    border-radius: 11px;
+}
+
+.notification-thumbnail-wrapper::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 45%,
+            rgba(0, 0, 0, 0.45)
+        );
+
+    opacity: 0.75;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PLAY BUTTON
+   ========================================================= */
+
+.notification-play-button {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.88);
+
+    border-radius: 50%;
+
+    background:
+        rgba(15, 23, 42, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    color: #FFFFFF;
+
+    font-size: 10px;
+
+    opacity: 0;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    transition:
+        opacity 200ms ease,
+        transform 200ms ease;
+}
+
+.notification-item:hover .notification-play-button {
+    opacity: 1;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
    ========================================================= */
 
 .notification-actions {
     display: flex;
     align-items: center;
+
     gap: 5px;
 
     flex: 0 0 auto;
+
+    margin-left: 5px;
 }
 
 .notification-action {
-    width: 34px;
-    height: 34px;
+    width: 35px;
+    height: 35px;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+    padding: 0;
+
     border: 1px solid transparent;
-    border-radius: 9px;
+
+    border-radius: 10px;
 
     background: transparent;
+
     color: #64748B;
+
+    cursor: pointer;
 
     transition:
         background 180ms ease,
+        border-color 180ms ease,
         color 180ms ease,
-        border-color 180ms ease;
+        transform 180ms ease;
 }
 
 .notification-action:hover {
-    background: #1F2937;
-    border-color: rgba(255, 255, 255, 0.07);
-    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.055);
+
+    border-color:
+        rgba(255, 255, 255, 0.07);
+
+    color: #E2E8F0;
+
+    transform: translateY(-1px);
 }
 
+.notification-action:active {
+    transform: scale(0.94);
+}
+
+.notification-action:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   TYPE-SPECIFIC CARD ACCENTS
+   ========================================================= */
+
+.notification-item[data-type="like"]::after {
+    background: #EF4444;
+}
+
+.notification-item[data-type="comment"]::after {
+    background: #3B82F6;
+}
+
+.notification-item[data-type="follow"]::after {
+    background: #8B5CF6;
+}
+
+.notification-item[data-type="live"]::after {
+    background: #EF4444;
+}
+
+.notification-item[data-type="success"]::after {
+    background: #22C55E;
+}
+
+.notification-item[data-type="warning"]::after {
+    background: #F59E0B;
+}
+
+.notification-item[data-type="premium"]::after {
+    background: #A78BFA;
+}
+
+
+/* =========================================================
+   CARD ENTRANCE ANIMATION
+   ========================================================= */
+
+.notification-item {
+    animation:
+        notificationCardAppear 360ms cubic-bezier(.2, .75, .25, 1) both;
+}
+
+.notification-item:nth-child(1) {
+    animation-delay: 20ms;
+}
+
+.notification-item:nth-child(2) {
+    animation-delay: 45ms;
+}
+
+.notification-item:nth-child(3) {
+    animation-delay: 70ms;
+}
+
+.notification-item:nth-child(4) {
+    animation-delay: 95ms;
+}
+
+.notification-item:nth-child(5) {
+    animation-delay: 120ms;
+}
+
+.notification-item:nth-child(6) {
+    animation-delay: 145ms;
+}
+
+@keyframes notificationCardAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .notifications-list {
+        gap: 8px;
+    }
+
+    .notification-item {
+        min-height: 82px;
+
+        padding: 13px 12px 13px 15px;
+
+        border-radius: 14px;
+    }
+
+    .notification-item::after {
+        top: 12px;
+        bottom: 12px;
+    }
+
+    .notification-unread-indicator {
+        left: 5px;
+    }
+
+    .notification-avatar-wrapper {
+        width: 46px;
+        height: 46px;
+
+        flex-basis: 46px;
+
+        margin-right: 12px;
+    }
+
+    .notification-avatar {
+        width: 46px;
+        height: 46px;
+    }
+
+    .notification-type-badge {
+        width: 20px;
+        height: 20px;
+
+        font-size: 8px;
+    }
+
+    .notification-icon {
+        width: 46px;
+        height: 46px;
+
+        flex-basis: 46px;
+
+        margin-right: 12px;
+
+        border-radius: 13px;
+
+        font-size: 16px;
+    }
+
+    .notification-content {
+        padding-right: 4px;
+        gap: 4px;
+    }
+
+    .notification-title {
+        font-size: 13px;
+        line-height: 1.35;
+    }
+
+    .notification-message {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .notification-time {
+        font-size: 10px;
+    }
+
+    .notification-thumbnail,
+    .notification-thumbnail-wrapper {
+        width: 76px;
+        height: 50px;
+
+        flex-basis: 76px;
+
+        border-radius: 9px;
+    }
+
+    .notification-actions {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .notification-item {
+        min-height: 76px;
+
+        padding: 11px 9px 11px 13px;
+
+        border-radius: 13px;
+    }
+
+    .notification-avatar-wrapper {
+        width: 42px;
+        height: 42px;
+
+        flex-basis: 42px;
+
+        margin-right: 10px;
+    }
+
+    .notification-avatar {
+        width: 42px;
+        height: 42px;
+    }
+
+    .notification-type-badge {
+        width: 18px;
+        height: 18px;
+
+        right: -3px;
+        bottom: -2px;
+
+        font-size: 7px;
+    }
+
+    .notification-icon {
+        width: 42px;
+        height: 42px;
+
+        flex-basis: 42px;
+
+        margin-right: 10px;
+
+        border-radius: 12px;
+    }
+
+    .notification-title {
+        font-size: 12.5px;
+    }
+
+    .notification-message {
+        font-size: 11.5px;
+
+        -webkit-line-clamp: 1;
+    }
+
+    .notification-thumbnail,
+    .notification-thumbnail-wrapper {
+        width: 64px;
+        height: 44px;
+
+        flex-basis: 64px;
+    }
+
+    .notification-play-button {
+        width: 25px;
+        height: 25px;
+
+        font-size: 8px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .notification-item {
+        padding-left: 11px;
+        padding-right: 7px;
+    }
+
+    .notification-thumbnail,
+    .notification-thumbnail-wrapper {
+        display: none;
+    }
+
+    .notification-content {
+        padding-right: 0;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .notification-item,
+    .notification-avatar,
+    .notification-icon,
+    .notification-thumbnail,
+    .notification-action,
+    .notification-play-button {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .notification-unread-indicator {
+        animation: none !important;
+    }
+}
 
 /* =========================================================
    EMPTY STATE
