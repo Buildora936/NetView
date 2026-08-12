@@ -1693,9 +1693,10 @@ export async function markNotificationAsRead(
 
     return await supabase
         .from("notifications")
-        .update({
-            is_read: true
-        })
+       .update({
+    is_read: true,
+    read_at: new Date().toISOString()
+})
         .eq(
             "id",
             notificationId
@@ -1729,8 +1730,9 @@ export async function markAllNotificationsAsRead() {
     return await supabase
         .from("notifications")
         .update({
-            is_read: true
-        })
+    is_read: true,
+    read_at: new Date().toISOString()
+})
         .eq(
             "user_id",
             user.id
