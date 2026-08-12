@@ -371,62 +371,6 @@ body {
     color: var(--nv-text-muted, #94a3b8);
 }
 
-/* --- Grids & Scroll Containers --- */
-.nv-trending-video-list,
-.nv-shorts-grid,
-.nv-horizontal-scroll,
-.nv-trending-ranking {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    width: 100%;
-}
-
-.nv-horizontal-scroll,
-.nv-shorts-grid {
-    display: flex;
-    overflow-x: auto;
-    gap: 16px;
-    scrollbar-width: none;
-    padding-bottom: 8px;
-}
-
-.nv-horizontal-scroll::-webkit-scrollbar,
-.nv-shorts-grid::-webkit-scrollbar {
-    display: none;
-}
-
-/* --- General Card & Elements Styling --- */
-.nv-trending-card,
-.nv-search-video-card,
-.nv-search-short-card {
-    background: var(--nv-surface, #1e293b);
-    border: 1px solid var(--nv-border, #334155);
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    text-decoration: none;
-    color: var(--nv-text, #f8fafc);
-    flex-shrink: 0;
-    width: 260px;
-}
-
-.nv-trending-video-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
-.nv-trending-video-list .nv-trending-card {
-    width: 100%;
-}
-
-.nv-trending-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--nv-primary, #2563eb);
-    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.15);
-}
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 1024px) {
@@ -454,5 +398,1131 @@ body {
     .nv-home {
         padding-left: 16px;
         padding-right: 16px;
+    }
+}
+/* =========================================================
+   NetView — Trending / Media Cards
+   Videos • Shorts • Products
+   ========================================================= */
+
+/* =========================================================
+   1. VARIABLES
+   ========================================================= */
+
+:root {
+    --nv-blue: #2563eb;
+    --nv-blue-dark: #1d4ed8;
+    --nv-blue-light: #60a5fa;
+
+    --nv-bg: #f8fafc;
+    --nv-card: #ffffff;
+    --nv-text: #0f172a;
+    --nv-muted: #64748b;
+    --nv-border: #e2e8f0;
+
+    --nv-radius-sm: 10px;
+    --nv-radius-md: 14px;
+    --nv-radius-lg: 18px;
+
+    --nv-shadow-sm:
+        0 2px 8px rgba(15, 23, 42, .06);
+
+    --nv-shadow-md:
+        0 8px 25px rgba(15, 23, 42, .10);
+
+    --nv-shadow-lg:
+        0 18px 45px rgba(15, 23, 42, .15);
+
+    --nv-transition:
+        .25s cubic-bezier(.4, 0, .2, 1);
+
+    --nv-transition-fast:
+        .18s ease;
+}
+
+
+/* =========================================================
+   2. GLOBAL MEDIA CONTAINERS
+   ========================================================= */
+
+.nv-video-card,
+.nv-short-card,
+.nv-product-card {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.nv-video-card *,
+.nv-short-card *,
+.nv-product-card * {
+    box-sizing: border-box;
+}
+
+.nv-video-card img,
+.nv-short-card img,
+.nv-product-card img {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   3. VIDEO GRID
+   ========================================================= */
+
+#trendingVideos,
+#moreTrendingVideos,
+.nv-videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 20px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   4. VIDEO CARD
+   ========================================================= */
+
+.nv-video-card {
+    min-width: 0;
+    border-radius: var(--nv-radius-lg);
+    background: transparent;
+    transition:
+        transform var(--nv-transition),
+        filter var(--nv-transition);
+}
+
+.nv-video-card:hover {
+    transform: translateY(-5px);
+}
+
+
+/* =========================================================
+   5. TRENDING RANK
+   ========================================================= */
+
+.nv-trending-card .nv-trending-rank {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--nv-blue),
+            #7c3aed
+        );
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, .35);
+
+    backdrop-filter: blur(8px);
+
+    transition:
+        transform var(--nv-transition),
+        box-shadow var(--nv-transition);
+}
+
+.nv-video-card:hover .nv-trending-rank {
+    transform: scale(1.08);
+    box-shadow:
+        0 10px 24px rgba(37, 99, 235, .45);
+}
+
+
+/* =========================================================
+   6. VIDEO LINK
+   ========================================================= */
+
+.nv-video-link-wrapper {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   7. VIDEO THUMBNAIL
+   ========================================================= */
+
+.nv-video-thumbnail {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    border-radius: var(--nv-radius-lg);
+
+    background:
+        linear-gradient(
+            135deg,
+            #e2e8f0,
+            #cbd5e1
+        );
+
+    box-shadow: var(--nv-shadow-sm);
+
+    isolation: isolate;
+}
+
+.nv-video-thumbnail::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 55%,
+            rgba(0,0,0,.18)
+        );
+
+    pointer-events: none;
+
+    opacity: .55;
+
+    transition:
+        opacity var(--nv-transition);
+}
+
+.nv-video-card:hover .nv-video-thumbnail::after {
+    opacity: .85;
+}
+
+.nv-video-thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform .55s cubic-bezier(.2,.7,.2,1),
+        filter var(--nv-transition);
+}
+
+.nv-video-card:hover .nv-video-thumbnail img {
+    transform: scale(1.045);
+    filter: brightness(.94);
+}
+
+
+/* =========================================================
+   8. VIDEO DURATION
+   ========================================================= */
+
+.nv-video-duration {
+    position: absolute;
+
+    right: 10px;
+    bottom: 10px;
+
+    z-index: 3;
+
+    padding: 4px 7px;
+
+    border-radius: 6px;
+
+    color: #fff;
+
+    background: rgba(0, 0, 0, .78);
+
+    backdrop-filter: blur(5px);
+
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
+    letter-spacing: .2px;
+}
+
+
+/* =========================================================
+   9. VIDEO CONTENT
+   ========================================================= */
+
+.nv-video-content {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 13px 2px 0;
+}
+
+.nv-video-avatar {
+    flex: 0 0 40px;
+
+    width: 40px;
+    height: 40px;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #e2e8f0;
+
+    box-shadow:
+        0 0 0 2px #fff,
+        0 3px 10px rgba(15,23,42,.12);
+}
+
+.nv-video-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   10. VIDEO INFORMATION
+   ========================================================= */
+
+.nv-video-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.nv-video-title {
+    margin: 0;
+
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 750;
+
+    color: var(--nv-text);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.nv-video-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.nv-video-title a:hover {
+    color: var(--nv-blue);
+}
+
+.nv-video-channel {
+    display: inline-block;
+
+    max-width: 100%;
+
+    margin-top: 5px;
+
+    color: var(--nv-muted);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    text-decoration: none;
+}
+
+.nv-video-channel:hover {
+    color: var(--nv-blue);
+}
+
+.nv-video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+
+    margin-top: 4px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   11. VIDEO MENU
+   ========================================================= */
+
+.nv-video-menu-btn {
+    flex: 0 0 34px;
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+
+    color: var(--nv-muted);
+
+    cursor: pointer;
+
+    transition:
+        background var(--nv-transition-fast),
+        color var(--nv-transition-fast),
+        transform var(--nv-transition-fast);
+}
+
+.nv-video-menu-btn:hover {
+    color: var(--nv-blue);
+    background: #eff6ff;
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   12. SHORTS SECTION
+   ========================================================= */
+
+#trendingShorts,
+.nv-shorts-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(170px, 1fr));
+
+    gap: 16px;
+
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x proximity;
+
+    scrollbar-width: thin;
+
+    padding:
+        4px 4px 14px;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+#trendingShorts::-webkit-scrollbar,
+.nv-shorts-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+#trendingShorts::-webkit-scrollbar-thumb,
+.nv-shorts-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   13. SHORT CARD
+   ========================================================= */
+
+.nv-short-card {
+    min-width: 0;
+
+    scroll-snap-align: start;
+
+    border-radius: var(--nv-radius-lg);
+
+    overflow: hidden;
+
+    background: var(--nv-card);
+
+    box-shadow:
+        0 3px 14px rgba(15,23,42,.08);
+
+    transition:
+        transform var(--nv-transition),
+        box-shadow var(--nv-transition);
+}
+
+.nv-short-card:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 14px 32px rgba(15,23,42,.16);
+}
+
+.nv-short-card > a {
+    display: block;
+
+    color: inherit;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   14. SHORT THUMBNAIL
+   ========================================================= */
+
+.nv-short-thumbnail {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 9 / 16;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #dbeafe,
+            #e2e8f0
+        );
+}
+
+.nv-short-thumbnail::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 45%,
+            rgba(0,0,0,.38)
+        );
+
+    opacity: .65;
+
+    pointer-events: none;
+
+    transition:
+        opacity var(--nv-transition);
+}
+
+.nv-short-card:hover
+.nv-short-thumbnail::after {
+    opacity: .9;
+}
+
+.nv-short-thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform .6s cubic-bezier(.2,.7,.2,1);
+}
+
+.nv-short-card:hover
+.nv-short-thumbnail img {
+    transform: scale(1.06);
+}
+
+
+/* =========================================================
+   15. SHORT INFO
+   ========================================================= */
+
+.nv-short-info {
+    padding: 12px;
+}
+
+.nv-short-info h3 {
+    margin: 0;
+
+    color: var(--nv-text);
+
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 750;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.nv-short-info p {
+    margin: 6px 0 0;
+
+    color: var(--nv-muted);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   16. PRODUCTS CONTAINER
+   ========================================================= */
+
+#trendingProducts,
+.nv-products-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(240px, 1fr));
+
+    gap: 20px;
+
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x proximity;
+
+    padding:
+        5px 4px 16px;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+}
+
+#trendingProducts::-webkit-scrollbar,
+.nv-products-grid::-webkit-scrollbar {
+    height: 7px;
+}
+
+#trendingProducts::-webkit-scrollbar-thumb,
+.nv-products-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   17. PRODUCT CARD
+   ========================================================= */
+
+.nv-product-card {
+    min-width: 0;
+
+    scroll-snap-align: start;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(226,232,240,.9);
+
+    border-radius:
+        var(--nv-radius-lg);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    box-shadow:
+        0 5px 18px rgba(15,23,42,.07);
+
+    transition:
+        transform var(--nv-transition),
+        box-shadow var(--nv-transition),
+        border-color var(--nv-transition);
+}
+
+.nv-product-card:hover {
+    transform: translateY(-7px);
+
+    border-color:
+        rgba(37,99,235,.22);
+
+    box-shadow:
+        0 18px 40px rgba(15,23,42,.14);
+}
+
+
+/* =========================================================
+   18. PRODUCT BADGES
+   ========================================================= */
+
+.nv-product-badge-container {
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    pointer-events: none;
+}
+
+.nv-product-badge {
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--nv-blue),
+            #4f46e5
+        );
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+    box-shadow:
+        0 5px 14px rgba(37,99,235,.28);
+}
+
+.nv-product-wishlist {
+    width: 36px;
+    height: 36px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #334155;
+
+    background:
+        rgba(255,255,255,.92);
+
+    backdrop-filter:
+        blur(10px);
+
+    box-shadow:
+        0 4px 15px rgba(15,23,42,.12);
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    transition:
+        transform var(--nv-transition-fast),
+        color var(--nv-transition-fast),
+        background var(--nv-transition-fast);
+}
+
+.nv-product-wishlist:hover {
+    color: #ef4444;
+    background: #fff;
+    transform: scale(1.1);
+}
+
+
+/* =========================================================
+   19. PRODUCT IMAGE
+   ========================================================= */
+
+.nv-product-thumbnail {
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1f5f9,
+            #e2e8f0
+        );
+}
+
+.nv-product-thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform .65s cubic-bezier(.2,.7,.2,1);
+}
+
+.nv-product-card:hover
+.nv-product-thumbnail img {
+    transform: scale(1.055);
+}
+
+
+/* =========================================================
+   20. PRODUCT CONTENT
+   ========================================================= */
+
+.nv-product-content {
+    padding: 15px;
+}
+
+.nv-product-category-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    color: var(--nv-blue);
+
+    background: #eff6ff;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .35px;
+}
+
+.nv-product-title {
+    margin: 9px 0 14px;
+
+    color: var(--nv-text);
+
+    font-size: 16px;
+    line-height: 1.35;
+
+    font-weight: 750;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.nv-product-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.nv-product-price-box {
+    min-width: 0;
+}
+
+.nv-product-price {
+    color: var(--nv-text);
+
+    font-size: 17px;
+    font-weight: 850;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   21. PRODUCT BUY BUTTON
+   ========================================================= */
+
+.nv-product-buy-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 38px;
+
+    padding: 8px 12px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--nv-blue),
+            var(--nv-blue-dark)
+        );
+
+    font-size: 12px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 16px rgba(37,99,235,.22);
+
+    transition:
+        transform var(--nv-transition-fast),
+        box-shadow var(--nv-transition-fast),
+        filter var(--nv-transition-fast);
+}
+
+.nv-product-buy-btn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 9px 22px rgba(37,99,235,.32);
+}
+
+.nv-product-buy-btn:active {
+    transform: translateY(0) scale(.97);
+}
+
+
+/* =========================================================
+   22. FOCUS ACCESSIBILITY
+   ========================================================= */
+
+.nv-video-card a:focus-visible,
+.nv-short-card a:focus-visible,
+.nv-product-card button:focus-visible {
+    outline: 3px solid rgba(37,99,235,.35);
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   23. TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    #trendingVideos,
+    #moreTrendingVideos,
+    .nv-videos-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 22px 16px;
+    }
+
+    #trendingShorts,
+    .nv-shorts-grid {
+        grid-template-columns:
+            repeat(5, 180px);
+    }
+
+    #trendingProducts,
+    .nv-products-grid {
+        grid-template-columns:
+            repeat(3, 250px);
+    }
+}
+
+
+/* =========================================================
+   24. MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #trendingVideos,
+    #moreTrendingVideos,
+    .nv-videos-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 24px;
+    }
+
+    .nv-video-card {
+        width: 100%;
+    }
+
+    .nv-video-thumbnail {
+        border-radius: 15px;
+    }
+
+
+    /* -----------------------------------------
+       SHORTS MOBILE
+       ----------------------------------------- */
+
+    #trendingShorts,
+    .nv-shorts-grid {
+        display: flex;
+
+        flex-direction: column;
+
+        overflow-x: visible;
+        overflow-y: visible;
+
+        gap: 14px;
+
+        padding:
+            4px 0;
+    }
+
+    .nv-short-card {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .nv-short-thumbnail {
+        aspect-ratio: 9 / 13;
+    }
+
+
+    /* -----------------------------------------
+       PRODUCTS MOBILE
+       ----------------------------------------- */
+
+    #trendingProducts,
+    .nv-products-grid {
+        display: flex;
+
+        flex-direction: column;
+
+        overflow-x: visible;
+        overflow-y: visible;
+
+        gap: 16px;
+
+        padding:
+            4px 0;
+    }
+
+    .nv-product-card {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .nv-product-thumbnail {
+        aspect-ratio: 1 / 1;
+    }
+
+    .nv-product-content {
+        padding: 14px;
+    }
+
+    .nv-product-title {
+        font-size: 15px;
+    }
+
+    .nv-product-price {
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================================
+   25. SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .nv-video-content {
+        gap: 9px;
+        padding-top: 10px;
+    }
+
+    .nv-video-avatar {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .nv-video-title {
+        font-size: 14px;
+    }
+
+    .nv-video-meta {
+        font-size: 11px;
+    }
+
+    .nv-video-channel {
+        font-size: 12px;
+    }
+
+    .nv-trending-card .nv-trending-rank {
+        top: 9px;
+        left: 9px;
+
+        min-width: 30px;
+        height: 30px;
+
+        font-size: 12px;
+    }
+
+    .nv-video-duration {
+        right: 8px;
+        bottom: 8px;
+
+        font-size: 11px;
+    }
+
+    .nv-product-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .nv-product-buy-btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   26. REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nv-video-card,
+    .nv-short-card,
+    .nv-product-card,
+    .nv-video-thumbnail img,
+    .nv-short-thumbnail img,
+    .nv-product-thumbnail img,
+    .nv-product-buy-btn,
+    .nv-product-wishlist {
+        transition: none !important;
+    }
+
+    .nv-video-card:hover,
+    .nv-short-card:hover,
+    .nv-product-card:hover {
+        transform: none;
     }
 }
