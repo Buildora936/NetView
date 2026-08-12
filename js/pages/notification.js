@@ -1,665 +1,1018 @@
-/* ============================================================
-   NetView - Notification Page
-   File: js/pages/notification.js
-   ============================================================ */
+// ==========================================
+// NetView
+// notification.js
+// ==========================================
 
 import { supabase } from "../core/supabase.js";
 
-/* ============================================================
-   CONFIGURATION
-   ============================================================ */
-
-const CONFIG = {
-    PAGE_SIZE: 30,
-    REALTIME_DELAY: 250,
-    DATE_LOCALE: "fr-FR",
-
-    MENTION_TYPES: [
-        "comment_mentioned",
-        "message_mentioned",
-        "live_mentioned"
-    ],
-
-    ACTIVITY_TYPES: [
-        "video_liked",
-        "video_commented",
-        "comment_replied",
-        "short_liked",
-        "short_commented",
-        "channel_subscribed",
-        "product_favorite",
-        "product_review"
-    ],
-
-    NETVIEW_TYPES: [
-        "system",
-        "maintenance",
-        "announcement",
-        "verification_approved",
-        "verification_rejected",
-        "security_login",
-        "security_new_device",
-        "payment_success",
-        "payment_failed",
-        "refund",
-        "payout",
-        "pro_subscription",
-        "pro_expiring"
-    ]
-};
+import {
+    getNotifications,
+    getUnreadNotificationCount,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+    getProfileById,
+    subscribeToNotifications,
+    unsubscribe
+} from "../core/data.js";
 
 
-/* ============================================================
-   STATE
-   ============================================================ */
+// ==========================================
+// Configuration
+// ==========================================
+
+const PAGE_SIZE = 50;
+
+const MAX_NOTIFICATIONS = 500;
+
+const DEFAULT_AVATAR =
+    "images/default-avatar.png";
+
+const DEFAULT_NOTIFICATION_IMAGE =
+    "NetView.png";
+
+
+// ==========================================
+// State
+// ==========================================
 
 const state = {
-    user: null,
 
     notifications: [],
 
-    activeFilter: "all",
+    actors: new Map(),
+
+    currentFilter: "all",
 
     loading: false,
 
-    initialized: false,
+    error: false,
 
     realtimeChannel: null,
 
-    realtimeTimer: null,
+    realtimeReconnectTimer: null,
 
-    currentPage: 0,
-
-    hasMore: true,
+    initialized: false,
 
     loadingMore: false
+
 };
 
 
-/* ============================================================
-   DOM
-   ============================================================ */
+// ==========================================
+// DOM
+// ==========================================
 
-const DOM = {
-    list: null,
-    loading: null,
-    empty: null,
-    error: null,
-
-    markAllButton: null,
-
-    filters: [],
-
-    allCount: null,
-    unreadCount: null
-};
+const elements = {};
 
 
-/* ============================================================
-   INITIALISATION
-   ============================================================ */
+// ==========================================
+// Initialization
+// ==========================================
 
-document.addEventListener("DOMContentLoaded", initNotificationsPage);
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
 
 
-/* ============================================================
-   MAIN INIT
-   ============================================================ */
+async function init() {
 
-async function initNotificationsPage() {
-    try {
-        cacheDOM();
-
-        bindEvents();
-
-        await getCurrentUser();
-
-        if (!state.user) {
-            handleUnauthenticatedUser();
-            return;
-        }
-
-        state.initialized = true;
-
-        await loadNotifications(true);
-
-        subscribeToRealtime();
-
-    } catch (error) {
-        console.error(
-            "[NetView Notifications] Initialisation error:",
-            error
-        );
-
-        showError(
-            "Impossible de charger vos notifications."
-        );
+    if (state.initialized) {
+        return;
     }
+
+    state.initialized = true;
+
+    cacheElements();
+
+    initializeHeader();
+
+    initializeSidebar();
+
+    initializeSearch();
+
+    initializeFilters();
+
+    initializeActions();
+
+    await loadNotifications();
+
+    initializeRealtime();
+
 }
 
 
-/* ============================================================
-   DOM CACHE
-   ============================================================ */
+// ==========================================
+// DOM Cache
+// ==========================================
 
-function cacheDOM() {
-    DOM.list = document.getElementById("notifications-list");
+function cacheElements() {
 
-    DOM.loading = document.getElementById(
-        "notifications-loading"
-    );
+    elements.app =
+        document.getElementById("app");
 
-    DOM.empty = document.getElementById(
-        "notifications-empty"
-    );
+    elements.headerRight =
+        document.getElementById("headerRight");
 
-    DOM.error = document.getElementById(
-        "notifications-error"
-    );
-
-    DOM.markAllButton = document.getElementById(
-        "mark-all-read-button"
-    );
-
-    DOM.allCount = document.getElementById(
-        "all-count"
-    );
-
-    DOM.unreadCount = document.getElementById(
-        "unread-count"
-    );
-
-    DOM.filters = Array.from(
-        document.querySelectorAll(
-            ".notification-filter"
-        )
-    );
-}
-
-
-/* ============================================================
-   EVENTS
-   ============================================================ */
-
-function bindEvents() {
-
-    DOM.filters.forEach(button => {
-        button.addEventListener(
-            "click",
-            handleFilterClick
-        );
-    });
-
-
-    if (DOM.markAllButton) {
-        DOM.markAllButton.addEventListener(
-            "click",
-            markAllAsRead
-        );
-    }
-
-
-    /*
-     * Gestion du menu/sidebar existant
-     */
-    const menuButton =
+    elements.menuButton =
         document.getElementById("menuButton");
 
-    const sidebar =
+    elements.sidebar =
         document.getElementById("sidebar");
 
-    const overlay =
+    elements.sidebarOverlay =
         document.getElementById("sidebarOverlay");
 
+    elements.sidebarNav =
+        document.querySelector(
+            ".nv-sidebar-nav"
+        );
 
-    if (
-        menuButton &&
-        sidebar &&
-        overlay
-    ) {
+    elements.searchForm =
+        document.getElementById("searchForm");
 
-        menuButton.addEventListener(
+    elements.searchInput =
+        document.getElementById("searchInput");
+
+    elements.markAllButton =
+        document.getElementById(
+            "mark-all-read-button"
+        );
+
+    elements.filterButtons =
+        document.querySelectorAll(
+            ".notification-filter"
+        );
+
+    elements.allCount =
+        document.getElementById(
+            "all-count"
+        );
+
+    elements.unreadCount =
+        document.getElementById(
+            "unread-count"
+        );
+
+    elements.loading =
+        document.getElementById(
+            "notifications-loading"
+        );
+
+    elements.list =
+        document.getElementById(
+            "notifications-list"
+        );
+
+    elements.empty =
+        document.getElementById(
+            "notifications-empty"
+        );
+
+    elements.error =
+        document.getElementById(
+            "notifications-error"
+        );
+
+    elements.retryButton =
+        document.getElementById(
+            "notifications-retry-button"
+        );
+
+    elements.toastContainer =
+        document.getElementById(
+            "toastContainer"
+        );
+
+}
+
+
+// ==========================================
+// Header
+// ==========================================
+
+function initializeHeader() {
+
+    if (!elements.headerRight) {
+        return;
+    }
+
+    elements.headerRight.innerHTML = `
+
+        <button
+            type="button"
+            class="nv-icon-button notification-header-button"
+            id="notificationHeaderButton"
+            aria-label="Notifications"
+            title="Notifications"
+        >
+
+            <i
+                class="fa-regular fa-bell"
+                aria-hidden="true"
+            ></i>
+
+            <span
+                class="notification-header-badge"
+                id="notificationHeaderBadge"
+                hidden
+            >
+                0
+            </span>
+
+        </button>
+
+
+        <a
+            href="profile.html"
+            class="nv-header-profile"
+            id="headerProfileButton"
+            aria-label="Mon profil"
+        >
+
+            <img
+                id="headerProfileAvatar"
+                src="${DEFAULT_AVATAR}"
+                alt="Profil"
+            >
+
+        </a>
+
+    `;
+
+
+    const notificationButton =
+        document.getElementById(
+            "notificationHeaderButton"
+        );
+
+    if (notificationButton) {
+
+        notificationButton.addEventListener(
             "click",
             () => {
 
-                sidebar.classList.toggle(
-                    "is-open"
-                );
-
-                overlay.classList.toggle(
-                    "is-visible"
-                );
-
-                document.body.classList.toggle(
-                    "sidebar-open"
-                );
-            }
-        );
-
-
-        overlay.addEventListener(
-            "click",
-            closeSidebar
-        );
-    }
-
-
-    /*
-     * Recherche
-     */
-    const searchForm =
-        document.getElementById("searchForm");
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-
-    if (searchForm) {
-
-        searchForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                const query =
-                    searchInput?.value?.trim();
-
-                if (!query) {
-                    return;
-                }
-
                 window.location.href =
-                    `search.html?q=${encodeURIComponent(query)}`;
+                    "notification.html";
+
             }
         );
+
     }
 
 
-    /*
-     * Infinite scroll
-     */
-    window.addEventListener(
-        "scroll",
-        handleScroll,
-        {
-            passive: true
-        }
-    );
+    loadHeaderProfile();
 
-
-    /*
-     * Page visibility
-     */
-    document.addEventListener(
-        "visibilitychange",
-        handleVisibilityChange
-    );
 }
 
 
-/* ============================================================
-   CURRENT USER
-   ============================================================ */
+// ==========================================
+// Header Profile
+// ==========================================
 
-async function getCurrentUser() {
-
-    const {
-        data,
-        error
-    } = await supabase.auth.getUser();
-
-
-    if (error) {
-        throw error;
-    }
-
-
-    state.user =
-        data?.user || null;
-}
-
-
-/* ============================================================
-   AUTH REDIRECT
-   ============================================================ */
-
-function handleUnauthenticatedUser() {
-
-    window.location.href =
-        `login.html?redirect=${encodeURIComponent(
-            "notification.html"
-        )}`;
-}
-
-
-/* ============================================================
-   LOAD NOTIFICATIONS
-   ============================================================ */
-
-async function loadNotifications(reset = false) {
-
-    if (!state.user) {
-        return;
-    }
-
-
-    if (state.loading) {
-        return;
-    }
-
-
-    state.loading = true;
-
-
-    if (reset) {
-
-        state.currentPage = 0;
-
-        state.hasMore = true;
-
-        state.notifications = [];
-
-        showLoading();
-
-        clearError();
-    }
-
+async function loadHeaderProfile() {
 
     try {
 
-        const from =
-            state.currentPage *
-            CONFIG.PAGE_SIZE;
-
-        const to =
-            from +
-            CONFIG.PAGE_SIZE -
-            1;
-
-
         const {
-            data,
-            error
-        } = await supabase
-            .from("notifications")
-            .select(`
-                id,
-                user_id,
-                actor_id,
-                type,
-                title,
-                message,
-                is_read,
-                created_at,
-                entity_type,
-                entity_id,
-                action_url,
-                image_url,
-                read_at,
-                metadata,
-                group_key,
-                priority,
-                expires_at,
-                actor:profiles!notifications_actor_id_fkey (
-                    id,
-                    username,
-                    display_name,
-                    avatar_url,
-                    verified,
-                    company_verified
-                )
-            `)
-            .eq(
-                "user_id",
-                state.user.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .range(from, to);
+            data: {
+                user
+            }
+        } =
+            await supabase.auth.getUser();
 
-
-        if (error) {
-            throw error;
+        if (!user) {
+            return;
         }
 
-
-        const rows =
-            Array.isArray(data)
-                ? data
-                : [];
-
-
-        /*
-         * Supprimer les notifications expirées
-         * côté affichage.
-         */
-        const now =
-            Date.now();
-
-
-        const validRows =
-            rows.filter(notification => {
-
-                if (
-                    !notification.expires_at
-                ) {
-                    return true;
-                }
-
-                return (
-                    new Date(
-                        notification.expires_at
-                    ).getTime() > now
-                );
-            });
-
-
-        if (reset) {
-
-            state.notifications =
-                validRows;
-
-        } else {
-
-            state.notifications.push(
-                ...validRows
+        const profile =
+            await getProfileById(
+                user.id
             );
+
+        if (!profile) {
+            return;
         }
 
+        const avatar =
+            profile.avatar_url ||
+            DEFAULT_AVATAR;
 
-        /*
-         * Si moins de PAGE_SIZE résultats
-         * sont retournés, il n'y a plus
-         * de page.
-         */
-        state.hasMore =
-            rows.length ===
-            CONFIG.PAGE_SIZE;
+        const avatarElement =
+            document.getElementById(
+                "headerProfileAvatar"
+            );
 
+        if (avatarElement) {
 
-        state.currentPage++;
+            avatarElement.src =
+                avatar;
 
+            avatarElement.alt =
+                profile.display_name ||
+                profile.username ||
+                "Profil";
 
-        renderNotifications();
-
-        await updateCounters();
+        }
 
     } catch (error) {
 
         console.error(
-            "[NetView Notifications] Load error:",
+            "Erreur chargement profil header :",
             error
         );
 
-
-        if (reset) {
-
-            state.notifications = [];
-
-            showError(
-                "Impossible de récupérer vos notifications."
-            );
-        }
-
-    } finally {
-
-        state.loading = false;
-
-        hideLoading();
     }
+
 }
 
 
-/* ============================================================
-   LOAD MORE
-   ============================================================ */
+// ==========================================
+// Sidebar
+// ==========================================
 
-async function loadMoreNotifications() {
+function initializeSidebar() {
+
+    if (!elements.sidebarNav) {
+        return;
+    }
+
+    elements.sidebarNav.innerHTML = `
+
+        <a
+            href="index.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-house"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Accueil
+            </span>
+
+        </a>
+
+
+        <a
+            href="trending.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-fire"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Tendances
+            </span>
+
+        </a>
+
+
+        <a
+            href="shorts.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-bolt"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Shorts
+            </span>
+
+        </a>
+
+
+        <a
+            href="lives.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-tower-broadcast"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Lives
+            </span>
+
+        </a>
+
+
+        <a
+            href="subscriptions.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-layer-group"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Abonnements
+            </span>
+
+        </a>
+
+
+        <a
+            href="playlist.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-list"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Playlists
+            </span>
+
+        </a>
+
+
+        <div
+            class="nv-sidebar-divider"
+        ></div>
+
+
+        <a
+            href="notification.html"
+            class="nv-sidebar-item active"
+            aria-current="page"
+        >
+
+            <i
+                class="fa-solid fa-bell"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Notifications
+            </span>
+
+            <span
+                class="sidebar-notification-badge"
+                id="sidebarNotificationBadge"
+                hidden
+            >
+                0
+            </span>
+
+        </a>
+
+
+        <a
+            href="settings.html"
+            class="nv-sidebar-item"
+        >
+
+            <i
+                class="fa-solid fa-gear"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Paramètres
+            </span>
+
+        </a>
+
+    `;
+
+
+    updateSidebarNotificationBadge(
+        0
+    );
+
+}
+
+
+// ==========================================
+// Sidebar Menu
+// ==========================================
+
+function initializeMenu() {
 
     if (
-        state.loadingMore ||
-        state.loading ||
-        !state.hasMore
+        !elements.menuButton ||
+        !elements.sidebar
     ) {
         return;
     }
 
+    elements.menuButton.addEventListener(
+        "click",
+        toggleSidebar
+    );
 
-    state.loadingMore = true;
 
+    if (elements.sidebarOverlay) {
 
-    try {
+        elements.sidebarOverlay.addEventListener(
+            "click",
+            closeSidebar
+        );
 
-        await loadNotifications(false);
-
-    } finally {
-
-        state.loadingMore = false;
     }
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+
+
+    elements.sidebar.addEventListener(
+        "click",
+        event => {
+
+            const link =
+                event.target.closest(
+                    "a"
+                );
+
+            if (!link) {
+                return;
+            }
+
+            if (
+                window.innerWidth <= 900
+            ) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+
 }
 
 
-/* ============================================================
-   FILTERS
-   ============================================================ */
+function toggleSidebar() {
 
-async function handleFilterClick(event) {
+    const isOpen =
+        elements.sidebar.classList.contains(
+            "open"
+        );
 
-    const button =
-        event.currentTarget;
+    if (isOpen) {
+        closeSidebar();
+    } else {
+        openSidebar();
+    }
 
-    const filter =
-        button.dataset.filter;
+}
 
 
-    if (!filter) {
+function openSidebar() {
+
+    elements.sidebar.classList.add(
+        "open"
+    );
+
+    if (elements.sidebarOverlay) {
+
+        elements.sidebarOverlay.classList.add(
+            "active"
+        );
+
+        elements.sidebarOverlay.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+    if (elements.menuButton) {
+
+        elements.menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+    }
+
+}
+
+
+function closeSidebar() {
+
+    if (!elements.sidebar) {
         return;
     }
 
+    elements.sidebar.classList.remove(
+        "open"
+    );
 
-    state.activeFilter =
+    if (elements.sidebarOverlay) {
+
+        elements.sidebarOverlay.classList.remove(
+            "active"
+        );
+
+        elements.sidebarOverlay.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+    if (elements.menuButton) {
+
+        elements.menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Search
+// ==========================================
+
+function initializeSearch() {
+
+    if (!elements.searchForm) {
+        return;
+    }
+
+    elements.searchForm.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const query =
+                String(
+                    elements.searchInput?.value ||
+                    ""
+                ).trim();
+
+            if (!query) {
+                return;
+            }
+
+            window.location.href =
+                `search.html?q=${encodeURIComponent(query)}`;
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// Filters
+// ==========================================
+
+function initializeFilters() {
+
+    elements.filterButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const filter =
+                        button.dataset.filter ||
+                        "all";
+
+                    setFilter(
+                        filter
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+function setFilter(
+    filter
+) {
+
+    const allowedFilters = [
+        "all",
+        "unread",
+        "mentions",
+        "activity",
+        "netview"
+    ];
+
+    if (
+        !allowedFilters.includes(
+            filter
+        )
+    ) {
+
+        filter = "all";
+
+    }
+
+    state.currentFilter =
         filter;
 
 
-    DOM.filters.forEach(
-        filterButton => {
+    elements.filterButtons.forEach(
+        button => {
 
             const active =
-                filterButton === button;
+                button.dataset.filter ===
+                filter;
 
-
-            filterButton.classList.toggle(
+            button.classList.toggle(
                 "active",
                 active
             );
 
-
-            filterButton.setAttribute(
+            button.setAttribute(
                 "aria-selected",
-                active
-                    ? "true"
-                    : "false"
+                String(active)
             );
+
         }
     );
 
 
     renderNotifications();
+
 }
 
 
-/* ============================================================
-   FILTER DATA
-   ============================================================ */
+// ==========================================
+// Actions
+// ==========================================
 
-function getFilteredNotifications() {
+function initializeActions() {
 
-    const notifications =
-        state.notifications;
+    if (elements.markAllButton) {
 
+        elements.markAllButton.addEventListener(
+            "click",
+            markAllAsRead
+        );
 
-    switch (
-        state.activeFilter
-    ) {
-
-        case "unread":
-
-            return notifications.filter(
-                notification =>
-                    notification.is_read === false
-            );
-
-
-        case "mentions":
-
-            return notifications.filter(
-                notification =>
-                    CONFIG.MENTION_TYPES.includes(
-                        notification.type
-                    )
-            );
-
-
-        case "activity":
-
-            return notifications.filter(
-                notification =>
-                    CONFIG.ACTIVITY_TYPES.includes(
-                        notification.type
-                    )
-            );
-
-
-        case "netview":
-
-            return notifications.filter(
-                notification =>
-                    CONFIG.NETVIEW_TYPES.includes(
-                        notification.type
-                    )
-            );
-
-
-        case "all":
-        default:
-
-            return notifications;
     }
+
+
+    if (elements.retryButton) {
+
+        elements.retryButton.addEventListener(
+            "click",
+            loadNotifications
+        );
+
+    }
+
+
+    if (elements.list) {
+
+        elements.list.addEventListener(
+            "click",
+            handleNotificationClick
+        );
+
+    }
+
+
+    initializeMenu();
+
 }
 
 
-/* ============================================================
-   RENDER
-   ============================================================ */
+// ==========================================
+// Load Notifications
+// ==========================================
+
+async function loadNotifications() {
+
+    if (state.loading) {
+        return;
+    }
+
+    state.loading =
+        true;
+
+    state.error =
+        false;
+
+    showLoading();
+
+    try {
+
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } =
+            await supabase.auth.getUser();
+
+        if (
+            userError ||
+            !user
+        ) {
+
+            throw new Error(
+                "Utilisateur non connecté"
+            );
+
+        }
+
+
+        state.notifications =
+            [];
+
+
+        let page = 1;
+
+
+        while (
+            state.notifications.length <
+            MAX_NOTIFICATIONS
+        ) {
+
+            const batch =
+                await getNotifications({
+                    page,
+                    limit: PAGE_SIZE
+                });
+
+
+            if (
+                !Array.isArray(batch) ||
+                batch.length === 0
+            ) {
+
+                break;
+
+            }
+
+
+            state.notifications.push(
+                ...batch
+            );
+
+
+            if (
+                batch.length <
+                PAGE_SIZE
+            ) {
+
+                break;
+
+            }
+
+
+            page++;
+
+        }
+
+
+        state.notifications =
+            deduplicateNotifications(
+                state.notifications
+            );
+
+
+        await loadActors();
+
+
+        renderNotifications();
+
+
+        await updateCounters();
+
+
+        hideError();
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement notifications :",
+            error
+        );
+
+        state.error =
+            true;
+
+        showError();
+
+    } finally {
+
+        state.loading =
+            false;
+
+        hideLoading();
+
+    }
+
+}
+
+
+// ==========================================
+// Load Actors
+// ==========================================
+
+async function loadActors() {
+
+    const actorIds =
+        [
+            ...new Set(
+                state.notifications
+                    .map(
+                        notification =>
+                            notification.actor_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    await Promise.all(
+        actorIds.map(
+            async actorId => {
+
+                if (
+                    state.actors.has(
+                        actorId
+                    )
+                ) {
+
+                    return;
+
+                }
+
+                try {
+
+                    const profile =
+                        await getProfileById(
+                            actorId
+                        );
+
+                    state.actors.set(
+                        actorId,
+                        profile
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Erreur récupération acteur :",
+                        error
+                    );
+
+                    state.actors.set(
+                        actorId,
+                        null
+                    );
+
+                }
+
+            }
+        )
+    );
+
+}
+
+
+// ==========================================
+// Render
+// ==========================================
 
 function renderNotifications() {
 
-    if (!DOM.list) {
+    if (!elements.list) {
         return;
     }
 
@@ -668,32 +1021,23 @@ function renderNotifications() {
         getFilteredNotifications();
 
 
-    /*
-     * Ne pas supprimer le skeleton
-     * pendant le chargement initial.
-     */
+    elements.list.innerHTML = "";
+
+
     if (
-        state.loading &&
-        state.notifications.length === 0
+        filtered.length === 0
     ) {
-        return;
-    }
 
-
-    DOM.list.innerHTML = "";
-
-
-    if (!filtered.length) {
-
-        showEmptyState();
+        showEmpty();
 
         updateMarkAllButton();
 
         return;
+
     }
 
 
-    hideEmptyState();
+    hideEmpty();
 
 
     const fragment =
@@ -703,38 +1047,97 @@ function renderNotifications() {
     filtered.forEach(
         notification => {
 
-            const element =
+            fragment.appendChild(
                 createNotificationElement(
                     notification
-                );
-
-
-            fragment.appendChild(
-                element
+                )
             );
+
         }
     );
 
 
-    DOM.list.appendChild(
+    elements.list.appendChild(
         fragment
     );
 
 
     updateMarkAllButton();
+
 }
 
 
-/* ============================================================
-   CREATE NOTIFICATION
-   ============================================================ */
+// ==========================================
+// Filter Notifications
+// ==========================================
+
+function getFilteredNotifications() {
+
+    switch (
+        state.currentFilter
+    ) {
+
+        case "unread":
+
+            return state.notifications.filter(
+                notification =>
+                    !notification.is_read
+            );
+
+
+        case "mentions":
+
+            return state.notifications.filter(
+                notification =>
+                    isMentionNotification(
+                        notification
+                    )
+            );
+
+
+        case "activity":
+
+            return state.notifications.filter(
+                notification =>
+                    isActivityNotification(
+                        notification
+                    )
+            );
+
+
+        case "netview":
+
+            return state.notifications.filter(
+                notification =>
+                    isNetViewNotification(
+                        notification
+                    )
+            );
+
+
+        case "all":
+
+        default:
+
+            return state.notifications;
+
+    }
+
+}
+
+
+// ==========================================
+// Notification Element
+// ==========================================
 
 function createNotificationElement(
     notification
 ) {
 
     const article =
-        document.createElement("article");
+        document.createElement(
+            "article"
+        );
 
 
     const unread =
@@ -742,134 +1145,55 @@ function createNotificationElement(
 
 
     article.className =
-        "notification-item";
-
-
-    if (unread) {
-
-        article.classList.add(
-            "is-unread"
+        "notification-item" +
+        (
+            unread
+                ? " is-unread"
+                : ""
         );
-    }
 
 
     article.dataset.notificationId =
         notification.id;
 
 
-    article.dataset.type =
-        notification.type;
-
-
     article.setAttribute(
-        "role",
-        "article"
+        "data-read",
+        String(
+            notification.is_read
+        )
     );
 
 
-    /*
-     * Avatar / image
-     */
-    const media =
-        document.createElement("div");
-
-    media.className =
-        "notification-media";
+    const actor =
+        notification.actor_id
+            ? state.actors.get(
+                notification.actor_id
+            )
+            : null;
 
 
-    const image =
-        document.createElement("img");
-
-
-    const imageURL =
-        getNotificationImage(
-            notification
+    const actorName =
+        getActorName(
+            notification,
+            actor
         );
 
 
-    image.src =
-        imageURL ||
-        getDefaultNotificationImage(
-            notification.type
+    const avatar =
+        getNotificationAvatar(
+            notification,
+            actor
         );
 
 
-    image.alt =
-        "";
-
-
-    image.loading =
-        "lazy";
-
-
-    image.className =
-        "notification-image";
-
-
-    image.addEventListener(
-        "error",
-        () => {
-
-            image.src =
-                getDefaultNotificationImage(
-                    notification.type
-                );
-        },
-        {
-            once: true
-        }
-    );
-
-
-    media.appendChild(
-        image
-    );
-
-
-    /*
-     * Icon type
-     */
     const icon =
-        document.createElement("span");
-
-
-    icon.className =
-        `notification-type-icon ${getTypeClass(
+        getNotificationIcon(
             notification.type
-        )}`;
-
-
-    icon.innerHTML =
-        `<i class="${getTypeIcon(
-            notification.type
-        )}" aria-hidden="true"></i>`;
-
-
-    media.appendChild(
-        icon
-    );
-
-
-    /*
-     * Content
-     */
-    const content =
-        document.createElement("div");
-
-
-    content.className =
-        "notification-content";
+        );
 
 
     const title =
-        document.createElement("h2");
-
-
-    title.className =
-        "notification-title";
-
-
-    title.textContent =
         notification.title ||
         getDefaultTitle(
             notification.type
@@ -877,445 +1201,305 @@ function createNotificationElement(
 
 
     const message =
-        document.createElement("p");
-
-
-    message.className =
-        "notification-message";
-
-
-    message.textContent =
         notification.message ||
         "";
 
 
-    const footer =
-        document.createElement("div");
-
-
-    footer.className =
-        "notification-meta";
-
-
     const time =
-        document.createElement("time");
-
-
-    time.className =
-        "notification-time";
-
-
-    time.dateTime =
-        notification.created_at;
-
-
-    time.textContent =
-        formatRelativeDate(
+        formatRelativeTime(
             notification.created_at
         );
 
 
-    footer.appendChild(
-        time
-    );
+    const image =
+        notification.image_url ||
+        null;
 
 
-    if (
-        notification.priority >
-        0
-    ) {
+    article.innerHTML = `
 
-        const priority =
-            document.createElement(
-                "span"
-            );
+        <div
+            class="notification-item-indicator"
+            aria-hidden="true"
+        ></div>
 
 
-        priority.className =
-            "notification-priority";
+        <div
+            class="notification-item-avatar-wrapper"
+        >
+
+            <img
+                class="notification-item-avatar"
+                src="${escapeAttribute(avatar)}"
+                alt="${escapeAttribute(actorName)}"
+                loading="lazy"
+                onerror="this.src='${escapeAttribute(DEFAULT_AVATAR)}'"
+            >
+
+            <span
+                class="notification-type-icon notification-type-${escapeAttribute(
+                    normalizeType(notification.type)
+                )}"
+                aria-hidden="true"
+            >
+
+                <i
+                    class="${escapeAttribute(icon)}"
+                ></i>
+
+            </span>
+
+        </div>
 
 
-        priority.innerHTML =
-            `<i class="fa-solid fa-star"></i> Important`;
+        <div
+            class="notification-item-content"
+        >
+
+            <div
+                class="notification-item-title"
+            >
+
+                ${escapeHTML(title)}
+
+            </div>
 
 
-        footer.appendChild(
-            priority
-        );
-    }
+            <div
+                class="notification-item-message"
+            >
+
+                ${escapeHTML(message)}
+
+            </div>
 
 
-    content.appendChild(
-        title
-    );
+            <time
+                class="notification-item-time"
+                datetime="${escapeAttribute(
+                    notification.created_at || ""
+                )}"
+            >
 
-    content.appendChild(
-        message
-    );
+                ${escapeHTML(time)}
 
-    content.appendChild(
-        footer
-    );
+            </time>
 
-
-    /*
-     * Actions
-     */
-    const actions =
-        document.createElement("div");
+        </div>
 
 
-    actions.className =
-        "notification-actions";
+        ${
+            image
+                ? `
+                    <div
+                        class="notification-item-thumbnail"
+                    >
 
+                        <img
+                            src="${escapeAttribute(image)}"
+                            alt=""
+                            loading="lazy"
+                            onerror="this.parentElement.remove()"
+                        >
 
-    if (unread) {
-
-        const unreadDot =
-            document.createElement(
-                "span"
-            );
-
-
-        unreadDot.className =
-            "notification-unread-dot";
-
-
-        unreadDot.title =
-            "Non lue";
-
-
-        unreadDot.setAttribute(
-            "aria-label",
-            "Notification non lue"
-        );
-
-
-        actions.appendChild(
-            unreadDot
-        );
-    }
-
-
-    const menuButton =
-        document.createElement("button");
-
-
-    menuButton.type =
-        "button";
-
-
-    menuButton.className =
-        "notification-menu-button";
-
-
-    menuButton.setAttribute(
-        "aria-label",
-        "Options de notification"
-    );
-
-
-    menuButton.innerHTML =
-        `<i class="fa-solid fa-ellipsis"></i>`;
-
-
-    menuButton.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            toggleNotificationMenu(
-                article,
-                notification
-            );
+                    </div>
+                `
+                : ""
         }
-    );
 
 
-    actions.appendChild(
-        menuButton
-    );
+        <div
+            class="notification-item-actions"
+        >
 
+            ${
+                unread
+                    ? `
+                        <button
+                            type="button"
+                            class="notification-action-button mark-read-button"
+                            data-action="read"
+                            aria-label="Marquer comme lu"
+                            title="Marquer comme lu"
+                        >
 
-    article.appendChild(
-        media
-    );
+                            <i
+                                class="fa-solid fa-check"
+                                aria-hidden="true"
+                            ></i>
 
-    article.appendChild(
-        content
-    );
+                        </button>
+                    `
+                    : `
+                        <span
+                            class="notification-read-state"
+                            title="Lu"
+                            aria-label="Notification lue"
+                        >
 
-    article.appendChild(
-        actions
-    );
+                            <i
+                                class="fa-solid fa-check-double"
+                                aria-hidden="true"
+                            ></i>
 
-
-    /*
-     * Click notification
-     */
-    article.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target.closest(
-                    ".notification-menu-button"
-                )
-            ) {
-                return;
+                        </span>
+                    `
             }
 
+        </div>
 
-            handleNotificationClick(
-                notification
-            );
-        }
-    );
+    `;
 
 
     return article;
+
 }
 
 
-/* ============================================================
-   NOTIFICATION CLICK
-   ============================================================ */
+// ==========================================
+// Notification Click
+// ==========================================
 
 async function handleNotificationClick(
-    notification
+    event
 ) {
+
+    const actionButton =
+        event.target.closest(
+            "[data-action]"
+        );
+
+
+    if (actionButton) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        const article =
+            actionButton.closest(
+                ".notification-item"
+            );
+
+
+        if (!article) {
+            return;
+        }
+
+
+        const notificationId =
+            article.dataset.notificationId;
+
+
+        if (
+            actionButton.dataset.action ===
+            "read"
+        ) {
+
+            await markAsRead(
+                notificationId
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    const article =
+        event.target.closest(
+            ".notification-item"
+        );
+
+
+    if (!article) {
+        return;
+    }
+
+
+    const notificationId =
+        article.dataset.notificationId;
+
+
+    const notification =
+        state.notifications.find(
+            item =>
+                item.id ===
+                notificationId
+        );
+
+
+    if (!notification) {
+        return;
+    }
+
 
     if (
         !notification.is_read
     ) {
 
         await markAsRead(
-            notification.id,
+            notificationId,
             false
         );
+
     }
 
 
-    const url =
-        resolveNotificationURL(
-            notification
-        );
-
-
-    if (url) {
-
-        window.location.href =
-            url;
-    }
-}
-
-
-/* ============================================================
-   RESOLVE URL
-   ============================================================ */
-
-function resolveNotificationURL(
-    notification
-) {
-
-    /*
-     * action_url prioritaire.
-     */
     if (
         notification.action_url
     ) {
 
-        return sanitizeInternalURL(
+        navigateToAction(
             notification.action_url
         );
+
     }
 
-
-    const entityType =
-        notification.entity_type;
-
-
-    const entityId =
-        notification.entity_id;
-
-
-    if (
-        !entityType ||
-        !entityId
-    ) {
-        return null;
-    }
-
-
-    switch (entityType) {
-
-        case "video":
-
-            return `player.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "short":
-
-            return `shorts.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "channel":
-
-            return `channel.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "live":
-
-            return `live.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "product":
-
-            return `product.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "conversation":
-
-            return `messages.html?id=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "message":
-
-            return `messages.html?message=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        case "order":
-
-            return `checkout.html?order=${encodeURIComponent(
-                entityId
-            )}`;
-
-
-        default:
-
-            return null;
-    }
 }
 
 
-/* ============================================================
-   SANITIZE URL
-   ============================================================ */
-
-function sanitizeInternalURL(
-    url
-) {
-
-    if (!url) {
-        return null;
-    }
-
-
-    try {
-
-        const parsed =
-            new URL(
-                url,
-                window.location.origin
-            );
-
-
-        /*
-         * Autorise uniquement les URLs
-         * du même domaine.
-         */
-        if (
-            parsed.origin !==
-            window.location.origin
-        ) {
-            return null;
-        }
-
-
-        return (
-            parsed.pathname +
-            parsed.search +
-            parsed.hash
-        );
-
-    } catch {
-
-        /*
-         * Pour les chemins relatifs simples.
-         */
-        if (
-            url.startsWith("/")
-        ) {
-            return url;
-        }
-
-
-        if (
-            url.endsWith(".html") ||
-            url.includes(".html?")
-        ) {
-            return url;
-        }
-
-
-        return null;
-    }
-}
-
-
-/* ============================================================
-   MARK AS READ
-   ============================================================ */
+// ==========================================
+// Mark One As Read
+// ==========================================
 
 async function markAsRead(
     notificationId,
-    rerender = true
+    showToast = true
 ) {
 
+    if (!notificationId) {
+        return;
+    }
+
+
+    const notification =
+        state.notifications.find(
+            item =>
+                item.id ===
+                notificationId
+        );
+
+
     if (
-        !state.user ||
-        !notificationId
+        !notification ||
+        notification.is_read
     ) {
-        return false;
+
+        return;
+
     }
 
 
     try {
 
-        const now =
-            new Date().toISOString();
-
-
         const {
             error
-        } = await supabase
-            .from("notifications")
-            .update({
-                is_read: true,
-                read_at: now
-            })
-            .eq(
-                "id",
+        } =
+            await markNotificationAsRead(
                 notificationId
-            )
-            .eq(
-                "user_id",
-                state.user.id
             );
 
 
@@ -1324,61 +1508,50 @@ async function markAsRead(
         }
 
 
-        const notification =
-            state.notifications.find(
-                item =>
-                    item.id ===
-                    notificationId
+        notification.is_read =
+            true;
+
+        notification.read_at =
+            new Date().toISOString();
+
+
+        renderNotifications();
+
+
+        await updateCounters();
+
+
+        if (showToast) {
+
+            showToastMessage(
+                "Notification marquée comme lue."
             );
 
-
-        if (notification) {
-
-            notification.is_read =
-                true;
-
-            notification.read_at =
-                now;
         }
-
-
-        if (rerender) {
-
-            renderNotifications();
-
-            await updateCounters();
-        }
-
-
-        return true;
 
     } catch (error) {
 
         console.error(
-            "[NetView Notifications] Mark read error:",
+            "Erreur marquage notification :",
             error
         );
 
-        showToast(
+
+        showToastMessage(
             "Impossible de marquer la notification comme lue.",
             "error"
         );
 
-        return false;
     }
+
 }
 
 
-/* ============================================================
-   MARK ALL AS READ
-   ============================================================ */
+// ==========================================
+// Mark All As Read
+// ==========================================
 
 async function markAllAsRead() {
-
-    if (!state.user) {
-        return;
-    }
-
 
     const unreadCount =
         state.notifications.filter(
@@ -1387,44 +1560,33 @@ async function markAllAsRead() {
         ).length;
 
 
-    if (!unreadCount) {
+    if (
+        unreadCount === 0
+    ) {
+
         return;
+
     }
 
 
-    if (DOM.markAllButton) {
+    if (elements.markAllButton) {
 
-        DOM.markAllButton.disabled =
+        elements.markAllButton.disabled =
             true;
 
-        DOM.markAllButton.classList.add(
-            "is-loading"
+        elements.markAllButton.classList.add(
+            "loading"
         );
+
     }
 
 
     try {
 
-        const now =
-            new Date().toISOString();
-
-
         const {
             error
-        } = await supabase
-            .from("notifications")
-            .update({
-                is_read: true,
-                read_at: now
-            })
-            .eq(
-                "user_id",
-                state.user.id
-            )
-            .eq(
-                "is_read",
-                false
-            );
+        } =
+            await markAllNotificationsAsRead();
 
 
         if (error) {
@@ -1432,58 +1594,72 @@ async function markAllAsRead() {
         }
 
 
+        const now =
+            new Date().toISOString();
+
+
         state.notifications.forEach(
             notification => {
 
-                notification.is_read =
-                    true;
+                if (
+                    !notification.is_read
+                ) {
 
-                notification.read_at =
-                    now;
+                    notification.is_read =
+                        true;
+
+                    notification.read_at =
+                        now;
+
+                }
+
             }
         );
 
 
         renderNotifications();
 
+
         await updateCounters();
 
 
-        showToast(
-            "Toutes les notifications sont maintenant lues.",
-            "success"
+        showToastMessage(
+            "Toutes les notifications sont maintenant lues."
         );
 
     } catch (error) {
 
         console.error(
-            "[NetView Notifications] Mark all read error:",
+            "Erreur marquage global :",
             error
         );
 
 
-        showToast(
+        showToastMessage(
             "Impossible de marquer toutes les notifications comme lues.",
             "error"
         );
 
     } finally {
 
-        if (DOM.markAllButton) {
+        if (elements.markAllButton) {
 
-            DOM.markAllButton.classList.remove(
-                "is-loading"
+            elements.markAllButton.classList.remove(
+                "loading"
             );
 
             updateMarkAllButton();
+
         }
+
     }
+
 }
 
 
-/* ============================================================
-   COUNTERS
-   ============================================================ */
+// ==========================================
+// Counters
+// ==========================================
 
 async function updateCounters() {
 
@@ -1498,14 +1674,24 @@ async function updateCounters() {
         ).length;
 
 
-    updateCounter(
-        DOM.allCount,
+    updateCountElement(
+        elements.allCount,
         total
     );
 
 
-    updateCounter(
-        DOM.unreadCount,
+    updateCountElement(
+        elements.unreadCount,
+        unread
+    );
+
+
+    updateHeaderNotificationBadge(
+        unread
+    );
+
+
+    updateSidebarNotificationBadge(
         unread
     );
 
@@ -1513,21 +1699,49 @@ async function updateCounters() {
     updateMarkAllButton();
 
 
-    /*
-     * Badge global éventuellement utilisé
-     * par le header/sidebar.
-     */
-    updateGlobalNotificationBadges(
-        unread
-    );
+    // Synchronisation avec Supabase
+    // lorsque la liste locale n'est pas encore complète.
+    try {
+
+        const remoteUnread =
+            await getUnreadNotificationCount();
+
+
+        if (
+            Number.isFinite(
+                remoteUnread
+            ) &&
+            remoteUnread > unread
+        ) {
+
+            updateHeaderNotificationBadge(
+                remoteUnread
+            );
+
+            updateSidebarNotificationBadge(
+                remoteUnread
+            );
+
+            updateCountElement(
+                elements.unreadCount,
+                remoteUnread
+            );
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Impossible de synchroniser le compteur distant :",
+            error
+        );
+
+    }
+
 }
 
 
-/* ============================================================
-   COUNTER UI
-   ============================================================ */
-
-function updateCounter(
+function updateCountElement(
     element,
     count
 ) {
@@ -1543,16 +1757,63 @@ function updateCounter(
 
     element.hidden =
         count <= 0;
+
 }
 
 
-/* ============================================================
-   MARK ALL BUTTON STATE
-   ============================================================ */
+function updateHeaderNotificationBadge(
+    count
+) {
+
+    const badge =
+        document.getElementById(
+            "notificationHeaderBadge"
+        );
+
+
+    if (!badge) {
+        return;
+    }
+
+
+    badge.textContent =
+        formatCount(count);
+
+
+    badge.hidden =
+        count <= 0;
+
+}
+
+
+function updateSidebarNotificationBadge(
+    count
+) {
+
+    const badge =
+        document.getElementById(
+            "sidebarNotificationBadge"
+        );
+
+
+    if (!badge) {
+        return;
+    }
+
+
+    badge.textContent =
+        formatCount(count);
+
+
+    badge.hidden =
+        count <= 0;
+
+}
+
 
 function updateMarkAllButton() {
 
-    if (!DOM.markAllButton) {
+    if (!elements.markAllButton) {
         return;
     }
 
@@ -1564,1322 +1825,1085 @@ function updateMarkAllButton() {
         );
 
 
-    DOM.markAllButton.disabled =
+    elements.markAllButton.disabled =
         !unread;
+
 }
 
 
-/* ============================================================
-   GLOBAL NOTIFICATION BADGES
-   ============================================================ */
+// ==========================================
+// Realtime
+// ==========================================
 
-function updateGlobalNotificationBadges(
-    unreadCount
-) {
+function initializeRealtime() {
 
-    const badges =
-        document.querySelectorAll(
-            "[data-notification-count], .notification-badge, #notificationBadge"
-        );
-
-
-    badges.forEach(
-        badge => {
-
-            badge.textContent =
-                unreadCount > 99
-                    ? "99+"
-                    : String(unreadCount);
-
-
-            badge.hidden =
-                unreadCount <= 0;
-        }
-    );
-}
-
-
-/* ============================================================
-   EMPTY STATE
-   ============================================================ */
-
-function showEmptyState() {
-
-    if (!DOM.empty) {
-        createFallbackEmptyState();
+    if (state.realtimeChannel) {
         return;
     }
-
-
-    DOM.empty.hidden =
-        false;
-
-
-    DOM.empty.innerHTML = `
-        <div class="notifications-empty-state">
-            <div class="notifications-empty-icon">
-                <i class="fa-regular fa-bell-slash"></i>
-            </div>
-
-            <h2>Aucune notification</h2>
-
-            <p>
-                ${
-                    state.activeFilter === "all"
-                        ? "Vous n'avez aucune notification pour le moment."
-                        : "Aucune notification ne correspond à ce filtre."
-                }
-            </p>
-        </div>
-    `;
-}
-
-
-/* ============================================================
-   FALLBACK EMPTY STATE
-   ============================================================ */
-
-function createFallbackEmptyState() {
-
-    if (!DOM.list) {
-        return;
-    }
-
-
-    DOM.list.innerHTML = `
-        <div class="notifications-empty-state">
-            <div class="notifications-empty-icon">
-                <i class="fa-regular fa-bell-slash"></i>
-            </div>
-
-            <h2>Aucune notification</h2>
-
-            <p>
-                ${
-                    state.activeFilter === "all"
-                        ? "Vous n'avez aucune notification pour le moment."
-                        : "Aucune notification ne correspond à ce filtre."
-                }
-            </p>
-        </div>
-    `;
-}
-
-
-/* ============================================================
-   HIDE EMPTY
-   ============================================================ */
-
-function hideEmptyState() {
-
-    if (!DOM.empty) {
-        return;
-    }
-
-
-    DOM.empty.hidden =
-        true;
-
-    DOM.empty.innerHTML =
-        "";
-}
-
-
-/* ============================================================
-   ERROR
-   ============================================================ */
-
-function showError(
-    message
-) {
-
-    if (DOM.loading) {
-
-        DOM.loading.hidden =
-            true;
-    }
-
-
-    if (DOM.error) {
-
-        DOM.error.hidden =
-            false;
-
-
-        DOM.error.innerHTML = `
-            <div class="notifications-error-state">
-                <div class="notifications-error-icon">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-
-                <h2>Une erreur est survenue</h2>
-
-                <p>${escapeHTML(message)}</p>
-
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    id="notifications-retry"
-                >
-                    <i class="fa-solid fa-rotate-right"></i>
-                    Réessayer
-                </button>
-            </div>
-        `;
-
-
-        const retry =
-            document.getElementById(
-                "notifications-retry"
-            );
-
-
-        retry?.addEventListener(
-            "click",
-            () => {
-
-                clearError();
-
-                loadNotifications(true);
-            }
-        );
-
-
-        return;
-    }
-
-
-    if (DOM.list) {
-
-        DOM.list.innerHTML = `
-            <div class="notifications-error-state">
-                <div class="notifications-error-icon">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-
-                <h2>Une erreur est survenue</h2>
-
-                <p>${escapeHTML(message)}</p>
-
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    id="notifications-retry-fallback"
-                >
-                    <i class="fa-solid fa-rotate-right"></i>
-                    Réessayer
-                </button>
-            </div>
-        `;
-
-
-        document
-            .getElementById(
-                "notifications-retry-fallback"
-            )
-            ?.addEventListener(
-                "click",
-                () => loadNotifications(true)
-            );
-    }
-}
-
-
-/* ============================================================
-   CLEAR ERROR
-   ============================================================ */
-
-function clearError() {
-
-    if (!DOM.error) {
-        return;
-    }
-
-
-    DOM.error.hidden =
-        true;
-
-    DOM.error.innerHTML =
-        "";
-}
-
-
-/* ============================================================
-   LOADING
-   ============================================================ */
-
-function showLoading() {
-
-    if (!DOM.loading) {
-        return;
-    }
-
-
-    DOM.loading.hidden =
-        false;
-}
-
-
-function hideLoading() {
-
-    if (!DOM.loading) {
-        return;
-    }
-
-
-    DOM.loading.hidden =
-        true;
-}
-
-
-/* ============================================================
-   REALTIME
-   ============================================================ */
-
-function subscribeToRealtime() {
-
-    if (!state.user) {
-        return;
-    }
-
-
-    unsubscribeFromRealtime();
 
 
     state.realtimeChannel =
-        supabase
-            .channel(
-                `netview-notifications-${state.user.id}`
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "notifications",
-                    filter:
-                        `user_id=eq.${state.user.id}`
-                },
-                payload => {
+        subscribeToNotifications(
+            handleRealtimeNotification
+        );
 
-                    queueRealtimeRefresh(
-                        "insert",
-                        payload
-                    );
-                }
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "UPDATE",
-                    schema: "public",
-                    table: "notifications",
-                    filter:
-                        `user_id=eq.${state.user.id}`
-                },
-                payload => {
 
-                    queueRealtimeRefresh(
-                        "update",
-                        payload
-                    );
-                }
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "DELETE",
-                    schema: "public",
-                    table: "notifications",
-                    filter:
-                        `user_id=eq.${state.user.id}`
-                },
-                payload => {
+    setupRealtimeStatus();
 
-                    queueRealtimeRefresh(
-                        "delete",
-                        payload
-                    );
-                }
-            )
-            .subscribe(
-                status => {
-
-                    if (
-                        status ===
-                        "CHANNEL_ERROR"
-                    ) {
-
-                        console.warn(
-                            "[NetView Notifications] Realtime channel error."
-                        );
-                    }
-                }
-            );
 }
 
 
-/* ============================================================
-   REALTIME REFRESH
-   ============================================================ */
+// ==========================================
+// Realtime Handler
+// ==========================================
 
-function queueRealtimeRefresh(
-    event,
+async function handleRealtimeNotification(
     payload
 ) {
 
-    clearTimeout(
-        state.realtimeTimer
-    );
-
-
-    state.realtimeTimer =
-        setTimeout(
-            async () => {
-
-                try {
-
-                    /*
-                     * Pour UPDATE/DELETE, on peut
-                     * synchroniser proprement la page.
-                     */
-                    await loadNotifications(true);
-
-                } catch (error) {
-
-                    console.error(
-                        "[NetView Notifications] Realtime refresh error:",
-                        error
-                    );
-                }
-
-            },
-            CONFIG.REALTIME_DELAY
-        );
-}
-
-
-/* ============================================================
-   UNSUBSCRIBE REALTIME
-   ============================================================ */
-
-async function unsubscribeFromRealtime() {
-
-    if (
-        !state.realtimeChannel
-    ) {
+    if (!payload) {
         return;
     }
+
+
+    const eventType =
+        payload.eventType;
+
+
+    const notification =
+        payload.new;
+
+
+    const oldNotification =
+        payload.old;
 
 
     try {
 
-        await supabase.removeChannel(
-            state.realtimeChannel
+        const {
+            data: {
+                user
+            }
+        } =
+            await supabase.auth.getUser();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        if (
+            eventType ===
+            "INSERT"
+        ) {
+
+            if (
+                !notification ||
+                notification.user_id !==
+                    user.id
+            ) {
+
+                return;
+
+            }
+
+
+            const exists =
+                state.notifications.some(
+                    item =>
+                        item.id ===
+                        notification.id
+                );
+
+
+            if (exists) {
+                return;
+            }
+
+
+            state.notifications.unshift(
+                notification
+            );
+
+
+            state.notifications =
+                deduplicateNotifications(
+                    state.notifications
+                ).slice(
+                    0,
+                    MAX_NOTIFICATIONS
+                );
+
+
+            if (
+                notification.actor_id
+            ) {
+
+                try {
+
+                    const profile =
+                        await getProfileById(
+                            notification.actor_id
+                        );
+
+                    state.actors.set(
+                        notification.actor_id,
+                        profile
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Erreur chargement acteur Realtime :",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            renderNotifications();
+
+            await updateCounters();
+
+
+            showRealtimeToast(
+                notification
+            );
+
+
+            return;
+
+        }
+
+
+        if (
+            eventType ===
+            "UPDATE"
+        ) {
+
+            if (
+                !notification ||
+                notification.user_id !==
+                    user.id
+            ) {
+
+                return;
+
+            }
+
+
+            const index =
+                state.notifications.findIndex(
+                    item =>
+                        item.id ===
+                        notification.id
+                );
+
+
+            if (index === -1) {
+
+                state.notifications.unshift(
+                    notification
+                );
+
+            } else {
+
+                state.notifications[
+                    index
+                ] =
+                    {
+                        ...state.notifications[
+                            index
+                        ],
+                        ...notification
+                    };
+
+            }
+
+
+            renderNotifications();
+
+            await updateCounters();
+
+
+            return;
+
+        }
+
+
+        if (
+            eventType ===
+            "DELETE"
+        ) {
+
+            const id =
+                oldNotification?.id;
+
+
+            if (!id) {
+                return;
+            }
+
+
+            state.notifications =
+                state.notifications.filter(
+                    item =>
+                        item.id !== id
+                );
+
+
+            renderNotifications();
+
+            await updateCounters();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Erreur notification Realtime :",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Realtime Status
+// ==========================================
+
+function setupRealtimeStatus() {
+
+    if (!state.realtimeChannel) {
+        return;
+    }
+
+
+    // Supabase channel exposes on events through
+    // the underlying realtime connection.
+    //
+    // Re-subscription is handled defensively
+    // when the channel is closed or errored.
+
+    try {
+
+        state.realtimeChannel.on(
+            "system",
+            {},
+            payload => {
+
+                const status =
+                    payload?.status ||
+                    payload?.message ||
+                    "";
+
+
+                if (
+                    status ===
+                        "CHANNEL_ERROR" ||
+                    status ===
+                        "TIMED_OUT" ||
+                    status ===
+                        "CLOSED"
+                ) {
+
+                    scheduleRealtimeReconnect();
+
+                }
+
+            }
         );
 
     } catch (error) {
 
         console.warn(
-            "[NetView Notifications] Realtime unsubscribe error:",
+            "Realtime status listener indisponible :",
             error
         );
+
+    }
+
+}
+
+
+// ==========================================
+// Realtime Reconnect
+// ==========================================
+
+function scheduleRealtimeReconnect() {
+
+    if (
+        state.realtimeReconnectTimer
+    ) {
+
+        return;
+
+    }
+
+
+    state.realtimeReconnectTimer =
+        setTimeout(
+            async () => {
+
+                state.realtimeReconnectTimer =
+                    null;
+
+                await reconnectRealtime();
+
+            },
+            3000
+        );
+
+}
+
+
+async function reconnectRealtime() {
+
+    try {
+
+        if (
+            state.realtimeChannel
+        ) {
+
+            await unsubscribe(
+                state.realtimeChannel
+            );
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Erreur suppression ancien channel :",
+            error
+        );
+
     }
 
 
     state.realtimeChannel =
         null;
+
+
+    initializeRealtime();
+
 }
 
 
-/* ============================================================
-   PAGE VISIBILITY
-   ============================================================ */
+// ==========================================
+// Realtime Toast
+// ==========================================
 
-function handleVisibilityChange() {
-
-    if (
-        document.visibilityState ===
-        "visible"
-    ) {
-
-        if (
-            state.initialized
-        ) {
-
-            loadNotifications(true);
-        }
-
-    } else {
-
-        /*
-         * On conserve Realtime actif.
-         * Supabase gère la connexion.
-         */
-    }
-}
-
-
-/* ============================================================
-   INFINITE SCROLL
-   ============================================================ */
-
-function handleScroll() {
-
-    if (
-        state.loading ||
-        state.loadingMore ||
-        !state.hasMore
-    ) {
-        return;
-    }
-
-
-    const scrollPosition =
-        window.innerHeight +
-        window.scrollY;
-
-
-    const threshold =
-        document.documentElement
-            .scrollHeight -
-        700;
-
-
-    if (
-        scrollPosition >=
-        threshold
-    ) {
-
-        loadMoreNotifications();
-    }
-}
-
-
-/* ============================================================
-   NOTIFICATION MENU
-   ============================================================ */
-
-function toggleNotificationMenu(
-    article,
+function showRealtimeToast(
     notification
 ) {
 
-    const existing =
-        article.querySelector(
-            ".notification-context-menu"
-        );
-
-
-    if (existing) {
-
-        existing.remove();
-
+    if (!notification) {
         return;
     }
 
 
-    /*
-     * Fermer les autres menus.
-     */
-    document
-        .querySelectorAll(
-            ".notification-context-menu"
+    const title =
+        notification.title ||
+        "Nouvelle notification";
+
+
+    showToastMessage(
+        title
+    );
+
+}
+
+
+// ==========================================
+// Notification Categories
+// ==========================================
+
+function isMentionNotification(
+    notification
+) {
+
+    const type =
+        normalizeType(
+            notification.type
+        );
+
+
+    return [
+        "mention",
+        "comment_mention",
+        "message_mention",
+        "live_mention",
+        "post_mention",
+        "short_mention",
+        "video_mention"
+    ].includes(
+        type
+    );
+
+}
+
+
+function isNetViewNotification(
+    notification
+) {
+
+    const type =
+        normalizeType(
+            notification.type
+        );
+
+
+    return [
+        "system",
+        "netview",
+        "announcement",
+        "security",
+        "account",
+        "moderation",
+        "copyright",
+        "payment",
+        "billing",
+        "maintenance",
+        "warning"
+    ].includes(
+        type
+    );
+
+}
+
+
+function isActivityNotification(
+    notification
+) {
+
+    if (
+        isMentionNotification(
+            notification
         )
-        .forEach(
-            menu => menu.remove()
-        );
-
-
-    const menu =
-        document.createElement("div");
-
-
-    menu.className =
-        "notification-context-menu";
-
-
-    const readButton =
-        document.createElement("button");
-
-
-    readButton.type =
-        "button";
-
-
-    readButton.innerHTML =
-        notification.is_read
-            ? `<i class="fa-regular fa-envelope"></i> Marquer comme non lue`
-            : `<i class="fa-regular fa-envelope-open"></i> Marquer comme lue`;
-
-
-    readButton.addEventListener(
-        "click",
-        async event => {
-
-            event.stopPropagation();
-
-
-            if (
-                notification.is_read
-            ) {
-
-                await markAsUnread(
-                    notification.id
-                );
-
-            } else {
-
-                await markAsRead(
-                    notification.id
-                );
-            }
-
-
-            menu.remove();
-        }
-    );
-
-
-    menu.appendChild(
-        readButton
-    );
-
-
-    const deleteButton =
-        document.createElement("button");
-
-
-    deleteButton.type =
-        "button";
-
-
-    deleteButton.className =
-        "danger";
-
-
-    deleteButton.innerHTML =
-        `<i class="fa-regular fa-trash-can"></i> Supprimer`;
-
-
-    deleteButton.addEventListener(
-        "click",
-        async event => {
-
-            event.stopPropagation();
-
-
-            await deleteNotification(
-                notification.id
-            );
-
-
-            menu.remove();
-        }
-    );
-
-
-    menu.appendChild(
-        deleteButton
-    );
-
-
-    article.appendChild(
-        menu
-    );
-}
-
-
-/* ============================================================
-   MARK AS UNREAD
-   ============================================================ */
-
-async function markAsUnread(
-    notificationId
-) {
-
-    if (!state.user) {
-        return false;
-    }
-
-
-    try {
-
-        const {
-            error
-        } = await supabase
-            .from("notifications")
-            .update({
-                is_read: false,
-                read_at: null
-            })
-            .eq(
-                "id",
-                notificationId
-            )
-            .eq(
-                "user_id",
-                state.user.id
-            );
-
-
-        if (error) {
-            throw error;
-        }
-
-
-        const notification =
-            state.notifications.find(
-                item =>
-                    item.id ===
-                    notificationId
-            );
-
-
-        if (notification) {
-
-            notification.is_read =
-                false;
-
-            notification.read_at =
-                null;
-        }
-
-
-        renderNotifications();
-
-        await updateCounters();
-
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "[NetView Notifications] Mark unread error:",
-            error
-        );
-
-
-        showToast(
-            "Impossible de modifier cette notification.",
-            "error"
-        );
-
-
-        return false;
-    }
-}
-
-
-/* ============================================================
-   DELETE NOTIFICATION
-   ============================================================ */
-
-async function deleteNotification(
-    notificationId
-) {
-
-    if (!state.user) {
-        return false;
-    }
-
-
-    try {
-
-        const {
-            error
-        } = await supabase
-            .from("notifications")
-            .delete()
-            .eq(
-                "id",
-                notificationId
-            )
-            .eq(
-                "user_id",
-                state.user.id
-            );
-
-
-        if (error) {
-            throw error;
-        }
-
-
-        state.notifications =
-            state.notifications.filter(
-                notification =>
-                    notification.id !==
-                    notificationId
-            );
-
-
-        renderNotifications();
-
-        await updateCounters();
-
-
-        showToast(
-            "Notification supprimée.",
-            "success"
-        );
-
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "[NetView Notifications] Delete error:",
-            error
-        );
-
-
-        showToast(
-            "Impossible de supprimer cette notification.",
-            "error"
-        );
-
-
-        return false;
-    }
-}
-
-
-/* ============================================================
-   IMAGE
-   ============================================================ */
-
-function getNotificationImage(
-    notification
-) {
-
-    if (
-        notification.image_url
     ) {
-        return notification.image_url;
+
+        return false;
+
     }
 
 
     if (
-        notification.actor?.avatar_url
+        isNetViewNotification(
+            notification
+        )
     ) {
-        return notification.actor.avatar_url;
+
+        return false;
+
     }
 
 
-    return null;
+    const type =
+        normalizeType(
+            notification.type
+        );
+
+
+    return [
+        "like",
+        "video_like",
+        "short_like",
+        "comment_like",
+        "comment",
+        "reply",
+        "follow",
+        "subscribe",
+        "subscription",
+        "new_video",
+        "new_short",
+        "new_live",
+        "live_started",
+        "live",
+        "product",
+        "purchase",
+        "sale",
+        "message",
+        "friend",
+        "channel"
+    ].includes(
+        type
+    );
+
 }
 
 
-/* ============================================================
-   TYPE ICON
-   ============================================================ */
+// ==========================================
+// Notification Icons
+// ==========================================
 
-function getTypeIcon(
+function getNotificationIcon(
     type
 ) {
 
+    const normalized =
+        normalizeType(type);
+
+
     const icons = {
 
-        video_published:
-            "fa-solid fa-video",
-
-        video_liked:
-            "fa-solid fa-thumbs-up",
-
-        video_commented:
-            "fa-solid fa-comment",
-
-        comment_replied:
-            "fa-solid fa-reply",
-
-        comment_mentioned:
-            "fa-solid fa-at",
-
-        short_published:
-            "fa-solid fa-bolt",
-
-        short_liked:
+        like:
             "fa-solid fa-heart",
 
-        short_commented:
+        video_like:
+            "fa-solid fa-heart",
+
+        short_like:
+            "fa-solid fa-heart",
+
+        comment_like:
+            "fa-solid fa-heart",
+
+        comment:
             "fa-solid fa-comment",
 
-        live_started:
-            "fa-solid fa-tower-broadcast",
+        reply:
+            "fa-solid fa-reply",
 
-        live_scheduled:
-            "fa-regular fa-calendar",
-
-        live_ended:
-            "fa-solid fa-circle-stop",
-
-        live_mentioned:
+        mention:
             "fa-solid fa-at",
 
-        channel_subscribed:
+        comment_mention:
+            "fa-solid fa-at",
+
+        message_mention:
+            "fa-solid fa-at",
+
+        follow:
             "fa-solid fa-user-plus",
 
-        channel_milestone:
-            "fa-solid fa-chart-line",
+        subscribe:
+            "fa-solid fa-user-plus",
 
-        message_received:
-            "fa-solid fa-message",
+        subscription:
+            "fa-solid fa-user-plus",
 
-        message_mentioned:
-            "fa-solid fa-at",
+        new_video:
+            "fa-solid fa-video",
 
-        message_reaction:
-            "fa-solid fa-face-smile",
+        new_short:
+            "fa-solid fa-bolt",
 
-        product_purchased:
+        new_live:
+            "fa-solid fa-tower-broadcast",
+
+        live:
+            "fa-solid fa-tower-broadcast",
+
+        live_started:
+            "fa-solid fa-circle",
+
+        product:
             "fa-solid fa-bag-shopping",
 
-        product_sale:
+        purchase:
             "fa-solid fa-cart-shopping",
 
-        product_review:
-            "fa-solid fa-star",
+        sale:
+            "fa-solid fa-chart-line",
 
-        product_favorite:
-            "fa-regular fa-heart",
+        message:
+            "fa-solid fa-message",
 
-        payment_success:
-            "fa-solid fa-circle-check",
+        channel:
+            "fa-solid fa-tv",
 
-        payment_failed:
-            "fa-solid fa-circle-xmark",
+        system:
+            "fa-solid fa-circle-info",
 
-        refund:
-            "fa-solid fa-arrow-rotate-left",
-
-        payout:
-            "fa-solid fa-money-bill-transfer",
-
-        pro_subscription:
-            "fa-solid fa-crown",
-
-        pro_expiring:
-            "fa-solid fa-clock",
-
-        verification_approved:
-            "fa-solid fa-circle-check",
-
-        verification_rejected:
-            "fa-solid fa-circle-xmark",
-
-        security_login:
-            "fa-solid fa-shield-halved",
-
-        security_new_device:
-            "fa-solid fa-mobile-screen-button",
-
-        maintenance:
-            "fa-solid fa-screwdriver-wrench",
+        netview:
+            "fa-solid fa-circle-info",
 
         announcement:
             "fa-solid fa-bullhorn",
 
-        system:
-            "fa-solid fa-circle-info"
+        security:
+            "fa-solid fa-shield-halved",
+
+        account:
+            "fa-solid fa-user-gear",
+
+        moderation:
+            "fa-solid fa-shield",
+
+        copyright:
+            "fa-solid fa-copyright",
+
+        payment:
+            "fa-solid fa-credit-card",
+
+        billing:
+            "fa-solid fa-receipt",
+
+        maintenance:
+            "fa-solid fa-screwdriver-wrench",
+
+        warning:
+            "fa-solid fa-triangle-exclamation"
+
     };
 
 
     return (
-        icons[type] ||
+        icons[normalized] ||
         "fa-solid fa-bell"
     );
+
 }
 
 
-/* ============================================================
-   TYPE CLASS
-   ============================================================ */
-
-function getTypeClass(
-    type
-) {
-
-    if (
-        CONFIG.MENTION_TYPES.includes(
-            type
-        )
-    ) {
-        return "type-mention";
-    }
-
-
-    if (
-        CONFIG.ACTIVITY_TYPES.includes(
-            type
-        )
-    ) {
-        return "type-activity";
-    }
-
-
-    if (
-        CONFIG.NETVIEW_TYPES.includes(
-            type
-        )
-    ) {
-        return "type-netview";
-    }
-
-
-    if (
-        type.includes("payment") ||
-        type.includes("payout") ||
-        type.includes("product")
-    ) {
-        return "type-commerce";
-    }
-
-
-    if (
-        type.includes("security") ||
-        type.includes("verification")
-    ) {
-        return "type-security";
-    }
-
-
-    if (
-        type.includes("live")
-    ) {
-        return "type-live";
-    }
-
-
-    if (
-        type.includes("message")
-    ) {
-        return "type-message";
-    }
-
-
-    return "type-default";
-}
-
-
-/* ============================================================
-   DEFAULT IMAGE
-   ============================================================ */
-
-function getDefaultNotificationImage(
-    type
-) {
-
-    const base =
-        "NetView_icone.png";
-
-
-    return base;
-}
-
-
-/* ============================================================
-   DEFAULT TITLE
-   ============================================================ */
+// ==========================================
+// Default Titles
+// ==========================================
 
 function getDefaultTitle(
     type
 ) {
 
+    const normalized =
+        normalizeType(type);
+
+
     const titles = {
 
-        video_liked:
+        like:
+            "Nouvelle mention J'aime",
+
+        video_like:
             "Votre vidéo a reçu un J'aime",
 
-        video_commented:
-            "Nouveau commentaire",
-
-        comment_replied:
-            "Nouvelle réponse à votre commentaire",
-
-        comment_mentioned:
-            "Vous avez été mentionné",
-
-        short_liked:
+        short_like:
             "Votre Short a reçu un J'aime",
 
-        short_commented:
-            "Nouveau commentaire sur votre Short",
+        comment_like:
+            "Votre commentaire a reçu un J'aime",
 
-        live_started:
-            "Un live vient de commencer",
+        comment:
+            "Nouveau commentaire",
 
-        live_scheduled:
-            "Live programmé",
+        reply:
+            "Nouvelle réponse",
 
-        channel_subscribed:
+        mention:
+            "Vous avez été mentionné",
+
+        comment_mention:
+            "Vous avez été mentionné",
+
+        follow:
+            "Nouvel abonné",
+
+        subscribe:
             "Nouvel abonnement",
 
-        message_received:
-            "Nouveau message",
+        subscription:
+            "Nouvel abonnement",
 
-        message_mentioned:
-            "Vous avez été mentionné dans un message",
+        new_video:
+            "Nouvelle vidéo",
 
-        product_purchased:
+        new_short:
+            "Nouveau Short",
+
+        new_live:
+            "Nouveau live",
+
+        live_started:
+            "Live en cours",
+
+        product:
+            "Nouvelle activité produit",
+
+        purchase:
             "Achat confirmé",
 
-        product_sale:
+        sale:
             "Nouvelle vente",
 
-        product_review:
-            "Nouvel avis produit",
+        message:
+            "Nouveau message",
 
-        payment_success:
-            "Paiement confirmé",
+        system:
+            "Notification NetView",
 
-        payment_failed:
-            "Paiement échoué",
-
-        verification_approved:
-            "Vérification approuvée",
-
-        verification_rejected:
-            "Vérification refusée",
-
-        security_login:
-            "Nouvelle connexion",
-
-        security_new_device:
-            "Nouvel appareil détecté",
+        netview:
+            "Notification NetView",
 
         announcement:
             "Annonce NetView",
 
+        security:
+            "Alerte de sécurité",
+
+        account:
+            "Activité du compte",
+
+        moderation:
+            "Notification de modération",
+
+        copyright:
+            "Notification de droits d'auteur",
+
+        payment:
+            "Notification de paiement",
+
+        billing:
+            "Notification de facturation",
+
         maintenance:
             "Maintenance NetView",
 
-        system:
-            "Notification NetView"
+        warning:
+            "Avertissement NetView"
+
     };
 
 
     return (
-        titles[type] ||
-        "Notification NetView"
+        titles[normalized] ||
+        "Nouvelle notification"
     );
+
 }
 
 
-/* ============================================================
-   DATE
-   ============================================================ */
+// ==========================================
+// Actor
+// ==========================================
 
-function formatRelativeDate(
-    date
+function getActorName(
+    notification,
+    actor
 ) {
 
-    if (!date) {
-        return "";
+    if (actor) {
+
+        return (
+            actor.display_name ||
+            actor.username ||
+            "Utilisateur NetView"
+        );
+
     }
-
-
-    const timestamp =
-        new Date(date).getTime();
 
 
     if (
-        Number.isNaN(timestamp)
+        notification.metadata &&
+        typeof notification.metadata ===
+            "object"
     ) {
-        return "";
-    }
-
-
-    const now =
-        Date.now();
-
-
-    const difference =
-        Math.max(
-            0,
-            now - timestamp
-        );
-
-
-    const seconds =
-        Math.floor(
-            difference / 1000
-        );
-
-
-    if (seconds < 60) {
-
-        return "À l'instant";
-    }
-
-
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
-
-    if (minutes < 60) {
 
         return (
-            minutes === 1
-                ? "Il y a 1 minute"
-                : `Il y a ${minutes} minutes`
+            notification.metadata.actor_name ||
+            notification.metadata.username ||
+            "Utilisateur NetView"
         );
+
     }
 
 
-    const hours =
-        Math.floor(
-            minutes / 60
-        );
+    return "Utilisateur NetView";
+
+}
 
 
-    if (hours < 24) {
+function getNotificationAvatar(
+    notification,
+    actor
+) {
 
-        return (
-            hours === 1
-                ? "Il y a 1 heure"
-                : `Il y a ${hours} heures`
-        );
+    if (
+        notification.image_url
+    ) {
+
+        return notification.image_url;
+
     }
 
 
-    const days =
-        Math.floor(
-            hours / 24
-        );
+    if (actor?.avatar_url) {
 
+        return actor.avatar_url;
 
-    if (days < 7) {
-
-        return (
-            days === 1
-                ? "Hier"
-                : `Il y a ${days} jours`
-        );
     }
 
 
-    return new Intl.DateTimeFormat(
-        CONFIG.DATE_LOCALE,
-        {
-            day: "numeric",
-            month: "short",
-            year:
-                new Date(date).getFullYear() !==
-                new Date().getFullYear()
-                    ? "numeric"
-                    : undefined
+    if (
+        notification.metadata &&
+        typeof notification.metadata ===
+            "object"
+    ) {
+
+        if (
+            notification.metadata.actor_avatar
+        ) {
+
+            return notification.metadata.actor_avatar;
+
         }
-    ).format(
-        new Date(date)
-    );
-}
 
+        if (
+            notification.metadata.avatar_url
+        ) {
 
-/* ============================================================
-   FORMAT COUNT
-   ============================================================ */
+            return notification.metadata.avatar_url;
 
-function formatCount(
-    value
-) {
+        }
 
-    const number =
-        Number(value) || 0;
-
-
-    if (
-        number >= 1000000
-    ) {
-
-        return (
-            (number / 1000000)
-                .toFixed(
-                    number >= 10000000
-                        ? 0
-                        : 1
-                )
-            + " M"
-        );
     }
 
 
-    if (
-        number >= 1000
-    ) {
+    return DEFAULT_AVATAR;
 
-        return (
-            (number / 1000)
-                .toFixed(
-                    number >= 10000
-                        ? 0
-                        : 1
-                )
-            + " k"
-        );
-    }
-
-
-    return String(number);
 }
 
 
-/* ============================================================
-   TOAST
-   ============================================================ */
+// ==========================================
+// Navigation
+// ==========================================
 
-function showToast(
-    message,
-    type = "info"
+function navigateToAction(
+    actionUrl
 ) {
 
-    /*
-     * Utilise le système Toast NetView
-     * s'il existe déjà.
-     */
-
-    if (
-        typeof window.showToast ===
-        "function"
-    ) {
-
-        window.showToast(
-            message,
-            type
-        );
-
+    if (!actionUrl) {
         return;
     }
 
 
-    /*
-     * Fallback minimal.
-     */
-
-    let container =
-        document.querySelector(
-            ".nv-toast-container"
-        );
+    const value =
+        String(actionUrl).trim();
 
 
-    if (!container) {
+    if (!value) {
+        return;
+    }
 
-        container =
-            document.createElement(
-                "div"
+
+    // URLs internes NetView
+    if (
+        value.startsWith(
+            "/"
+        ) &&
+        !value.startsWith(
+            "//"
+        )
+    ) {
+
+        window.location.href =
+            value;
+
+        return;
+
+    }
+
+
+    if (
+        value.startsWith(
+            "./"
+        ) ||
+        value.startsWith(
+            "../"
+        )
+    ) {
+
+        window.location.href =
+            value;
+
+        return;
+
+    }
+
+
+    if (
+        value.startsWith(
+            "http://"
+        ) ||
+        value.startsWith(
+            "https://"
+        )
+    ) {
+
+        try {
+
+            const url =
+                new URL(
+                    value,
+                    window.location.origin
+                );
+
+
+            if (
+                url.origin ===
+                window.location.origin
+            ) {
+
+                window.location.href =
+                    url.href;
+
+                return;
+
+            }
+
+
+            window.open(
+                url.href,
+                "_blank",
+                "noopener,noreferrer"
             );
 
-        container.className =
-            "nv-toast-container";
+        } catch (error) {
+
+            console.error(
+                "URL notification invalide :",
+                error
+            );
+
+        }
+
+        return;
+
+    }
 
 
-        document.body.appendChild(
-            container
+    window.location.href =
+        value;
+
+}
+
+
+// ==========================================
+// UI States
+// ==========================================
+
+function showLoading() {
+
+    if (elements.loading) {
+
+        elements.loading.style.display =
+            "";
+
+        elements.loading.setAttribute(
+            "aria-hidden",
+            "false"
         );
+
+    }
+
+
+    if (elements.list) {
+
+        elements.list.setAttribute(
+            "aria-busy",
+            "true"
+        );
+
+    }
+
+}
+
+
+function hideLoading() {
+
+    if (elements.loading) {
+
+        elements.loading.style.display =
+            "none";
+
+        elements.loading.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    if (elements.list) {
+
+        elements.list.setAttribute(
+            "aria-busy",
+            "false"
+        );
+
+    }
+
+}
+
+
+function showEmpty() {
+
+    if (elements.empty) {
+
+        elements.empty.hidden =
+            false;
+
+    }
+
+}
+
+
+function hideEmpty() {
+
+    if (elements.empty) {
+
+        elements.empty.hidden =
+            true;
+
+    }
+
+}
+
+
+function showError() {
+
+    if (elements.error) {
+
+        elements.error.hidden =
+            false;
+
+    }
+
+}
+
+
+function hideError() {
+
+    if (elements.error) {
+
+        elements.error.hidden =
+            true;
+
+    }
+
+}
+
+
+// ==========================================
+// Toast
+// ==========================================
+
+function showToastMessage(
+    message,
+    type = "success"
+) {
+
+    if (
+        !elements.toastContainer ||
+        !message
+    ) {
+
+        return;
+
     }
 
 
@@ -2893,11 +2917,27 @@ function showToast(
         `nv-toast nv-toast-${type}`;
 
 
-    toast.textContent =
-        message;
+    const icon =
+        type === "error"
+            ? "fa-solid fa-circle-exclamation"
+            : "fa-solid fa-circle-check";
 
 
-    container.appendChild(
+    toast.innerHTML = `
+
+        <i
+            class="${icon}"
+            aria-hidden="true"
+        ></i>
+
+        <span>
+            ${escapeHTML(message)}
+        </span>
+
+    `;
+
+
+    elements.toastContainer.appendChild(
         toast
     );
 
@@ -2906,8 +2946,9 @@ function showToast(
         () => {
 
             toast.classList.add(
-                "is-visible"
+                "show"
             );
+
         }
     );
 
@@ -2916,101 +2957,391 @@ function showToast(
         () => {
 
             toast.classList.remove(
-                "is-visible"
+                "show"
             );
 
-
             setTimeout(
-                () => toast.remove(),
+                () => {
+
+                    toast.remove();
+
+                },
                 300
             );
 
         },
-        3500
+        3000
     );
+
 }
 
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
+// ==========================================
+// Time
+// ==========================================
 
-function closeSidebar() {
+function formatRelativeTime(
+    dateValue
+) {
 
-    const sidebar =
-        document.getElementById(
-            "sidebar"
+    if (!dateValue) {
+        return "";
+    }
+
+
+    const date =
+        new Date(
+            dateValue
         );
 
-    const overlay =
-        document.getElementById(
-            "sidebarOverlay"
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    const difference =
+        Math.max(
+            0,
+            now -
+                date.getTime()
         );
 
 
-    sidebar?.classList.remove(
-        "is-open"
+    const seconds =
+        Math.floor(
+            difference /
+                1000
+        );
+
+
+    if (
+        seconds <
+        60
+    ) {
+
+        return "À l'instant";
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            seconds /
+                60
+        );
+
+
+    if (
+        minutes <
+        60
+    ) {
+
+        return (
+            `Il y a ${minutes} min`
+        );
+
+    }
+
+
+    const hours =
+        Math.floor(
+            minutes /
+                60
+        );
+
+
+    if (
+        hours <
+        24
+    ) {
+
+        return (
+            `Il y a ${hours} h`
+        );
+
+    }
+
+
+    const days =
+        Math.floor(
+            hours /
+                24
+        );
+
+
+    if (
+        days <
+        7
+    ) {
+
+        return (
+            `Il y a ${days} j`
+        );
+
+    }
+
+
+    const weeks =
+        Math.floor(
+            days /
+                7
+        );
+
+
+    if (
+        weeks <
+        5
+    ) {
+
+        return (
+            `Il y a ${weeks} sem.`
+        );
+
+    }
+
+
+    const months =
+        Math.floor(
+            days /
+                30
+        );
+
+
+    if (
+        months <
+        12
+    ) {
+
+        return (
+            `Il y a ${months} mois`
+        );
+
+    }
+
+
+    const years =
+        Math.floor(
+            days /
+                365
+        );
+
+
+    return (
+        `Il y a ${years} an` +
+        (
+            years > 1
+                ? "s"
+                : ""
+        )
     );
 
-
-    overlay?.classList.remove(
-        "is-visible"
-    );
-
-
-    document.body.classList.remove(
-        "sidebar-open"
-    );
 }
 
 
-/* ============================================================
-   ESCAPE HTML
-   ============================================================ */
+// ==========================================
+// Helpers
+// ==========================================
+
+function normalizeType(
+    type
+) {
+
+    return String(
+        type ||
+        ""
+    )
+        .trim()
+        .toLowerCase()
+        .replace(
+            /[\s-]+/g,
+            "_"
+        );
+
+}
+
+
+function formatCount(
+    count
+) {
+
+    const number =
+        Number(count) || 0;
+
+
+    if (
+        number > 99
+    ) {
+
+        return "99+";
+
+    }
+
+
+    return String(
+        number
+    );
+
+}
+
+
+function deduplicateNotifications(
+    notifications
+) {
+
+    const map =
+        new Map();
+
+
+    notifications.forEach(
+        notification => {
+
+            if (
+                notification?.id
+            ) {
+
+                map.set(
+                    notification.id,
+                    notification
+                );
+
+            }
+
+        }
+    );
+
+
+    return [
+        ...map.values()
+    ].sort(
+        (
+            a,
+            b
+        ) => {
+
+            const dateA =
+                new Date(
+                    a.created_at ||
+                    0
+                ).getTime();
+
+
+            const dateB =
+                new Date(
+                    b.created_at ||
+                    0
+                ).getTime();
+
+
+            return dateB - dateA;
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// HTML Security
+// ==========================================
 
 function escapeHTML(
     value
 ) {
 
-    const div =
-        document.createElement(
-            "div"
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
         );
 
-
-    div.textContent =
-        value ?? "";
-
-
-    return div.innerHTML;
 }
 
 
-/* ============================================================
-   CLEANUP
-   ============================================================ */
+function escapeAttribute(
+    value
+) {
+
+    return escapeHTML(
+        value
+    );
+
+}
+
+
+// ==========================================
+// Cleanup
+// ==========================================
 
 window.addEventListener(
     "beforeunload",
-    () => {
+    async () => {
 
-        clearTimeout(
-            state.realtimeTimer
-        );
+        if (
+            state.realtimeChannel
+        ) {
 
+            try {
 
-        unsubscribeFromRealtime();
+                await unsubscribe(
+                    state.realtimeChannel
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    "Erreur fermeture Realtime :",
+                    error
+                );
+
+            }
+
+        }
+
     }
 );
 
 
-/* ============================================================
-   EXPORTS
-   ============================================================ */
+// ==========================================
+// Export
+// ==========================================
 
 export {
+
     loadNotifications,
+
     markAsRead,
+
     markAllAsRead,
-    state
+
+    setFilter
+
 };
