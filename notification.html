@@ -1,250 +1,785 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Consultez toutes vos notifications NetView : nouvelles vidéos, lives, abonnements, messages et activités de votre compte.">
-    <meta name="theme-color" content="#2563EB">
-    <meta name="color-scheme" content="dark">
-    <title>Notifications - NetView</title>
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="NetView_icone.png">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<meta
+    name="description"
+    content="Consultez toutes vos notifications NetView : nouvelles vidéos, lives, abonnements, messages et activités de votre compte."
+>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta
+    name="theme-color"
+    content="#2563EB"
+>
 
-    <!-- NetView CSS Core -->
-    <link rel="stylesheet" href="CSS/core/variables.css">
-    <link rel="stylesheet" href="CSS/core/reset.css">
-    <link rel="stylesheet" href="CSS/core/typography.css">
-    <link rel="stylesheet" href="CSS/core/animations.css">
-    <link rel="stylesheet" href="CSS/core/utilities.css">
+<meta
+    name="color-scheme"
+    content="dark"
+>
 
-    <!-- NetView Components -->
-    <link rel="stylesheet" href="CSS/components/buttons.css">
-    <link rel="stylesheet" href="CSS/components/cards.css">
-    <link rel="stylesheet" href="CSS/components/modal.css">
-    <link rel="stylesheet" href="CSS/components/toast.css">
-    <link rel="stylesheet" href="CSS/components/sidebar.css">
-    <link rel="stylesheet" href="CSS/components/header.css">
-    <link rel="stylesheet" href="CSS/components/footer.css">
-    <link rel="stylesheet" href="CSS/components/loader.css">
-
-    <!-- Page CSS -->
-    <link rel="stylesheet" href="CSS/pages/notification.css">
-</head>
-
-<body class="netview-page notifications-page" data-page="notifications">
-    <!-- Application -->
-    <div id="app" class="app">
+<title>
+    Notifications - NetView
+</title>
 
 
-        <!-- ==========================================
-Header
-========================================== -->
+<!-- ==========================================
+     FAVICON
+=========================================== -->
 
-<header class="nv-header">
+<link
+    rel="icon"
+    type="image/png"
+    href="NetView_icone.png"
+>
 
-    <div class="nv-header-left">
 
-        <button
-            id="menuButton"
-            class="nv-icon-button"
-            aria-label="Menu">
+<!-- ==========================================
+     FONT AWESOME
+=========================================== -->
 
-            <i class="fa-solid fa-bars"></i>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
 
-        </button>
 
-        <a
-            href="index.html"
-            class="nv-logo">
+<!-- ==========================================
+     GOOGLE FONTS
+=========================================== -->
 
-            <img
-                src="NetView.png"
-                alt="NetView">
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
 
-        </a>
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
 
-    </div>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
-    <div class="nv-header-center">
 
-        <form
-            id="searchForm"
-            class="nv-search-form">
+<!-- ==========================================
+     NETVIEW CSS CORE
+=========================================== -->
 
-            <input
-                id="searchInput"
-                class="nv-search-input"
-                type="search"
-                placeholder="Rechercher">
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css"
+>
+
+
+<!-- ==========================================
+     NETVIEW COMPONENTS
+=========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/cards.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/modal.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/toast.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/sidebar.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/header.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/footer.css"
+>
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css"
+>
+
+
+<!-- ==========================================
+     PAGE CSS
+=========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/pages/notification.css"
+>
+
+</head><body
+    class="netview-page notifications-page"
+    data-page="notifications"
+><!-- ==========================================
+     APPLICATION
+=========================================== -->
+
+<div
+    id="app"
+    class="app"
+>
+
+
+    <!-- ======================================
+         HEADER
+    ======================================= -->
+
+    <header class="nv-header">
+
+        <div class="nv-header-left">
 
             <button
-                class="nv-search-button"
-                type="submit">
+                id="menuButton"
+                class="nv-icon-button"
+                type="button"
+                aria-label="Ouvrir le menu"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i
+                    class="fa-solid fa-bars"
+                    aria-hidden="true"
+                ></i>
 
             </button>
 
-        </form>
 
-    </div>
+            <a
+                href="index.html"
+                class="nv-logo"
+                aria-label="NetView - Accueil"
+            >
+
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                >
+
+            </a>
+
+        </div>
+
+
+        <!-- ==================================
+             SEARCH
+        =================================== -->
+
+        <div class="nv-header-center">
+
+            <form
+                id="searchForm"
+                class="nv-search-form"
+                role="search"
+            >
+
+                <input
+                    id="searchInput"
+                    class="nv-search-input"
+                    type="search"
+                    name="q"
+                    placeholder="Rechercher"
+                    autocomplete="off"
+                    aria-label="Rechercher sur NetView"
+                >
+
+                <button
+                    class="nv-search-button"
+                    type="submit"
+                    aria-label="Rechercher"
+                >
+
+                    <i
+                        class="fa-solid fa-magnifying-glass"
+                        aria-hidden="true"
+                    ></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ==================================
+             HEADER RIGHT
+             Rempli par notification.js
+        =================================== -->
+
+        <div
+            id="headerRight"
+            class="nv-header-right"
+        ></div>
+
+    </header>
+
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside
+        id="sidebar"
+        class="nv-sidebar"
+        aria-label="Navigation principale"
+    >
+
+        <nav
+            class="nv-sidebar-nav"
+            aria-label="Menu NetView"
+        ></nav>
+
+    </aside>
+
+
+    <!-- ==========================================
+         MOBILE SIDEBAR OVERLAY
+    =========================================== -->
 
     <div
-        id="headerRight"
-        class="nv-header-right">
+        id="sidebarOverlay"
+        class="nv-sidebar-overlay"
+        aria-hidden="true"
+    ></div>
 
-        <!-- Rempli dynamiquement par index.js -->
 
-    </div>
+    <!-- ==========================================
+         MAIN CONTENT
+    =========================================== -->
 
-</header>
+    <main
+        id="main-content"
+        class="page-content"
+    >
 
-<!-- ==========================================
-Sidebar
-========================================== -->
 
-<aside
-    id="sidebar"
-    class="nv-sidebar">
+        <!-- ======================================
+             PAGE HEADER
+        ======================================= -->
 
-    <nav class="nv-sidebar-nav">
+        <section
+            class="page-header notifications-header"
+            aria-labelledby="notifications-title"
+        >
 
-        <!-- Généré par index.js -->
+            <div class="page-header-content">
 
-    </nav>
 
-</aside>
+                <!-- PAGE TITLE -->
 
-<!-- ==========================================
-Mobile Overlay
-========================================== -->
+                <div class="page-title-wrapper">
 
-<div
-    id="sidebarOverlay"
-    class="nv-sidebar-overlay">
+                    <div
+                        class="page-title-icon"
+                        aria-hidden="true"
+                    >
+
+                        <i class="fa-solid fa-bell"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h1
+                            id="notifications-title"
+                            class="page-title"
+                        >
+                            Notifications
+                        </h1>
+
+                        <p class="page-subtitle">
+                            Retrouvez toute votre activité NetView au même endroit.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MARK ALL AS READ -->
+
+                <button
+                    type="button"
+                    class="btn btn-secondary mark-all-read-button"
+                    id="mark-all-read-button"
+                    disabled
+                >
+
+                    <i
+                        class="fa-solid fa-check-double"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Tout marquer comme lu
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================
+             NOTIFICATION TOOLBAR
+        ======================================= -->
+
+        <section
+            class="notifications-toolbar"
+            aria-label="Filtres des notifications"
+        >
+
+
+            <!-- FILTERS -->
+
+            <div
+                class="notification-filters"
+                role="tablist"
+                aria-label="Filtrer les notifications"
+            >
+
+
+                <!-- ALL -->
+
+                <button
+                    type="button"
+                    class="notification-filter active"
+                    data-filter="all"
+                    role="tab"
+                    aria-selected="true"
+                >
+
+                    <i
+                        class="fa-solid fa-inbox"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Toutes
+                    </span>
+
+                    <span
+                        class="filter-count"
+                        id="all-count"
+                        hidden
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <!-- UNREAD -->
+
+                <button
+                    type="button"
+                    class="notification-filter"
+                    data-filter="unread"
+                    role="tab"
+                    aria-selected="false"
+                >
+
+                    <i
+                        class="fa-solid fa-envelope"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Non lues
+                    </span>
+
+                    <span
+                        class="filter-count"
+                        id="unread-count"
+                        hidden
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <!-- MENTIONS -->
+
+                <button
+                    type="button"
+                    class="notification-filter"
+                    data-filter="mentions"
+                    role="tab"
+                    aria-selected="false"
+                >
+
+                    <i
+                        class="fa-solid fa-at"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Mentions
+                    </span>
+
+                </button>
+
+
+                <!-- ACTIVITY -->
+
+                <button
+                    type="button"
+                    class="notification-filter"
+                    data-filter="activity"
+                    role="tab"
+                    aria-selected="false"
+                >
+
+                    <i
+                        class="fa-solid fa-bolt"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Activité
+                    </span>
+
+                </button>
+
+
+                <!-- NETVIEW -->
+
+                <button
+                    type="button"
+                    class="notification-filter"
+                    data-filter="netview"
+                    role="tab"
+                    aria-selected="false"
+                >
+
+                    <i
+                        class="fa-solid fa-circle-info"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        NetView
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- NOTIFICATION SETTINGS -->
+
+            <a
+                href="settings.html#notifications"
+                class="notification-settings-link"
+            >
+
+                <i
+                    class="fa-solid fa-gear"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Paramètres
+                </span>
+
+            </a>
+
+        </section>
+
+
+        <!-- ======================================
+             NOTIFICATIONS SECTION
+        ======================================= -->
+
+        <section
+            class="notifications-section"
+            aria-label="Liste des notifications"
+        >
+
+
+            <!-- ==================================
+                 LOADING
+            =================================== -->
+
+            <div
+                class="notifications-loading"
+                id="notifications-loading"
+                aria-hidden="true"
+            >
+
+                <!-- SKELETON 1 -->
+
+                <article class="notification-skeleton">
+
+                    <div class="skeleton skeleton-avatar"></div>
+
+                    <div class="skeleton-content">
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-large"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-medium"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-small"
+                        ></div>
+
+                    </div>
+
+                    <div class="skeleton skeleton-thumbnail"></div>
+
+                </article>
+
+
+                <!-- SKELETON 2 -->
+
+                <article class="notification-skeleton">
+
+                    <div class="skeleton skeleton-avatar"></div>
+
+                    <div class="skeleton-content">
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-large"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-medium"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-small"
+                        ></div>
+
+                    </div>
+
+                    <div class="skeleton skeleton-thumbnail"></div>
+
+                </article>
+
+
+                <!-- SKELETON 3 -->
+
+                <article class="notification-skeleton">
+
+                    <div class="skeleton skeleton-avatar"></div>
+
+                    <div class="skeleton-content">
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-large"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-medium"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-small"
+                        ></div>
+
+                    </div>
+
+                    <div class="skeleton skeleton-thumbnail"></div>
+
+                </article>
+
+
+                <!-- SKELETON 4 -->
+
+                <article class="notification-skeleton">
+
+                    <div class="skeleton skeleton-avatar"></div>
+
+                    <div class="skeleton-content">
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-large"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-medium"
+                        ></div>
+
+                        <div
+                            class="skeleton skeleton-line skeleton-line-small"
+                        ></div>
+
+                    </div>
+
+                    <div class="skeleton skeleton-thumbnail"></div>
+
+                </article>
+
+            </div>
+
+
+            <!-- ==================================
+                 NOTIFICATION LIST
+            =================================== -->
+
+            <div
+                class="notifications-list"
+                id="notifications-list"
+                aria-live="polite"
+                aria-busy="false"
+            ></div>
+
+
+            <!-- ==================================
+                 EMPTY STATE
+            =================================== -->
+
+            <div
+                class="notifications-empty"
+                id="notifications-empty"
+                hidden
+                role="status"
+            >
+
+                <div
+                    class="notifications-empty-icon"
+                    aria-hidden="true"
+                >
+
+                    <i class="fa-regular fa-bell-slash"></i>
+
+                </div>
+
+                <h2>
+                    Aucune notification
+                </h2>
+
+                <p>
+                    Vous êtes à jour. Les nouvelles activités apparaîtront ici.
+                </p>
+
+            </div>
+
+
+            <!-- ==================================
+                 ERROR STATE
+            =================================== -->
+
+            <div
+                class="notifications-error"
+                id="notifications-error"
+                hidden
+                role="alert"
+            >
+
+                <div
+                    class="notifications-error-icon"
+                    aria-hidden="true"
+                >
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <h2>
+                    Impossible de charger les notifications
+                </h2>
+
+                <p>
+                    Une erreur est survenue lors du chargement de vos notifications.
+                </p>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="notifications-retry-button"
+                >
+
+                    <i
+                        class="fa-solid fa-rotate-right"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Réessayer
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         TOAST CONTAINER
+    =========================================== -->
+
+    <div
+        id="toastContainer"
+        class="nv-toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
 
 </div>
-                   
-            <!-- PAGE CONTENT -->
-            <main id="main-content" class="page-content">
 
-                <!-- PAGE HEADER -->
-                <section class="page-header notifications-header">
-                    <div class="page-header-content">
-                        <div class="page-title-wrapper">
-                            <div class="page-title-icon" aria-hidden="true">
-                                <i class="fa-solid fa-bell"></i>
-                            </div>
-                            <div>
-                                <h1 class="page-title">Notifications</h1>
-                                <p class="page-subtitle">Retrouvez toute votre activité NetView au même endroit.</p>
-                            </div>
-                        </div>
 
-                        <!-- Mark all read -->
-                        <button type="button" class="btn btn-secondary mark-all-read-button" id="mark-all-read-button" disabled>
-                            <i class="fa-solid fa-check-double"></i>
-                            <span>Tout marquer comme lu</span>
-                        </button>
-                    </div>
-                </section>
+<!-- ==========================================
+     PAGE JAVASCRIPT
+=========================================== -->
 
-                <!-- NOTIFICATION TOOLBAR -->
-                <section class="notifications-toolbar" aria-label="Filtres des notifications">
-                    <div class="notification-filters" role="tablist" aria-label="Filtrer les notifications">
-                        <button type="button" class="notification-filter active" data-filter="all" role="tab" aria-selected="true">
-                            <i class="fa-solid fa-inbox"></i>
-                            <span>Toutes</span>
-                            <span class="filter-count" id="all-count" hidden>0</span>
-                        </button>
-                        <button type="button" class="notification-filter" data-filter="unread" role="tab" aria-selected="false">
-                            <i class="fa-solid fa-envelope"></i>
-                            <span>Non lues</span>
-                            <span class="filter-count" id="unread-count" hidden>0</span>
-                        </button>
-                        <button type="button" class="notification-filter" data-filter="mentions" role="tab" aria-selected="false">
-                            <i class="fa-solid fa-at"></i>
-                            <span>Mentions</span>
-                        </button>
-                        <button type="button" class="notification-filter" data-filter="activity" role="tab" aria-selected="false">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>Activité</span>
-                        </button>
-                        <button type="button" class="notification-filter" data-filter="netview" role="tab" aria-selected="false">
-                            <i class="fa-solid fa-circle-info"></i>
-                            <span>NetView</span>
-                        </button>
-                    </div>
+<script
+    type="module"
+    src="js/pages/notification.js"
+></script>
 
-                    <!-- Notification settings -->
-                    <a href="settings.html#notifications" class="notification-settings-link">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Paramètres</span>
-                    </a>
-                </section>
-
-                <!-- NOTIFICATION CONTENT -->
-                <section class="notifications-section" aria-label="Liste des notifications">
-                    <div class="notifications-list" id="notifications-list" aria-live="polite">
-
-                        <!-- LOADING SKELETON -->
-                        <div class="notifications-loading" id="notifications-loading">
-                            <article class="notification-skeleton">
-                                <div class="skeleton skeleton-avatar"></div>
-                                <div class="skeleton-content">
-                                    <div class="skeleton skeleton-line skeleton-line-large"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-medium"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-small"></div>
-                                </div>
-                                <div class="skeleton skeleton-thumbnail"></div>
-                            </article>
-                            <article class="notification-skeleton">
-                                <div class="skeleton skeleton-avatar"></div>
-                                <div class="skeleton-content">
-                                    <div class="skeleton skeleton-line skeleton-line-large"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-medium"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-small"></div>
-                                </div>
-                                <div class="skeleton skeleton-thumbnail"></div>
-                            </article>
-                            <article class="notification-skeleton">
-                                <div class="skeleton skeleton-avatar"></div>
-                                <div class="skeleton-content">
-                                    <div class="skeleton skeleton-line skeleton-line-large"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-medium"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-small"></div>
-                                </div>
-                                <div class="skeleton skeleton-thumbnail"></div>
-                            </article>
-                            <article class="notification-skeleton">
-                                <div class="skeleton skeleton-avatar"></div>
-                                <div class="skeleton-content">
-                                    <div class="skeleton skeleton-line skeleton-line-large"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-medium"></div>
-                                    <div class="skeleton skeleton-line skeleton-line-small"></div>
-                                </div>
-                                <div class="skeleton skeleton-thumbnail"></div>
-                            </article>
-                        </div>
-
-                    </div>
-                </section>
-
-            </main>
-        </div>
-    </div>
-    <div id="notifications-empty" hidden></div>
-<div id="notifications-error" hidden></div>
-    <div id="notification" class="notification"></div>
-<script type="module" src="js/pages/notification.js"></script>
-</body>
-</html>
+</body></html>
