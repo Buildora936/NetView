@@ -436,6 +436,10 @@
 .nv-sidebar::-webkit-scrollbar-track {
     background: transparent;
 }
+.nv-sidebar.active {
+    width: 240px;
+    animation: nvSidebarOpen .3s ease;
+}
 
 .nv-sidebar::-webkit-scrollbar-thumb {
     background: #253045;
