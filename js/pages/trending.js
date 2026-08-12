@@ -18,7 +18,7 @@ import {
     getTrendingVideos,
     getTrendingShorts,
     getTrendingProducts,
-    getCategories
+    getVideoCategories
 } from "../core/data.js";
 
 import {
