@@ -336,14 +336,14 @@
     transform: scale(0.94);
 }
 
-.nv-avatar-button {
+.nv-header-profile {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
 }
 
-.nv-avatar-button img {
+.nv-header-profile img {
     width: 100%;
     height: 100%;
     object-fit: cover;
