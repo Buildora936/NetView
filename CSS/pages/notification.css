@@ -396,6 +396,10 @@
    SIDEBAR
    ========================================================= */
 
+/* =========================================================
+   SIDEBAR — FERMÉE PAR DÉFAUT
+   ========================================================= */
+
 .nv-sidebar {
     position: fixed;
 
@@ -419,9 +423,29 @@
     scrollbar-width: thin;
     scrollbar-color: #253045 transparent;
 
+    /*
+     * FERMÉ PAR DÉFAUT
+     */
+    transform: translateX(-100%);
+
+    visibility: hidden;
+    pointer-events: none;
+
     transition:
-        width 0.25s ease,
-        transform 0.25s ease;
+        transform 0.25s ease,
+        visibility 0.25s ease;
+}
+
+
+/* =========================================================
+   SIDEBAR — OUVERTE
+   ========================================================= */
+
+.nv-sidebar.open {
+    transform: translateX(0);
+
+    visibility: visible;
+    pointer-events: auto;
 }
 
 
@@ -435,10 +459,6 @@
 
 .nv-sidebar::-webkit-scrollbar-track {
     background: transparent;
-}
-.nv-sidebar.active {
-    width: 240px;
-    animation: nvSidebarOpen .3s ease;
 }
 
 .nv-sidebar::-webkit-scrollbar-thumb {
@@ -564,7 +584,7 @@
 
     min-width: 0;
 
-    margin-left: 248px;
+    margin-left: 0;
 
     padding-top: 64px;
 
@@ -575,7 +595,9 @@
     transition:
         margin-left 0.25s ease;
 }
-
+.nv-main-content.sidebar-open {
+    margin-left: 248px;
+}
 
 /* =========================================================
    SIDEBAR OVERLAY
