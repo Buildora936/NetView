@@ -199,6 +199,16 @@ function initializeHeader() {
 
     elements.headerRight.innerHTML = `
 
+       <button
+            id="uploadButton"
+            class="nv-icon-button"
+            title="Publier">
+
+            <i class="fa-solid fa-plus nv-plus-icon"></i>
+
+        </button>
+
+
         <button
             type="button"
             class="nv-icon-button notification-header-button"
