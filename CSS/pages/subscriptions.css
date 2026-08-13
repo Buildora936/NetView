@@ -122,6 +122,106 @@
     box-sizing: border-box;
 }
 
+.nv-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nv-logo img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+.nv-search-form {
+    display: flex;
+    width: 100%;
+    max-width: 640px;
+    height: 40px;
+}
+
+.nv-search-input {
+    flex: 1;
+    border: 1px solid var(--nv-border);
+    border-right: none;
+    border-radius: 20px 0 0 20px;
+    padding: 0 18px;
+    background: var(--nv-background);
+    color: var(--nv-text);
+    outline: none;
+}
+
+.nv-search-input:focus {
+    border-color: var(--nv-primary);
+}
+
+.nv-search-button {
+    width: 64px;
+    border: 1px solid var(--nv-border);
+    border-radius: 0 20px 20px 0;
+    background: var(--nv-surface-hover);
+    color: var(--nv-text);
+    cursor: pointer;
+}
+
+/* ==========================================
+    Header Right
+========================================== */
+.nv-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.nv-icon-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--nv-text);
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.nv-icon-button:hover {
+    background: var(--nv-surface-hover);
+}
+
+.nv-avatar-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.nv-avatar-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================
+    Bouton S'identifier
+========================================== */
+.nv-login-button {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 20px;
+    border: 1px solid var(--nv-primary);
+    background: transparent;
+    color: var(--nv-primary);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nv-login-button:hover {
+    background: rgba(37, 99, 235, .12);
+}
 
 /* =========================================================
    PAGE TITLE
