@@ -201,66 +201,7 @@
 
             </div>
 
-
-            <!-- HEADER RIGHT -->
-
-            <div class="nv-header-right">
-
-
-                <!-- CREATE -->
-
-                <a
-                    href="publish.html"
-                    class="nv-icon-button"
-                    aria-label="Créer"
-                    title="Créer"
-                >
-                    <i class="fa-solid fa-plus"></i>
-                </a>
-
-
-                <!-- NOTIFICATIONS -->
-
-                <a
-                    href="notification.html"
-                    class="nv-icon-button nv-notification-button"
-                    id="header-notification-button"
-                    aria-label="Notifications"
-                    title="Notifications"
-                >
-
-                    <i class="fa-regular fa-bell"></i>
-
-                    <span
-                        class="nv-notification-badge"
-                        id="header-notification-badge"
-                        hidden
-                    >
-                        0
-                    </span>
-
-                </a>
-
-
-                <!-- PROFILE -->
-
-                <a
-                    href="profile.html"
-                    class="nv-header-profile"
-                    id="header-profile-link"
-                    aria-label="Mon profil"
-                    title="Mon profil"
-                >
-
-                    <img
-                        id="header-profile-avatar"
-                        src="assets/images/default-avatar.png"
-                        alt="Mon profil"
-                    >
-
-                </a>
-
-            </div>
+  <div id="headerRight" class="nv-header-right"></div>
 
         </header>
 
@@ -272,57 +213,27 @@
         <div class="nv-layout">
 
 
-          
+          <!-- =================================================
+     SIDEBAR
+     Généré dynamiquement par subscriptions.js
+     ================================================= -->
 
-                    <!-- PLAYLISTS -->
-
-                    <a
-                        href="playlist.html"
-                        class="nv-sidebar-item"
-                    >
-                        <i class="fa-solid fa-list"></i>
-                        <span>Playlists</span>
-                    </a>
-
-
-                    <!-- LIVES -->
-
-                    <a
-                        href="lives.html"
-                        class="nv-sidebar-item"
-                    >
-                        <i class="fa-solid fa-tower-broadcast"></i>
-                        <span>Lives</span>
-                    </a>
-
-
-                    <div class="nv-sidebar-divider"></div>
-
-
-                    <!-- PARAMÈTRES -->
-
-                    <a
-                        href="settings.html"
-                        class="nv-sidebar-item"
-                    >
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Paramètres</span>
-                    </a>
-
-
-                    <!-- AIDE -->
-
-                    <a
-                        href="help.html"
-                        class="nv-sidebar-item"
-                    >
-                        <i class="fa-regular fa-circle-question"></i>
-                        <span>Aide</span>
-                    </a>
-
-                </nav>
-
-            </aside>
+<aside
+    class="nv-sidebar"
+    id="main-sidebar"
+    aria-label="Navigation principale"
+>
+    <nav
+        class="nv-sidebar-nav"
+        id="sidebar-nav"
+    >
+        <!--
+            Le contenu est injecté dynamiquement
+            par subscriptions.js selon l'état
+            de l'utilisateur.
+        -->
+    </nav>
+</aside>
 
 
             <!-- SIDEBAR OVERLAY -->
