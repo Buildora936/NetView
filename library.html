@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Votre bibliothèque NetView : historique, vidéos à regarder plus tard, vidéos aimées, playlists et téléchargements."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>Bibliothèque - NetView</title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         NETVIEW CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/animations.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/utilities.css"
+    >
+
+
+    <!-- =====================================================
+         NETVIEW COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/forms.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/footer.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         LIBRARY CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/pages/library.css"
+    >
+
+</head>
+
+
+<body class="nv-page library-page">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="nv-header">
+
+        <div class="nv-header-left">
+
+            <button
+                id="menuButton"
+                class="nv-icon-button"
+                type="button"
+                aria-label="Menu"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+
+            <a
+                href="index.html"
+                class="nv-logo"
+                aria-label="NetView - Accueil"
+            >
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                >
+            </a>
+
+        </div>
+
+
+        <div class="nv-header-center">
+
+            <form
+                id="searchForm"
+                class="nv-search-form"
+                role="search"
+                autocomplete="off"
+            >
+
+                <input
+                    id="searchInput"
+                    class="nv-search-input"
+                    type="search"
+                    name="q"
+                    placeholder="Rechercher"
+                    aria-label="Rechercher"
+                >
+
+                <button
+                    class="nv-search-button"
+                    type="submit"
+                    aria-label="Rechercher"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div
+            id="headerRight"
+            class="nv-header-right"
+        ></div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside
+        id="sidebar"
+        class="nv-sidebar"
+        aria-label="Navigation principale"
+    >
+
+        <nav class="nv-sidebar-nav"></nav>
+
+    </aside>
+
+
+    <!-- =====================================================
+         SIDEBAR OVERLAY
+         ===================================================== -->
+
+    <div
+        id="sidebarOverlay"
+        class="nv-sidebar-overlay"
+        aria-hidden="true"
+    ></div>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main
+        id="mainContent"
+        class="library-main"
+    >
+
+        <div class="library-page-content">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <section class="library-header">
+
+                <div class="library-header-content">
+
+
+                    <div class="library-title-wrapper">
+
+                        <div class="library-title-icon">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+
+
+                        <div class="library-title-text">
+
+                            <h1 class="library-title">
+                                Bibliothèque
+                            </h1>
+
+                            <p class="library-subtitle">
+                                Retrouvez vos vidéos, votre historique,
+                                vos playlists et tous les contenus
+                                que vous souhaitez conserver.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="library-header-actions">
+
+                        <button
+                            id="libraryRefreshButton"
+                            class="library-action-button"
+                            type="button"
+                            title="Actualiser"
+                            aria-label="Actualiser la bibliothèque"
+                        >
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>Actualiser</span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LIBRARY NAVIGATION
+                 ================================================= -->
+
+            <section
+                class="library-navigation-section"
+                aria-label="Catégories de bibliothèque"
+            >
+
+                <div
+                    id="libraryTabs"
+                    class="library-tabs"
+                    role="tablist"
+                >
+
+
+                    <button
+                        id="libraryTabHistory"
+                        class="library-tab active"
+                        type="button"
+                        role="tab"
+                        aria-selected="true"
+                        aria-controls="libraryHistorySection"
+                        data-library-tab="history"
+                    >
+
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+
+                        <span>
+                            Historique
+                        </span>
+
+                        <span
+                            id="historyCount"
+                            class="library-tab-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="libraryTabWatchLater"
+                        class="library-tab"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="libraryWatchLaterSection"
+                        data-library-tab="watch-later"
+                    >
+
+                        <i class="fa-solid fa-clock"></i>
+
+                        <span>
+                            À regarder plus tard
+                        </span>
+
+                        <span
+                            id="watchLaterCount"
+                            class="library-tab-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="libraryTabLiked"
+                        class="library-tab"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="libraryLikedSection"
+                        data-library-tab="liked"
+                    >
+
+                        <i class="fa-solid fa-thumbs-up"></i>
+
+                        <span>
+                            Vidéos aimées
+                        </span>
+
+                        <span
+                            id="likedCount"
+                            class="library-tab-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="libraryTabPlaylists"
+                        class="library-tab"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="libraryPlaylistsSection"
+                        data-library-tab="playlists"
+                    >
+
+                        <i class="fa-solid fa-list"></i>
+
+                        <span>
+                            Playlists
+                        </span>
+
+                        <span
+                            id="playlistsCount"
+                            class="library-tab-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="libraryTabDownloads"
+                        class="library-tab"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="libraryDownloadsSection"
+                        data-library-tab="downloads"
+                    >
+
+                        <i class="fa-solid fa-download"></i>
+
+                        <span>
+                            Téléchargements
+                        </span>
+
+                        <span
+                            id="downloadsCount"
+                            class="library-tab-count"
+                            hidden
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 TOOLBAR
+                 ================================================= -->
+
+            <section class="library-toolbar">
+
+                <div class="library-search-wrapper">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        id="librarySearchInput"
+                        class="library-search-input"
+                        type="search"
+                        placeholder="Rechercher dans votre bibliothèque..."
+                        autocomplete="off"
+                        aria-label="Rechercher dans votre bibliothèque"
+                    >
+
+                    <button
+                        id="clearLibrarySearch"
+                        class="library-search-clear"
+                        type="button"
+                        aria-label="Effacer la recherche"
+                        hidden
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="library-toolbar-right">
+
+
+                    <div class="library-filter-wrapper">
+
+                        <label
+                            for="libraryFilter"
+                            class="sr-only"
+                        >
+                            Filtrer
+                        </label>
+
+                        <select
+                            id="libraryFilter"
+                            class="library-filter"
+                        >
+
+                            <option value="all">
+                                Tous
+                            </option>
+
+                            <option value="video">
+                                Vidéos
+                            </option>
+
+                            <option value="short">
+                                Shorts
+                            </option>
+
+                            <option value="live">
+                                Lives
+                            </option>
+
+                        </select>
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </div>
+
+
+                    <div class="library-sort-wrapper">
+
+                        <label
+                            for="librarySort"
+                            class="sr-only"
+                        >
+                            Trier
+                        </label>
+
+                        <select
+                            id="librarySort"
+                            class="library-sort"
+                        >
+
+                            <option value="recent">
+                                Plus récent
+                            </option>
+
+                            <option value="oldest">
+                                Plus ancien
+                            </option>
+
+                            <option value="title">
+                                Titre
+                            </option>
+
+                            <option value="channel">
+                                Chaîne
+                            </option>
+
+                        </select>
+
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 HISTORY
+                 ================================================= -->
+
+            <section
+                id="libraryHistorySection"
+                class="library-section library-history-section"
+                data-library-section="history"
+                role="tabpanel"
+                aria-labelledby="libraryTabHistory"
+            >
+
+
+                <div class="library-section-header">
+
+                    <div class="library-section-heading">
+
+                        <div class="library-section-icon">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+
+                        <div>
+
+                            <h2 class="library-section-title">
+                                Historique
+                            </h2>
+
+                            <p class="library-section-subtitle">
+                                Les vidéos que vous avez récemment regardées.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="library-section-actions">
+
+                        <button
+                            id="clearHistoryButton"
+                            class="library-danger-button"
+                            type="button"
+                        >
+
+                            <i class="fa-solid fa-trash-can"></i>
+
+                            <span>
+                                Effacer l'historique
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="historyLoading"
+                    class="library-loading"
+                    hidden
+                >
+
+                    <div class="library-video-grid library-skeleton-grid">
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="historyGrid"
+                    class="library-video-grid"
+                ></div>
+
+
+                <div
+                    id="historyEmpty"
+                    class="library-empty"
+                    hidden
+                >
+
+                    <div class="library-empty-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+
+                    <h3>
+                        Votre historique est vide
+                    </h3>
+
+                    <p>
+                        Les vidéos que vous regardez apparaîtront ici.
+                    </p>
+
+                    <a
+                        href="index.html"
+                        class="library-empty-button"
+                    >
+                        <i class="fa-solid fa-play"></i>
+                        Découvrir des vidéos
+                    </a>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 WATCH LATER
+                 ================================================= -->
+
+            <section
+                id="libraryWatchLaterSection"
+                class="library-section library-watch-later-section"
+                data-library-section="watch-later"
+                role="tabpanel"
+                aria-labelledby="libraryTabWatchLater"
+                hidden
+            >
+
+                <div class="library-section-header">
+
+                    <div class="library-section-heading">
+
+                        <div class="library-section-icon">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+
+                        <div>
+
+                            <h2 class="library-section-title">
+                                À regarder plus tard
+                            </h2>
+
+                            <p class="library-section-subtitle">
+                                Conservez les vidéos que vous souhaitez regarder ultérieurement.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="watchLaterLoading"
+                    class="library-loading"
+                    hidden
+                >
+
+                    <div class="library-video-grid library-skeleton-grid">
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="watchLaterGrid"
+                    class="library-video-grid"
+                ></div>
+
+
+                <div
+                    id="watchLaterEmpty"
+                    class="library-empty"
+                    hidden
+                >
+
+                    <div class="library-empty-icon">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+
+                    <h3>
+                        Rien à regarder plus tard
+                    </h3>
+
+                    <p>
+                        Ajoutez des vidéos à votre liste pour les retrouver facilement ici.
+                    </p>
+
+                    <a
+                        href="index.html"
+                        class="library-empty-button"
+                    >
+                        <i class="fa-solid fa-compass"></i>
+                        Explorer NetView
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LIKED VIDEOS
+                 ================================================= -->
+
+            <section
+                id="libraryLikedSection"
+                class="library-section library-liked-section"
+                data-library-section="liked"
+                role="tabpanel"
+                aria-labelledby="libraryTabLiked"
+                hidden
+            >
+
+                <div class="library-section-header">
+
+                    <div class="library-section-heading">
+
+                        <div class="library-section-icon">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </div>
+
+                        <div>
+
+                            <h2 class="library-section-title">
+                                Vidéos aimées
+                            </h2>
+
+                            <p class="library-section-subtitle">
+                                Toutes les vidéos auxquelles vous avez donné un J'aime.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="likedLoading"
+                    class="library-loading"
+                    hidden
+                >
+
+                    <div class="library-video-grid library-skeleton-grid">
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="likedGrid"
+                    class="library-video-grid"
+                ></div>
+
+
+                <div
+                    id="likedEmpty"
+                    class="library-empty"
+                    hidden
+                >
+
+                    <div class="library-empty-icon">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                    </div>
+
+                    <h3>
+                        Aucune vidéo aimée
+                    </h3>
+
+                    <p>
+                        Les vidéos que vous aimez seront regroupées dans cette section.
+                    </p>
+
+                    <a
+                        href="index.html"
+                        class="library-empty-button"
+                    >
+                        <i class="fa-solid fa-play"></i>
+                        Découvrir des vidéos
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PLAYLISTS
+                 ================================================= -->
+
+            <section
+                id="libraryPlaylistsSection"
+                class="library-section library-playlists-section"
+                data-library-section="playlists"
+                role="tabpanel"
+                aria-labelledby="libraryTabPlaylists"
+                hidden
+            >
+
+                <div class="library-section-header">
+
+                    <div class="library-section-heading">
+
+                        <div class="library-section-icon">
+                            <i class="fa-solid fa-list"></i>
+                        </div>
+
+                        <div>
+
+                            <h2 class="library-section-title">
+                                Playlists
+                            </h2>
+
+                            <p class="library-section-subtitle">
+                                Organisez vos vidéos dans des collections personnalisées.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="library-section-actions">
+
+                        <a
+                            href="playlist.html"
+                            class="library-primary-button"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                            <span>
+                                Créer une playlist
+                            </span>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="playlistsLoading"
+                    class="library-loading"
+                    hidden
+                >
+
+                    <div class="library-playlist-grid library-skeleton-grid">
+
+                        <div class="library-skeleton-playlist skeleton"></div>
+                        <div class="library-skeleton-playlist skeleton"></div>
+                        <div class="library-skeleton-playlist skeleton"></div>
+                        <div class="library-skeleton-playlist skeleton"></div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="playlistsGrid"
+                    class="library-playlist-grid"
+                ></div>
+
+
+                <div
+                    id="playlistsEmpty"
+                    class="library-empty"
+                    hidden
+                >
+
+                    <div class="library-empty-icon">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+
+                    <h3>
+                        Aucune playlist
+                    </h3>
+
+                    <p>
+                        Créez votre première playlist pour organiser vos vidéos.
+                    </p>
+
+                    <a
+                        href="playlist.html"
+                        class="library-empty-button"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Créer une playlist
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DOWNLOADS
+                 ================================================= -->
+
+            <section
+                id="libraryDownloadsSection"
+                class="library-section library-downloads-section"
+                data-library-section="downloads"
+                role="tabpanel"
+                aria-labelledby="libraryTabDownloads"
+                hidden
+            >
+
+                <div class="library-section-header">
+
+                    <div class="library-section-heading">
+
+                        <div class="library-section-icon">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+
+                        <div>
+
+                            <h2 class="library-section-title">
+                                Téléchargements
+                            </h2>
+
+                            <p class="library-section-subtitle">
+                                Retrouvez les contenus disponibles hors connexion.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="downloadsLoading"
+                    class="library-loading"
+                    hidden
+                >
+
+                    <div class="library-video-grid library-skeleton-grid">
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                        <div class="library-skeleton-card">
+                            <div class="library-skeleton-thumbnail skeleton"></div>
+                            <div class="library-skeleton-content">
+                                <div class="library-skeleton-line large skeleton"></div>
+                                <div class="library-skeleton-line medium skeleton"></div>
+                                <div class="library-skeleton-line small skeleton"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="downloadsGrid"
+                    class="library-video-grid"
+                ></div>
+
+
+                <div
+                    id="downloadsEmpty"
+                    class="library-empty"
+                    hidden
+                >
+
+                    <div class="library-empty-icon">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+
+                    <h3>
+                        Aucun téléchargement
+                    </h3>
+
+                    <p>
+                        Les contenus téléchargés et disponibles hors connexion apparaîtront ici.
+                    </p>
+
+                    <a
+                        href="index.html"
+                        class="library-empty-button"
+                    >
+                        <i class="fa-solid fa-play"></i>
+                        Explorer les contenus
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SEARCH EMPTY
+                 ================================================= -->
+
+            <section
+                id="librarySearchEmpty"
+                class="library-search-empty"
+                hidden
+            >
+
+                <div class="library-search-empty-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <h2>
+                    Aucun résultat
+                </h2>
+
+                <p>
+                    Aucun contenu de votre bibliothèque ne correspond à votre recherche.
+                </p>
+
+                <button
+                    id="clearSearchEmptyButton"
+                    class="library-secondary-button"
+                    type="button"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                    Effacer la recherche
+                </button>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ERROR STATE
+                 ================================================= -->
+
+            <section
+                id="libraryError"
+                class="library-error"
+                hidden
+            >
+
+                <div class="library-error-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <h2>
+                    Impossible de charger votre bibliothèque
+                </h2>
+
+                <p>
+                    Une erreur est survenue lors du chargement des données.
+                    Vérifiez votre connexion puis réessayez.
+                </p>
+
+                <button
+                    id="libraryRetryButton"
+                    class="library-primary-button"
+                    type="button"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                    Réessayer
+                </button>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         CONFIRMATION MODAL
+         ===================================================== -->
+
+    <div
+        id="libraryConfirmModal"
+        class="library-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="libraryConfirmTitle"
+        hidden
+    >
+
+        <div class="library-modal-backdrop"></div>
+
+
+        <div class="library-modal-dialog">
+
+            <button
+                id="libraryConfirmClose"
+                class="library-modal-close"
+                type="button"
+                aria-label="Fermer"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <div class="library-modal-icon">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+
+
+            <h2 id="libraryConfirmTitle">
+                Confirmer la suppression
+            </h2>
+
+
+            <p id="libraryConfirmMessage">
+                Voulez-vous vraiment supprimer cet élément ?
+            </p>
+
+
+            <div class="library-modal-actions">
+
+                <button
+                    id="libraryConfirmCancel"
+                    class="library-secondary-button"
+                    type="button"
+                >
+                    Annuler
+                </button>
+
+                <button
+                    id="libraryConfirmAction"
+                    class="library-danger-button"
+                    type="button"
+                >
+                    <i class="fa-solid fa-trash-can"></i>
+                    Supprimer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         TOAST
+         ===================================================== -->
+
+    <div
+        id="libraryToast"
+        class="library-toast"
+        role="status"
+        aria-live="polite"
+        hidden
+    >
+
+        <i
+            id="libraryToastIcon"
+            class="fa-solid fa-circle-check"
+        ></i>
+
+        <span id="libraryToastMessage"></span>
+
+    </div>
+
+    <!-- =====================================================
+         PAGE JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        type="module"
+        src="js/pages/library.js"
+    ></script>
+
+</body>
+
+</html>
