@@ -12,7 +12,6 @@ import {
     getProfile,
     select,
     remove,
-    getPublicUrl,
     subscribe,
     unsubscribe
 } from "../core/data.js";
@@ -23,50 +22,25 @@ import {
 // ==========================================
 
 const sidebar =
-    document.getElementById("main-sidebar");
+    document.getElementById("sidebar");
 
 const sidebarNav =
-    document.getElementById("sidebar-nav");
+    sidebar?.querySelector(".nv-sidebar-nav");
 
 const sidebarToggle =
-    document.getElementById("sidebar-toggle");
+    document.getElementById("menuButton");
 
 const sidebarOverlay =
-    document.getElementById("sidebar-overlay");
+    document.getElementById("sidebarOverlay");
 
 const globalSearchForm =
-    document.getElementById("global-search-form");
+    document.getElementById("searchForm");
 
 const globalSearchInput =
-    document.getElementById("global-search-input");
+    document.getElementById("searchInput");
 
 const headerRight =
     document.getElementById("headerRight");
-
-const uploadButton =
-    document.getElementById(
-        "uploadButton"
-    );
-
-const notificationsButton =
-    document.getElementById(
-        "notificationsButton"
-    );
-
-const notificationBadge =
-    document.getElementById(
-        "notificationBadge"
-    );
-
-const loginButton =
-    document.getElementById(
-        "loginButton"
-    );
-
-const headerAvatar =
-    document.getElementById(
-        "headerAvatar"
-    );
 
 const subscriptionChannels =
     document.getElementById("subscription-channels");
@@ -187,56 +161,86 @@ document.addEventListener(
 
 async function init() {
 
+    setupSidebarEvents();
+
+    setupSearch();
+
+    setupFilters();
+
+    setupSort();
+
+    setupRetry();
+
+    setupViewAll();
+
+    showLoading();
+
     try {
-
-        setupSidebarEvents();
-
-        setupSearch();
-
-        setupFilters();
-
-        setupSort();
-
-        setupRetry();
-
-        setupViewAll();
-
-        showLoading();
 
         const session =
             await getSession();
 
+        // ------------------------------------------
+        // VISITOR
+        // ------------------------------------------
+
         if (!session) {
 
+            currentUser = null;
+            currentProfile = null;
+
+            showGuestHeader();
             showGuestSidebar();
-
             renderGuestState();
-
-            hideLoading();
 
             return;
         }
+
+
+        // ------------------------------------------
+        // USER
+        // ------------------------------------------
 
         currentUser =
             await getUser();
 
         if (!currentUser) {
 
+            currentUser = null;
+            currentProfile = null;
+
+            showGuestHeader();
             showGuestSidebar();
-
             renderGuestState();
-
-            hideLoading();
 
             return;
         }
 
-        currentProfile =
-            await getProfile();
+
+        // ------------------------------------------
+        // PROFILE
+        // ------------------------------------------
+
+        try {
+
+            currentProfile =
+                await getProfile();
+
+        } catch (profileError) {
+
+            console.warn(
+                "NetView: impossible de récupérer le profil.",
+                profileError
+            );
+
+            currentProfile = null;
+
+        }
+
+
+        showUserHeader();
 
         showUserSidebar();
-
-        renderHeader();
 
         await loadSubscriptions();
 
@@ -262,303 +266,7 @@ async function init() {
 
 
 // ==========================================
-// Sidebar
-// ==========================================
-
-function showGuestSidebar() {
-
-    if (!sidebarNav) {
-        return;
-    }
-
-    sidebarNav.innerHTML = `
-
-        <a href="index.html">
-
-            <i class="fa-solid fa-house"></i>
-
-            <span>Accueil</span>
-
-        </a>
-
-        <a href="shorts.html">
-
-            <i class="fa-solid fa-bolt"></i>
-
-            <span>Shorts</span>
-
-        </a>
-
-        <a href="lives.html">
-
-            <i class="fa-solid fa-tower-broadcast"></i>
-
-            <span>Lives</span>
-
-        </a>
-
-        <a href="search.html">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <span>Explorer</span>
-
-        </a>
-
-        <a href="netview-shop.html">
-
-            <i class="fa-solid fa-store"></i>
-
-            <span>Boutique</span>
-
-        </a>
-
-        <hr>
-
-        <a href="auth.html">
-
-            <i class="fa-regular fa-user"></i>
-
-            <span>S'identifier</span>
-
-        </a>
-
-    `;
-}
-
-
-function showUserSidebar() {
-
-    if (!sidebarNav) {
-        return;
-    }
-
-    sidebarNav.innerHTML = `
-
-        <a href="index.html">
-
-            <i class="fa-solid fa-house"></i>
-
-            <span>Accueil</span>
-
-        </a>
-
-        <a href="shorts.html">
-
-            <i class="fa-solid fa-bolt"></i>
-
-            <span>Shorts</span>
-
-        </a>
-
-        <a
-            href="subscriptions.html"
-            class="active"
-            aria-current="page"
-        >
-
-            <i class="fa-solid fa-tv"></i>
-
-            <span>Abonnements</span>
-
-        </a>
-
-        <a href="playlist.html">
-
-            <i class="fa-solid fa-list"></i>
-
-            <span>Playlists</span>
-
-        </a>
-
-        <a href="history.html">
-
-            <i class="fa-solid fa-clock-rotate-left"></i>
-
-            <span>Historique</span>
-
-        </a>
-
-        <a href="watch-later.html">
-
-            <i class="fa-regular fa-clock"></i>
-
-            <span>À regarder</span>
-
-        </a>
-
-        <a href="liked-videos.html">
-
-            <i class="fa-solid fa-thumbs-up"></i>
-
-            <span>J'aime</span>
-
-        </a>
-
-        <hr>
-
-        <a href="lives.html">
-
-            <i class="fa-solid fa-tower-broadcast"></i>
-
-            <span>Lives</span>
-
-        </a>
-
-        <a href="netview-shop.html">
-
-            <i class="fa-solid fa-store"></i>
-
-            <span>Boutique</span>
-
-        </a>
-
-        <a href="settings.html">
-
-            <i class="fa-solid fa-gear"></i>
-
-            <span>Paramètres</span>
-
-        </a>
-
-    `;
-}
-
-
-// ==========================================
-// Sidebar Events
-// ==========================================
-
-function setupSidebarEvents() {
-
-    if (
-        !sidebarToggle ||
-        !sidebar ||
-        !sidebarOverlay
-    ) {
-        return;
-    }
-
-    sidebarToggle.addEventListener(
-        "click",
-        toggleSidebar
-    );
-
-    sidebarOverlay.addEventListener(
-        "click",
-        closeSidebar
-    );
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeSidebar();
-
-            }
-
-        }
-    );
-}
-
-
-function toggleSidebar() {
-
-    const isOpen =
-        sidebar.classList.contains(
-            "open"
-        );
-
-    if (isOpen) {
-
-        closeSidebar();
-
-    } else {
-
-        openSidebar();
-
-    }
-}
-
-
-function openSidebar() {
-
-    sidebar.classList.add("open");
-
-    sidebarOverlay.classList.add(
-        "active"
-    );
-
-    sidebarToggle.setAttribute(
-        "aria-expanded",
-        "true"
-    );
-
-    sidebarOverlay.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-}
-
-
-function closeSidebar() {
-
-    sidebar.classList.remove("open");
-
-    sidebarOverlay.classList.remove(
-        "active"
-    );
-
-    sidebarToggle.setAttribute(
-        "aria-expanded",
-        "false"
-    );
-
-    sidebarOverlay.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-}
-
-
-// ==========================================
-// Search
-// ==========================================
-
-function setupSearch() {
-
-    if (!globalSearchForm) {
-        return;
-    }
-
-    globalSearchForm.addEventListener(
-        "submit",
-        event => {
-
-            event.preventDefault();
-
-            const query =
-                globalSearchInput?.value
-                    ?.trim();
-
-            if (!query) {
-                return;
-            }
-
-            window.location.href =
-                `search.html?q=${encodeURIComponent(query)}`;
-
-        }
-    );
-}
-
-
-// ==========================================
-// Guest Header
+// HEADER
 // ==========================================
 
 function showGuestHeader() {
@@ -574,6 +282,7 @@ function showGuestHeader() {
             id="loginButton"
             class="nv-login-button"
             aria-label="S'identifier"
+            title="S'identifier"
         >
 
             <i class="fa-regular fa-user"></i>
@@ -586,12 +295,22 @@ function showGuestHeader() {
 
     `;
 
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+    loginButton?.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                "auth.html";
+
+        }
+    );
 }
 
-
-// ==========================================
-// User Header
-// ==========================================
 
 function showUserHeader() {
 
@@ -601,7 +320,7 @@ function showUserHeader() {
 
     const avatar =
         currentProfile?.avatar_url ||
-        "images/default-avatar.png";
+        DEFAULT_AVATAR;
 
     const displayName =
         currentProfile?.display_name ||
@@ -661,57 +380,352 @@ function showUserHeader() {
     `;
 
 
-    // ==========================================
+    // ------------------------------------------
     // Notifications
-    // ==========================================
+    // ------------------------------------------
 
     const notificationButton =
         document.getElementById(
             "header-notifications-button"
         );
 
-    if (notificationButton) {
+    notificationButton?.addEventListener(
+        "click",
+        () => {
 
-        notificationButton.addEventListener(
-            "click",
-            () => {
+            window.location.href =
+                "notification.html";
 
-                window.location.href =
-                    "notification.html";
-
-            }
-        );
-
-    }
+        }
+    );
 
 
-    // ==========================================
-    // Upload
-    // ==========================================
+    // ------------------------------------------
+    // Publication
+    // ------------------------------------------
 
     const uploadButton =
         document.getElementById(
             "uploadButton"
         );
 
-    if (uploadButton) {
+    uploadButton?.addEventListener(
+        "click",
+        () => {
 
-        uploadButton.addEventListener(
-            "click",
-            () => {
+            window.location.href =
+                "publish.html";
 
-                window.location.href =
-                    "publish.html";
-
-            }
-        );
-
-    }
-
+        }
+    );
 }
 
+
 // ==========================================
-// Load Subscriptions
+// SIDEBAR - GUEST
+// ==========================================
+
+function showGuestSidebar() {
+
+    if (!sidebarNav) {
+        return;
+    }
+
+    sidebarNav.innerHTML = `
+
+        <a
+            href="index.html"
+        >
+            <i class="fa-solid fa-house"></i>
+            <span>Accueil</span>
+        </a>
+
+
+        <a
+            href="shorts.html"
+        >
+            <i class="fa-solid fa-bolt"></i>
+            <span>Shorts</span>
+        </a>
+
+
+        <a
+            href="lives.html"
+        >
+            <i class="fa-solid fa-tower-broadcast"></i>
+            <span>Lives</span>
+        </a>
+
+
+        <a
+            href="search.html"
+        >
+            <i class="fa-solid fa-compass"></i>
+            <span>Explorer</span>
+        </a>
+
+
+        <a
+            href="netview-shop.html"
+        >
+            <i class="fa-solid fa-store"></i>
+            <span>Boutique</span>
+        </a>
+
+
+        <hr>
+
+
+        <a
+            href="auth.html"
+        >
+            <i class="fa-regular fa-user"></i>
+            <span>S'identifier</span>
+        </a>
+
+    `;
+}
+
+
+// ==========================================
+// SIDEBAR - USER
+// ==========================================
+
+function showUserSidebar() {
+
+    if (!sidebarNav) {
+        return;
+    }
+
+    sidebarNav.innerHTML = `
+
+        <a
+            href="index.html"
+        >
+            <i class="fa-solid fa-house"></i>
+            <span>Accueil</span>
+        </a>
+
+
+        <a
+            href="shorts.html"
+        >
+            <i class="fa-solid fa-bolt"></i>
+            <span>Shorts</span>
+        </a>
+
+
+        <a
+            href="subscriptions.html"
+            class="active"
+            aria-current="page"
+        >
+            <i class="fa-solid fa-tv"></i>
+            <span>Abonnements</span>
+        </a>
+
+
+        <a
+            href="playlist.html"
+        >
+            <i class="fa-solid fa-list"></i>
+            <span>Playlists</span>
+        </a>
+
+
+        <a
+            href="history.html"
+        >
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Historique</span>
+        </a>
+
+
+        <a
+            href="watch-later.html"
+        >
+            <i class="fa-regular fa-clock"></i>
+            <span>À regarder</span>
+        </a>
+
+
+        <a
+            href="liked-videos.html"
+        >
+            <i class="fa-solid fa-thumbs-up"></i>
+            <span>J'aime</span>
+        </a>
+
+
+        <hr>
+
+
+        <a
+            href="lives.html"
+        >
+            <i class="fa-solid fa-tower-broadcast"></i>
+            <span>Lives</span>
+        </a>
+
+
+        <a
+            href="netview-shop.html"
+        >
+            <i class="fa-solid fa-store"></i>
+            <span>Boutique</span>
+        </a>
+
+
+        <a
+            href="settings.html"
+        >
+            <i class="fa-solid fa-gear"></i>
+            <span>Paramètres</span>
+        </a>
+
+    `;
+}
+
+
+// ==========================================
+// SIDEBAR EVENTS
+// ==========================================
+
+function setupSidebarEvents() {
+
+    sidebarToggle?.addEventListener(
+        "click",
+        () => {
+
+            if (
+                sidebar?.classList.contains(
+                    "open"
+                )
+            ) {
+
+                closeSidebar();
+
+            } else {
+
+                openSidebar();
+
+            }
+
+        }
+    );
+
+
+    sidebarOverlay?.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+}
+
+
+function openSidebar() {
+
+    if (!sidebar) {
+        return;
+    }
+
+    sidebar.classList.add(
+        "open"
+    );
+
+    sidebarOverlay?.classList.add(
+        "active"
+    );
+
+    sidebarToggle?.setAttribute(
+        "aria-expanded",
+        "true"
+    );
+
+    sidebarOverlay?.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+
+function closeSidebar() {
+
+    if (!sidebar) {
+        return;
+    }
+
+    sidebar.classList.remove(
+        "open"
+    );
+
+    sidebarOverlay?.classList.remove(
+        "active"
+    );
+
+    sidebarToggle?.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    sidebarOverlay?.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+}
+
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+function setupSearch() {
+
+    if (!globalSearchForm) {
+        return;
+    }
+
+    globalSearchForm.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const query =
+                globalSearchInput?.value
+                    ?.trim();
+
+            if (!query) {
+                return;
+            }
+
+            window.location.href =
+                `search.html?q=${encodeURIComponent(
+                    query
+                )}`;
+
+        }
+    );
+}
+
+
+// ==========================================
+// LOAD SUBSCRIPTIONS
 // ==========================================
 
 async function loadSubscriptions() {
@@ -722,31 +736,36 @@ async function loadSubscriptions() {
 
     clearStates();
 
-    showLoading();
-
     try {
 
-        const {
-            data,
-            error
-        } = await select(
-            "subscriptions",
-            "*",
-            [
-                {
-                    method: "eq",
-                    column: "user_id",
-                    value: currentUser.id
-                }
-            ]
-        );
+        const result =
+            await select(
+                "subscriptions",
+                "*",
+                [
+                    {
+                        method: "eq",
+                        column: "user_id",
+                        value: currentUser.id
+                    }
+                ]
+            );
+
+        const data =
+            result?.data || [];
+
+        const error =
+            result?.error;
 
         if (error) {
             throw error;
         }
 
         subscriptions =
-            data || [];
+            Array.isArray(data)
+                ? data
+                : [];
+
 
         subscribedChannelIds =
             subscriptions
@@ -755,6 +774,11 @@ async function loadSubscriptions() {
                         subscription.channel_id
                 )
                 .filter(Boolean);
+
+
+        // ------------------------------------------
+        // Aucun abonnement
+        // ------------------------------------------
 
         if (
             subscribedChannelIds.length === 0
@@ -769,10 +793,16 @@ async function loadSubscriptions() {
             return;
         }
 
+
+        // ------------------------------------------
+        // Charger données
+        // ------------------------------------------
+
         await Promise.all([
             loadSubscribedChannels(),
             loadSubscribedContent()
         ]);
+
 
         renderChannels();
 
@@ -783,7 +813,7 @@ async function loadSubscriptions() {
     } catch (error) {
 
         console.error(
-            "Erreur chargement abonnements :",
+            "NetView subscriptions load error:",
             error
         );
 
@@ -791,16 +821,12 @@ async function loadSubscriptions() {
             "Une erreur est survenue lors du chargement de vos abonnements."
         );
 
-    } finally {
-
-        hideLoading();
-
     }
 }
 
 
 // ==========================================
-// Load Channels
+// LOAD CHANNELS
 // ==========================================
 
 async function loadSubscribedChannels() {
@@ -814,27 +840,28 @@ async function loadSubscribedChannels() {
         return;
     }
 
-    const {
-        data,
-        error
-    } = await select(
-        "channels",
-        "*",
-        [
-            {
-                method: "in",
-                column: "id",
-                value: subscribedChannelIds
-            }
-        ]
-    );
+    const result =
+        await select(
+            "channels",
+            "*",
+            [
+                {
+                    method: "in",
+                    column: "id",
+                    value: subscribedChannelIds
+                }
+            ]
+        );
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
     subscribedChannels =
-        data || [];
+        Array.isArray(result?.data)
+            ? result.data
+            : [];
+
 
     subscribedChannels.sort(
         (a, b) => {
@@ -857,7 +884,7 @@ async function loadSubscribedChannels() {
 
 
 // ==========================================
-// Load Subscribed Videos
+// LOAD VIDEOS
 // ==========================================
 
 async function loadSubscribedVideos() {
@@ -865,49 +892,53 @@ async function loadSubscribedVideos() {
     if (
         subscribedChannelIds.length === 0
     ) {
+
         return [];
+
     }
 
-    const {
-        data,
-        error
-    } = await select(
-        "videos",
-        `
-            *,
-            channels (
-                id,
-                name,
-                handle,
-                avatar_url,
-                verified,
-                subscribers_count
-            )
-        `,
-        [
-            {
-                method: "in",
-                column: "channel_id",
-                value: subscribedChannelIds
-            },
-            {
-                method: "eq",
-                column: "status",
-                value: "published"
-            },
-            {
-                method: "eq",
-                column: "visibility",
-                value: "public"
-            }
-        ]
-    );
+    const result =
+        await select(
+            "videos",
+            `
+                *,
+                channels (
+                    id,
+                    name,
+                    handle,
+                    avatar_url,
+                    verified,
+                    subscribers_count
+                )
+            `,
+            [
+                {
+                    method: "in",
+                    column: "channel_id",
+                    value: subscribedChannelIds
+                },
+                {
+                    method: "eq",
+                    column: "status",
+                    value: "published"
+                },
+                {
+                    method: "eq",
+                    column: "visibility",
+                    value: "public"
+                }
+            ]
+        );
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
-    return (data || []).map(
+    return (
+        Array.isArray(result?.data)
+            ? result.data
+            : []
+    ).map(
         video => ({
 
             ...video,
@@ -937,7 +968,7 @@ async function loadSubscribedVideos() {
 
 
 // ==========================================
-// Load Subscribed Shorts
+// LOAD SHORTS
 // ==========================================
 
 async function loadSubscribedShorts() {
@@ -945,39 +976,43 @@ async function loadSubscribedShorts() {
     if (
         subscribedChannelIds.length === 0
     ) {
+
         return [];
+
     }
 
-    const {
-        data,
-        error
-    } = await select(
-        "shorts",
-        `
-            *,
-            channels (
-                id,
-                name,
-                handle,
-                avatar_url,
-                verified,
-                subscribers_count
-            )
-        `,
-        [
-            {
-                method: "in",
-                column: "channel_id",
-                value: subscribedChannelIds
-            }
-        ]
-    );
+    const result =
+        await select(
+            "shorts",
+            `
+                *,
+                channels (
+                    id,
+                    name,
+                    handle,
+                    avatar_url,
+                    verified,
+                    subscribers_count
+                )
+            `,
+            [
+                {
+                    method: "in",
+                    column: "channel_id",
+                    value: subscribedChannelIds
+                }
+            ]
+        );
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
-    return (data || []).map(
+    return (
+        Array.isArray(result?.data)
+            ? result.data
+            : []
+    ).map(
         short => ({
 
             ...short,
@@ -1007,7 +1042,7 @@ async function loadSubscribedShorts() {
 
 
 // ==========================================
-// Load Subscribed Lives
+// LOAD LIVES
 // ==========================================
 
 async function loadSubscribedLives() {
@@ -1015,49 +1050,53 @@ async function loadSubscribedLives() {
     if (
         subscribedChannelIds.length === 0
     ) {
+
         return [];
+
     }
 
-    const {
-        data,
-        error
-    } = await select(
-        "lives",
-        `
-            *,
-            channels (
-                id,
-                name,
-                handle,
-                avatar_url,
-                verified,
-                subscribers_count
-            )
-        `,
-        [
-            {
-                method: "in",
-                column: "channel_id",
-                value: subscribedChannelIds
-            },
-            {
-                method: "eq",
-                column: "status",
-                value: "live"
-            },
-            {
-                method: "eq",
-                column: "visibility",
-                value: "public"
-            }
-        ]
-    );
+    const result =
+        await select(
+            "lives",
+            `
+                *,
+                channels (
+                    id,
+                    name,
+                    handle,
+                    avatar_url,
+                    verified,
+                    subscribers_count
+                )
+            `,
+            [
+                {
+                    method: "in",
+                    column: "channel_id",
+                    value: subscribedChannelIds
+                },
+                {
+                    method: "eq",
+                    column: "status",
+                    value: "live"
+                },
+                {
+                    method: "eq",
+                    column: "visibility",
+                    value: "public"
+                }
+            ]
+        );
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
-    return (data || []).map(
+    return (
+        Array.isArray(result?.data)
+            ? result.data
+            : []
+    ).map(
         live => ({
 
             ...live,
@@ -1087,7 +1126,7 @@ async function loadSubscribedLives() {
 
 
 // ==========================================
-// Load All Content
+// LOAD ALL CONTENT
 // ==========================================
 
 async function loadSubscribedContent() {
@@ -1113,7 +1152,7 @@ async function loadSubscribedContent() {
 
 
 // ==========================================
-// Channels Render
+// RENDER CHANNELS
 // ==========================================
 
 function renderChannels() {
@@ -1127,8 +1166,18 @@ function renderChannels() {
     if (
         subscribedChannels.length === 0
     ) {
+
+        hideElement(
+            subscriptionChannels
+        );
+
         return;
     }
+
+    showElement(
+        subscriptionChannels
+    );
+
 
     subscribedChannels.forEach(
         channel => {
@@ -1144,6 +1193,7 @@ function renderChannels() {
             article.dataset.channelId =
                 channel.id;
 
+
             const avatar =
                 channel.avatar_url ||
                 DEFAULT_AVATAR;
@@ -1157,10 +1207,13 @@ function renderChannels() {
                     ? `@${channel.handle}`
                     : "";
 
+
             article.innerHTML = `
 
                 <a
-                    href="${getChannelUrl(channel)}"
+                    href="${escapeAttribute(
+                        getChannelUrl(channel)
+                    )}"
                     class="subscription-channel-link"
                     aria-label="${escapeAttribute(name)}"
                 >
@@ -1177,6 +1230,7 @@ function renderChannels() {
 
                     </div>
 
+
                     <div
                         class="subscription-channel-info"
                     >
@@ -1184,6 +1238,7 @@ function renderChannels() {
                         <span
                             class="subscription-channel-name"
                         >
+
                             ${escapeHTML(name)}
 
                             ${
@@ -1198,6 +1253,7 @@ function renderChannels() {
                             }
 
                         </span>
+
 
                         ${
                             handle
@@ -1214,6 +1270,7 @@ function renderChannels() {
                     </div>
 
                 </a>
+
 
                 <button
                     type="button"
@@ -1233,10 +1290,12 @@ function renderChannels() {
 
             `;
 
+
             const unsubscribeButton =
                 article.querySelector(
                     ".subscription-channel-unsubscribe"
                 );
+
 
             unsubscribeButton?.addEventListener(
                 "click",
@@ -1254,6 +1313,7 @@ function renderChannels() {
                 }
             );
 
+
             subscriptionChannels.appendChild(
                 article
             );
@@ -1264,7 +1324,7 @@ function renderChannels() {
 
 
 // ==========================================
-// Content Render
+// RENDER CONTENT
 // ==========================================
 
 function renderContent() {
@@ -1284,9 +1344,14 @@ function renderContent() {
         filterEmptyState
     );
 
+
     if (
         filteredContent.length === 0
     ) {
+
+        hideElement(
+            contentGrid
+        );
 
         showElement(
             filterEmptyState
@@ -1296,6 +1361,12 @@ function renderContent() {
 
         return;
     }
+
+
+    showElement(
+        contentGrid
+    );
+
 
     filteredContent.forEach(
         content => {
@@ -1310,7 +1381,7 @@ function renderContent() {
 
 
 // ==========================================
-// Content Card
+// CONTENT CARD
 // ==========================================
 
 function createContentCard(
@@ -1331,23 +1402,31 @@ function createContentCard(
     article.dataset.contentType =
         content.contentType;
 
+
     const title =
         content.title ||
         "Sans titre";
 
+
     const thumbnail =
         getThumbnail(content);
+
 
     const channelName =
         content.channelName ||
         "Chaîne inconnue";
 
+
     const avatar =
         content.channelAvatar ||
         DEFAULT_AVATAR;
 
+
     const verified =
-        content.channelVerified;
+        Boolean(
+            content.channelVerified
+        );
+
 
     const views =
         formatNumber(
@@ -1356,16 +1435,32 @@ function createContentCard(
             0
         );
 
+
     const date =
         getContentDate(content);
+
 
     const duration =
         formatDuration(
             content.duration
         );
 
+
     const url =
         getContentUrl(content);
+
+
+    const channel =
+        content.channels || {
+
+            id:
+                content.channel_id,
+
+            handle:
+                content.channelHandle
+
+        };
+
 
     article.innerHTML = `
 
@@ -1385,6 +1480,7 @@ function createContentCard(
                     loading="lazy"
                 >
 
+
                 ${
                     duration
                         ? `
@@ -1396,6 +1492,7 @@ function createContentCard(
                           `
                         : ""
                 }
+
 
                 ${
                     content.contentType === "lives"
@@ -1429,10 +1526,9 @@ function createContentCard(
 
 
             <a
-                href="${getChannelUrl(content.channels || {
-                    id: content.channel_id,
-                    handle: content.channelHandle
-                })}"
+                href="${escapeAttribute(
+                    getChannelUrl(channel)
+                )}"
                 class="subscription-content-channel"
             >
 
@@ -1443,9 +1539,11 @@ function createContentCard(
                     aria-hidden="true"
                 >
 
+
                 <span>
                     ${escapeHTML(channelName)}
                 </span>
+
 
                 ${
                     verified
@@ -1488,7 +1586,7 @@ function createContentCard(
 
 
 // ==========================================
-// Live Render
+// LIVE RENDER
 // ==========================================
 
 function renderLiveContent() {
@@ -1500,24 +1598,33 @@ function renderLiveContent() {
         return;
     }
 
+
     const liveContents =
         allContent.filter(
             item =>
                 item.contentType === "lives"
         );
 
+
     liveGrid.innerHTML = "";
+
 
     if (
         liveContents.length === 0
     ) {
 
-        hideElement(liveSection);
+        hideElement(
+            liveSection
+        );
 
         return;
     }
 
-    showElement(liveSection);
+
+    showElement(
+        liveSection
+    );
+
 
     liveContents.forEach(
         live => {
@@ -1531,6 +1638,10 @@ function renderLiveContent() {
 }
 
 
+// ==========================================
+// LIVE CARD
+// ==========================================
+
 function createLiveCard(
     live
 ) {
@@ -1543,15 +1654,19 @@ function createLiveCard(
     article.className =
         "subscription-live-card";
 
+
     const title =
         live.title ||
         "Live sans titre";
 
+
     const thumbnail =
         getThumbnail(live);
 
+
     const url =
         getContentUrl(live);
+
 
     const viewers =
         formatNumber(
@@ -1560,11 +1675,13 @@ function createLiveCard(
             0
         );
 
+
     article.innerHTML = `
 
         <a
             href="${escapeAttribute(url)}"
             class="subscription-live-thumbnail-link"
+            aria-label="${escapeAttribute(title)}"
         >
 
             <div
@@ -1577,11 +1694,15 @@ function createLiveCard(
                     loading="lazy"
                 >
 
+
                 <span
                     class="subscription-live-badge"
                 >
+
                     <span></span>
+
                     EN DIRECT
+
                 </span>
 
             </div>
@@ -1600,10 +1721,11 @@ function createLiveCard(
                 ${escapeHTML(title)}
             </a>
 
+
             <span
                 class="subscription-live-viewers"
             >
-                ${escapeHTML(formatNumber(viewers))}
+                ${escapeHTML(viewers)}
                 spectateurs
             </span>
 
@@ -1616,7 +1738,7 @@ function createLiveCard(
 
 
 // ==========================================
-// Filters
+// FILTERS
 // ==========================================
 
 function setupFilters() {
@@ -1651,6 +1773,7 @@ function setActiveFilter(
     activeFilter =
         filter;
 
+
     filterButtons.forEach(
         button => {
 
@@ -1671,11 +1794,16 @@ function setActiveFilter(
         }
     );
 
+
     updateContentSubtitle();
 
     renderContent();
 }
 
+
+// ==========================================
+// FILTERED CONTENT
+// ==========================================
 
 function getFilteredContent() {
 
@@ -1689,6 +1817,7 @@ function getFilteredContent() {
 
     }
 
+
     return allContent.filter(
         content =>
             content.contentType ===
@@ -1698,7 +1827,7 @@ function getFilteredContent() {
 
 
 // ==========================================
-// Sort
+// SORT
 // ==========================================
 
 function setupSort() {
@@ -1706,6 +1835,7 @@ function setupSort() {
     if (!sortSelect) {
         return;
     }
+
 
     sortSelect.addEventListener(
         "change",
@@ -1742,6 +1872,7 @@ function sortContent() {
                         0
                     );
 
+
                 const viewsB =
                     Number(
                         b.views ??
@@ -1750,18 +1881,22 @@ function sortContent() {
                         0
                     );
 
+
                 return viewsB - viewsA;
             }
+
 
             const dateA =
                 new Date(
                     getRawDate(a)
                 ).getTime() || 0;
 
+
             const dateB =
                 new Date(
                     getRawDate(b)
                 ).getTime() || 0;
+
 
             if (
                 activeSort ===
@@ -1772,6 +1907,7 @@ function sortContent() {
 
             }
 
+
             return dateB - dateA;
 
         }
@@ -1780,7 +1916,7 @@ function sortContent() {
 
 
 // ==========================================
-// Content Subtitle
+// SUBTITLE
 // ==========================================
 
 function updateContentSubtitle() {
@@ -1790,9 +1926,11 @@ function updateContentSubtitle() {
             "subscription-content-subtitle"
         );
 
+
     if (!subtitle) {
         return;
     }
+
 
     const labels = {
 
@@ -1810,6 +1948,7 @@ function updateContentSubtitle() {
 
     };
 
+
     subtitle.textContent =
         labels[activeFilter] ||
         labels.all;
@@ -1817,7 +1956,7 @@ function updateContentSubtitle() {
 
 
 // ==========================================
-// Empty Filter Message
+// FILTER EMPTY MESSAGE
 // ==========================================
 
 function updateFilterEmptyMessage() {
@@ -1825,6 +1964,7 @@ function updateFilterEmptyMessage() {
     if (!filterEmptyMessage) {
         return;
     }
+
 
     const messages = {
 
@@ -1842,6 +1982,7 @@ function updateFilterEmptyMessage() {
 
     };
 
+
     filterEmptyMessage.textContent =
         messages[activeFilter] ||
         messages.all;
@@ -1849,7 +1990,7 @@ function updateFilterEmptyMessage() {
 
 
 // ==========================================
-// Unsubscribe
+// UNSUBSCRIBE
 // ==========================================
 
 async function handleUnsubscribe(
@@ -1864,45 +2005,54 @@ async function handleUnsubscribe(
         return;
     }
 
+
     const button =
         article?.querySelector(
             ".subscription-channel-unsubscribe"
         );
+
 
     if (button) {
 
         button.disabled = true;
 
         button.innerHTML = `
+
             <i class="fa-solid fa-spinner fa-spin"></i>
-            <span>...</span>
+
+            <span>
+                ...
+            </span>
+
         `;
 
     }
 
+
     try {
 
-        const {
-            error
-        } = await remove(
-            "subscriptions",
-            [
-                {
-                    method: "eq",
-                    column: "user_id",
-                    value: currentUser.id
-                },
-                {
-                    method: "eq",
-                    column: "channel_id",
-                    value: channelId
-                }
-            ]
-        );
+        const result =
+            await remove(
+                "subscriptions",
+                [
+                    {
+                        method: "eq",
+                        column: "user_id",
+                        value: currentUser.id
+                    },
+                    {
+                        method: "eq",
+                        column: "channel_id",
+                        value: channelId
+                    }
+                ]
+            );
 
-        if (error) {
-            throw error;
+
+        if (result?.error) {
+            throw result.error;
         }
+
 
         subscriptions =
             subscriptions.filter(
@@ -1911,17 +2061,20 @@ async function handleUnsubscribe(
                     channelId
             );
 
+
         subscribedChannelIds =
             subscribedChannelIds.filter(
                 id =>
                     id !== channelId
             );
 
+
         subscribedChannels =
             subscribedChannels.filter(
                 channel =>
                     channel.id !== channelId
             );
+
 
         allContent =
             allContent.filter(
@@ -1930,11 +2083,9 @@ async function handleUnsubscribe(
                     channelId
             );
 
+
         article?.remove();
 
-        renderContent();
-
-        renderLiveContent();
 
         if (
             subscribedChannels.length === 0
@@ -1942,25 +2093,39 @@ async function handleUnsubscribe(
 
             renderEmptySubscriptions();
 
+            return;
+
         }
+
+
+        renderContent();
+
+        renderLiveContent();
 
     } catch (error) {
 
         console.error(
-            "Erreur désabonnement :",
+            "NetView unsubscribe error:",
             error
         );
+
 
         if (button) {
 
             button.disabled = false;
 
             button.innerHTML = `
+
                 <i class="fa-solid fa-check"></i>
-                <span>Abonné</span>
+
+                <span>
+                    Abonné
+                </span>
+
             `;
 
         }
+
 
         alert(
             "Impossible de se désabonner de cette chaîne."
@@ -1971,12 +2136,18 @@ async function handleUnsubscribe(
 
 
 // ==========================================
-// Realtime
+// REALTIME
 // ==========================================
 
 function setupRealtime() {
 
     cleanupRealtime();
+
+
+    if (!currentUser) {
+        return;
+    }
+
 
     const subscriptionChannel =
         subscribe(
@@ -1984,28 +2155,29 @@ function setupRealtime() {
             "subscriptions",
             async payload => {
 
-                if (
-                    !payload?.new &&
-                    !payload?.old
-                ) {
+                const changed =
+                    payload?.new ||
+                    payload?.old;
+
+
+                if (!changed) {
                     return;
                 }
 
-                const changed =
-                    payload.new ||
-                    payload.old;
 
                 if (
-                    changed?.user_id !==
+                    changed.user_id !==
                     currentUser?.id
                 ) {
                     return;
                 }
 
+
                 await loadSubscriptions();
 
             }
         );
+
 
     const videosChannel =
         subscribe(
@@ -2014,8 +2186,9 @@ function setupRealtime() {
             async payload => {
 
                 const changed =
-                    payload.new ||
-                    payload.old;
+                    payload?.new ||
+                    payload?.old;
+
 
                 if (
                     changed &&
@@ -2030,6 +2203,7 @@ function setupRealtime() {
 
             }
         );
+
 
     const shortsChannel =
         subscribe(
@@ -2038,8 +2212,9 @@ function setupRealtime() {
             async payload => {
 
                 const changed =
-                    payload.new ||
-                    payload.old;
+                    payload?.new ||
+                    payload?.old;
+
 
                 if (
                     changed &&
@@ -2054,6 +2229,7 @@ function setupRealtime() {
 
             }
         );
+
 
     const livesChannel =
         subscribe(
@@ -2062,8 +2238,9 @@ function setupRealtime() {
             async payload => {
 
                 const changed =
-                    payload.new ||
-                    payload.old;
+                    payload?.new ||
+                    payload?.old;
+
 
                 if (
                     changed &&
@@ -2078,6 +2255,7 @@ function setupRealtime() {
 
             }
         );
+
 
     realtimeChannels = [
         subscriptionChannel,
@@ -2091,14 +2269,22 @@ function setupRealtime() {
 async function cleanupRealtime() {
 
     if (
-        !realtimeChannels.length
+        realtimeChannels.length === 0
     ) {
         return;
     }
 
+
+    const channels =
+        [...realtimeChannels];
+
+
+    realtimeChannels = [];
+
+
     for (
         const channel
-        of realtimeChannels
+        of channels
     ) {
 
         try {
@@ -2110,20 +2296,18 @@ async function cleanupRealtime() {
         } catch (error) {
 
             console.warn(
-                "Erreur nettoyage Realtime :",
+                "NetView Realtime cleanup error:",
                 error
             );
 
         }
 
     }
-
-    realtimeChannels = [];
 }
 
 
 // ==========================================
-// View All
+// VIEW ALL
 // ==========================================
 
 function setupViewAll() {
@@ -2132,13 +2316,15 @@ function setupViewAll() {
         return;
     }
 
+
     viewAllButton.addEventListener(
         "click",
         () => {
 
-            activeFilter = "all";
+            setActiveFilter(
+                "all"
+            );
 
-            setActiveFilter("all");
 
             document
                 .getElementById(
@@ -2155,13 +2341,21 @@ function setupViewAll() {
 
 
 // ==========================================
-// Guest State
+// GUEST STATE
 // ==========================================
 
 function renderGuestState() {
 
     hideElement(
         subscriptionChannels
+    );
+
+    hideElement(
+        contentGrid
+    );
+
+    hideElement(
+        liveSection
     );
 
     hideElement(
@@ -2176,13 +2370,18 @@ function renderGuestState() {
         emptyState
     );
 
+
     const title =
         document.getElementById(
             "subscriptions-empty-title"
         );
 
+
     const paragraph =
-        emptyState?.querySelector("p");
+        emptyState?.querySelector(
+            "p"
+        );
+
 
     if (title) {
 
@@ -2190,6 +2389,7 @@ function renderGuestState() {
             "Connectez-vous pour voir vos abonnements";
 
     }
+
 
     if (paragraph) {
 
@@ -2201,7 +2401,7 @@ function renderGuestState() {
 
 
 // ==========================================
-// Empty Subscriptions
+// EMPTY SUBSCRIPTIONS
 // ==========================================
 
 function renderEmptySubscriptions() {
@@ -2229,11 +2429,39 @@ function renderEmptySubscriptions() {
     showElement(
         emptyState
     );
+
+
+    const title =
+        document.getElementById(
+            "subscriptions-empty-title"
+        );
+
+
+    const paragraph =
+        emptyState?.querySelector(
+            "p"
+        );
+
+
+    if (title) {
+
+        title.textContent =
+            "Aucun abonnement";
+
+    }
+
+
+    if (paragraph) {
+
+        paragraph.textContent =
+            "Vous ne suivez encore aucune chaîne. Abonnez-vous à vos créateurs préférés pour retrouver leurs dernières publications ici.";
+
+    }
 }
 
 
 // ==========================================
-// Error State
+// ERROR
 // ==========================================
 
 function showError(
@@ -2249,8 +2477,21 @@ function showError(
     );
 
     hideElement(
+        subscriptionChannels
+    );
+
+    hideElement(
+        contentGrid
+    );
+
+    hideElement(
+        liveSection
+    );
+
+    hideElement(
         filterEmptyState
     );
+
 
     if (errorMessage) {
 
@@ -2259,6 +2500,7 @@ function showError(
 
     }
 
+
     showElement(
         errorState
     );
@@ -2266,7 +2508,7 @@ function showError(
 
 
 // ==========================================
-// Retry
+// RETRY
 // ==========================================
 
 function setupRetry() {
@@ -2274,6 +2516,7 @@ function setupRetry() {
     if (!retryButton) {
         return;
     }
+
 
     retryButton.addEventListener(
         "click",
@@ -2285,39 +2528,64 @@ function setupRetry() {
 
             showLoading();
 
+
             try {
 
-                if (!currentUser) {
+                const session =
+                    await getSession();
 
-                    currentUser =
-                        await getUser();
 
-                }
+                if (!session) {
 
-                if (!currentUser) {
+                    currentUser = null;
+                    currentProfile = null;
 
+                    showGuestHeader();
+                    showGuestSidebar();
                     renderGuestState();
 
                     return;
                 }
 
+
+                currentUser =
+                    await getUser();
+
+
+                if (!currentUser) {
+
+                    currentUser = null;
+                    currentProfile = null;
+
+                    showGuestHeader();
+                    showGuestSidebar();
+                    renderGuestState();
+
+                    return;
+                }
+
+
                 currentProfile =
                     await getProfile();
 
+
+                showUserHeader();
+
                 showUserSidebar();
 
-                renderHeader();
 
                 await loadSubscriptions();
+
 
                 setupRealtime();
 
             } catch (error) {
 
                 console.error(
-                    "Erreur retry subscriptions :",
+                    "NetView subscriptions retry error:",
                     error
                 );
+
 
                 showError(
                     "Impossible de recharger vos abonnements."
@@ -2335,24 +2603,28 @@ function setupRetry() {
 
 
 // ==========================================
-// Loading
+// LOADING
 // ==========================================
 
 function showLoading() {
 
     isLoading = true;
 
+
     showElement(
         loadingState
     );
+
 
     hideElement(
         emptyState
     );
 
+
     hideElement(
         filterEmptyState
     );
+
 
     hideElement(
         errorState
@@ -2364,6 +2636,7 @@ function hideLoading() {
 
     isLoading = false;
 
+
     hideElement(
         loadingState
     );
@@ -2371,7 +2644,7 @@ function hideLoading() {
 
 
 // ==========================================
-// State Helpers
+// STATE HELPERS
 // ==========================================
 
 function clearStates() {
@@ -2415,7 +2688,7 @@ function hideElement(
 
 
 // ==========================================
-// URLs
+// CHANNEL URL
 // ==========================================
 
 function getChannelUrl(
@@ -2426,6 +2699,7 @@ function getChannelUrl(
         return "channel.html";
     }
 
+
     if (channel.handle) {
 
         return `channel.html?handle=${encodeURIComponent(
@@ -2433,6 +2707,7 @@ function getChannelUrl(
         )}`;
 
     }
+
 
     if (channel.id) {
 
@@ -2442,9 +2717,14 @@ function getChannelUrl(
 
     }
 
+
     return "channel.html";
 }
 
+
+// ==========================================
+// CONTENT URL
+// ==========================================
 
 function getContentUrl(
     content
@@ -2453,6 +2733,7 @@ function getContentUrl(
     if (!content) {
         return "index.html";
     }
+
 
     if (
         content.contentType ===
@@ -2465,6 +2746,7 @@ function getContentUrl(
 
     }
 
+
     if (
         content.contentType ===
         "lives"
@@ -2476,6 +2758,7 @@ function getContentUrl(
 
     }
 
+
     return `player.html?id=${encodeURIComponent(
         content.id
     )}`;
@@ -2483,7 +2766,7 @@ function getContentUrl(
 
 
 // ==========================================
-// Thumbnail
+// THUMBNAIL
 // ==========================================
 
 function getThumbnail(
@@ -2493,6 +2776,7 @@ function getThumbnail(
     if (!content) {
         return DEFAULT_THUMBNAIL;
     }
+
 
     const candidates = [
 
@@ -2508,6 +2792,7 @@ function getThumbnail(
 
     ];
 
+
     const found =
         candidates.find(
             value =>
@@ -2515,13 +2800,14 @@ function getThumbnail(
                 value.trim()
         );
 
+
     return found ||
         DEFAULT_THUMBNAIL;
 }
 
 
 // ==========================================
-// Dates
+// DATES
 // ==========================================
 
 function getRawDate(
@@ -2545,12 +2831,15 @@ function getContentDate(
     const raw =
         getRawDate(content);
 
+
     if (!raw) {
         return "";
     }
 
+
     const date =
         new Date(raw);
+
 
     if (
         Number.isNaN(
@@ -2560,23 +2849,33 @@ function getContentDate(
         return "";
     }
 
+
     const diff =
         Date.now() -
         date.getTime();
+
+
+    if (diff < 0) {
+        return "à l'instant";
+    }
+
 
     const seconds =
         Math.floor(
             diff / 1000
         );
 
+
     if (seconds < 60) {
         return "à l'instant";
     }
+
 
     const minutes =
         Math.floor(
             seconds / 60
         );
+
 
     if (minutes < 60) {
 
@@ -2584,10 +2883,12 @@ function getContentDate(
 
     }
 
+
     const hours =
         Math.floor(
             minutes / 60
         );
+
 
     if (hours < 24) {
 
@@ -2595,10 +2896,12 @@ function getContentDate(
 
     }
 
+
     const days =
         Math.floor(
             hours / 24
         );
+
 
     if (days < 30) {
 
@@ -2606,10 +2909,12 @@ function getContentDate(
 
     }
 
+
     const months =
         Math.floor(
             days / 30
         );
+
 
     if (months < 12) {
 
@@ -2617,10 +2922,12 @@ function getContentDate(
 
     }
 
+
     const years =
         Math.floor(
             months / 12
         );
+
 
     return `il y a ${years} an${
         years > 1 ? "s" : ""
@@ -2629,7 +2936,7 @@ function getContentDate(
 
 
 // ==========================================
-// Number Formatting
+// NUMBER FORMAT
 // ==========================================
 
 function formatNumber(
@@ -2639,11 +2946,13 @@ function formatNumber(
     const number =
         Number(value);
 
+
     if (
         !Number.isFinite(number)
     ) {
         return "0";
     }
+
 
     if (number < 1000) {
 
@@ -2652,6 +2961,7 @@ function formatNumber(
         );
 
     }
+
 
     if (number < 1000000) {
 
@@ -2663,6 +2973,7 @@ function formatNumber(
 
     }
 
+
     if (number < 1000000000) {
 
         return `${(
@@ -2673,6 +2984,7 @@ function formatNumber(
 
     }
 
+
     return `${(
         number / 1000000000
     ).toFixed(1)} Md`;
@@ -2680,7 +2992,7 @@ function formatNumber(
 
 
 // ==========================================
-// Duration
+// DURATION
 // ==========================================
 
 function formatDuration(
@@ -2695,8 +3007,10 @@ function formatDuration(
         return "";
     }
 
+
     let seconds =
         Number(value);
+
 
     if (
         !Number.isFinite(seconds) ||
@@ -2705,13 +3019,16 @@ function formatDuration(
         return "";
     }
 
+
     seconds =
         Math.floor(seconds);
+
 
     const hours =
         Math.floor(
             seconds / 3600
         );
+
 
     const minutes =
         Math.floor(
@@ -2719,8 +3036,10 @@ function formatDuration(
             60
         );
 
+
     const remainingSeconds =
         seconds % 60;
+
 
     if (hours > 0) {
 
@@ -2740,6 +3059,7 @@ function formatDuration(
 
     }
 
+
     return [
         minutes,
         String(
@@ -2753,7 +3073,7 @@ function formatDuration(
 
 
 // ==========================================
-// HTML Security
+// HTML SECURITY
 // ==========================================
 
 function escapeHTML(
@@ -2797,7 +3117,7 @@ function escapeAttribute(
 
 
 // ==========================================
-// Page Cleanup
+// PAGE CLEANUP
 // ==========================================
 
 window.addEventListener(
