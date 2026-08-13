@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Retrouvez les dernières vidéos, shorts et lives des chaînes auxquelles vous êtes abonné sur NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#0B1220"
+    >
+
+    <meta
+        name="color-scheme"
+        content="dark"
+    >
+
+    <title>Abonnements - NetView</title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         NETVIEW CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/animations.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/forms.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/footer.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/loader.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/pages/subscriptions.css"
+    >
+
+</head>
+
+
+<body class="subscriptions-page">
+
+
+    <!-- =====================================================
+         APP
+         ===================================================== -->
+
+    <div class="app">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header
+            class="nv-header"
+            id="main-header"
+        >
+
+            <!-- HEADER LEFT -->
+
+            <div class="nv-header-left">
+
+                <button
+                    type="button"
+                    class="nv-icon-button"
+                    id="sidebar-toggle"
+                    aria-label="Ouvrir le menu"
+                    aria-expanded="false"
+                    aria-controls="main-sidebar"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+
+                <a
+                    href="index.html"
+                    class="nv-logo"
+                    aria-label="NetView - Accueil"
+                >
+                    <img
+                        src="assets/images/NetView.png"
+                        alt="NetView"
+                    >
+                </a>
+
+            </div>
+
+
+            <!-- HEADER CENTER -->
+
+            <div class="nv-header-center">
+
+                <form
+                    class="nv-search-form"
+                    id="global-search-form"
+                    role="search"
+                >
+
+                    <input
+                        type="search"
+                        class="nv-search-input"
+                        id="global-search-input"
+                        name="q"
+                        placeholder="Rechercher sur NetView"
+                        autocomplete="off"
+                        aria-label="Rechercher sur NetView"
+                    >
+
+                    <button
+                        type="submit"
+                        class="nv-search-button"
+                        aria-label="Rechercher"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- HEADER RIGHT -->
+
+            <div class="nv-header-right">
+
+
+                <!-- CREATE -->
+
+                <a
+                    href="publish.html"
+                    class="nv-icon-button"
+                    aria-label="Créer"
+                    title="Créer"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+
+
+                <!-- NOTIFICATIONS -->
+
+                <a
+                    href="notification.html"
+                    class="nv-icon-button nv-notification-button"
+                    id="header-notification-button"
+                    aria-label="Notifications"
+                    title="Notifications"
+                >
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span
+                        class="nv-notification-badge"
+                        id="header-notification-badge"
+                        hidden
+                    >
+                        0
+                    </span>
+
+                </a>
+
+
+                <!-- PROFILE -->
+
+                <a
+                    href="profile.html"
+                    class="nv-header-profile"
+                    id="header-profile-link"
+                    aria-label="Mon profil"
+                    title="Mon profil"
+                >
+
+                    <img
+                        id="header-profile-avatar"
+                        src="assets/images/default-avatar.png"
+                        alt="Mon profil"
+                    >
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             LAYOUT
+             ================================================= -->
+
+        <div class="nv-layout">
+
+
+          
+
+                    <!-- PLAYLISTS -->
+
+                    <a
+                        href="playlist.html"
+                        class="nv-sidebar-item"
+                    >
+                        <i class="fa-solid fa-list"></i>
+                        <span>Playlists</span>
+                    </a>
+
+
+                    <!-- LIVES -->
+
+                    <a
+                        href="lives.html"
+                        class="nv-sidebar-item"
+                    >
+                        <i class="fa-solid fa-tower-broadcast"></i>
+                        <span>Lives</span>
+                    </a>
+
+
+                    <div class="nv-sidebar-divider"></div>
+
+
+                    <!-- PARAMÈTRES -->
+
+                    <a
+                        href="settings.html"
+                        class="nv-sidebar-item"
+                    >
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Paramètres</span>
+                    </a>
+
+
+                    <!-- AIDE -->
+
+                    <a
+                        href="help.html"
+                        class="nv-sidebar-item"
+                    >
+                        <i class="fa-regular fa-circle-question"></i>
+                        <span>Aide</span>
+                    </a>
+
+                </nav>
+
+            </aside>
+
+
+            <!-- SIDEBAR OVERLAY -->
+
+            <div
+                class="nv-sidebar-overlay"
+                id="sidebar-overlay"
+                aria-hidden="true"
+            ></div>
+
+
+            <!-- =================================================
+                 MAIN
+                 ================================================= -->
+
+            <main
+                class="nv-main-content"
+                id="main-content"
+            >
+
+                <div class="page-content">
+
+
+                    <!-- =================================================
+                         PAGE HEADER
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-header"
+                        aria-labelledby="subscriptions-page-title"
+                    >
+
+                        <div class="page-header-content">
+
+
+                            <div class="page-title-wrapper">
+
+                                <div
+                                    class="page-title-icon"
+                                    aria-hidden="true"
+                                >
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </div>
+
+
+                                <div>
+
+                                    <h1
+                                        class="page-title"
+                                        id="subscriptions-page-title"
+                                    >
+                                        Abonnements
+                                    </h1>
+
+                                    <p class="page-subtitle">
+                                        Retrouvez les dernières publications
+                                        des chaînes que vous suivez.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- DISCOVER -->
+
+                            <a
+                                href="search.html"
+                                class="subscriptions-discover-button"
+                            >
+
+                                <i class="fa-solid fa-compass"></i>
+
+                                <span>
+                                    Découvrir des chaînes
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         SUBSCRIBED CHANNELS
+                         ================================================= -->
+
+                    <section
+                        class="subscription-channels-section"
+                        aria-labelledby="subscription-channels-title"
+                    >
+
+                        <div class="section-header">
+
+                            <div>
+
+                                <h2
+                                    class="section-title"
+                                    id="subscription-channels-title"
+                                >
+                                    Vos abonnements
+                                </h2>
+
+                                <p class="section-subtitle">
+                                    Les chaînes que vous suivez
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="section-view-all"
+                                id="view-all-subscriptions"
+                            >
+
+                                <span>
+                                    Voir tout
+                                </span>
+
+                                <i class="fa-solid fa-arrow-right"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- CHANNEL LIST -->
+
+                        <div
+                            class="subscription-channels"
+                            id="subscription-channels"
+                            aria-live="polite"
+                        >
+                            <!-- Généré par subscriptions.js -->
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         FILTER TOOLBAR
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-toolbar"
+                        aria-label="Filtres des abonnements"
+                    >
+
+                        <div
+                            class="subscription-filters"
+                            role="tablist"
+                            aria-label="Type de contenu"
+                        >
+
+
+                            <!-- ALL -->
+
+                            <button
+                                type="button"
+                                class="subscription-filter active"
+                                data-filter="all"
+                                role="tab"
+                                aria-selected="true"
+                            >
+
+                                <i class="fa-solid fa-border-all"></i>
+
+                                <span>
+                                    Tous
+                                </span>
+
+                            </button>
+
+
+                            <!-- VIDEOS -->
+
+                            <button
+                                type="button"
+                                class="subscription-filter"
+                                data-filter="videos"
+                                role="tab"
+                                aria-selected="false"
+                            >
+
+                                <i class="fa-solid fa-play"></i>
+
+                                <span>
+                                    Vidéos
+                                </span>
+
+                            </button>
+
+
+                            <!-- SHORTS -->
+
+                            <button
+                                type="button"
+                                class="subscription-filter"
+                                data-filter="shorts"
+                                role="tab"
+                                aria-selected="false"
+                            >
+
+                                <i class="fa-solid fa-bolt"></i>
+
+                                <span>
+                                    Shorts
+                                </span>
+
+                            </button>
+
+
+                            <!-- LIVES -->
+
+                            <button
+                                type="button"
+                                class="subscription-filter"
+                                data-filter="lives"
+                                role="tab"
+                                aria-selected="false"
+                            >
+
+                                <i class="fa-solid fa-tower-broadcast"></i>
+
+                                <span>
+                                    Lives
+                                </span>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- SORT -->
+
+                        <div class="subscription-sort-wrapper">
+
+                            <label
+                                for="subscription-sort"
+                                class="sr-only"
+                            >
+                                Trier les contenus
+                            </label>
+
+                            <select
+                                id="subscription-sort"
+                                class="subscription-sort"
+                            >
+
+                                <option value="recent">
+                                    Plus récents
+                                </option>
+
+                                <option value="oldest">
+                                    Plus anciens
+                                </option>
+
+                                <option value="popular">
+                                    Plus populaires
+                                </option>
+
+                            </select>
+
+                            <i class="fa-solid fa-chevron-down"></i>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         LIVE SECTION
+                         ================================================= -->
+
+                    <section
+                        class="subscription-live-section"
+                        id="subscription-live-section"
+                        aria-labelledby="subscription-live-title"
+                        hidden
+                    >
+
+                        <div class="section-header">
+
+                            <div>
+
+                                <h2
+                                    class="section-title"
+                                    id="subscription-live-title"
+                                >
+                                    En direct
+                                </h2>
+
+                                <p class="section-subtitle">
+                                    Les chaînes auxquelles vous êtes abonné
+                                    qui sont actuellement en direct
+                                </p>
+
+                            </div>
+
+
+                            <span class="live-section-indicator">
+
+                                <span
+                                    class="live-indicator-dot"
+                                    aria-hidden="true"
+                                ></span>
+
+                                EN DIRECT
+
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="subscription-live-grid"
+                            id="subscription-live-grid"
+                        >
+                            <!-- Généré par subscriptions.js -->
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         CONTENT SECTION
+                         ================================================= -->
+
+                    <section
+                        class="subscription-content-section"
+                        aria-labelledby="subscription-content-title"
+                    >
+
+                        <div class="section-header">
+
+                            <div>
+
+                                <h2
+                                    class="section-title"
+                                    id="subscription-content-title"
+                                >
+                                    Dernières publications
+                                </h2>
+
+                                <p
+                                    class="section-subtitle"
+                                    id="subscription-content-subtitle"
+                                >
+                                    Les contenus les plus récents de vos
+                                    chaînes
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- VIDEO GRID -->
+
+                        <div
+                            class="subscription-content-grid"
+                            id="subscription-content-grid"
+                            aria-live="polite"
+                        >
+                            <!-- Généré par subscriptions.js -->
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         LOADING STATE
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-loading"
+                        id="subscriptions-loading"
+                        aria-label="Chargement des abonnements"
+                        hidden
+                    >
+
+                        <div class="subscription-skeleton-channels">
+
+                            <div class="subscription-channel-skeleton">
+                                <div class="skeleton skeleton-channel-avatar"></div>
+                                <div class="skeleton skeleton-channel-name"></div>
+                            </div>
+
+                            <div class="subscription-channel-skeleton">
+                                <div class="skeleton skeleton-channel-avatar"></div>
+                                <div class="skeleton skeleton-channel-name"></div>
+                            </div>
+
+                            <div class="subscription-channel-skeleton">
+                                <div class="skeleton skeleton-channel-avatar"></div>
+                                <div class="skeleton skeleton-channel-name"></div>
+                            </div>
+
+                            <div class="subscription-channel-skeleton">
+                                <div class="skeleton skeleton-channel-avatar"></div>
+                                <div class="skeleton skeleton-channel-name"></div>
+                            </div>
+
+                            <div class="subscription-channel-skeleton">
+                                <div class="skeleton skeleton-channel-avatar"></div>
+                                <div class="skeleton skeleton-channel-name"></div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="subscription-skeleton-grid">
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                            <article class="subscription-card-skeleton">
+                                <div class="skeleton skeleton-video-thumbnail"></div>
+                                <div class="skeleton skeleton-video-title"></div>
+                                <div class="skeleton skeleton-video-line"></div>
+                                <div class="skeleton skeleton-video-line small"></div>
+                            </article>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         EMPTY STATE
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-empty"
+                        id="subscriptions-empty"
+                        aria-labelledby="subscriptions-empty-title"
+                        hidden
+                    >
+
+                        <div
+                            class="subscriptions-empty-icon"
+                            aria-hidden="true"
+                        >
+                            <i class="fa-regular fa-bell"></i>
+                        </div>
+
+
+                        <h2
+                            id="subscriptions-empty-title"
+                        >
+                            Aucun abonnement
+                        </h2>
+
+
+                        <p>
+                            Vous ne suivez encore aucune chaîne.
+                            Abonnez-vous à vos créateurs préférés pour
+                            retrouver leurs dernières publications ici.
+                        </p>
+
+
+                        <a
+                            href="search.html"
+                            class="subscriptions-empty-button"
+                        >
+
+                            <i class="fa-solid fa-compass"></i>
+
+                            <span>
+                                Découvrir des chaînes
+                            </span>
+
+                        </a>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         FILTER EMPTY STATE
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-filter-empty"
+                        id="subscriptions-filter-empty"
+                        hidden
+                    >
+
+                        <div
+                            class="subscriptions-filter-empty-icon"
+                            aria-hidden="true"
+                        >
+                            <i class="fa-regular fa-folder-open"></i>
+                        </div>
+
+
+                        <h2>
+                            Aucun contenu
+                        </h2>
+
+
+                        <p id="subscriptions-filter-empty-message">
+                            Aucun contenu ne correspond à ce filtre pour
+                            le moment.
+                        </p>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         ERROR STATE
+                         ================================================= -->
+
+                    <section
+                        class="subscriptions-error"
+                        id="subscriptions-error"
+                        aria-labelledby="subscriptions-error-title"
+                        hidden
+                    >
+
+                        <div
+                            class="subscriptions-error-icon"
+                            aria-hidden="true"
+                        >
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+
+
+                        <h2
+                            id="subscriptions-error-title"
+                        >
+                            Impossible de charger vos abonnements
+                        </h2>
+
+
+                        <p id="subscriptions-error-message">
+                            Une erreur est survenue lors du chargement
+                            des données. Veuillez réessayer.
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="subscriptions-retry-button"
+                            id="subscriptions-retry-button"
+                        >
+
+                            <i class="fa-solid fa-rotate-right"></i>
+
+                            <span>
+                                Réessayer
+                            </span>
+
+                        </button>
+
+                    </section>
+
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ONLY PAGE SCRIPT
+         subscriptions.js imports the NetView core modules.
+         ===================================================== -->
+
+    <script
+        type="module"
+        src="js/pages/subscriptions.js"
+    ></script>
+
+</body>
+
+</html>
