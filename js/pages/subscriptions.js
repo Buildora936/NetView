@@ -43,6 +43,31 @@ const globalSearchInput =
 const headerRight =
     document.getElementById("headerRight");
 
+const uploadButton =
+    document.getElementById(
+        "uploadButton"
+    );
+
+const notificationsButton =
+    document.getElementById(
+        "notificationsButton"
+    );
+
+const notificationBadge =
+    document.getElementById(
+        "notificationBadge"
+    );
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+const headerAvatar =
+    document.getElementById(
+        "headerAvatar"
+    );
+
 const subscriptionChannels =
     document.getElementById("subscription-channels");
 
@@ -533,10 +558,42 @@ function setupSearch() {
 
 
 // ==========================================
-// Header
+// Guest Header
 // ==========================================
 
-function renderHeader() {
+function showGuestHeader() {
+
+    if (!headerRight) {
+        return;
+    }
+
+    headerRight.innerHTML = `
+
+        <button
+            type="button"
+            id="loginButton"
+            class="nv-login-button"
+            aria-label="S'identifier"
+        >
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>
+                S'identifier
+            </span>
+
+        </button>
+
+    `;
+
+}
+
+
+// ==========================================
+// User Header
+// ==========================================
+
+function showUserHeader() {
 
     if (!headerRight) {
         return;
@@ -544,7 +601,7 @@ function renderHeader() {
 
     const avatar =
         currentProfile?.avatar_url ||
-        DEFAULT_AVATAR;
+        "images/default-avatar.png";
 
     const displayName =
         currentProfile?.display_name ||
@@ -553,6 +610,23 @@ function renderHeader() {
         "Utilisateur";
 
     headerRight.innerHTML = `
+
+        <!-- PUBLICATION -->
+
+        <button
+            type="button"
+            class="nv-icon-button"
+            id="uploadButton"
+            aria-label="Publier"
+            title="Publier"
+        >
+
+            <i class="fa-solid fa-plus nv-plus-icon"></i>
+
+        </button>
+
+
+        <!-- NOTIFICATIONS -->
 
         <button
             type="button"
@@ -566,9 +640,12 @@ function renderHeader() {
 
         </button>
 
+
+        <!-- PROFIL -->
+
         <a
             href="profile.html"
-            class="nv-header-avatar"
+            class="nv-header-profile-avatar"
             aria-label="Mon profil"
             title="${escapeAttribute(displayName)}"
         >
@@ -582,6 +659,11 @@ function renderHeader() {
         </a>
 
     `;
+
+
+    // ==========================================
+    // Notifications
+    // ==========================================
 
     const notificationButton =
         document.getElementById(
@@ -601,8 +683,32 @@ function renderHeader() {
         );
 
     }
-}
 
+
+    // ==========================================
+    // Upload
+    // ==========================================
+
+    const uploadButton =
+        document.getElementById(
+            "uploadButton"
+        );
+
+    if (uploadButton) {
+
+        uploadButton.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    "publish.html";
+
+            }
+        );
+
+    }
+
+}
 
 // ==========================================
 // Load Subscriptions
