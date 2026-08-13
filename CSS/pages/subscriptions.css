@@ -33,6 +33,12 @@
 /* =========================================================
    PAGE HEADER
    ========================================================= */
+.nv-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 220px;
+}
 
 .subscriptions-header {
     position: relative;
@@ -221,6 +227,154 @@
 
 .nv-login-button:hover {
     background: rgba(37, 99, 235, .12);
+}
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.nv-sidebar {
+    position: fixed;
+
+    top: 64px;
+    left: 0;
+    bottom: 0;
+
+    z-index: 900;
+
+    width: 248px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 14px 10px;
+
+    background: rgba(11, 18, 32, 0.97);
+
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+
+    scrollbar-width: thin;
+    scrollbar-color: #253045 transparent;
+
+    transform: translateX(-100%);
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        transform 250ms ease,
+        visibility 250ms ease;
+}
+
+.nv-sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nv-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nv-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nv-sidebar::-webkit-scrollbar-thumb {
+    background: #253045;
+    border-radius: 999px;
+}
+
+.nv-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nv-sidebar-item {
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 0 14px;
+
+    border-radius: 11px;
+
+    color: #C5CEDB;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+}
+
+.nv-sidebar-item:hover {
+    background: #1F2937;
+    color: #FFFFFF;
+}
+
+.nv-sidebar-item.active {
+    background: rgba(37, 99, 235, 0.16);
+    color: #60A5FA;
+    font-weight: 600;
+}
+
+.nv-sidebar-item i {
+    width: 20px;
+    flex-shrink: 0;
+
+    text-align: center;
+    font-size: 17px;
+}
+
+.nv-sidebar-badge {
+    margin-left: auto;
+
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 5px;
+
+    border-radius: 999px;
+
+    background: #2563EB;
+    color: #FFFFFF;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.nv-sidebar-divider {
+    height: 1px;
+
+    margin: 10px 8px;
+
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.nv-sidebar-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 64px 0 0 0;
+
+    z-index: 850;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 /* =========================================================
