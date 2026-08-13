@@ -447,22 +447,17 @@ body {
     margin-bottom: 32px;
 }
 
-/* ==========================================
-    Grille Style YouTube (6 par ligne)
-========================================== */
+/* =========================================================
+   NETVIEW — VIDEO GRID & CARDS
+   ========================================================= */
+
 .nv-videos-grid,
-.nv-videos-feed,
-.nv-videos-grid {
+#videosGrid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 28px 20px;
     width: 100%;
 }
-
-
-/* =========================================================
-   4. VIDEO CARD
-   ========================================================= */
 
 .nv-video-card {
     min-width: 0;
@@ -477,65 +472,32 @@ body {
     transform: translateY(-5px);
 }
 
-
-/* =========================================================
-   6. VIDEO LINK
-   ========================================================= */
-
 .nv-video-link-wrapper {
     display: block;
     color: inherit;
     text-decoration: none;
 }
 
-
-/* =========================================================
-   7. VIDEO THUMBNAIL
-   ========================================================= */
-
 .nv-video-thumbnail {
     position: relative;
-
     width: 100%;
     aspect-ratio: 16 / 9;
-
     overflow: hidden;
-
     border-radius: var(--nv-radius-lg);
-
-    background:
-        linear-gradient(
-            135deg,
-            #e2e8f0,
-            #cbd5e1
-        );
-
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
     box-shadow: var(--nv-shadow-sm);
-
     isolation: isolate;
 }
 
 .nv-video-thumbnail::after {
     content: "";
-
     position: absolute;
     inset: 0;
-
     z-index: 1;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 55%,
-            rgba(0,0,0,.18)
-        );
-
+    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, .18));
     pointer-events: none;
-
     opacity: .55;
-
-    transition:
-        opacity var(--nv-transition);
+    transition: opacity var(--nv-transition);
 }
 
 .nv-video-card:hover .nv-video-thumbnail::after {
@@ -545,11 +507,9 @@ body {
 .nv-video-thumbnail img {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     transition:
-        transform .55s cubic-bezier(.2,.7,.2,1),
+        transform .55s cubic-bezier(.2, .7, .2, 1),
         filter var(--nv-transition);
 }
 
@@ -558,65 +518,39 @@ body {
     filter: brightness(.94);
 }
 
-
-/* =========================================================
-   8. VIDEO DURATION
-   ========================================================= */
-
 .nv-video-duration {
     position: absolute;
-
     right: 10px;
     bottom: 10px;
-
     z-index: 3;
-
     padding: 4px 7px;
-
     border-radius: 6px;
-
     color: #fff;
-
     background: rgba(0, 0, 0, .78);
-
     backdrop-filter: blur(5px);
-
     font-size: 12px;
     font-weight: 700;
     line-height: 1;
-
     letter-spacing: .2px;
 }
-
-
-/* =========================================================
-   9. VIDEO CONTENT
-   ========================================================= */
 
 .nv-video-content {
     display: flex;
     align-items: flex-start;
-
     gap: 12px;
-
     padding: 13px 2px 0;
 }
 
 .nv-video-avatar {
     flex: 0 0 40px;
-
     width: 40px;
     height: 40px;
-
     overflow: hidden;
-
     border-radius: 50%;
-
     background: #e2e8f0;
-
     box-shadow:
         0 0 0 2px #fff,
-        0 3px 10px rgba(15,23,42,.12);
+        0 3px 10px rgba(15, 23, 42, .12);
 }
 
 .nv-video-avatar img {
@@ -625,11 +559,6 @@ body {
     object-fit: cover;
 }
 
-
-/* =========================================================
-   10. VIDEO INFORMATION
-   ========================================================= */
-
 .nv-video-info {
     min-width: 0;
     flex: 1;
@@ -637,17 +566,13 @@ body {
 
 .nv-video-title {
     margin: 0;
-
     font-size: 15px;
     line-height: 1.4;
     font-weight: 750;
-
     color: var(--nv-text);
-
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-
     overflow: hidden;
 }
 
@@ -662,20 +587,14 @@ body {
 
 .nv-video-channel {
     display: inline-block;
-
     max-width: 100%;
-
     margin-top: 5px;
-
     color: var(--nv-muted);
-
     font-size: 13px;
     font-weight: 600;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
     text-decoration: none;
 }
 
@@ -688,38 +607,23 @@ body {
     flex-wrap: wrap;
     align-items: center;
     gap: 5px;
-
     margin-top: 4px;
-
     color: #94a3b8;
-
     font-size: 12px;
 }
 
-
-/* =========================================================
-   11. VIDEO MENU
-   ========================================================= */
-
 .nv-video-menu-btn {
     flex: 0 0 34px;
-
     width: 34px;
     height: 34px;
-
     border: 0;
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: transparent;
-
     color: var(--nv-muted);
-
     cursor: pointer;
-
     transition:
         background var(--nv-transition-fast),
         color var(--nv-transition-fast),
@@ -730,6 +634,62 @@ body {
     color: var(--nv-blue);
     background: #eff6ff;
     transform: scale(1.08);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1100px) {
+    .nv-videos-grid,
+    #videosGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 16px;
+    }
+}
+
+@media (max-width: 700px) {
+    .nv-videos-grid,
+    #videosGrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    .nv-video-card {
+        width: 100%;
+    }
+
+    .nv-video-thumbnail {
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 420px) {
+    .nv-video-content {
+        gap: 9px;
+        padding-top: 10px;
+    }
+
+    .nv-video-avatar {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .nv-video-title {
+        font-size: 14px;
+    }
+
+    .nv-video-meta {
+        font-size: 11px;
+    }
+
+    .nv-video-channel {
+        font-size: 12px;
+    }
+
+    .nv-video-duration {
+        right: 8px;
+        bottom: 8px;
+        font-size: 11px;
+    }
 }
 /* ==========================================
     Ultra-Styled Product Card (NetView Store)
