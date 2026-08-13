@@ -134,106 +134,25 @@
              HEADER
              ================================================= -->
 
-        <header
-            class="nv-header"
-            id="main-header"
-        >
+        <header class="nv-header">
+    <div class="nv-header-left">
+        <button id="menuButton" class="nv-icon-button" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+        <a href="index.html" class="nv-logo"><img src="NetView.png" alt="NetView"></a>
+    </div>
+    <div class="nv-header-center">
+        <form id="searchForm" class="nv-search-form">
+            <input id="searchInput" class="nv-search-input" type="search" placeholder="Rechercher">
+            <button class="nv-search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <div id="headerRight" class="nv-header-right"></div>
 
-            <!-- HEADER LEFT -->
+</header>
 
-            <div class="nv-header-left">
-
-                <button
-                    type="button"
-                    class="nv-icon-button"
-                    id="sidebar-toggle"
-                    aria-label="Ouvrir le menu"
-                    aria-expanded="false"
-                    aria-controls="main-sidebar"
-                >
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-
-  <a href="index.html" class="nv-logo"><img src="NetView.png" alt="NetView"></a>
-
-            </div>
-
-
-            <!-- HEADER CENTER -->
-
-            <div class="nv-header-center">
-
-                <form
-                    class="nv-search-form"
-                    id="global-search-form"
-                    role="search"
-                >
-
-                    <input
-                        type="search"
-                        class="nv-search-input"
-                        id="global-search-input"
-                        name="q"
-                        placeholder="Rechercher sur NetView"
-                        autocomplete="off"
-                        aria-label="Rechercher sur NetView"
-                    >
-
-                    <button
-                        type="submit"
-                        class="nv-search-button"
-                        aria-label="Rechercher"
-                    >
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-
-                </form>
-
-            </div>
-
-  <div id="headerRight" class="nv-header-right"></div>
-
-        </header>
-
-
-        <!-- =================================================
-             LAYOUT
-             ================================================= -->
-
-        <div class="nv-layout">
-
-
-          <!-- =================================================
-     SIDEBAR
-     Généré dynamiquement par subscriptions.js
-     ================================================= -->
-
-<aside
-    class="nv-sidebar"
-    id="main-sidebar"
-    aria-label="Navigation principale"
->
-    <nav
-        class="nv-sidebar-nav"
-        id="sidebar-nav"
-    >
-        <!--
-            Le contenu est injecté dynamiquement
-            par subscriptions.js selon l'état
-            de l'utilisateur.
-        -->
-    </nav>
+<aside id="sidebar" class="nv-sidebar">
+    <nav class="nv-sidebar-nav"></nav>
 </aside>
-
-
-            <!-- SIDEBAR OVERLAY -->
-
-            <div
-                class="nv-sidebar-overlay"
-                id="sidebar-overlay"
-                aria-hidden="true"
-            ></div>
-
+<div id="sidebarOverlay" class="nv-sidebar-overlay"></div>
 
             <!-- =================================================
                  MAIN
