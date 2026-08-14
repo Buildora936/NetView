@@ -908,21 +908,6 @@ function showUserSidebar() {
 
         </a>
 
-
-        <button
-            id="logoutButton"
-            class="nv-sidebar-button"
-            type="button"
-        >
-
-            <i class="fa-solid fa-right-from-bracket"></i>
-
-            <span>
-                Se déconnecter
-            </span>
-
-        </button>
-
     `;
 
 }
