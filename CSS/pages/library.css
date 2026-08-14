@@ -110,6 +110,33 @@
     flex-shrink: 0;
 }
 
+/* ==========================================
+    Header
+========================================== */
+.nv-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: var(--nv-surface);
+    border-bottom: 1px solid var(--nv-border);
+    z-index: 1000;
+}
+
+/* ==========================================
+    Header Left
+========================================== */
+.nv-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
 
 .nv-logo {
     display: flex;
@@ -121,6 +148,17 @@
     height: auto;
     object-fit: contain;
 }
+
+/* ==========================================
+    Header Center
+========================================== */
+.nv-header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 40px;
+}
+
 .nv-search-form {
     display: flex;
     width: 100%;
@@ -211,154 +249,121 @@
 .nv-login-button:hover {
     background: rgba(37, 99, 235, .12);
 }
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
 
+/* ==========================================
+    Sidebar
+========================================== */
 .nv-sidebar {
     position: fixed;
-
     top: 64px;
     left: 0;
     bottom: 0;
-
+    width: 72px;
+    background: var(--nv-surface);
+    border-right: 1px solid var(--nv-border);
+    overflow: hidden;
     z-index: 900;
-
-    width: 248px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding: 14px 10px;
-
-    background: rgba(11, 18, 32, 0.97);
-
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
-
-    scrollbar-width: thin;
-    scrollbar-color: #253045 transparent;
-
-    transform: translateX(-100%);
-    visibility: hidden;
-    pointer-events: none;
-
-    transition:
-        transform 250ms ease,
-        visibility 250ms ease;
+    transition: width .3s ease, transform .3s ease;
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
 }
 
-.nv-sidebar.open {
-    transform: translateX(0);
-    visibility: visible;
-    pointer-events: auto;
+.nv-sidebar.active {
+    width: 240px;
+    animation: nvSidebarOpen .3s ease;
 }
 
-.nv-sidebar::-webkit-scrollbar {
-    width: 5px;
-}
-
-.nv-sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.nv-sidebar::-webkit-scrollbar-thumb {
-    background: #253045;
-    border-radius: 999px;
-}
-
+/* La zone de navigation interne fixe (sans défilement) */
 .nv-sidebar-nav {
+    overflow-y: hidden;   /* Désactive le défilement vertical */
+    flex-grow: 1;       
     display: flex;
     flex-direction: column;
     gap: 4px;
+    padding: 12px 8px;
 }
 
-.nv-sidebar-item {
-    min-height: 44px;
-
+.nv-sidebar a {
+    height: 44px;
     display: flex;
     align-items: center;
-
-    gap: 14px;
-
+    gap: 20px;
     padding: 0 14px;
-
-    border-radius: 11px;
-
-    color: #C5CEDB;
-
+    border-radius: 12px;
+    color: var(--nv-text);
     text-decoration: none;
-
-    font-size: 14px;
-    font-weight: 500;
-
-    transition:
-        background 180ms ease,
-        color 180ms ease,
-        transform 180ms ease;
+    white-space: nowrap;
 }
 
-.nv-sidebar-item:hover {
-    background: #1F2937;
-    color: #FFFFFF;
+.nv-sidebar a:hover {
+    background: var(--nv-surface-hover);
 }
 
-.nv-sidebar-item.active {
-    background: rgba(37, 99, 235, 0.16);
-    color: #60A5FA;
-    font-weight: 600;
-}
-
-.nv-sidebar-item i {
-    width: 20px;
-    flex-shrink: 0;
-
+.nv-sidebar i {
+    width: 24px;
     text-align: center;
-    font-size: 17px;
+    font-size: 18px;
 }
 
-.nv-sidebar-badge {
-    margin-left: auto;
-
-    min-width: 20px;
-    height: 20px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0 5px;
-
-    border-radius: 999px;
-
-    background: #2563EB;
-    color: #FFFFFF;
-
-    font-size: 10px;
-    font-weight: 700;
+@keyframes nvSidebarOpen {
+    from {
+        transform: translateX(-20px);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
-.nv-sidebar-divider {
-    height: 1px;
-
-    margin: 10px 8px;
-
-    background: rgba(255, 255, 255, 0.07);
-}
-
+/* ==========================================
+    Overlay Mobile
+========================================== */
 .nv-sidebar-overlay {
-    display: none;
-
     position: fixed;
-
-    inset: 64px 0 0 0;
-
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s ease;
     z-index: 850;
-
-    background: rgba(0, 0, 0, 0.55);
-
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
 }
+
+.nv-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==========================================
+    Responsive Header & Sidebar
+========================================== */
+@media(max-width: 900px) {
+    .nv-header-center {
+        padding: 0 10px;
+    }
+    .nv-logo img {
+        width: 100px;
+    }
+}
+
+@media(max-width: 650px) {
+    .nv-header {
+        padding: 0 10px;
+    }
+    .nv-header-center {
+        display: none;
+    }
+    .nv-sidebar {
+        width: 0;
+    }
+    .nv-sidebar.active {
+        width: 240px;
+    }
+    .nv-login-button {
+        padding: 0 12px;
+        font-size: 14px;
+    }
+}
+
 /* ==========================================================
    BUTTONS
    ========================================================== */
