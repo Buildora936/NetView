@@ -1,359 +1,1001 @@
 // ==========================================
 // NetView
-// js/pages/library.js
-// Bibliothèque
-// Synchronisé avec data.js / auth.js / navigation.js / ui.js
+// library.js
+// ==========================================
+
+
+// ==========================================
+// Imports
 // ==========================================
 
 import {
-    getProfile,
-    getNotifications,
-    getUnreadNotificationCount,
-    markNotificationAsRead,
-    subscribeToNotifications,
-    getVideoById,
-    getWatchHistory,
-    deleteWatchHistory,
-    clearWatchHistory,
-    getWatchLater,
-    removeFromWatchLater,
-    getLikedVideos,
-    removeLikedVideo,
-    getPlaylists,
-    deletePlaylist,
-    getDownloads
-} from "../core/data.js";
-
-import {
+    getSession,
     getUser,
-    isAuthenticated
+    signOut
 } from "../core/auth.js";
 
 import {
-    initNavigation
+    getProfile,
+
+    getWatchHistory,
+    clearWatchHistory,
+
+    getWatchLater,
+    addWatchLater,
+    removeWatchLater,
+    hasWatchLater,
+
+    getLikedVideos,
+    likeVideo,
+    unlikeVideo,
+    hasLikedVideo,
+
+    getPlaylists,
+    getPlaylist,
+    createPlaylist,
+    updatePlaylist,
+    deletePlaylist,
+    addVideoToPlaylist,
+    removeVideoFromPlaylist,
+    updatePlaylistItemPosition
+} from "../core/data.js";
+
+import {
+    showLoader,
+    hideLoader
+} from "../core/ui.js";
+
+import {
+    navigate
 } from "../core/navigation.js";
 
 
 // ==========================================
-// DOM
+// Header
 // ==========================================
 
-const $ = (selector) =>
-    document.querySelector(selector);
+const menuButton =
+    document.getElementById(
+        "menuButton"
+    );
 
-const $$ = (selector) =>
-    document.querySelectorAll(selector);
+const searchForm =
+    document.getElementById(
+        "searchForm"
+    );
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+const searchButton =
+    searchForm?.querySelector(
+        ".nv-search-button"
+    );
+
+const headerRight =
+    document.getElementById(
+        "headerRight"
+    );
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+const sidebarNav =
+    sidebar?.querySelector(
+        ".nv-sidebar-nav"
+    );
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
 
 
 // ==========================================
-// State
+// Main
 // ==========================================
 
-const state = {
-    activeTab: "history",
-
-    history: [],
-    watchLater: [],
-    liked: [],
-    playlists: [],
-    downloads: [],
-
-    search: "",
-    filter: "all",
-    sort: "recent",
-
-    loading: false,
-
-    confirmAction: null,
-
-    notificationChannel: null
-};
+const mainContent =
+    document.getElementById(
+        "mainContent"
+    );
 
 
 // ==========================================
-// Initialization
+// Library Tabs
+// ==========================================
+
+const libraryTabs =
+    document.getElementById(
+        "libraryTabs"
+    );
+
+const libraryTabHistory =
+    document.getElementById(
+        "libraryTabHistory"
+    );
+
+const libraryTabWatchLater =
+    document.getElementById(
+        "libraryTabWatchLater"
+    );
+
+const libraryTabLiked =
+    document.getElementById(
+        "libraryTabLiked"
+    );
+
+const libraryTabPlaylists =
+    document.getElementById(
+        "libraryTabPlaylists"
+    );
+
+
+// ==========================================
+// Library Sections
+// ==========================================
+
+const libraryHistorySection =
+    document.getElementById(
+        "libraryHistorySection"
+    );
+
+const libraryWatchLaterSection =
+    document.getElementById(
+        "libraryWatchLaterSection"
+    );
+
+const libraryLikedSection =
+    document.getElementById(
+        "libraryLikedSection"
+    );
+
+const libraryPlaylistsSection =
+    document.getElementById(
+        "libraryPlaylistsSection"
+    );
+
+
+// ==========================================
+// Search / Filter / Sort
+// ==========================================
+
+const librarySearchInput =
+    document.getElementById(
+        "librarySearchInput"
+    );
+
+const clearLibrarySearch =
+    document.getElementById(
+        "clearLibrarySearch"
+    );
+
+const libraryFilter =
+    document.getElementById(
+        "libraryFilter"
+    );
+
+const librarySort =
+    document.getElementById(
+        "librarySort"
+    );
+
+const librarySearchEmpty =
+    document.getElementById(
+        "librarySearchEmpty"
+    );
+
+const clearSearchEmptyButton =
+    document.getElementById(
+        "clearSearchEmptyButton"
+    );
+
+
+// ==========================================
+// Refresh
+// ==========================================
+
+const libraryRefreshButton =
+    document.getElementById(
+        "libraryRefreshButton"
+    );
+
+
+// ==========================================
+// History
+// ==========================================
+
+const historyLoading =
+    document.getElementById(
+        "historyLoading"
+    );
+
+const historyGrid =
+    document.getElementById(
+        "historyGrid"
+    );
+
+const historyEmpty =
+    document.getElementById(
+        "historyEmpty"
+    );
+
+const clearHistoryButton =
+    document.getElementById(
+        "clearHistoryButton"
+    );
+
+const historyCount =
+    document.getElementById(
+        "historyCount"
+    );
+
+
+// ==========================================
+// Watch Later
+// ==========================================
+
+const watchLaterLoading =
+    document.getElementById(
+        "watchLaterLoading"
+    );
+
+const watchLaterGrid =
+    document.getElementById(
+        "watchLaterGrid"
+    );
+
+const watchLaterEmpty =
+    document.getElementById(
+        "watchLaterEmpty"
+    );
+
+const watchLaterCount =
+    document.getElementById(
+        "watchLaterCount"
+    );
+
+
+// ==========================================
+// Liked
+// ==========================================
+
+const likedLoading =
+    document.getElementById(
+        "likedLoading"
+    );
+
+const likedGrid =
+    document.getElementById(
+        "likedGrid"
+    );
+
+const likedEmpty =
+    document.getElementById(
+        "likedEmpty"
+    );
+
+const likedCount =
+    document.getElementById(
+        "likedCount"
+    );
+
+
+// ==========================================
+// Playlists
+// ==========================================
+
+const playlistsLoading =
+    document.getElementById(
+        "playlistsLoading"
+    );
+
+const playlistsGrid =
+    document.getElementById(
+        "playlistsGrid"
+    );
+
+const playlistsEmpty =
+    document.getElementById(
+        "playlistsEmpty"
+    );
+
+const playlistsCount =
+    document.getElementById(
+        "playlistsCount"
+    );
+
+
+// ==========================================
+// Error
+// ==========================================
+
+const libraryError =
+    document.getElementById(
+        "libraryError"
+    );
+
+const libraryRetryButton =
+    document.getElementById(
+        "libraryRetryButton"
+    );
+
+
+// ==========================================
+// Confirmation Modal
+// ==========================================
+
+const libraryConfirmModal =
+    document.getElementById(
+        "libraryConfirmModal"
+    );
+
+const libraryConfirmClose =
+    document.getElementById(
+        "libraryConfirmClose"
+    );
+
+const libraryConfirmCancel =
+    document.getElementById(
+        "libraryConfirmCancel"
+    );
+
+const libraryConfirmAction =
+    document.getElementById(
+        "libraryConfirmAction"
+    );
+
+const libraryConfirmMessage =
+    document.getElementById(
+        "libraryConfirmMessage"
+    );
+
+const libraryConfirmBackdrop =
+    libraryConfirmModal?.querySelector(
+        ".library-modal-backdrop"
+    );
+
+
+// ==========================================
+// Toast
+// ==========================================
+
+const libraryToast =
+    document.getElementById(
+        "libraryToast"
+    );
+
+const libraryToastIcon =
+    document.getElementById(
+        "libraryToastIcon"
+    );
+
+const libraryToastMessage =
+    document.getElementById(
+        "libraryToastMessage"
+    );
+
+
+// ==========================================
+// Global State
+// ==========================================
+
+let currentUser =
+    null;
+
+let currentProfile =
+    null;
+
+let sidebarOpen =
+    false;
+
+let currentTab =
+    "history";
+
+let searchQuery =
+    "";
+
+let currentFilter =
+    "all";
+
+let currentSort =
+    "recent";
+
+let isLoading =
+    false;
+
+let historyData =
+    [];
+
+let watchLaterData =
+    [];
+
+let likedData =
+    [];
+
+let playlistsData =
+    [];
+
+let filteredHistory =
+    [];
+
+let filteredWatchLater =
+    [];
+
+let filteredLiked =
+    [];
+
+let filteredPlaylists =
+    [];
+
+let confirmAction =
+    null;
+
+let toastTimer =
+    null;
+
+
+// ==========================================
+// Initialisation
 // ==========================================
 
 document.addEventListener(
     "DOMContentLoaded",
-    initLibrary
+    init
 );
 
 
-async function initLibrary() {
+// ==========================================
+// Init
+// ==========================================
+
+async function init() {
 
     try {
 
-        if (typeof initNavigation === "function") {
-            await initNavigation();
-        }
+        showLoader();
 
-        const authenticated =
-            await isAuthenticated();
+        await checkSession();
 
-        if (!authenticated) {
-            redirectToLogin();
+        if (!currentUser) {
+
+            navigate(
+                "auth.html"
+            );
+
             return;
+
         }
 
-        bindEvents();
+        await loadProfile();
+
+        updateHeader();
+
+        updateSidebar();
 
         await loadLibrary();
 
-        initNotifications();
+        addEventListeners();
 
-    } catch (error) {
+        activateTab(
+            currentTab,
+            false
+        );
+
+    }
+
+    catch (error) {
 
         console.error(
-            "NetView Library initialization error:",
+            "NetView Library:",
             error
         );
 
         showLibraryError();
+
     }
+
+    finally {
+
+        hideLoader();
+
+    }
+
 }
 
 
 // ==========================================
-// Authentication
+// Session
 // ==========================================
 
-function redirectToLogin() {
+async function checkSession() {
 
-    const currentUrl =
-        window.location.href;
+    try {
 
-    window.location.href =
-        `login.html?redirect=${encodeURIComponent(currentUrl)}`;
+        const session =
+            await getSession();
+
+        if (!session) {
+
+            currentUser =
+                null;
+
+            return;
+
+        }
+
+        currentUser =
+            await getUser();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Session error:",
+            error
+        );
+
+        currentUser =
+            null;
+
+    }
+
 }
 
 
 // ==========================================
-// Events
+// Profile
 // ==========================================
 
-function bindEvents() {
+async function loadProfile() {
 
-    // --------------------------------------
-    // Tabs
-    // --------------------------------------
+    if (!currentUser) {
 
-    $$("[data-library-tab]")
-        .forEach(button => {
+        currentProfile =
+            null;
 
-            button.addEventListener(
-                "click",
-                () => {
+        return;
 
-                    const tab =
-                        button.dataset.libraryTab;
+    }
 
-                    switchTab(tab);
-                }
+    try {
+
+        currentProfile =
+            await getProfile(
+                currentUser.id
             );
 
-        });
+    }
 
+    catch (error) {
 
-    // --------------------------------------
-    // Refresh
-    // --------------------------------------
-
-    $("#libraryRefreshButton")
-        ?.addEventListener(
-            "click",
-            async () => {
-
-                await loadLibrary();
-
-                showToast(
-                    "Bibliothèque actualisée.",
-                    "success"
-                );
-            }
+        console.error(
+            "Profile error:",
+            error
         );
 
+        currentProfile =
+            null;
 
-    // --------------------------------------
-    // Search
-    // --------------------------------------
+    }
 
-    $("#librarySearchInput")
-        ?.addEventListener(
-            "input",
-            event => {
-
-                state.search =
-                    event.target.value
-                        .trim()
-                        .toLowerCase();
-
-                updateClearSearchButton();
-
-                renderActiveSection();
-            }
-        );
+}
 
 
-    $("#clearLibrarySearch")
-        ?.addEventListener(
-            "click",
-            clearLibrarySearch
-        );
+// ==========================================
+// Header
+// ==========================================
+
+function updateHeader() {
+
+    if (!headerRight) {
+
+        return;
+
+    }
+
+    if (!currentUser) {
+
+        showGuestHeader();
+
+        return;
+
+    }
+
+    showUserHeader();
+
+}
 
 
-    $("#clearSearchEmptyButton")
-        ?.addEventListener(
-            "click",
-            clearLibrarySearch
-        );
+// ==========================================
+// Guest Header
+// ==========================================
+
+function showGuestHeader() {
+
+    headerRight.innerHTML = `
+
+        <button
+            id="loginButton"
+            class="nv-login-button"
+            type="button"
+        >
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>
+                S'identifier
+            </span>
+
+        </button>
+
+    `;
+
+}
 
 
-    // --------------------------------------
-    // Filter
-    // --------------------------------------
+// ==========================================
+// User Header
+// ==========================================
 
-    $("#libraryFilter")
-        ?.addEventListener(
-            "change",
-            event => {
+function showUserHeader() {
 
-                state.filter =
-                    event.target.value;
+    headerRight.innerHTML = `
 
-                renderActiveSection();
-            }
-        );
+        <button
+            id="uploadButton"
+            class="nv-icon-button"
+            type="button"
+            title="Publier"
+            aria-label="Publier"
+        >
 
+            <i class="fa-solid fa-plus nv-plus-icon"></i>
 
-    // --------------------------------------
-    // Sort
-    // --------------------------------------
-
-    $("#librarySort")
-        ?.addEventListener(
-            "change",
-            event => {
-
-                state.sort =
-                    event.target.value;
-
-                renderActiveSection();
-            }
-        );
+        </button>
 
 
-    // --------------------------------------
-    // Clear history
-    // --------------------------------------
+        <button
+            id="notificationsButton"
+            class="nv-icon-button"
+            type="button"
+            title="Notifications"
+            aria-label="Notifications"
+        >
 
-    $("#clearHistoryButton")
-        ?.addEventListener(
-            "click",
-            () => {
+            <i class="fa-regular fa-bell"></i>
 
-                openConfirmModal(
-                    "Effacer l'historique",
-                    "Voulez-vous vraiment supprimer tout votre historique de visionnage ? Cette action est irréversible.",
-                    clearHistory
-                );
-            }
-        );
+            <span
+                id="notificationBadge"
+                class="nv-badge"
+            ></span>
 
-
-    // --------------------------------------
-    // Retry
-    // --------------------------------------
-
-    $("#libraryRetryButton")
-        ?.addEventListener(
-            "click",
-            loadLibrary
-        );
+        </button>
 
 
-    // --------------------------------------
-    // Confirmation modal
-    // --------------------------------------
+        <a
+            href="settings.html"
+            class="nv-avatar-button"
+            aria-label="Paramètres"
+        >
 
-    $("#libraryConfirmClose")
-        ?.addEventListener(
-            "click",
-            closeConfirmModal
-        );
+            <img
+                id="headerAvatar"
+                src="${
+                    currentProfile?.avatar_url ||
+                    "images/default-avatar.png"
+                }"
+                alt="Avatar"
+            >
 
-    $("#libraryConfirmCancel")
-        ?.addEventListener(
-            "click",
-            closeConfirmModal
-        );
+        </a>
 
-    $("#libraryConfirmAction")
-        ?.addEventListener(
-            "click",
-            async () => {
+    `;
 
-                if (
-                    typeof state.confirmAction !==
-                    "function"
-                ) {
-                    closeConfirmModal();
-                    return;
-                }
-
-                const action =
-                    state.confirmAction;
-
-                closeConfirmModal();
-
-                await action();
-            }
-        );
-
-    $(".library-modal-backdrop")
-        ?.addEventListener(
-            "click",
-            closeConfirmModal
-        );
+}
 
 
-    document.addEventListener(
-        "keydown",
-        event => {
+// ==========================================
+// Sidebar
+// ==========================================
 
-            if (
-                event.key === "Escape"
-            ) {
-                closeConfirmModal();
-            }
-        }
+function updateSidebar() {
+
+    if (!sidebarNav) {
+
+        return;
+
+    }
+
+    if (!currentUser) {
+
+        showGuestSidebar();
+
+        return;
+
+    }
+
+    showUserSidebar();
+
+}
+
+
+// ==========================================
+// Guest Sidebar
+// ==========================================
+
+function showGuestSidebar() {
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Accueil
+            </span>
+
+        </a>
+
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>
+                Shorts
+            </span>
+
+        </a>
+
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>
+                Lives
+            </span>
+
+        </a>
+
+
+        <a href="search.html">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <span>
+                Explorer
+            </span>
+
+        </a>
+
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>
+                Boutique
+            </span>
+
+        </a>
+
+
+        <hr>
+
+
+        <a href="auth.html">
+
+            <i class="fa-regular fa-user"></i>
+
+            <span>
+                S'identifier
+            </span>
+
+        </a>
+
+    `;
+
+}
+
+
+// ==========================================
+// User Sidebar
+// ==========================================
+
+function showUserSidebar() {
+
+    sidebarNav.innerHTML = `
+
+        <a href="index.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Accueil
+            </span>
+
+        </a>
+
+
+        <a href="shorts.html">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>
+                Shorts
+            </span>
+
+        </a>
+
+
+        <a href="subscriptions.html">
+
+            <i class="fa-solid fa-tv"></i>
+
+            <span>
+                Abonnements
+            </span>
+
+        </a>
+
+
+        <a
+            href="library.html"
+            class="active"
+            aria-current="page"
+        >
+
+            <i class="fa-solid fa-book-bookmark"></i>
+
+            <span>
+                Bibliothèque
+            </span>
+
+        </a>
+
+
+        <a href="playlist.html">
+
+            <i class="fa-solid fa-list"></i>
+
+            <span>
+                Playlists
+            </span>
+
+        </a>
+
+
+        <a href="lives.html">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            <span>
+                Lives
+            </span>
+
+        </a>
+
+
+        <hr>
+
+
+        <a href="netview-shop.html">
+
+            <i class="fa-solid fa-store"></i>
+
+            <span>
+                Boutique
+            </span>
+
+        </a>
+
+
+        <a href="settings.html">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>
+                Paramètres
+            </span>
+
+        </a>
+
+
+        <button
+            id="logoutButton"
+            class="nv-sidebar-button"
+            type="button"
+        >
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>
+                Se déconnecter
+            </span>
+
+        </button>
+
+    `;
+
+}
+
+
+// ==========================================
+// Sidebar Toggle
+// ==========================================
+
+function toggleSidebar() {
+
+    if (sidebarOpen) {
+
+        closeSidebar();
+
+    }
+
+    else {
+
+        openSidebar();
+
+    }
+
+}
+
+
+// ==========================================
+// Open Sidebar
+// ==========================================
+
+function openSidebar() {
+
+    sidebarOpen =
+        true;
+
+    sidebar?.classList.add(
+        "active"
     );
 
+    sidebarOverlay?.classList.add(
+        "active"
+    );
 
-    // --------------------------------------
-    // Global search
-    // --------------------------------------
+    menuButton?.setAttribute(
+        "aria-expanded",
+        "true"
+    );
 
-    $("#searchForm")
-        ?.addEventListener(
-            "submit",
-            event => {
+}
 
-                event.preventDefault();
 
-                const query =
-                    $("#searchInput")
-                        ?.value
-                        ?.trim();
+// ==========================================
+// Close Sidebar
+// ==========================================
 
-                if (!query) {
-                    return;
-                }
+function closeSidebar() {
 
-                window.location.href =
-                    `search.html?q=${encodeURIComponent(query)}`;
-            }
-        );
+    sidebarOpen =
+        false;
+
+    sidebar?.classList.remove(
+        "active"
+    );
+
+    sidebarOverlay?.classList.remove(
+        "active"
+    );
+
+    menuButton?.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
 }
 
 
@@ -363,52 +1005,63 @@ function bindEvents() {
 
 async function loadLibrary() {
 
-    if (state.loading) {
+    if (!currentUser) {
+
         return;
+
     }
 
-    state.loading = true;
-
     hideLibraryError();
+
+    isLoading =
+        true;
 
     try {
 
         await Promise.all([
             loadHistory(),
             loadWatchLater(),
-            loadLikedVideos(),
-            loadPlaylists(),
-            loadDownloads()
+            loadLiked(),
+            loadPlaylists()
         ]);
 
         updateCounts();
 
-        renderActiveSection();
+        applyAllFilters();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Erreur chargement bibliothèque :",
+            "Library loading error:",
             error
         );
 
         showLibraryError();
 
-    } finally {
+        throw error;
 
-        state.loading = false;
     }
+
+    finally {
+
+        isLoading =
+            false;
+
+    }
+
 }
 
 
 // ==========================================
-// History
+// Load History
 // ==========================================
 
 async function loadHistory() {
 
     setLoading(
-        "historyLoading",
+        historyLoading,
         true
     );
 
@@ -416,43 +1069,51 @@ async function loadHistory() {
 
         const data =
             await getWatchHistory({
+                page: 1,
                 limit: 100
             });
 
-        state.history =
+        historyData =
             Array.isArray(data)
                 ? data
                 : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Erreur historique :",
+            "History error:",
             error
         );
 
-        state.history = [];
+        historyData =
+            [];
 
         throw error;
 
-    } finally {
+    }
+
+    finally {
 
         setLoading(
-            "historyLoading",
+            historyLoading,
             false
         );
+
     }
+
 }
 
 
 // ==========================================
-// Watch Later
+// Load Watch Later
 // ==========================================
 
 async function loadWatchLater() {
 
     setLoading(
-        "watchLaterLoading",
+        watchLaterLoading,
         true
     );
 
@@ -460,43 +1121,51 @@ async function loadWatchLater() {
 
         const data =
             await getWatchLater({
+                page: 1,
                 limit: 100
             });
 
-        state.watchLater =
+        watchLaterData =
             Array.isArray(data)
                 ? data
                 : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Erreur à regarder plus tard :",
+            "Watch later error:",
             error
         );
 
-        state.watchLater = [];
+        watchLaterData =
+            [];
 
         throw error;
 
-    } finally {
+    }
+
+    finally {
 
         setLoading(
-            "watchLaterLoading",
+            watchLaterLoading,
             false
         );
+
     }
+
 }
 
 
 // ==========================================
-// Liked Videos
+// Load Liked
 // ==========================================
 
-async function loadLikedVideos() {
+async function loadLiked() {
 
     setLoading(
-        "likedLoading",
+        likedLoading,
         true
     );
 
@@ -504,43 +1173,51 @@ async function loadLikedVideos() {
 
         const data =
             await getLikedVideos({
+                page: 1,
                 limit: 100
             });
 
-        state.liked =
+        likedData =
             Array.isArray(data)
                 ? data
                 : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Erreur vidéos aimées :",
+            "Liked videos error:",
             error
         );
 
-        state.liked = [];
+        likedData =
+            [];
 
         throw error;
 
-    } finally {
+    }
+
+    finally {
 
         setLoading(
-            "likedLoading",
+            likedLoading,
             false
         );
+
     }
+
 }
 
 
 // ==========================================
-// Playlists
+// Load Playlists
 // ==========================================
 
 async function loadPlaylists() {
 
     setLoading(
-        "playlistsLoading",
+        playlistsLoading,
         true
     );
 
@@ -548,316 +1225,962 @@ async function loadPlaylists() {
 
         const data =
             await getPlaylists({
+                page: 1,
                 limit: 100
             });
 
-        state.playlists =
+        playlistsData =
             Array.isArray(data)
                 ? data
                 : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Erreur playlists :",
+            "Playlists error:",
             error
         );
 
-        state.playlists = [];
+        playlistsData =
+            [];
 
         throw error;
 
-    } finally {
+    }
+
+    finally {
 
         setLoading(
-            "playlistsLoading",
+            playlistsLoading,
             false
         );
+
     }
+
 }
 
 
 // ==========================================
-// Downloads
-// ==========================================
-//
-// IMPORTANT :
-// Cette section ne permet PAS de télécharger
-// des vidéos protégées par défaut.
-//
-// Elle affiche uniquement les téléchargements
-// autorisés par le créateur et enregistrés
-// dans la table downloads.
-//
-// Le bouton de téléchargement réel doit être
-// contrôlé côté publication vidéo.
-//
+// Loading Helper
 // ==========================================
 
-async function loadDownloads() {
+function setLoading(
+    element,
+    value
+) {
 
-    setLoading(
-        "downloadsLoading",
-        true
+    if (!element) {
+
+        return;
+
+    }
+
+    element.hidden =
+        !value;
+
+}
+
+
+// ==========================================
+// Counts
+// ==========================================
+
+function updateCounts() {
+
+    updateCount(
+        historyCount,
+        historyData.length
     );
 
-    try {
+    updateCount(
+        watchLaterCount,
+        watchLaterData.length
+    );
 
-        if (
-            typeof getDownloads !==
-            "function"
-        ) {
-            state.downloads = [];
-            return;
-        }
+    updateCount(
+        likedCount,
+        likedData.length
+    );
 
-        const data =
-            await getDownloads({
-                limit: 100
-            });
+    updateCount(
+        playlistsCount,
+        playlistsData.length
+    );
 
-        state.downloads =
-            Array.isArray(data)
-                ? data
-                : [];
+}
 
-    } catch (error) {
 
-        console.error(
-            "Erreur téléchargements :",
-            error
-        );
+function updateCount(
+    element,
+    count
+) {
 
-        state.downloads = [];
+    if (!element) {
 
-        // Les téléchargements restent
-        // indépendants du reste de la bibliothèque.
-        // On n'empêche pas l'affichage des autres onglets.
+        return;
 
-    } finally {
-
-        setLoading(
-            "downloadsLoading",
-            false
-        );
     }
+
+    if (!count) {
+
+        element.hidden =
+            true;
+
+        element.textContent =
+            "0";
+
+        return;
+
+    }
+
+    element.hidden =
+        false;
+
+    element.textContent =
+        formatNumber(count);
+
 }
 
 
 // ==========================================
-// Tab Switching
+// Tabs
 // ==========================================
 
-function switchTab(tab) {
+function activateTab(
+    tab,
+    scroll = true
+) {
 
     const validTabs = [
         "history",
         "watch-later",
         "liked",
-        "playlists",
-        "downloads"
+        "playlists"
     ];
 
     if (!validTabs.includes(tab)) {
-        return;
+
+        tab =
+            "history";
+
     }
 
-    state.activeTab = tab;
+    currentTab =
+        tab;
 
-    $$("[data-library-tab]")
-        .forEach(button => {
+    const tabElements = [
+        libraryTabHistory,
+        libraryTabWatchLater,
+        libraryTabLiked,
+        libraryTabPlaylists
+    ];
 
-            const active =
-                button.dataset.libraryTab === tab;
+    tabElements.forEach(
+        element => {
 
-            button.classList.toggle(
+            if (!element) {
+
+                return;
+
+            }
+
+            const isActive =
+                element.dataset.libraryTab === tab;
+
+            element.classList.toggle(
                 "active",
-                active
+                isActive
             );
 
-            button.setAttribute(
+            element.setAttribute(
                 "aria-selected",
-                String(active)
+                String(isActive)
             );
-        });
+
+            element.tabIndex =
+                isActive
+                    ? 0
+                    : -1;
+
+        }
+    );
 
 
-    $$("[data-library-section]")
-        .forEach(section => {
+    const sections = [
+        libraryHistorySection,
+        libraryWatchLaterSection,
+        libraryLikedSection,
+        libraryPlaylistsSection
+    ];
 
-            const active =
+    sections.forEach(
+        section => {
+
+            if (!section) {
+
+                return;
+
+            }
+
+            const isActive =
                 section.dataset.librarySection === tab;
 
             section.hidden =
-                !active;
+                !isActive;
+
+        }
+    );
+
+
+    librarySearchEmpty.hidden =
+        true;
+
+
+    applyCurrentTabFilters();
+
+
+    if (scroll) {
+
+        const header =
+            document.querySelector(
+                ".library-header"
+            );
+
+        const offset =
+            header
+                ? header.offsetHeight + 20
+                : 20;
+
+        const top =
+            Math.max(
+                0,
+                window.scrollY +
+                (
+                    libraryTabs?.getBoundingClientRect()
+                        .top || 0
+                ) -
+                offset
+            );
+
+        window.scrollTo({
+            top,
+            behavior: "smooth"
         });
 
-
-    renderActiveSection();
-}
-
-
-// ==========================================
-// Render Active Section
-// ==========================================
-
-function renderActiveSection() {
-
-    hideSearchEmpty();
-
-    switch (state.activeTab) {
-
-        case "history":
-            renderHistory();
-            break;
-
-        case "watch-later":
-            renderWatchLater();
-            break;
-
-        case "liked":
-            renderLiked();
-            break;
-
-        case "playlists":
-            renderPlaylists();
-            break;
-
-        case "downloads":
-            renderDownloads();
-            break;
     }
+
 }
 
 
 // ==========================================
-// Filter + Search + Sort
+// Apply All Filters
 // ==========================================
 
-function prepareItems(
-    items,
-    type
+function applyAllFilters() {
+
+    filteredHistory =
+        processVideoCollection(
+            historyData
+        );
+
+    filteredWatchLater =
+        processVideoCollection(
+            watchLaterData
+        );
+
+    filteredLiked =
+        processVideoCollection(
+            likedData
+        );
+
+    filteredPlaylists =
+        processPlaylistCollection(
+            playlistsData
+        );
+
+    renderHistory(
+        filteredHistory
+    );
+
+    renderWatchLater(
+        filteredWatchLater
+    );
+
+    renderLiked(
+        filteredLiked
+    );
+
+    renderPlaylists(
+        filteredPlaylists
+    );
+
+    updateSearchEmptyState();
+
+}
+
+
+// ==========================================
+// Apply Current Tab
+// ==========================================
+
+function applyCurrentTabFilters() {
+
+    if (currentTab === "history") {
+
+        filteredHistory =
+            processVideoCollection(
+                historyData
+            );
+
+        renderHistory(
+            filteredHistory
+        );
+
+    }
+
+    else if (
+        currentTab === "watch-later"
+    ) {
+
+        filteredWatchLater =
+            processVideoCollection(
+                watchLaterData
+            );
+
+        renderWatchLater(
+            filteredWatchLater
+        );
+
+    }
+
+    else if (
+        currentTab === "liked"
+    ) {
+
+        filteredLiked =
+            processVideoCollection(
+                likedData
+            );
+
+        renderLiked(
+            filteredLiked
+        );
+
+    }
+
+    else if (
+        currentTab === "playlists"
+    ) {
+
+        filteredPlaylists =
+            processPlaylistCollection(
+                playlistsData
+            );
+
+        renderPlaylists(
+            filteredPlaylists
+        );
+
+    }
+
+    updateSearchEmptyState();
+
+}
+
+
+// ==========================================
+// Process Video Collections
+// ==========================================
+
+function processVideoCollection(
+    collection
 ) {
 
     let result =
-        Array.isArray(items)
-            ? [...items]
+        Array.isArray(collection)
+            ? [...collection]
             : [];
 
 
-    // --------------------------------------
-    // Search
-    // --------------------------------------
+    const query =
+        searchQuery
+            .trim()
+            .toLowerCase();
 
-    if (state.search) {
+
+    if (query) {
 
         result =
-            result.filter(item => {
+            result.filter(
+                item => {
 
-                const title =
-                    String(
-                        item.title ||
-                        item.video?.title ||
-                        item.videos?.title ||
-                        item.name ||
-                        ""
-                    ).toLowerCase();
+                    const video =
+                        getVideoFromItem(
+                            item
+                        );
 
-                const description =
-                    String(
-                        item.description ||
-                        item.video?.description ||
-                        item.videos?.description ||
-                        ""
-                    ).toLowerCase();
+                    if (!video) {
 
-                const channel =
-                    String(
-                        item.channelName ||
-                        item.channel?.name ||
-                        item.channels?.name ||
-                        ""
-                    ).toLowerCase();
+                        return false;
 
-                return (
-                    title.includes(state.search) ||
-                    description.includes(state.search) ||
-                    channel.includes(state.search)
-                );
-            });
+                    }
+
+                    const title =
+                        String(
+                            video.title || ""
+                        ).toLowerCase();
+
+                    const channel =
+                        String(
+                            getChannelName(
+                                video,
+                                item
+                            )
+                        ).toLowerCase();
+
+                    const description =
+                        String(
+                            video.description || ""
+                        ).toLowerCase();
+
+                    return (
+                        title.includes(query) ||
+                        channel.includes(query) ||
+                        description.includes(query)
+                    );
+
+                }
+            );
+
     }
 
 
-    // --------------------------------------
-    // Filter
-    // --------------------------------------
-
     if (
-        state.filter !== "all" &&
-        type !== "playlists"
+        currentFilter !== "all"
     ) {
 
         result =
             result.filter(
-                item =>
-                    getContentType(item) ===
-                    state.filter
+                item => {
+
+                    return matchesContentFilter(
+                        item,
+                        currentFilter
+                    );
+
+                }
             );
+
     }
 
 
-    // --------------------------------------
-    // Sort
-    // --------------------------------------
+    return sortVideoCollection(
+        result
+    );
+
+}
+
+
+// ==========================================
+// Process Playlists
+// ==========================================
+
+function processPlaylistCollection(
+    collection
+) {
+
+    let result =
+        Array.isArray(collection)
+            ? [...collection]
+            : [];
+
+
+    const query =
+        searchQuery
+            .trim()
+            .toLowerCase();
+
+
+    if (query) {
+
+        result =
+            result.filter(
+                playlist => {
+
+                    const title =
+                        String(
+                            playlist.title ||
+                            playlist.name ||
+                            ""
+                        ).toLowerCase();
+
+                    const description =
+                        String(
+                            playlist.description ||
+                            ""
+                        ).toLowerCase();
+
+                    return (
+                        title.includes(query) ||
+                        description.includes(query)
+                    );
+
+                }
+            );
+
+    }
+
+
+    return sortPlaylistCollection(
+        result
+    );
+
+}
+
+
+// ==========================================
+// Get Video
+// ==========================================
+
+function getVideoFromItem(
+    item
+) {
+
+    if (!item) {
+
+        return null;
+
+    }
+
+    if (item.videos) {
+
+        if (Array.isArray(item.videos)) {
+
+            return item.videos[0] || null;
+
+        }
+
+        return item.videos;
+
+    }
+
+    return item;
+
+}
+
+
+// ==========================================
+// Channel
+// ==========================================
+
+function getChannel(
+    video,
+    item = null
+) {
+
+    if (
+        video?.channels
+    ) {
+
+        if (
+            Array.isArray(
+                video.channels
+            )
+        ) {
+
+            return (
+                video.channels[0] ||
+                null
+            );
+
+        }
+
+        return video.channels;
+
+    }
+
+
+    if (
+        item?.channels
+    ) {
+
+        if (
+            Array.isArray(
+                item.channels
+            )
+        ) {
+
+            return (
+                item.channels[0] ||
+                null
+            );
+
+        }
+
+        return item.channels;
+
+    }
+
+
+    return null;
+
+}
+
+
+// ==========================================
+// Channel Name
+// ==========================================
+
+function getChannelName(
+    video,
+    item = null
+) {
+
+    const channel =
+        getChannel(
+            video,
+            item
+        );
+
+    return (
+        channel?.name ||
+        video?.channel_name ||
+        video?.channelName ||
+        "Chaîne inconnue"
+    );
+
+}
+
+
+// ==========================================
+// Content Filter
+// ==========================================
+
+function matchesContentFilter(
+    item,
+    filter
+) {
+
+    if (
+        filter === "all"
+    ) {
+
+        return true;
+
+    }
+
+
+    const video =
+        getVideoFromItem(
+            item
+        );
+
+
+    if (!video) {
+
+        return false;
+
+    }
+
+
+    const type =
+        String(
+            video.content_type ||
+            video.type ||
+            item.content_type ||
+            item.type ||
+            "video"
+        ).toLowerCase();
+
+
+    if (
+        filter === "video"
+    ) {
+
+        return (
+            type === "video"
+        );
+
+    }
+
+
+    if (
+        filter === "short"
+    ) {
+
+        return (
+            type === "short" ||
+            type === "shorts"
+        );
+
+    }
+
+
+    if (
+        filter === "live"
+    ) {
+
+        return (
+            type === "live" ||
+            type === "lives"
+        );
+
+    }
+
+
+    return true;
+
+}
+
+
+// ==========================================
+// Sort Videos
+// ==========================================
+
+function sortVideoCollection(
+    collection
+) {
+
+    const result =
+        [...collection];
+
 
     result.sort(
         (a, b) => {
 
-            switch (state.sort) {
+            const videoA =
+                getVideoFromItem(a);
 
-                case "oldest":
+            const videoB =
+                getVideoFromItem(b);
 
-                    return (
-                        getDateValue(a) -
-                        getDateValue(b)
-                    );
 
-                case "title":
+            if (
+                currentSort === "title"
+            ) {
 
-                    return getTitle(a)
-                        .localeCompare(
-                            getTitle(b),
-                            "fr",
-                            {
-                                sensitivity:
-                                    "base"
-                            }
-                        );
+                return String(
+                    videoA?.title || ""
+                ).localeCompare(
+                    String(
+                        videoB?.title || ""
+                    ),
+                    "fr",
+                    {
+                        sensitivity:
+                            "base"
+                    }
+                );
 
-                case "channel":
-
-                    return getChannelName(a)
-                        .localeCompare(
-                            getChannelName(b),
-                            "fr",
-                            {
-                                sensitivity:
-                                    "base"
-                            }
-                        );
-
-                case "recent":
-                default:
-
-                    return (
-                        getDateValue(b) -
-                        getDateValue(a)
-                    );
             }
+
+
+            if (
+                currentSort === "channel"
+            ) {
+
+                return getChannelName(
+                    videoA,
+                    a
+                ).localeCompare(
+                    getChannelName(
+                        videoB,
+                        b
+                    ),
+                    "fr",
+                    {
+                        sensitivity:
+                            "base"
+                    }
+                );
+
+            }
+
+
+            const dateA =
+                getItemDate(a);
+
+            const dateB =
+                getItemDate(b);
+
+
+            if (
+                currentSort === "oldest"
+            ) {
+
+                return (
+                    dateA - dateB
+                );
+
+            }
+
+
+            return (
+                dateB - dateA
+            );
+
         }
     );
 
+
     return result;
+
+}
+
+
+// ==========================================
+// Sort Playlists
+// ==========================================
+
+function sortPlaylistCollection(
+    collection
+) {
+
+    const result =
+        [...collection];
+
+
+    result.sort(
+        (a, b) => {
+
+            if (
+                currentSort === "title"
+            ) {
+
+                return String(
+                    a.title ||
+                    a.name ||
+                    ""
+                ).localeCompare(
+                    String(
+                        b.title ||
+                        b.name ||
+                        ""
+                    ),
+                    "fr",
+                    {
+                        sensitivity:
+                            "base"
+                    }
+                );
+
+            }
+
+
+            const dateA =
+                getItemDate(a);
+
+            const dateB =
+                getItemDate(b);
+
+
+            if (
+                currentSort === "oldest"
+            ) {
+
+                return (
+                    dateA - dateB
+                );
+
+            }
+
+
+            return (
+                dateB - dateA
+            );
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+// ==========================================
+// Date
+// ==========================================
+
+function getItemDate(
+    item
+) {
+
+    if (!item) {
+
+        return 0;
+
+    }
+
+
+    const candidates = [
+        item.last_watched_at,
+        item.created_at,
+        item.updated_at,
+        item.published_at,
+        item.watched_at
+    ];
+
+
+    for (
+        const value of candidates
+    ) {
+
+        if (!value) {
+
+            continue;
+
+        }
+
+        const date =
+            new Date(value);
+
+        if (
+            !Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return date.getTime();
+
+        }
+
+    }
+
+
+    const video =
+        getVideoFromItem(
+            item
+        );
+
+
+    if (
+        video &&
+        video.created_at
+    ) {
+
+        const date =
+            new Date(
+                video.created_at
+            );
+
+        if (
+            !Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return date.getTime();
+
+        }
+
+    }
+
+
+    return 0;
+
 }
 
 
@@ -865,54 +2188,55 @@ function prepareItems(
 // Render History
 // ==========================================
 
-function renderHistory() {
+function renderHistory(
+    data
+) {
 
-    const grid =
-        $("#historyGrid");
-
-    if (!grid) {
-        return;
-    }
-
-    const items =
-        prepareItems(
-            state.history,
-            "history"
-        );
-
-    grid.innerHTML = "";
-
-    if (!items.length) {
-
-        $("#historyEmpty").hidden =
-            Boolean(state.search);
-
-        if (state.search) {
-            showSearchEmpty();
-        }
+    if (!historyGrid) {
 
         return;
+
     }
 
-    $("#historyEmpty").hidden =
+
+    historyGrid.innerHTML =
+        "";
+
+
+    if (!data.length) {
+
+        historyEmpty.hidden =
+            false;
+
+        return;
+
+    }
+
+
+    historyEmpty.hidden =
         true;
 
-    items.forEach(
+
+    data.forEach(
         item => {
 
-            grid.appendChild(
-                createVideoCard(
+            const card =
+                createLibraryVideoCard(
                     item,
-                    {
-                        type: "history",
-                        removeAction:
-                            () =>
-                                removeHistoryItem(item)
-                    }
-                )
-            );
+                    "history"
+                );
+
+            if (card) {
+
+                historyGrid.appendChild(
+                    card
+                );
+
+            }
+
         }
     );
+
 }
 
 
@@ -920,54 +2244,55 @@ function renderHistory() {
 // Render Watch Later
 // ==========================================
 
-function renderWatchLater() {
+function renderWatchLater(
+    data
+) {
 
-    const grid =
-        $("#watchLaterGrid");
-
-    if (!grid) {
-        return;
-    }
-
-    const items =
-        prepareItems(
-            state.watchLater,
-            "watch-later"
-        );
-
-    grid.innerHTML = "";
-
-    if (!items.length) {
-
-        $("#watchLaterEmpty").hidden =
-            Boolean(state.search);
-
-        if (state.search) {
-            showSearchEmpty();
-        }
+    if (!watchLaterGrid) {
 
         return;
+
     }
 
-    $("#watchLaterEmpty").hidden =
+
+    watchLaterGrid.innerHTML =
+        "";
+
+
+    if (!data.length) {
+
+        watchLaterEmpty.hidden =
+            false;
+
+        return;
+
+    }
+
+
+    watchLaterEmpty.hidden =
         true;
 
-    items.forEach(
+
+    data.forEach(
         item => {
 
-            grid.appendChild(
-                createVideoCard(
+            const card =
+                createLibraryVideoCard(
                     item,
-                    {
-                        type: "watch-later",
-                        removeAction:
-                            () =>
-                                removeWatchLaterItem(item)
-                    }
-                )
-            );
+                    "watch-later"
+                );
+
+            if (card) {
+
+                watchLaterGrid.appendChild(
+                    card
+                );
+
+            }
+
         }
     );
+
 }
 
 
@@ -975,54 +2300,55 @@ function renderWatchLater() {
 // Render Liked
 // ==========================================
 
-function renderLiked() {
+function renderLiked(
+    data
+) {
 
-    const grid =
-        $("#likedGrid");
-
-    if (!grid) {
-        return;
-    }
-
-    const items =
-        prepareItems(
-            state.liked,
-            "liked"
-        );
-
-    grid.innerHTML = "";
-
-    if (!items.length) {
-
-        $("#likedEmpty").hidden =
-            Boolean(state.search);
-
-        if (state.search) {
-            showSearchEmpty();
-        }
+    if (!likedGrid) {
 
         return;
+
     }
 
-    $("#likedEmpty").hidden =
+
+    likedGrid.innerHTML =
+        "";
+
+
+    if (!data.length) {
+
+        likedEmpty.hidden =
+            false;
+
+        return;
+
+    }
+
+
+    likedEmpty.hidden =
         true;
 
-    items.forEach(
+
+    data.forEach(
         item => {
 
-            grid.appendChild(
-                createVideoCard(
+            const card =
+                createLibraryVideoCard(
                     item,
-                    {
-                        type: "liked",
-                        removeAction:
-                            () =>
-                                removeLikedItem(item)
-                    }
-                )
-            );
+                    "liked"
+                );
+
+            if (card) {
+
+                likedGrid.appendChild(
+                    card
+                );
+
+            }
+
         }
     );
+
 }
 
 
@@ -1030,124 +2356,54 @@ function renderLiked() {
 // Render Playlists
 // ==========================================
 
-function renderPlaylists() {
+function renderPlaylists(
+    data
+) {
 
-    const grid =
-        $("#playlistsGrid");
-
-    if (!grid) {
-        return;
-    }
-
-    let items =
-        Array.isArray(state.playlists)
-            ? [...state.playlists]
-            : [];
-
-
-    if (state.search) {
-
-        items =
-            items.filter(
-                playlist => {
-
-                    const text =
-                        `${playlist.name || ""} ${
-                            playlist.description || ""
-                        }`
-                            .toLowerCase();
-
-                    return text.includes(
-                        state.search
-                    );
-                }
-            );
-    }
-
-
-    items.sort(
-        (a, b) =>
-            getDateValue(b) -
-            getDateValue(a)
-    );
-
-
-    grid.innerHTML = "";
-
-    if (!items.length) {
-
-        $("#playlistsEmpty").hidden =
-            Boolean(state.search);
-
-        if (state.search) {
-            showSearchEmpty();
-        }
+    if (!playlistsGrid) {
 
         return;
+
     }
 
-    $("#playlistsEmpty").hidden =
+
+    playlistsGrid.innerHTML =
+        "";
+
+
+    if (!data.length) {
+
+        playlistsEmpty.hidden =
+            false;
+
+        return;
+
+    }
+
+
+    playlistsEmpty.hidden =
         true;
 
-    items.forEach(
+
+    data.forEach(
         playlist => {
 
-            grid.appendChild(
+            const card =
                 createPlaylistCard(
                     playlist
-                )
-            );
+                );
+
+            if (card) {
+
+                playlistsGrid.appendChild(
+                    card
+                );
+
+            }
+
         }
     );
-}
 
-
-// ==========================================
-// Render Downloads
-// ==========================================
-
-function renderDownloads() {
-
-    const grid =
-        $("#downloadsGrid");
-
-    if (!grid) {
-        return;
-    }
-
-    const items =
-        prepareItems(
-            state.downloads,
-            "downloads"
-        );
-
-    grid.innerHTML = "";
-
-    if (!items.length) {
-
-        $("#downloadsEmpty").hidden =
-            Boolean(state.search);
-
-        if (state.search) {
-            showSearchEmpty();
-        }
-
-        return;
-    }
-
-    $("#downloadsEmpty").hidden =
-        true;
-
-    items.forEach(
-        item => {
-
-            grid.appendChild(
-                createDownloadCard(
-                    item
-                )
-            );
-        }
-    );
 }
 
 
@@ -1155,415 +2411,230 @@ function renderDownloads() {
 // Video Card
 // ==========================================
 
-function createVideoCard(
+function createLibraryVideoCard(
     item,
-    options = {}
+    source
 ) {
 
     const video =
-        item.video ||
-        item.videos ||
-        item;
-
-    const videoId =
-        video.id ||
-        item.video_id ||
-        item.videoId;
-
-    const title =
-        video.title ||
-        item.title ||
-        "Vidéo sans titre";
-
-    const thumbnail =
-        video.thumbnail_url ||
-        video.thumbnail ||
-        item.thumbnail_url ||
-        item.thumbnail ||
-        "images/video-placeholder.jpg";
-
-    const channelName =
-        video.channelName ||
-        video.channels?.name ||
-        item.channelName ||
-        item.channels?.name ||
-        "Chaîne inconnue";
-
-    const channelHandle =
-        video.channelHandle ||
-        video.channels?.handle ||
-        item.channelHandle ||
-        item.channels?.handle ||
-        "";
-
-    const channelAvatar =
-        video.channelAvatar ||
-        video.channels?.avatar_url ||
-        item.channelAvatar ||
-        item.channels?.avatar_url ||
-        "images/default-avatar.png";
-
-    const verified =
-        Boolean(
-            video.channelVerified ||
-            video.channels?.verified ||
-            item.channelVerified ||
-            item.channels?.verified
+        getVideoFromItem(
+            item
         );
 
-    const duration =
-        video.duration ||
-        item.duration ||
-        "";
 
-    const views =
-        video.views ??
-        item.views ??
-        0;
+    if (!video) {
 
-    const date =
-        item.watched_at ||
-        item.created_at ||
-        item.updated_at ||
-        video.published_at ||
-        video.created_at;
+        return null;
 
-
-    const card =
-        document.createElement("article");
-
-    card.className =
-        "library-video-card";
-
-    card.dataset.videoId =
-        videoId || "";
-
-
-    // --------------------------------------
-    // Thumbnail
-    // --------------------------------------
-
-    const thumbnailWrapper =
-        document.createElement("div");
-
-    thumbnailWrapper.className =
-        "library-video-thumbnail";
-
-
-    const image =
-        document.createElement("img");
-
-    image.src =
-        thumbnail;
-
-    image.alt =
-        title;
-
-    image.loading =
-        "lazy";
-
-    image.addEventListener(
-        "error",
-        () => {
-
-            image.src =
-                "images/video-placeholder.jpg";
-        }
-    );
-
-
-    thumbnailWrapper.appendChild(
-        image
-    );
-
-
-    if (duration) {
-
-        const durationElement =
-            document.createElement("span");
-
-        durationElement.className =
-            "library-video-duration";
-
-        durationElement.textContent =
-            formatDuration(duration);
-
-        thumbnailWrapper.appendChild(
-            durationElement
-        );
     }
 
 
-    thumbnailWrapper.addEventListener(
-        "click",
-        () => {
-
-            if (!videoId) {
-                return;
-            }
-
-            window.location.href =
-                `player.html?id=${encodeURIComponent(videoId)}`;
-        }
-    );
+    const article =
+        document.createElement(
+            "article"
+        );
 
 
-    // --------------------------------------
-    // Content
-    // --------------------------------------
+    article.className =
+        "library-video-card";
 
-    const content =
-        document.createElement("div");
-
-    content.className =
-        "library-video-content";
+    article.dataset.id =
+        video.id || "";
 
 
-    const titleElement =
-        document.createElement("a");
-
-    titleElement.className =
-        "library-video-title";
-
-    titleElement.href =
-        videoId
-            ? `player.html?id=${encodeURIComponent(videoId)}`
-            : "#";
-
-    titleElement.textContent =
-        title;
+    article.dataset.source =
+        source;
 
 
     const channel =
-        document.createElement("div");
-
-    channel.className =
-        "library-video-channel";
-
-
-    const avatar =
-        document.createElement("img");
-
-    avatar.src =
-        channelAvatar;
-
-    avatar.alt =
-        channelName;
-
-    avatar.loading =
-        "lazy";
-
-
-    const channelLink =
-        document.createElement("a");
-
-    channelLink.href =
-        channelHandle
-            ? `channel.html?handle=${encodeURIComponent(channelHandle)}`
-            : "#";
-
-    channelLink.textContent =
-        channelName;
-
-
-    channel.appendChild(
-        avatar
-    );
-
-    channel.appendChild(
-        channelLink
-    );
-
-
-    if (verified) {
-
-        const badge =
-            document.createElement("i");
-
-        badge.className =
-            "fa-solid fa-circle-check library-verified";
-
-        badge.title =
-            "Chaîne vérifiée";
-
-        channel.appendChild(
-            badge
-        );
-    }
-
-
-    const metadata =
-        document.createElement("div");
-
-    metadata.className =
-        "library-video-meta";
-
-    metadata.textContent =
-        `${formatNumber(views)} vues • ${formatRelativeDate(date)}`;
-
-
-    content.appendChild(
-        titleElement
-    );
-
-    content.appendChild(
-        channel
-    );
-
-    content.appendChild(
-        metadata
-    );
-
-
-    // --------------------------------------
-    // Actions
-    // --------------------------------------
-
-    const actions =
-        document.createElement("div");
-
-    actions.className =
-        "library-video-actions";
-
-
-    if (
-        typeof options.removeAction ===
-        "function"
-    ) {
-
-        const removeButton =
-            document.createElement("button");
-
-        removeButton.type =
-            "button";
-
-        removeButton.className =
-            "library-item-remove";
-
-        removeButton.title =
-            "Supprimer de la bibliothèque";
-
-        removeButton.setAttribute(
-            "aria-label",
-            "Supprimer de la bibliothèque"
+        getChannel(
+            video,
+            item
         );
 
-        removeButton.innerHTML =
-            '<i class="fa-solid fa-trash-can"></i>';
-
-        removeButton.addEventListener(
-            "click",
-            event => {
-
-                event.stopPropagation();
-
-                options.removeAction();
-            }
-        );
-
-        actions.appendChild(
-            removeButton
-        );
-    }
-
-
-    content.appendChild(
-        actions
-    );
-
-
-    card.appendChild(
-        thumbnailWrapper
-    );
-
-    card.appendChild(
-        content
-    );
-
-
-    return card;
-}
-
-
-// ==========================================
-// Download Card
-// ==========================================
-
-function createDownloadCard(
-    item
-) {
-
-    const video =
-        item.video ||
-        item.videos ||
-        item;
-
-    const videoId =
-        video.id ||
-        item.video_id ||
-        item.videoId;
-
-    const title =
-        video.title ||
-        item.title ||
-        "Contenu téléchargé";
 
     const thumbnail =
-        video.thumbnail_url ||
-        video.thumbnail ||
-        item.thumbnail_url ||
-        item.thumbnail ||
-        "images/video-placeholder.jpg";
+        escapeHtml(
+            video.thumbnail_url ||
+            "images/default-thumbnail.jpg"
+        );
+
+
+    const title =
+        escapeHtml(
+            video.title ||
+            "Vidéo sans titre"
+        );
+
 
     const channelName =
-        video.channels?.name ||
-        video.channelName ||
-        item.channelName ||
-        "Chaîne inconnue";
-
-    const createdAt =
-        item.downloaded_at ||
-        item.created_at ||
-        video.created_at;
+        escapeHtml(
+            getChannelName(
+                video,
+                item
+            )
+        );
 
 
-    const card =
-        createVideoCard(
+    const channelAvatar =
+        escapeHtml(
+            channel?.avatar_url ||
+            "images/default-avatar.png"
+        );
+
+
+    const duration =
+        formatDuration(
+            video.duration
+        );
+
+
+    const views =
+        formatViews(
+            video.views || 0
+        );
+
+
+    const date =
+        getDisplayDate(
             item,
-            {
-                type: "downloads"
-            }
+            video
         );
 
 
-    card.classList.add(
-        "library-download-card"
-    );
+    const verified =
+        channel?.verified
+            ? `
+                <i
+                    class="fa-solid fa-circle-check library-verified"
+                    title="Chaîne vérifiée"
+                    aria-label="Chaîne vérifiée"
+                ></i>
+            `
+            : "";
 
 
-    const content =
-        card.querySelector(
-            ".library-video-content"
-        );
+    article.innerHTML = `
 
-    if (content) {
+        <div class="library-video-thumbnail-wrapper">
 
-        const status =
-            document.createElement("div");
+            <a
+                href="player.html?id=${encodeURIComponent(
+                    video.id || ""
+                )}"
+                class="library-video-thumbnail-link"
+                aria-label="${title}"
+            >
 
-        status.className =
-            "library-download-status";
+                <img
+                    class="library-video-thumbnail"
+                    src="${thumbnail}"
+                    alt="${title}"
+                    loading="lazy"
+                >
 
-        status.innerHTML =
-            '<i class="fa-solid fa-circle-check"></i> Disponible hors connexion';
+                ${
+                    duration
+                        ? `
+                            <span class="library-video-duration">
+                                ${duration}
+                            </span>
+                        `
+                        : ""
+                }
 
-        content.appendChild(
-            status
-        );
-    }
+            </a>
 
 
-    return card;
+            <button
+                class="library-video-more"
+                type="button"
+                aria-label="Actions"
+                data-action="video-menu"
+                data-video-id="${escapeHtml(
+                    video.id || ""
+                )}"
+            >
+
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="library-video-content">
+
+            <a
+                href="channel.html?id=${encodeURIComponent(
+                    video.channel_id || ""
+                )}"
+                class="library-video-avatar"
+            >
+
+                <img
+                    src="${channelAvatar}"
+                    alt="${channelName}"
+                    loading="lazy"
+                >
+
+            </a>
+
+
+            <div class="library-video-info">
+
+                <h3 class="library-video-title">
+
+                    <a
+                        href="player.html?id=${encodeURIComponent(
+                            video.id || ""
+                        )}"
+                    >
+                        ${title}
+                    </a>
+
+                </h3>
+
+
+                <a
+                    href="channel.html?id=${encodeURIComponent(
+                        video.channel_id || ""
+                    )}"
+                    class="library-video-channel"
+                >
+
+                    ${channelName}
+
+                    ${verified}
+
+                </a>
+
+
+                <div class="library-video-meta">
+
+                    <span>
+                        ${views} vues
+                    </span>
+
+                    <span>
+                        •
+                    </span>
+
+                    <span>
+                        ${date}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    return article;
+
 }
 
 
@@ -1575,588 +2646,312 @@ function createPlaylistCard(
     playlist
 ) {
 
-    const card =
-        document.createElement("article");
+    const article =
+        document.createElement(
+            "article"
+        );
 
-    card.className =
+
+    article.className =
         "library-playlist-card";
 
 
-    const playlistId =
-        playlist.id;
+    article.dataset.id =
+        playlist.id || "";
 
 
-    const link =
-        document.createElement("a");
-
-    link.href =
-        `playlist.html?id=${encodeURIComponent(playlistId)}`;
-
-    link.className =
-        "library-playlist-card-link";
+    const items =
+        Array.isArray(
+            playlist.playlist_items
+        )
+            ? [...playlist.playlist_items]
+            : [];
 
 
-    const cover =
-        document.createElement("div");
-
-    cover.className =
-        "library-playlist-cover";
-
-
-    const image =
-        document.createElement("img");
-
-    image.src =
-        playlist.thumbnail_url ||
-        playlist.cover_url ||
-        "images/playlist-placeholder.jpg";
-
-    image.alt =
-        playlist.name ||
-        "Playlist";
-
-    image.loading =
-        "lazy";
-
-
-    image.addEventListener(
-        "error",
-        () => {
-
-            image.src =
-                "images/playlist-placeholder.jpg";
-        }
+    items.sort(
+        (a, b) =>
+            Number(
+                a.position || 0
+            ) -
+            Number(
+                b.position || 0
+            )
     );
 
 
-    const count =
-        document.createElement("span");
-
-    count.className =
-        "library-playlist-count";
-
-    const videoCount =
-        playlist.video_count ??
-        playlist.items_count ??
-        0;
-
-    count.innerHTML =
-        `<i class="fa-solid fa-list"></i> ${formatNumber(videoCount)}`;
+    const firstVideo =
+        items[0]?.videos ||
+        null;
 
 
-    cover.appendChild(
-        image
-    );
-
-    cover.appendChild(
-        count
-    );
+    const secondVideo =
+        items[1]?.videos ||
+        null;
 
 
-    const info =
-        document.createElement("div");
+    const thirdVideo =
+        items[2]?.videos ||
+        null;
 
-    info.className =
-        "library-playlist-info";
+
+    const fourthVideo =
+        items[3]?.videos ||
+        null;
 
 
     const title =
-        document.createElement("h3");
-
-    title.className =
-        "library-playlist-title";
-
-    title.textContent =
-        playlist.name ||
-        "Playlist sans titre";
+        escapeHtml(
+            playlist.title ||
+            playlist.name ||
+            "Playlist sans titre"
+        );
 
 
     const description =
-        document.createElement("p");
-
-    description.className =
-        "library-playlist-description";
-
-    description.textContent =
-        playlist.description ||
-        "Aucune description";
-
-
-    info.appendChild(
-        title
-    );
-
-    info.appendChild(
-        description
-    );
-
-
-    link.appendChild(
-        cover
-    );
-
-    link.appendChild(
-        info
-    );
-
-
-    const actions =
-        document.createElement("div");
-
-    actions.className =
-        "library-playlist-actions";
-
-
-    const deleteButton =
-        document.createElement("button");
-
-    deleteButton.type =
-        "button";
-
-    deleteButton.className =
-        "library-item-remove";
-
-    deleteButton.title =
-        "Supprimer la playlist";
-
-    deleteButton.innerHTML =
-        '<i class="fa-solid fa-trash-can"></i>';
-
-
-    deleteButton.addEventListener(
-        "click",
-        event => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            openConfirmModal(
-                "Supprimer la playlist",
-                `Voulez-vous vraiment supprimer « ${playlist.name || "cette playlist"} » ?`,
-                () =>
-                    removePlaylist(
-                        playlist
-                    )
-            );
-        }
-    );
-
-
-    actions.appendChild(
-        deleteButton
-    );
-
-
-    card.appendChild(
-        link
-    );
-
-    card.appendChild(
-        actions
-    );
-
-
-    return card;
-}
-
-
-// ==========================================
-// Remove History Item
-// ==========================================
-
-async function removeHistoryItem(
-    item
-) {
-
-    const historyId =
-        item.id ||
-        item.history_id;
-
-    if (!historyId) {
-        return;
-    }
-
-    try {
-
-        const result =
-            await deleteWatchHistory(
-                historyId
-            );
-
-        if (result?.error) {
-            throw result.error;
-        }
-
-        state.history =
-            state.history.filter(
-                entry =>
-                    (
-                        entry.id ||
-                        entry.history_id
-                    ) !== historyId
-            );
-
-        updateCounts();
-
-        renderHistory();
-
-        showToast(
-            "Élément supprimé de l'historique.",
-            "success"
+        escapeHtml(
+            playlist.description ||
+            ""
         );
 
-    } catch (error) {
 
-        console.error(
-            "Erreur suppression historique :",
-            error
-        );
+    const count =
+        items.length;
 
-        showToast(
-            "Impossible de supprimer cet élément.",
-            "error"
-        );
-    }
-}
 
+    const cover =
+        firstVideo?.thumbnail_url ||
+        "images/default-thumbnail.jpg";
 
-// ==========================================
-// Clear History
-// ==========================================
 
-async function clearHistory() {
+    article.innerHTML = `
 
-    try {
+        <a
+            href="playlist.html?id=${encodeURIComponent(
+                playlist.id || ""
+            )}"
+            class="library-playlist-cover"
+            aria-label="${title}"
+        >
 
-        const result =
-            await clearWatchHistory();
+            <div class="library-playlist-main-image">
 
-        if (result?.error) {
-            throw result.error;
-        }
+                <img
+                    src="${escapeHtml(
+                        cover
+                    )}"
+                    alt="${title}"
+                    loading="lazy"
+                >
 
-        state.history = [];
+            </div>
 
-        updateCounts();
 
-        renderHistory();
+            <div class="library-playlist-stack">
 
-        showToast(
-            "Historique effacé.",
-            "success"
-        );
+                <div class="library-playlist-stack-item">
 
-    } catch (error) {
+                    ${
+                        secondVideo?.thumbnail_url
+                            ? `
+                                <img
+                                    src="${escapeHtml(
+                                        secondVideo.thumbnail_url
+                                    )}"
+                                    alt=""
+                                    loading="lazy"
+                                >
+                            `
+                            : ""
+                    }
 
-        console.error(
-            "Erreur effacement historique :",
-            error
-        );
+                </div>
 
-        showToast(
-            "Impossible d'effacer l'historique.",
-            "error"
-        );
-    }
-}
 
+                <div class="library-playlist-stack-item">
 
-// ==========================================
-// Remove Watch Later
-// ==========================================
-
-async function removeWatchLaterItem(
-    item
-) {
+                    ${
+                        thirdVideo?.thumbnail_url
+                            ? `
+                                <img
+                                    src="${escapeHtml(
+                                        thirdVideo.thumbnail_url
+                                    )}"
+                                    alt=""
+                                    loading="lazy"
+                                >
+                            `
+                            : ""
+                    }
 
-    const videoId =
-        item.video_id ||
-        item.video?.id ||
-        item.videos?.id ||
-        item.id;
+                </div>
 
-    if (!videoId) {
-        return;
-    }
 
-    try {
+                <div class="library-playlist-stack-item">
 
-        const result =
-            await removeFromWatchLater(
-                videoId
-            );
+                    ${
+                        fourthVideo?.thumbnail_url
+                            ? `
+                                <img
+                                    src="${escapeHtml(
+                                        fourthVideo.thumbnail_url
+                                    )}"
+                                    alt=""
+                                    loading="lazy"
+                                >
+                            `
+                            : ""
+                    }
 
-        if (result?.error) {
-            throw result.error;
-        }
+                </div>
 
-        state.watchLater =
-            state.watchLater.filter(
-                entry =>
-                    (
-                        entry.video_id ||
-                        entry.video?.id ||
-                        entry.videos?.id ||
-                        entry.id
-                    ) !== videoId
-            );
+            </div>
 
-        updateCounts();
 
-        renderWatchLater();
+            <div class="library-playlist-count">
 
-        showToast(
-            "Vidéo retirée de À regarder plus tard.",
-            "success"
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Erreur suppression watch later :",
-            error
-        );
-
-        showToast(
-            "Impossible de retirer cette vidéo.",
-            "error"
-        );
-    }
-}
-
-
-// ==========================================
-// Remove Liked Video
-// ==========================================
-
-async function removeLikedItem(
-    item
-) {
-
-    const videoId =
-        item.video_id ||
-        item.video?.id ||
-        item.videos?.id ||
-        item.id;
-
-    if (!videoId) {
-        return;
-    }
-
-    try {
-
-        const result =
-            await removeLikedVideo(
-                videoId
-            );
+                <i class="fa-solid fa-list"></i>
 
-        if (result?.error) {
-            throw result.error;
-        }
-
-        state.liked =
-            state.liked.filter(
-                entry =>
-                    (
-                        entry.video_id ||
-                        entry.video?.id ||
-                        entry.videos?.id ||
-                        entry.id
-                    ) !== videoId
-            );
-
-        updateCounts();
-
-        renderLiked();
-
-        showToast(
-            "Vidéo retirée de vos vidéos aimées.",
-            "success"
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Erreur suppression vidéo aimée :",
-            error
-        );
-
-        showToast(
-            "Impossible de retirer cette vidéo.",
-            "error"
-        );
-    }
-}
-
-
-// ==========================================
-// Remove Playlist
-// ==========================================
-
-async function removePlaylist(
-    playlist
-) {
+                <span>
+                    ${formatNumber(count)}
+                </span>
 
-    if (!playlist?.id) {
-        return;
-    }
+            </div>
 
-    try {
+        </a>
 
-        const result =
-            await deletePlaylist(
-                playlist.id
-            );
 
-        if (result?.error) {
-            throw result.error;
-        }
+        <div class="library-playlist-content">
 
-        state.playlists =
-            state.playlists.filter(
-                item =>
-                    item.id !==
-                    playlist.id
-            );
+            <h3 class="library-playlist-title">
 
-        updateCounts();
+                <a
+                    href="playlist.html?id=${encodeURIComponent(
+                        playlist.id || ""
+                    )}"
+                >
+                    ${title}
+                </a>
 
-        renderPlaylists();
+            </h3>
 
-        showToast(
-            "Playlist supprimée.",
-            "success"
-        );
 
-    } catch (error) {
-
-        console.error(
-            "Erreur suppression playlist :",
-            error
-        );
-
-        showToast(
-            "Impossible de supprimer la playlist.",
-            "error"
-        );
-    }
-}
-
-
-// ==========================================
-// Counts
-// ==========================================
-
-function updateCounts() {
-
-    updateCount(
-        "historyCount",
-        state.history.length
-    );
-
-    updateCount(
-        "watchLaterCount",
-        state.watchLater.length
-    );
-
-    updateCount(
-        "likedCount",
-        state.liked.length
-    );
-
-    updateCount(
-        "playlistsCount",
-        state.playlists.length
-    );
-
-    updateCount(
-        "downloadsCount",
-        state.downloads.length
-    );
-}
-
-
-function updateCount(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(id);
-
-    if (!element) {
-        return;
-    }
-
-    element.textContent =
-        formatNumber(value);
-
-    element.hidden =
-        value <= 0;
-}
-
-
-// ==========================================
-// Notifications Realtime
-// ==========================================
-
-function initNotifications() {
-
-    try {
-
-        state.notificationChannel =
-            subscribeToNotifications(
-                async payload => {
-
-                    console.log(
-                        "Notification bibliothèque :",
-                        payload
-                    );
-
-                    await updateHeaderNotificationCount();
-                }
-            );
-
-    } catch (error) {
-
-        console.warn(
-            "Realtime notifications indisponible :",
-            error
-        );
-    }
-}
-
-
-async function updateHeaderNotificationCount() {
-
-    try {
-
-        const count =
-            await getUnreadNotificationCount();
-
-        const elements =
-            $$(
-                "[data-notification-count]"
-            );
-
-        elements.forEach(
-            element => {
-
-                element.textContent =
-                    formatNumber(count);
-
-                element.hidden =
-                    count <= 0;
+            ${
+                description
+                    ? `
+                        <p class="library-playlist-description">
+                            ${description}
+                        </p>
+                    `
+                    : ""
             }
-        );
 
-    } catch (error) {
 
-        console.warn(
-            "Erreur compteur notifications :",
-            error
-        );
+            <div class="library-playlist-meta">
+
+                <span>
+                    ${formatNumber(count)}
+                    ${
+                        count > 1
+                            ? "vidéos"
+                            : "vidéo"
+                    }
+                </span>
+
+            </div>
+
+
+            <div class="library-playlist-actions">
+
+                <a
+                    href="playlist.html?id=${encodeURIComponent(
+                        playlist.id || ""
+                    )}"
+                    class="library-playlist-open"
+                >
+
+                    <i class="fa-solid fa-play"></i>
+
+                    Ouvrir
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="library-playlist-delete"
+                    data-action="delete-playlist"
+                    data-playlist-id="${escapeHtml(
+                        playlist.id || ""
+                    )}"
+                    aria-label="Supprimer la playlist"
+                >
+
+                    <i class="fa-solid fa-trash-can"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    return article;
+
+}
+
+
+// ==========================================
+// Display Date
+// ==========================================
+
+function getDisplayDate(
+    item,
+    video
+) {
+
+    const value =
+        item?.last_watched_at ||
+        item?.created_at ||
+        item?.watched_at ||
+        video?.published_at ||
+        video?.created_at;
+
+
+    if (!value) {
+
+        return "";
+
     }
+
+
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleDateString(
+        "fr-FR",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
 }
 
 
@@ -2164,110 +2959,642 @@ async function updateHeaderNotificationCount() {
 // Search
 // ==========================================
 
-function clearLibrarySearch() {
-
-    state.search = "";
-
-    const input =
-        $("#librarySearchInput");
-
-    if (input) {
-        input.value = "";
-    }
-
-    updateClearSearchButton();
-
-    hideSearchEmpty();
-
-    renderActiveSection();
-}
-
-
-function updateClearSearchButton() {
-
-    const button =
-        $("#clearLibrarySearch");
-
-    if (!button) {
-        return;
-    }
-
-    button.hidden =
-        !state.search;
-}
-
-
-function showSearchEmpty() {
-
-    const element =
-        $("#librarySearchEmpty");
-
-    if (element) {
-        element.hidden = false;
-    }
-}
-
-
-function hideSearchEmpty() {
-
-    const element =
-        $("#librarySearchEmpty");
-
-    if (element) {
-        element.hidden = true;
-    }
-}
-
-
-// ==========================================
-// Loading
-// ==========================================
-
-function setLoading(
-    id,
+function handleLibrarySearch(
     value
 ) {
 
-    const element =
-        document.getElementById(id);
+    searchQuery =
+        String(
+            value || ""
+        ).trim();
 
-    if (element) {
-        element.hidden =
-            !value;
+
+    const hasSearch =
+        searchQuery.length > 0;
+
+
+    if (clearLibrarySearch) {
+
+        clearLibrarySearch.hidden =
+            !hasSearch;
+
     }
+
+
+    applyCurrentTabFilters();
+
 }
 
 
 // ==========================================
-// Error
+// Clear Search
 // ==========================================
 
-function showLibraryError() {
+function clearSearch() {
 
-    const error =
-        $("#libraryError");
+    searchQuery =
+        "";
 
-    if (error) {
-        error.hidden = false;
+
+    if (librarySearchInput) {
+
+        librarySearchInput.value =
+            "";
+
     }
 
-    $$("[data-library-section]")
-        .forEach(
-            section => {
-                section.hidden = true;
+
+    if (clearLibrarySearch) {
+
+        clearLibrarySearch.hidden =
+            true;
+
+    }
+
+
+    librarySearchEmpty.hidden =
+        true;
+
+
+    applyCurrentTabFilters();
+
+
+    librarySearchInput?.focus();
+
+}
+
+
+// ==========================================
+// Search Empty
+// ==========================================
+
+function updateSearchEmptyState() {
+
+    if (!librarySearchEmpty) {
+
+        return;
+
+    }
+
+
+    if (!searchQuery) {
+
+        librarySearchEmpty.hidden =
+            true;
+
+        return;
+
+    }
+
+
+    let currentData = [];
+
+
+    if (
+        currentTab === "history"
+    ) {
+
+        currentData =
+            filteredHistory;
+
+    }
+
+    else if (
+        currentTab === "watch-later"
+    ) {
+
+        currentData =
+            filteredWatchLater;
+
+    }
+
+    else if (
+        currentTab === "liked"
+    ) {
+
+        currentData =
+            filteredLiked;
+
+    }
+
+    else if (
+        currentTab === "playlists"
+    ) {
+
+        currentData =
+            filteredPlaylists;
+
+    }
+
+
+    librarySearchEmpty.hidden =
+        currentData.length !== 0;
+
+}
+
+
+// ==========================================
+// Filter
+// ==========================================
+
+function handleFilterChange() {
+
+    currentFilter =
+        libraryFilter?.value ||
+        "all";
+
+
+    applyCurrentTabFilters();
+
+}
+
+
+// ==========================================
+// Sort
+// ==========================================
+
+function handleSortChange() {
+
+    currentSort =
+        librarySort?.value ||
+        "recent";
+
+
+    applyCurrentTabFilters();
+
+}
+
+
+// ==========================================
+// Refresh
+// ==========================================
+
+async function refreshLibrary() {
+
+    if (isLoading) {
+
+        return;
+
+    }
+
+
+    try {
+
+        setRefreshLoading(
+            true
+        );
+
+        await loadLibrary();
+
+        showToast(
+            "Bibliothèque actualisée.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showToast(
+            "Impossible d'actualiser la bibliothèque.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        setRefreshLoading(
+            false
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Refresh Button Loading
+// ==========================================
+
+function setRefreshLoading(
+    loading
+) {
+
+    if (!libraryRefreshButton) {
+
+        return;
+
+    }
+
+
+    libraryRefreshButton.disabled =
+        loading;
+
+
+    if (loading) {
+
+        libraryRefreshButton.classList.add(
+            "loading"
+        );
+
+        libraryRefreshButton.innerHTML = `
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            <span>
+                Actualisation...
+            </span>
+
+        `;
+
+    }
+
+    else {
+
+        libraryRefreshButton.classList.remove(
+            "loading"
+        );
+
+        libraryRefreshButton.innerHTML = `
+
+            <i class="fa-solid fa-rotate"></i>
+
+            <span>
+                Actualiser
+            </span>
+
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// Clear History
+// ==========================================
+
+function askClearHistory() {
+
+    openConfirmModal(
+        "Voulez-vous vraiment effacer tout votre historique ? Cette action est irréversible.",
+        async () => {
+
+            try {
+
+                const result =
+                    await clearWatchHistory();
+
+
+                if (
+                    result?.error
+                ) {
+
+                    throw result.error;
+
+                }
+
+
+                historyData =
+                    [];
+
+                filteredHistory =
+                    [];
+
+
+                updateCounts();
+
+                renderHistory(
+                    []
+                );
+
+
+                showToast(
+                    "Votre historique a été effacé.",
+                    "success"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+                showToast(
+                    "Impossible d'effacer l'historique.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// Remove Watch Later
+// ==========================================
+
+async function removeFromWatchLater(
+    videoId
+) {
+
+    if (!videoId) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const result =
+            await removeWatchLater(
+                videoId
+            );
+
+
+        if (
+            result?.error
+        ) {
+
+            throw result.error;
+
+        }
+
+
+        watchLaterData =
+            watchLaterData.filter(
+                item => {
+
+                    const video =
+                        getVideoFromItem(
+                            item
+                        );
+
+                    return (
+                        video?.id !== videoId
+                    );
+
+                }
+            );
+
+
+        updateCounts();
+
+        applyCurrentTabFilters();
+
+
+        showToast(
+            "Vidéo retirée de À regarder plus tard.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showToast(
+            "Impossible de retirer cette vidéo.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Remove Liked
+// ==========================================
+
+async function removeFromLiked(
+    videoId
+) {
+
+    if (!videoId) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const result =
+            await unlikeVideo(
+                videoId
+            );
+
+
+        if (
+            result?.error
+        ) {
+
+            throw result.error;
+
+        }
+
+
+        likedData =
+            likedData.filter(
+                item => {
+
+                    const video =
+                        getVideoFromItem(
+                            item
+                        );
+
+                    return (
+                        video?.id !== videoId
+                    );
+
+                }
+            );
+
+
+        updateCounts();
+
+        applyCurrentTabFilters();
+
+
+        showToast(
+            "Vidéo retirée de vos J'aime.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showToast(
+            "Impossible de retirer votre J'aime.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Delete Playlist
+// ==========================================
+
+function askDeletePlaylist(
+    playlistId
+) {
+
+    if (!playlistId) {
+
+        return;
+
+    }
+
+
+    openConfirmModal(
+        "Voulez-vous vraiment supprimer cette playlist ? Cette action est irréversible.",
+        async () => {
+
+            try {
+
+                const result =
+                    await deletePlaylist(
+                        playlistId
+                    );
+
+
+                if (
+                    result?.error
+                ) {
+
+                    throw result.error;
+
+                }
+
+
+                playlistsData =
+                    playlistsData.filter(
+                        playlist =>
+                            playlist.id !== playlistId
+                    );
+
+
+                updateCounts();
+
+                applyCurrentTabFilters();
+
+
+                showToast(
+                    "Playlist supprimée.",
+                    "success"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+                showToast(
+                    "Impossible de supprimer la playlist.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// Video Menu
+// ==========================================
+
+function handleVideoMenu(
+    videoId,
+    source
+) {
+
+    if (!videoId) {
+
+        return;
+
+    }
+
+
+    if (
+        source === "watch-later"
+    ) {
+
+        openConfirmModal(
+            "Retirer cette vidéo de votre liste À regarder plus tard ?",
+            async () => {
+
+                await removeFromWatchLater(
+                    videoId
+                );
+
             }
         );
-}
 
+        return;
 
-function hideLibraryError() {
-
-    const error =
-        $("#libraryError");
-
-    if (error) {
-        error.hidden = true;
     }
+
+
+    if (
+        source === "liked"
+    ) {
+
+        openConfirmModal(
+            "Retirer votre J'aime de cette vidéo ?",
+            async () => {
+
+                await removeFromLiked(
+                    videoId
+                );
+
+            }
+        );
+
+        return;
+
+    }
+
+
+    if (
+        source === "history"
+    ) {
+
+        showToast(
+            "Pour effacer complètement l'historique, utilisez le bouton « Effacer l'historique ».",
+            "info"
+        );
+
+    }
+
 }
 
 
@@ -2276,59 +3603,117 @@ function hideLibraryError() {
 // ==========================================
 
 function openConfirmModal(
-    title,
     message,
     action
 ) {
 
-    const modal =
-        $("#libraryConfirmModal");
+    if (!libraryConfirmModal) {
 
-    if (!modal) {
         return;
+
     }
 
-    $("#libraryConfirmTitle")
-        .textContent =
-        title;
 
-    $("#libraryConfirmMessage")
-        .textContent =
-        message;
+    confirmAction =
+        typeof action === "function"
+            ? action
+            : null;
 
-    state.confirmAction =
-        action;
 
-    modal.hidden =
+    if (libraryConfirmMessage) {
+
+        libraryConfirmMessage.textContent =
+            message;
+
+    }
+
+
+    libraryConfirmModal.hidden =
         false;
 
     document.body.classList.add(
         "library-modal-open"
     );
 
-    $("#libraryConfirmAction")
-        ?.focus();
+
+    setTimeout(
+        () => {
+
+            libraryConfirmAction?.focus();
+
+        },
+        0
+    );
+
 }
 
 
+// ==========================================
+// Close Modal
+// ==========================================
+
 function closeConfirmModal() {
 
-    const modal =
-        $("#libraryConfirmModal");
+    if (!libraryConfirmModal) {
 
-    if (!modal) {
         return;
+
     }
 
-    modal.hidden =
-        true;
 
-    state.confirmAction =
-        null;
+    libraryConfirmModal.hidden =
+        true;
 
     document.body.classList.remove(
         "library-modal-open"
     );
+
+
+    confirmAction =
+        null;
+
+}
+
+
+// ==========================================
+// Confirm Action
+// ==========================================
+
+async function executeConfirmAction() {
+
+    if (
+        typeof confirmAction !==
+        "function"
+    ) {
+
+        closeConfirmModal();
+
+        return;
+
+    }
+
+
+    const action =
+        confirmAction;
+
+
+    closeConfirmModal();
+
+
+    try {
+
+        await action();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
 }
 
 
@@ -2336,289 +3721,1031 @@ function closeConfirmModal() {
 // Toast
 // ==========================================
 
-let toastTimer = null;
-
-
 function showToast(
     message,
     type = "success"
 ) {
 
-    const toast =
-        $("#libraryToast");
-
-    const messageElement =
-        $("#libraryToastMessage");
-
-    const icon =
-        $("#libraryToastIcon");
-
     if (
-        !toast ||
-        !messageElement
+        !libraryToast ||
+        !libraryToastMessage
     ) {
+
         return;
+
     }
-
-    messageElement.textContent =
-        message;
-
-
-    if (icon) {
-
-        icon.className =
-            type === "error"
-                ? "fa-solid fa-circle-exclamation"
-                : "fa-solid fa-circle-check";
-    }
-
-
-    toast.dataset.type =
-        type;
-
-    toast.hidden =
-        false;
 
 
     clearTimeout(
         toastTimer
     );
 
+
+    libraryToastMessage.textContent =
+        message;
+
+
+    libraryToast.classList.remove(
+        "success",
+        "error",
+        "info",
+        "warning"
+    );
+
+
+    libraryToast.classList.add(
+        type
+    );
+
+
+    if (libraryToastIcon) {
+
+        if (
+            type === "error"
+        ) {
+
+            libraryToastIcon.className =
+                "fa-solid fa-circle-exclamation";
+
+        }
+
+        else if (
+            type === "warning"
+        ) {
+
+            libraryToastIcon.className =
+                "fa-solid fa-triangle-exclamation";
+
+        }
+
+        else if (
+            type === "info"
+        ) {
+
+            libraryToastIcon.className =
+                "fa-solid fa-circle-info";
+
+        }
+
+        else {
+
+            libraryToastIcon.className =
+                "fa-solid fa-circle-check";
+
+        }
+
+    }
+
+
+    libraryToast.hidden =
+        false;
+
+
+    requestAnimationFrame(
+        () => {
+
+            libraryToast.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+
     toastTimer =
         setTimeout(
             () => {
 
-                toast.hidden =
-                    true;
+                libraryToast.classList.remove(
+                    "show"
+                );
+
+                setTimeout(
+                    () => {
+
+                        libraryToast.hidden =
+                            true;
+
+                    },
+                    250
+                );
 
             },
             3500
         );
+
 }
 
 
 // ==========================================
-// Utilities
+// Error State
 // ==========================================
 
-function getTitle(
-    item
-) {
+function showLibraryError() {
 
-    return String(
-        item.title ||
-        item.video?.title ||
-        item.videos?.title ||
-        item.name ||
-        ""
-    );
+    if (libraryError) {
+
+        libraryError.hidden =
+            false;
+
+    }
+
+
+    if (mainContent) {
+
+        mainContent.classList.add(
+            "has-library-error"
+        );
+
+    }
+
 }
 
 
-function getChannelName(
-    item
-) {
+function hideLibraryError() {
 
-    return String(
-        item.channelName ||
-        item.channel?.name ||
-        item.channels?.name ||
-        item.video?.channels?.name ||
-        item.videos?.channels?.name ||
-        ""
-    );
+    if (libraryError) {
+
+        libraryError.hidden =
+            true;
+
+    }
+
+
+    if (mainContent) {
+
+        mainContent.classList.remove(
+            "has-library-error"
+        );
+
+    }
+
 }
 
 
-function getDateValue(
-    item
+// ==========================================
+// Retry
+// ==========================================
+
+async function retryLibrary() {
+
+    if (isLoading) {
+
+        return;
+
+    }
+
+
+    try {
+
+        hideLibraryError();
+
+        showLoader();
+
+        await loadLibrary();
+
+        showToast(
+            "Bibliothèque chargée.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showLibraryError();
+
+        showToast(
+            "Le chargement a échoué.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        hideLoader();
+
+    }
+
+}
+
+
+// ==========================================
+// Global Search
+// ==========================================
+
+function handleGlobalSearch(
+    event
+) {
+
+    event?.preventDefault();
+
+
+    if (!searchInput) {
+
+        return;
+
+    }
+
+
+    const query =
+        searchInput.value.trim();
+
+
+    if (!query) {
+
+        return;
+
+    }
+
+
+    navigate(
+        `search.html?q=${encodeURIComponent(
+            query
+        )}`
+    );
+
+}
+
+
+// ==========================================
+// Header Events
+// ==========================================
+
+async function handleHeaderClick(
+    event
+) {
+
+    const login =
+        event.target.closest(
+            "#loginButton"
+        );
+
+
+    if (login) {
+
+        navigate(
+            "auth.html"
+        );
+
+        return;
+
+    }
+
+
+    const upload =
+        event.target.closest(
+            "#uploadButton"
+        );
+
+
+    if (upload) {
+
+        navigate(
+            "publish.html"
+        );
+
+        return;
+
+    }
+
+
+    const notifications =
+        event.target.closest(
+            "#notificationsButton"
+        );
+
+
+    if (notifications) {
+
+        navigate(
+            "notification.html"
+        );
+
+        return;
+
+    }
+
+}
+
+
+// ==========================================
+// Sidebar Events
+// ==========================================
+
+async function handleSidebarClick(
+    event
+) {
+
+    const logout =
+        event.target.closest(
+            "#logoutButton"
+        );
+
+
+    if (!logout) {
+
+        return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    try {
+
+        await signOut();
+
+        navigate(
+            "auth.html"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showToast(
+            "Impossible de se déconnecter.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Keyboard Tabs
+// ==========================================
+
+function handleTabKeyboard(
+    event
+) {
+
+    const tabs = [
+        libraryTabHistory,
+        libraryTabWatchLater,
+        libraryTabLiked,
+        libraryTabPlaylists
+    ].filter(Boolean);
+
+
+    if (!tabs.length) {
+
+        return;
+
+    }
+
+
+    const currentIndex =
+        tabs.indexOf(
+            event.currentTarget
+        );
+
+
+    if (
+        currentIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    let nextIndex =
+        currentIndex;
+
+
+    if (
+        event.key === "ArrowRight"
+    ) {
+
+        nextIndex =
+            (
+                currentIndex + 1
+            ) %
+            tabs.length;
+
+    }
+
+    else if (
+        event.key === "ArrowLeft"
+    ) {
+
+        nextIndex =
+            (
+                currentIndex - 1 +
+                tabs.length
+            ) %
+            tabs.length;
+
+    }
+
+    else if (
+        event.key === "Home"
+    ) {
+
+        nextIndex =
+            0;
+
+    }
+
+    else if (
+        event.key === "End"
+    ) {
+
+        nextIndex =
+            tabs.length - 1;
+
+    }
+
+    else {
+
+        return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    const nextTab =
+        tabs[nextIndex];
+
+
+    activateTab(
+        nextTab.dataset.libraryTab
+    );
+
+
+    nextTab.focus();
+
+}
+
+
+// ==========================================
+// Event Listeners
+// ==========================================
+
+function addEventListeners() {
+
+    // ======================================
+    // Sidebar
+    // ======================================
+
+    menuButton?.addEventListener(
+        "click",
+        toggleSidebar
+    );
+
+
+    sidebarOverlay?.addEventListener(
+        "click",
+        closeSidebar
+    );
+
+
+    // ======================================
+    // Global Search
+    // ======================================
+
+    searchForm?.addEventListener(
+        "submit",
+        handleGlobalSearch
+    );
+
+
+    searchButton?.addEventListener(
+        "click",
+        handleGlobalSearch
+    );
+
+
+    // ======================================
+    // Header
+    // ======================================
+
+    headerRight?.addEventListener(
+        "click",
+        handleHeaderClick
+    );
+
+
+    // ======================================
+    // Sidebar
+    // ======================================
+
+    sidebarNav?.addEventListener(
+        "click",
+        handleSidebarClick
+    );
+
+
+    // ======================================
+    // Tabs
+    // ======================================
+
+    libraryTabs?.addEventListener(
+        "click",
+        event => {
+
+            const tab =
+                event.target.closest(
+                    ".library-tab"
+                );
+
+
+            if (!tab) {
+
+                return;
+
+            }
+
+
+            activateTab(
+                tab.dataset.libraryTab
+            );
+
+        }
+    );
+
+
+    [
+        libraryTabHistory,
+        libraryTabWatchLater,
+        libraryTabLiked,
+        libraryTabPlaylists
+    ].forEach(
+        tab => {
+
+            tab?.addEventListener(
+                "keydown",
+                handleTabKeyboard
+            );
+
+        }
+    );
+
+
+    // ======================================
+    // Library Search
+    // ======================================
+
+    librarySearchInput?.addEventListener(
+        "input",
+        event => {
+
+            handleLibrarySearch(
+                event.target.value
+            );
+
+        }
+    );
+
+
+    clearLibrarySearch?.addEventListener(
+        "click",
+        clearSearch
+    );
+
+
+    clearSearchEmptyButton?.addEventListener(
+        "click",
+        clearSearch
+    );
+
+
+    // ======================================
+    // Filter
+    // ======================================
+
+    libraryFilter?.addEventListener(
+        "change",
+        handleFilterChange
+    );
+
+
+    // ======================================
+    // Sort
+    // ======================================
+
+    librarySort?.addEventListener(
+        "change",
+        handleSortChange
+    );
+
+
+    // ======================================
+    // Refresh
+    // ======================================
+
+    libraryRefreshButton?.addEventListener(
+        "click",
+        refreshLibrary
+    );
+
+
+    // ======================================
+    // Clear History
+    // ======================================
+
+    clearHistoryButton?.addEventListener(
+        "click",
+        askClearHistory
+    );
+
+
+    // ======================================
+    // Retry
+    // ======================================
+
+    libraryRetryButton?.addEventListener(
+        "click",
+        retryLibrary
+    );
+
+
+    // ======================================
+    // Confirmation Modal
+    // ======================================
+
+    libraryConfirmClose?.addEventListener(
+        "click",
+        closeConfirmModal
+    );
+
+
+    libraryConfirmCancel?.addEventListener(
+        "click",
+        closeConfirmModal
+    );
+
+
+    libraryConfirmBackdrop?.addEventListener(
+        "click",
+        closeConfirmModal
+    );
+
+
+    libraryConfirmAction?.addEventListener(
+        "click",
+        executeConfirmAction
+    );
+
+
+    // ======================================
+    // Dynamic Library Actions
+    // ======================================
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const videoMenu =
+                event.target.closest(
+                    '[data-action="video-menu"]'
+                );
+
+
+            if (videoMenu) {
+
+                event.stopPropagation();
+
+                handleVideoMenu(
+                    videoMenu.dataset.videoId,
+                    videoMenu.closest(
+                        ".library-video-card"
+                    )?.dataset.source
+                );
+
+                return;
+
+            }
+
+
+            const deletePlaylist =
+                event.target.closest(
+                    '[data-action="delete-playlist"]'
+                );
+
+
+            if (deletePlaylist) {
+
+                event.stopPropagation();
+
+                askDeletePlaylist(
+                    deletePlaylist.dataset.playlistId
+                );
+
+            }
+
+        }
+    );
+
+
+    // ======================================
+    // Escape
+    // ======================================
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                if (
+                    libraryConfirmModal &&
+                    !libraryConfirmModal.hidden
+                ) {
+
+                    closeConfirmModal();
+
+                    return;
+
+                }
+
+
+                if (sidebarOpen) {
+
+                    closeSidebar();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    // ======================================
+    // Resize
+    // ======================================
+
+    window.addEventListener(
+        "resize",
+        handleResize
+    );
+
+}
+
+
+// ==========================================
+// Resize
+// ==========================================
+
+function handleResize() {
+
+    if (
+        window.innerWidth > 900
+    ) {
+
+        sidebarOverlay?.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// Format Duration
+// ==========================================
+
+function formatDuration(
+    totalSeconds
+) {
+
+    if (
+        totalSeconds === null ||
+        totalSeconds === undefined ||
+        totalSeconds === "" ||
+        Number.isNaN(
+            Number(totalSeconds)
+        ) ||
+        Number(totalSeconds) < 0
+    ) {
+
+        return "";
+
+    }
+
+
+    const total =
+        Math.floor(
+            Number(totalSeconds)
+        );
+
+
+    const hours =
+        Math.floor(
+            total / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (total % 3600) / 60
+        );
+
+
+    const seconds =
+        total % 60;
+
+
+    const mm =
+        String(
+            minutes
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const ss =
+        String(
+            seconds
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    if (hours > 0) {
+
+        return (
+            String(
+                hours
+            ).padStart(
+                2,
+                "0"
+            ) +
+            ":" +
+            mm +
+            ":" +
+            ss
+        );
+
+    }
+
+
+    return (
+        mm +
+        ":" +
+        ss
+    );
+
+}
+
+
+// ==========================================
+// Format Views
+// ==========================================
+
+function formatViews(
+    views
 ) {
 
     const value =
-        item.watched_at ||
-        item.downloaded_at ||
-        item.created_at ||
-        item.updated_at ||
-        item.published_at ||
-        item.video?.published_at ||
-        item.videos?.published_at;
+        Number(
+            views
+        ) || 0;
 
-    const timestamp =
+
+    if (
+        value >= 1000000000
+    ) {
+
+        return (
+            (
+                value /
+                1000000000
+            )
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                ) +
+            " Md"
+        );
+
+    }
+
+
+    if (
+        value >= 1000000
+    ) {
+
+        return (
+            (
+                value /
+                1000000
+            )
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                ) +
+            " M"
+        );
+
+    }
+
+
+    if (
+        value >= 1000
+    ) {
+
+        return (
+            (
+                value /
+                1000
+            )
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                ) +
+            " k"
+        );
+
+    }
+
+
+    return String(
         value
-            ? new Date(value).getTime()
-            : 0;
+    );
 
-    return Number.isFinite(timestamp)
-        ? timestamp
-        : 0;
 }
 
 
-function getContentType(
-    item
-) {
-
-    const type =
-        item.content_type ||
-        item.type ||
-        item.video_type ||
-        item.media_type;
-
-    if (
-        type === "short" ||
-        type === "shorts"
-    ) {
-        return "short";
-    }
-
-    if (
-        type === "live" ||
-        type === "stream"
-    ) {
-        return "live";
-    }
-
-    return "video";
-}
-
+// ==========================================
+// Format Number
+// ==========================================
 
 function formatNumber(
     value
 ) {
 
     const number =
-        Number(value) || 0;
+        Number(
+            value
+        ) || 0;
+
 
     return new Intl.NumberFormat(
-        "fr-FR",
-        {
-            notation:
-                number >= 1000
-                    ? "compact"
-                    : "standard",
-            maximumFractionDigits: 1
-        }
-    ).format(number);
+        "fr-FR"
+    ).format(
+        number
+    );
+
 }
 
 
-function formatRelativeDate(
+// ==========================================
+// Escape HTML
+// ==========================================
+
+function escapeHtml(
     value
 ) {
 
-    if (!value) {
-        return "";
-    }
-
-    const date =
-        new Date(value);
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-        return "";
-    }
-
-    const seconds =
-        Math.floor(
-            (
-                Date.now() -
-                date.getTime()
-            ) / 1000
-        );
-
-    if (seconds < 60) {
-        return "à l'instant";
-    }
-
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
-    if (minutes < 60) {
-        return `il y a ${minutes} min`;
-    }
-
-    const hours =
-        Math.floor(
-            minutes / 60
-        );
-
-    if (hours < 24) {
-        return `il y a ${hours} h`;
-    }
-
-    const days =
-        Math.floor(
-            hours / 24
-        );
-
-    if (days < 30) {
-        return `il y a ${days} j`;
-    }
-
-    const months =
-        Math.floor(
-            days / 30
-        );
-
-    if (months < 12) {
-        return `il y a ${months} mois`;
-    }
-
-    const years =
-        Math.floor(
-            days / 365
-        );
-
-    return `il y a ${years} an${years > 1 ? "s" : ""}`;
-}
-
-
-function formatDuration(
-    duration
-) {
-
-    if (
-        typeof duration ===
-        "number"
-    ) {
-
-        const seconds =
-            Math.max(
-                0,
-                Math.floor(duration)
-            );
-
-        const hours =
-            Math.floor(
-                seconds / 3600
-            );
-
-        const minutes =
-            Math.floor(
-                (
-                    seconds % 3600
-                ) / 60
-            );
-
-        const secs =
-            seconds % 60;
-
-        if (hours > 0) {
-
-            return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-        }
-
-        return `${minutes}:${String(secs).padStart(2, "0")}`;
-    }
-
     return String(
-        duration || ""
-    );
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
 }
 
 
@@ -2626,26 +4753,28 @@ function formatDuration(
 // Cleanup
 // ==========================================
 
+function destroy() {
+
+    window.removeEventListener(
+        "resize",
+        handleResize
+    );
+
+
+    closeSidebar();
+
+    closeConfirmModal();
+
+    hideLoader();
+
+}
+
+
+// ==========================================
+// Before Unload
+// ==========================================
+
 window.addEventListener(
     "beforeunload",
-    () => {
-
-        if (
-            state.notificationChannel
-        ) {
-
-            import("../core/supabase.js")
-                .then(
-                    ({ supabase }) => {
-
-                        supabase.removeChannel(
-                            state.notificationChannel
-                        );
-                    }
-                )
-                .catch(
-                    () => {}
-                );
-        }
-    }
+    destroy
 );
