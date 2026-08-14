@@ -1805,3 +1805,461 @@ export function subscribeToNotifications(
 
     return channel;
 }
+// ==========================================
+// Downloads
+// ==========================================
+// NetView
+//
+// Les vidéos ne sont téléchargeables que si
+// le créateur a explicitement activé cette option.
+//
+// IMPORTANT :
+// - Aucun téléchargement automatique de vidéo.
+// - Aucun contournement d'une restriction.
+// - Le frontend doit vérifier download_enabled.
+// - Le fichier réel doit rester protégé par Storage/RLS.
+// ==========================================
+
+
+// ==========================================
+// Get Video Download Permission
+// ==========================================
+
+export async function canDownloadVideo(videoId) {
+
+    if (!videoId) {
+        return false;
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("videos")
+        .select(`
+            id,
+            download_enabled
+        `)
+        .eq(
+            "id",
+            videoId
+        )
+        .eq(
+            "status",
+            "published"
+        )
+        .eq(
+            "visibility",
+            "public"
+        )
+        .maybeSingle();
+
+    if (error) {
+
+        console.error(
+            "Erreur vérification téléchargement vidéo :",
+            error
+        );
+
+        return false;
+    }
+
+    return data?.download_enabled === true;
+}
+
+
+// ==========================================
+// Get Downloadable Video
+// ==========================================
+
+export async function getDownloadableVideo(
+    videoId
+) {
+
+    if (!videoId) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Identifiant vidéo manquant"
+            )
+        };
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("videos")
+        .select(`
+            id,
+            channel_id,
+            title,
+            download_enabled
+        `)
+        .eq(
+            "id",
+            videoId
+        )
+        .eq(
+            "status",
+            "published"
+        )
+        .eq(
+            "visibility",
+            "public"
+        )
+        .eq(
+            "download_enabled",
+            true
+        )
+        .maybeSingle();
+
+    if (error) {
+
+        console.error(
+            "Erreur récupération vidéo téléchargeable :",
+            error
+        );
+
+        return {
+            data: null,
+            error
+        };
+    }
+
+    if (!data) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Le téléchargement de cette vidéo n'est pas autorisé."
+            )
+        };
+    }
+
+    return {
+        data,
+        error: null
+    };
+}
+
+
+// ==========================================
+// Get User Downloads
+// ==========================================
+
+export async function getDownloads({
+    page = 1,
+    limit = 20
+} = {}) {
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+
+        return [];
+    }
+
+    const safeLimit =
+        Math.min(
+            Math.max(
+                Number(limit) || 20,
+                1
+            ),
+            100
+        );
+
+    const safePage =
+        Math.max(
+            Number(page) || 1,
+            1
+        );
+
+    const from =
+        (safePage - 1) *
+        safeLimit;
+
+    const to =
+        from +
+        safeLimit -
+        1;
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("downloads")
+        .select(`
+            *,
+            videos (
+                id,
+                title,
+                thumbnail_url,
+                duration,
+                channel_id,
+                download_enabled,
+                channels (
+                    id,
+                    name,
+                    handle,
+                    avatar_url,
+                    verified
+                )
+            )
+        `)
+        .eq(
+            "user_id",
+            user.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        )
+        .range(
+            from,
+            to
+        );
+
+    if (error) {
+
+        console.error(
+            "Erreur récupération téléchargements :",
+            error
+        );
+
+        return [];
+    }
+
+    return (data || []).filter(
+        download =>
+            download.videos?.download_enabled === true
+    );
+}
+
+
+// ==========================================
+// Add Download
+// ==========================================
+
+export async function addDownload(
+    videoId
+) {
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Vous devez être connecté."
+            )
+        };
+    }
+
+    if (!videoId) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Identifiant vidéo manquant."
+            )
+        };
+    }
+
+    // Vérification obligatoire de l'autorisation
+    const allowed =
+        await canDownloadVideo(
+            videoId
+        );
+
+    if (!allowed) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Le créateur n'autorise pas le téléchargement de cette vidéo."
+            )
+        };
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("downloads")
+        .upsert(
+            {
+                user_id: user.id,
+                video_id: videoId
+            },
+            {
+                onConflict:
+                    "user_id,video_id"
+            }
+        )
+        .select()
+        .single();
+
+    if (error) {
+
+        console.error(
+            "Erreur ajout téléchargement :",
+            error
+        );
+
+        return {
+            data: null,
+            error
+        };
+    }
+
+    return {
+        data,
+        error: null
+    };
+}
+
+
+// ==========================================
+// Remove Download
+// ==========================================
+
+export async function removeDownload(
+    videoId
+) {
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Vous devez être connecté."
+            )
+        };
+    }
+
+    if (!videoId) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Identifiant vidéo manquant."
+            )
+        };
+    }
+
+    return await supabase
+        .from("downloads")
+        .delete()
+        .eq(
+            "user_id",
+            user.id
+        )
+        .eq(
+            "video_id",
+            videoId
+        );
+}
+
+
+// ==========================================
+// Check Download Exists
+// ==========================================
+
+export async function hasDownload(
+    videoId
+) {
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user || !videoId) {
+        return false;
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("downloads")
+        .select("id")
+        .eq(
+            "user_id",
+            user.id
+        )
+        .eq(
+            "video_id",
+            videoId
+        )
+        .maybeSingle();
+
+    if (error) {
+
+        console.error(
+            "Erreur vérification téléchargement :",
+            error
+        );
+
+        return false;
+    }
+
+    return !!data;
+}
+
+
+// ==========================================
+// Delete All User Downloads
+// ==========================================
+
+export async function clearDownloads() {
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+
+        return {
+            data: null,
+            error: new Error(
+                "Vous devez être connecté."
+            )
+        };
+    }
+
+    return await supabase
+        .from("downloads")
+        .delete()
+        .eq(
+            "user_id",
+            user.id
+        );
+}
