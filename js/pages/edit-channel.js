@@ -2,14 +2,10 @@
 // NetView
 // edit-channel.js
 // ==========================================================
-
-import {
-    getCurrentUser
-} from "../core/auth.js";
-
 import {
     getMyChannels,
-    updateChannel
+    updateChannel,
+    getCurrentUser
 } from "../core/data.js";
 
 import {
