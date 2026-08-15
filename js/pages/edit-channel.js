@@ -8,8 +8,7 @@ import { getUser } from "../core/auth.js";
 
 import {
     getMyChannels,
-    updateChannel,
-    getCurrentUser
+    updateChannel
 } from "../core/data.js";
 
 import {
