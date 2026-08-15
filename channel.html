@@ -77,213 +77,25 @@
          HEADER
          ===================================================== -->
 
-    <header class="nv-header">
+   <header class="nv-header">
+    <div class="nv-header-left">
+        <button id="menuButton" class="nv-icon-button" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+        <a href="index.html" class="nv-logo"><img src="NetView.png" alt="NetView"></a>
+    </div>
+    <div class="nv-header-center">
+        <form id="searchForm" class="nv-search-form">
+            <input id="searchInput" class="nv-search-input" type="search" placeholder="Rechercher">
+            <button class="nv-search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <div id="headerRight" class="nv-header-right"></div>
 
-        <div class="nv-header-left">
+</header>
 
-            <button
-                id="menuButton"
-                class="nv-icon-button"
-                type="button"
-                aria-label="Ouvrir le menu"
-                aria-controls="channelSidebar"
-                aria-expanded="false"
-            >
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-
-            <a
-                href="index.html"
-                class="nv-logo"
-                aria-label="NetView - Accueil"
-            >
-
-                <img
-                    src="NetView.png"
-                    alt="NetView"
-                >
-
-            </a>
-
-        </div>
-
-
-        <div class="nv-header-center">
-
-            <form
-                id="channelSearchForm"
-                class="nv-search"
-                role="search"
-            >
-
-                <label
-                    for="channelSearchInput"
-                    class="sr-only"
-                >
-                    Rechercher sur NetView
-                </label>
-
-                <input
-                    id="channelSearchInput"
-                    class="nv-search-input"
-                    type="search"
-                    name="q"
-                    placeholder="Rechercher"
-                    autocomplete="off"
-                >
-
-                <button
-                    class="nv-search-button"
-                    type="submit"
-                    aria-label="Rechercher"
-                >
-
-                    <i class="fa-solid fa-magnifying-glass"></i>
-
-                </button>
-
-            </form>
-
-        </div>
-
-
-        <div class="nv-header-right">
-
-            <a
-                href="publish.html"
-                class="nv-icon-button"
-                aria-label="Publier"
-                title="Publier"
-            >
-                <i class="fa-solid fa-video"></i>
-            </a>
-
-            <a
-                href="notification.html"
-                class="nv-icon-button"
-                aria-label="Notifications"
-                title="Notifications"
-            >
-                <i class="fa-regular fa-bell"></i>
-
-                <span
-                    id="notificationBadge"
-                    class="nv-notification-badge"
-                    hidden
-                >
-                    0
-                </span>
-
-            </a>
-
-            <a
-                href="profile.html"
-                class="nv-avatar-button"
-                aria-label="Mon profil"
-                title="Mon profil"
-            >
-
-                <img
-                    id="headerAvatar"
-                    src="assets/images/default-avatar.png"
-                    alt="Profil"
-                >
-
-            </a>
-
-        </div>
-
-    </header>
-
-
-
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
-
-    <aside
-        id="channelSidebar"
-        class="nv-sidebar"
-        aria-label="Navigation principale"
-    >
-
-        <nav class="nv-sidebar-nav">
-
-            <a
-                href="index.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-house"></i>
-                <span>Accueil</span>
-            </a>
-
-
-            <a
-                href="shorts.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-bolt"></i>
-                <span>Shorts</span>
-            </a>
-
-
-            <a
-                href="subscriptions.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-tv"></i>
-                <span>Abonnements</span>
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="library.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-photo-film"></i>
-                <span>Bibliothèque</span>
-            </a>
-
-
-            <a
-                href="playlist.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-list"></i>
-                <span>Playlists</span>
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="netview-shop.html"
-                class="nv-sidebar-item"
-            >
-                <i class="fa-solid fa-store"></i>
-                <span>NetView Shop</span>
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-
-    <!-- =====================================================
-         MOBILE SIDEBAR OVERLAY
-         ===================================================== -->
-
-    <div
-        id="sidebarOverlay"
-        class="nv-sidebar-overlay"
-        hidden
-    ></div>
+<aside id="sidebar" class="nv-sidebar">
+    <nav class="nv-sidebar-nav"></nav>
+</aside>
+<div id="sidebarOverlay" class="nv-sidebar-overlay"></div>
 
 
 
