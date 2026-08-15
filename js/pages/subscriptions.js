@@ -745,7 +745,7 @@ async function loadSubscriptions() {
                 [
                     {
                         method: "eq",
-                        column: "user_id",
+                        column: "subscriber_id",
                         value: currentUser.id
                     }
                 ]
