@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Créez votre chaîne NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Créer une chaîne - NetView
+    </title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/animations.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/core/utilities.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENT CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/forms.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/pages/add-channel.css"
+    >
+
+</head>
+
+
+<body class="nv-page add-channel-page">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="nv-header">
+
+        <div class="nv-header-left">
+
+            <button
+                id="menuButton"
+                class="nv-icon-button"
+                type="button"
+                aria-label="Menu"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+
+            <a
+                href="index.html"
+                class="nv-logo"
+                aria-label="NetView - Accueil"
+            >
+
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                >
+
+            </a>
+
+        </div>
+
+
+        <div class="nv-header-center">
+
+            <form
+                id="searchForm"
+                class="nv-search-form"
+                role="search"
+                autocomplete="off"
+            >
+
+                <input
+                    id="searchInput"
+                    class="nv-search-input"
+                    type="search"
+                    name="q"
+                    placeholder="Rechercher"
+                    aria-label="Rechercher"
+                >
+
+                <button
+                    class="nv-search-button"
+                    type="submit"
+                    aria-label="Rechercher"
+                >
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div
+            id="headerRight"
+            class="nv-header-right"
+        ></div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside
+        id="sidebar"
+        class="nv-sidebar"
+        aria-label="Navigation principale"
+    >
+
+        <nav class="nv-sidebar-nav"></nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         SIDEBAR OVERLAY
+         ===================================================== -->
+
+    <div
+        id="sidebarOverlay"
+        class="nv-sidebar-overlay"
+        aria-hidden="true"
+    ></div>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main
+        id="mainContent"
+        class="add-channel-main"
+    >
+
+        <div class="add-channel-container">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <section class="add-channel-header">
+
+                <div class="add-channel-header-icon">
+
+                    <i class="fa-solid fa-tv"></i>
+
+                </div>
+
+
+                <div class="add-channel-header-content">
+
+                    <div class="add-channel-header-badge">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        <span>
+                            1 compte = 1 chaîne
+                        </span>
+
+                    </div>
+
+
+                    <h1 class="add-channel-title">
+                        Créer votre chaîne
+                    </h1>
+
+
+                    <p class="add-channel-subtitle">
+                        Créez votre espace créateur sur NetView
+                        et partagez vos vidéos, Shorts et Lives
+                        avec votre communauté.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 FORM LAYOUT
+                 ================================================= -->
+
+            <div class="add-channel-layout">
+
+
+                <!-- =================================================
+                     FORM CARD
+                     ================================================= -->
+
+                <section
+                    class="add-channel-card"
+                    aria-labelledby="addChannelFormTitle"
+                >
+
+                    <div class="add-channel-card-header">
+
+                        <div>
+
+                            <h2
+                                id="addChannelFormTitle"
+                                class="add-channel-card-title"
+                            >
+                                Informations de votre chaîne
+                            </h2>
+
+                            <p class="add-channel-card-subtitle">
+                                Ces informations seront visibles publiquement
+                                sur votre chaîne NetView.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =============================================
+                         FORM
+                         ============================================= -->
+
+                    <form
+                        id="addChannelForm"
+                        class="add-channel-form"
+                        novalidate
+                    >
+
+
+                        <!-- =========================================
+                             CHANNEL NAME
+                             ========================================= -->
+
+                        <div class="add-channel-form-group">
+
+                            <label
+                                for="channelName"
+                                class="add-channel-label"
+                            >
+                                Nom de la chaîne
+                                <span
+                                    class="add-channel-required"
+                                    aria-hidden="true"
+                                >
+                                    *
+                                </span>
+                            </label>
+
+
+                            <div class="add-channel-input-wrapper">
+
+                                <i class="fa-solid fa-tv"></i>
+
+                                <input
+                                    id="channelName"
+                                    name="name"
+                                    class="add-channel-input"
+                                    type="text"
+                                    maxlength="100"
+                                    minlength="2"
+                                    placeholder="Nom de votre chaîne"
+                                    autocomplete="organization"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="add-channel-field-footer">
+
+                                <p
+                                    id="channelNameError"
+                                    class="add-channel-field-error"
+                                    hidden
+                                ></p>
+
+
+                                <span
+                                    id="channelNameCounter"
+                                    class="add-channel-counter"
+                                >
+                                    0 / 100
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                             HANDLE
+                             ========================================= -->
+
+                        <div class="add-channel-form-group">
+
+                            <label
+                                for="channelHandle"
+                                class="add-channel-label"
+                            >
+                                Identifiant de la chaîne
+                                <span
+                                    class="add-channel-required"
+                                    aria-hidden="true"
+                                >
+                                    *
+                                </span>
+                            </label>
+
+
+                            <div
+                                class="add-channel-handle-wrapper"
+                            >
+
+                                <span
+                                    class="add-channel-handle-prefix"
+                                    aria-hidden="true"
+                                >
+                                    @
+                                </span>
+
+
+                                <input
+                                    id="channelHandle"
+                                    name="handle"
+                                    class="add-channel-input add-channel-handle-input"
+                                    type="text"
+                                    maxlength="30"
+                                    minlength="3"
+                                    placeholder="votreidentifiant"
+                                    autocomplete="off"
+                                    autocapitalize="none"
+                                    spellcheck="false"
+                                    required
+                                >
+
+
+                                <span
+                                    id="channelHandleStatus"
+                                    class="add-channel-handle-status"
+                                    aria-live="polite"
+                                ></span>
+
+                            </div>
+
+
+                            <p class="add-channel-field-help">
+
+                                Votre URL publique sera :
+
+                                <strong>
+                                    NetView.com/@<span id="handlePreview">
+                                        votreidentifiant
+                                    </span>
+                                </strong>
+
+                            </p>
+
+
+                            <p
+                                id="channelHandleError"
+                                class="add-channel-field-error"
+                                hidden
+                            ></p>
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                             DESCRIPTION
+                             ========================================= -->
+
+                        <div class="add-channel-form-group">
+
+                            <label
+                                for="channelDescription"
+                                class="add-channel-label"
+                            >
+                                Description
+                            </label>
+
+
+                            <div class="add-channel-textarea-wrapper">
+
+                                <textarea
+                                    id="channelDescription"
+                                    name="description"
+                                    class="add-channel-textarea"
+                                    maxlength="1000"
+                                    rows="6"
+                                    placeholder="Présentez votre chaîne et expliquez à votre communauté ce que vous proposez..."
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="add-channel-field-footer">
+
+                                <p
+                                    id="channelDescriptionError"
+                                    class="add-channel-field-error"
+                                    hidden
+                                ></p>
+
+
+                                <span
+                                    id="channelDescriptionCounter"
+                                    class="add-channel-counter"
+                                >
+                                    0 / 1000
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                             AVATAR
+                             ========================================= -->
+
+                        <div class="add-channel-form-group">
+
+                            <div class="add-channel-label-row">
+
+                                <label class="add-channel-label">
+
+                                    Photo de profil
+
+                                </label>
+
+                                <span class="add-channel-optional">
+                                    Facultatif
+                                </span>
+
+                            </div>
+
+
+                            <div class="add-channel-media-field">
+
+                                <div
+                                    id="avatarPreview"
+                                    class="add-channel-avatar-preview"
+                                >
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                </div>
+
+
+                                <div class="add-channel-media-info">
+
+                                    <h3>
+                                        Photo de votre chaîne
+                                    </h3>
+
+                                    <p>
+                                        Utilisez une image carrée
+                                        claire et reconnaissable.
+                                    </p>
+
+
+                                    <div class="add-channel-media-actions">
+
+                                        <button
+                                            id="avatarUploadButton"
+                                            class="nv-button nv-button-secondary"
+                                            type="button"
+                                        >
+
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                                            <span>
+                                                Téléverser une image
+                                            </span>
+
+                                        </button>
+
+
+                                        <button
+                                            id="avatarRemoveButton"
+                                            class="nv-button nv-button-ghost"
+                                            type="button"
+                                            hidden
+                                        >
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            <span>
+                                                Supprimer
+                                            </span>
+
+                                        </button>
+
+                                    </div>
+
+
+                                    <p class="add-channel-media-help">
+                                        JPG, PNG ou WEBP.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <input
+                                id="channelAvatar"
+                                name="avatar"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                hidden
+                            >
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                             BANNER
+                             ========================================= -->
+
+                        <div class="add-channel-form-group">
+
+                            <div class="add-channel-label-row">
+
+                                <label class="add-channel-label">
+
+                                    Bannière
+
+                                </label>
+
+                                <span class="add-channel-optional">
+                                    Facultatif
+                                </span>
+
+                            </div>
+
+
+                            <div class="add-channel-banner-field">
+
+                                <div
+                                    id="bannerPreview"
+                                    class="add-channel-banner-preview"
+                                >
+
+                                    <div class="add-channel-banner-placeholder">
+
+                                        <i class="fa-solid fa-image"></i>
+
+                                        <span>
+                                            Aperçu de votre bannière
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="add-channel-banner-actions">
+
+                                    <button
+                                        id="bannerUploadButton"
+                                        class="nv-button nv-button-secondary"
+                                        type="button"
+                                    >
+
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                                        <span>
+                                            Téléverser une bannière
+                                        </span>
+
+                                    </button>
+
+
+                                    <button
+                                        id="bannerRemoveButton"
+                                        class="nv-button nv-button-ghost"
+                                        type="button"
+                                        hidden
+                                    >
+
+                                        <i class="fa-solid fa-trash"></i>
+
+                                        <span>
+                                            Supprimer
+                                        </span>
+
+                                    </button>
+
+                                </div>
+
+
+                                <p class="add-channel-media-help">
+                                    JPG, PNG ou WEBP.
+                                </p>
+
+                            </div>
+
+
+                            <input
+                                id="channelBanner"
+                                name="banner"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                hidden
+                            >
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                             ACTIONS
+                             ========================================= -->
+
+                        <div class="add-channel-form-actions">
+
+                            <a
+                                href="index.html"
+                                id="cancelChannelButton"
+                                class="nv-button nv-button-secondary"
+                            >
+
+                                <i class="fa-solid fa-arrow-left"></i>
+
+                                <span>
+                                    Annuler
+                                </span>
+
+                            </a>
+
+
+                            <button
+                                id="createChannelButton"
+                                class="nv-button nv-button-primary"
+                                type="submit"
+                            >
+
+                                <i class="fa-solid fa-plus"></i>
+
+                                <span>
+                                    Créer ma chaîne
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+
+                <!-- =================================================
+                     LIVE PREVIEW
+                     ================================================= -->
+
+                <aside
+                    class="add-channel-preview-card"
+                    aria-label="Aperçu de la chaîne"
+                >
+
+                    <div class="add-channel-preview-header">
+
+                        <div>
+
+                            <h2 class="add-channel-preview-title">
+                                Aperçu
+                            </h2>
+
+                            <p class="add-channel-preview-subtitle">
+                                Votre chaîne telle que les visiteurs
+                                pourront la découvrir.
+                            </p>
+
+                        </div>
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </div>
+
+
+
+                    <div class="add-channel-preview-channel">
+
+
+                        <!-- BANNER -->
+
+                        <div
+                            id="livePreviewBanner"
+                            class="add-channel-preview-banner"
+                        ></div>
+
+
+
+                        <!-- CHANNEL IDENTITY -->
+
+                        <div class="add-channel-preview-identity">
+
+                            <div
+                                id="livePreviewAvatar"
+                                class="add-channel-preview-avatar"
+                            >
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </div>
+
+
+                            <div class="add-channel-preview-name-block">
+
+                                <h3
+                                    id="livePreviewName"
+                                    class="add-channel-preview-name"
+                                >
+                                    Nom de votre chaîne
+                                </h3>
+
+
+                                <p
+                                    id="livePreviewHandle"
+                                    class="add-channel-preview-handle"
+                                >
+                                    @votreidentifiant
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="add-channel-preview-body">
+
+                            <p
+                                id="livePreviewDescription"
+                                class="add-channel-preview-description"
+                            >
+                                La description de votre chaîne apparaîtra ici.
+                            </p>
+
+
+                            <div class="add-channel-preview-stats">
+
+                                <div class="add-channel-preview-stat">
+
+                                    <strong>
+                                        0
+                                    </strong>
+
+                                    <span>
+                                        abonnés
+                                    </span>
+
+                                </div>
+
+
+                                <div class="add-channel-preview-stat">
+
+                                    <strong>
+                                        0
+                                    </strong>
+
+                                    <span>
+                                        vidéos
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PREVIEW INFO -->
+
+                    <div class="add-channel-preview-info">
+
+                        <div class="add-channel-preview-info-item">
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                            <p>
+                                Vous pourrez modifier les informations
+                                de votre chaîne plus tard depuis
+                                <strong>Modifier la chaîne</strong>.
+                            </p>
+
+                        </div>
+
+
+                        <div class="add-channel-preview-info-item">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <p>
+                                Votre chaîne sera soumise aux règles
+                                de la communauté NetView.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         PAGE LOADER
+         ===================================================== -->
+
+    <div
+        id="addChannelLoader"
+        class="add-channel-loader"
+        hidden
+        aria-hidden="true"
+    >
+
+        <div class="add-channel-loader-content">
+
+            <div class="add-channel-loader-spinner">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </div>
+
+            <p id="addChannelLoaderMessage">
+                Préparation de votre chaîne...
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         TOAST
+         ===================================================== -->
+
+    <div
+        id="addChannelToast"
+        class="nv-toast"
+        role="status"
+        aria-live="polite"
+        hidden
+    >
+
+        <i
+            id="addChannelToastIcon"
+            class="fa-solid fa-circle-check"
+        ></i>
+
+        <span id="addChannelToastMessage"></span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        type="module"
+        src="js/pages/add-channel.js"
+    ></script>
+
+</body>
+
+</html>
