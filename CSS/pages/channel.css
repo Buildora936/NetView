@@ -1,0 +1,1645 @@
+/* =========================================================
+   NETVIEW — CHANNEL PAGE
+   CSS/pages/channel.css
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.channel-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 15% 0%,
+            rgba(37, 99, 235, 0.10),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(59, 130, 246, 0.07),
+            transparent 30%
+        ),
+        var(--nv-bg, #f8fafc);
+}
+
+.channel-main {
+    min-height: calc(100vh - 64px);
+    margin-left: 0;
+    padding-bottom: 80px;
+    transition:
+        margin-left 0.3s ease,
+        padding 0.3s ease;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.channel-page .nv-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    min-height: 64px;
+
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 1px 0 rgba(15, 23, 42, 0.03),
+        0 8px 30px rgba(15, 23, 42, 0.04);
+}
+
+.channel-page .nv-logo img {
+    width: auto;
+    height: 36px;
+    object-fit: contain;
+}
+
+.channel-page .nv-search {
+    width: min(620px, 100%);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.channel-page .nv-sidebar {
+    z-index: 1100;
+}
+
+.channel-page .nv-sidebar-overlay {
+    position: fixed;
+    inset: 64px 0 0;
+    z-index: 1050;
+
+    background: rgba(15, 23, 42, 0.45);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.channel-loading {
+    width: min(1500px, 100%);
+    margin: 0 auto;
+    padding: 24px 28px 0;
+}
+
+.channel-loading-banner {
+    width: 100%;
+    height: clamp(180px, 28vw, 330px);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #e2e8f0 8%,
+            #f1f5f9 18%,
+            #e2e8f0 33%
+        );
+
+    background-size: 200% 100%;
+    animation: channelSkeleton 1.5s linear infinite;
+}
+
+.channel-loading-profile {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    padding: 28px 12px;
+}
+
+.channel-loading-avatar {
+    flex: 0 0 120px;
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 50%;
+}
+
+.channel-loading-lines {
+    flex: 1;
+    display: grid;
+    gap: 14px;
+    max-width: 500px;
+}
+
+.channel-skeleton-line {
+    height: 16px;
+    border-radius: 999px;
+}
+
+.channel-skeleton-line.large {
+    width: 70%;
+}
+
+.channel-skeleton-line.medium {
+    width: 45%;
+}
+
+.skeleton {
+    background:
+        linear-gradient(
+            110deg,
+            #e2e8f0 8%,
+            #f8fafc 18%,
+            #e2e8f0 33%
+        );
+
+    background-size: 200% 100%;
+    animation: channelSkeleton 1.5s linear infinite;
+}
+
+@keyframes channelSkeleton {
+    to {
+        background-position-x: -200%;
+    }
+}
+
+
+/* =========================================================
+   ERROR / STATES
+   ========================================================= */
+
+.channel-state {
+    width: min(680px, calc(100% - 40px));
+    margin: 100px auto;
+    padding: 48px 32px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 28px;
+
+    box-shadow:
+        0 24px 70px rgba(15, 23, 42, 0.10);
+}
+
+.channel-state-icon {
+    display: grid;
+    place-items: center;
+
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 22px;
+
+    color: #2563eb;
+
+    background: rgba(37, 99, 235, 0.10);
+    border-radius: 22px;
+
+    font-size: 28px;
+}
+
+.channel-error .channel-state-icon {
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.10);
+}
+
+.channel-state h1 {
+    margin: 0 0 10px;
+
+    color: #0f172a;
+
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 800;
+}
+
+.channel-state p {
+    margin: 0 auto 28px;
+    max-width: 520px;
+
+    color: #64748b;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CHANNEL CONTENT
+   ========================================================= */
+
+.channel-content {
+    width: 100%;
+    animation: channelContentIn 0.45s ease both;
+}
+
+@keyframes channelContentIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.channel-hero {
+    width: min(1500px, 100%);
+    margin: 0 auto;
+}
+
+.channel-banner {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    height: clamp(190px, 29vw, 360px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #eff6ff 45%,
+            #e0e7ff
+        );
+
+    border-radius: 0 0 24px 24px;
+
+    box-shadow:
+        inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.channel-banner::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 45%,
+            rgba(15, 23, 42, 0.15)
+        );
+}
+
+.channel-banner-placeholder {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: rgba(37, 99, 235, 0.45);
+
+    font-size: 42px;
+}
+
+.channel-banner.has-image {
+    background-size: cover;
+    background-position: center;
+}
+
+
+/* =========================================================
+   CHANNEL HEADER
+   ========================================================= */
+
+.channel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+
+    padding: 26px clamp(20px, 4vw, 48px) 30px;
+}
+
+.channel-header-main {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.channel-avatar-wrapper {
+    position: relative;
+    flex: 0 0 auto;
+
+    width: 138px;
+    height: 138px;
+
+    margin-top: -70px;
+
+    padding: 5px;
+
+    background: #fff;
+    border-radius: 50%;
+
+    box-shadow:
+        0 10px 35px rgba(15, 23, 42, 0.16);
+}
+
+.channel-avatar {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #eff6ff
+        );
+}
+
+
+/* =========================================================
+   CHANNEL INFO
+   ========================================================= */
+
+.channel-info {
+    min-width: 0;
+}
+
+.channel-name-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.channel-name {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #0f172a;
+
+    font-size: clamp(25px, 3vw, 38px);
+    line-height: 1.15;
+    font-weight: 850;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.channel-verified {
+    flex: 0 0 auto;
+
+    color: #2563eb;
+    font-size: 20px;
+}
+
+.channel-handle {
+    margin-top: 6px;
+
+    color: #64748b;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.channel-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+
+    margin-top: 12px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.channel-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.channel-stats strong {
+    color: #1e293b;
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.channel-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    flex: 0 0 auto;
+}
+
+.channel-actions .nv-button {
+    min-height: 44px;
+
+    border-radius: 14px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.channel-actions .nv-button:hover {
+    transform: translateY(-2px);
+}
+
+.channel-actions .nv-button-primary {
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.22);
+}
+
+.channel-actions .nv-button-primary:hover {
+    box-shadow:
+        0 12px 28px rgba(37, 99, 235, 0.30);
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.channel-tabs {
+    position: sticky;
+    top: 64px;
+    z-index: 800;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    overflow-x: auto;
+
+    padding: 0 clamp(16px, 4vw, 48px);
+
+    background: rgba(248, 250, 252, 0.90);
+    border-top: 1px solid rgba(15, 23, 42, 0.05);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    scrollbar-width: none;
+}
+
+.channel-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.channel-tab {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    min-height: 58px;
+    padding: 0 18px;
+
+    color: #64748b;
+
+    background: transparent;
+    border: 0;
+
+    font: inherit;
+    font-size: 14px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+.channel-tab::after {
+    content: "";
+
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 0;
+
+    height: 3px;
+
+    background: #2563eb;
+
+    border-radius: 999px 999px 0 0;
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    transition: transform 0.25s ease;
+}
+
+.channel-tab:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.channel-tab.active {
+    color: #2563eb;
+}
+
+.channel-tab.active::after {
+    transform: scaleX(1);
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.channel-tab-section {
+    width: min(1500px, 100%);
+    margin: 0 auto;
+    padding: 34px clamp(20px, 4vw, 48px);
+}
+
+.channel-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+.channel-section-header h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: clamp(21px, 2.5vw, 28px);
+    font-weight: 800;
+}
+
+.channel-section-header p {
+    margin: 7px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   VIDEO GRID
+   ========================================================= */
+
+.channel-video-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(
+                min(100%, 250px),
+                1fr
+            )
+        );
+
+    gap: 26px 18px;
+}
+
+
+/* =========================================================
+   VIDEO CARD
+   ========================================================= */
+
+.channel-video-card {
+    min-width: 0;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.045);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.channel-video-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(37, 99, 235, 0.18);
+
+    box-shadow:
+        0 18px 38px rgba(15, 23, 42, 0.11);
+}
+
+.channel-video-thumbnail {
+    position: relative;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background: #e2e8f0;
+}
+
+.channel-video-thumbnail img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.45s ease;
+}
+
+.channel-video-card:hover
+.channel-video-thumbnail img {
+    transform: scale(1.045);
+}
+
+.channel-video-duration {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+
+    padding: 4px 7px;
+
+    color: #fff;
+
+    background: rgba(15, 23, 42, 0.88);
+
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.channel-video-content {
+    padding: 13px 14px 15px;
+}
+
+.channel-video-title {
+    display: -webkit-box;
+
+    overflow: hidden;
+
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 750;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.channel-video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+
+    margin-top: 8px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SHORTS GRID
+   ========================================================= */
+
+.channel-shorts-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(
+                155px,
+                190px
+            )
+        );
+
+    justify-content: start;
+
+    gap: 18px;
+}
+
+.channel-short-card {
+    overflow: hidden;
+
+    aspect-ratio: 9 / 16;
+
+    position: relative;
+
+    background: #0f172a;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.10);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.channel-short-card:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 18px 34px rgba(15, 23, 42, 0.18);
+}
+
+.channel-short-card img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.channel-short-overlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            transparent 45%,
+            rgba(0, 0, 0, 0.80)
+        );
+}
+
+.channel-short-title {
+    color: #fff;
+
+    font-size: 14px;
+    line-height: 1.35;
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.channel-empty {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    padding: 80px 24px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.92),
+            rgba(248, 250, 252, 0.85)
+        );
+
+    border: 1px dashed rgba(100, 116, 139, 0.25);
+    border-radius: 24px;
+}
+
+.channel-empty-icon {
+    display: grid;
+    place-items: center;
+
+    width: 68px;
+    height: 68px;
+    margin-bottom: 18px;
+
+    color: #2563eb;
+
+    background: rgba(37, 99, 235, 0.09);
+
+    border-radius: 20px;
+
+    font-size: 25px;
+}
+
+.channel-empty h3 {
+    margin: 0 0 8px;
+
+    color: #0f172a;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.channel-empty p {
+    max-width: 480px;
+    margin: 0;
+
+    color: #64748b;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
+
+.channel-about-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            12,
+            minmax(0, 1fr)
+        );
+
+    gap: 20px;
+}
+
+.channel-about-card {
+    grid-column: span 6;
+
+    padding: 28px;
+
+    background: rgba(255, 255, 255, 0.90);
+
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    border-radius: 22px;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.055);
+}
+
+.channel-about-card:nth-child(3) {
+    grid-column: span 12;
+}
+
+.channel-about-card-icon {
+    display: grid;
+    place-items: center;
+
+    width: 46px;
+    height: 46px;
+    margin-bottom: 18px;
+
+    color: #2563eb;
+
+    background: rgba(37, 99, 235, 0.09);
+
+    border-radius: 14px;
+}
+
+.channel-about-card h2 {
+    margin: 0 0 12px;
+
+    color: #0f172a;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.channel-description {
+    margin: 0;
+
+    color: #475569;
+
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+}
+
+.channel-about-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.channel-about-stat:last-child {
+    border-bottom: 0;
+}
+
+.channel-about-stat span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.channel-about-stat strong {
+    color: #0f172a;
+    font-size: 15px;
+}
+
+.channel-url-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    border-radius: 13px;
+}
+
+.channel-url-row span {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size: 13px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.channel-url-row .nv-icon-button {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.channel-modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 3000;
+
+    display: grid;
+    place-items: center;
+
+    padding: 20px;
+}
+
+.channel-modal-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    animation: channelModalFade 0.2s ease;
+}
+
+.channel-modal-dialog {
+    position: relative;
+    z-index: 1;
+
+    width: min(560px, 100%);
+
+    padding: 34px;
+
+    background: #fff;
+
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 26px;
+
+    box-shadow:
+        0 30px 90px rgba(15, 23, 42, 0.28);
+
+    animation: channelModalIn 0.25s ease;
+}
+
+@keyframes channelModalFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes channelModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.channel-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+
+    color: #64748b;
+
+    background: #f1f5f9;
+
+    border: 0;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.channel-modal-close:hover {
+    color: #0f172a;
+    background: #e2e8f0;
+    transform: rotate(4deg);
+}
+
+.channel-modal-icon {
+    display: grid;
+    place-items: center;
+
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+
+    color: #2563eb;
+
+    background: rgba(37, 99, 235, 0.10);
+
+    border-radius: 17px;
+
+    font-size: 23px;
+}
+
+.channel-modal-dialog h2 {
+    margin: 0 0 8px;
+
+    color: #0f172a;
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.channel-modal-dialog > p {
+    margin: 0 0 22px;
+
+    color: #64748b;
+
+    line-height: 1.6;
+}
+
+.channel-share-url {
+    display: flex;
+    gap: 10px;
+}
+
+.channel-share-url input {
+    min-width: 0;
+    flex: 1;
+
+    height: 46px;
+    padding: 0 14px;
+
+    color: #334155;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    outline: none;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.channel-page .nv-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+
+    z-index: 4000;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    max-width: min(420px, calc(100vw - 32px));
+
+    padding: 14px 18px;
+
+    color: #fff;
+
+    background: #0f172a;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+
+    box-shadow:
+        0 15px 40px rgba(15, 23, 42, 0.25);
+
+    animation: channelToastIn 0.3s ease;
+}
+
+.channel-page .nv-toast i {
+    color: #60a5fa;
+}
+
+@keyframes channelToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+    .channel-main {
+        margin-left: 0;
+    }
+
+}
+
+
+@media (max-width: 1050px) {
+
+    .channel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .channel-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .channel-main {
+        padding-bottom: 50px;
+    }
+
+    .channel-loading {
+        padding: 12px 14px 0;
+    }
+
+    .channel-loading-banner {
+        height: 190px;
+        border-radius: 0 0 18px 18px;
+    }
+
+    .channel-loading-profile {
+        gap: 16px;
+        padding: 20px 4px;
+    }
+
+    .channel-loading-avatar {
+        width: 78px;
+        height: 78px;
+        flex-basis: 78px;
+    }
+
+
+    /* HERO */
+
+    .channel-banner {
+        height: 190px;
+        border-radius: 0;
+    }
+
+    .channel-header {
+        gap: 18px;
+
+        padding:
+            0
+            16px
+            22px;
+    }
+
+    .channel-header-main {
+        width: 100%;
+
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .channel-avatar-wrapper {
+        width: 94px;
+        height: 94px;
+
+        margin-top: -47px;
+    }
+
+    .channel-info {
+        width: 100%;
+    }
+
+    .channel-name {
+        font-size: 25px;
+
+        white-space: normal;
+    }
+
+    .channel-handle {
+        font-size: 14px;
+    }
+
+    .channel-stats {
+        gap: 10px 14px;
+        margin-top: 10px;
+    }
+
+
+    /* ACTIONS */
+
+    .channel-actions {
+        width: 100%;
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .channel-actions .nv-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+
+    /* TABS */
+
+    .channel-tabs {
+        top: 64px;
+
+        padding:
+            0
+            10px;
+    }
+
+    .channel-tab {
+        min-height: 54px;
+        padding: 0 14px;
+    }
+
+    .channel-tab::after {
+        left: 14px;
+        right: 14px;
+    }
+
+
+    /* SECTIONS */
+
+    .channel-tab-section {
+        padding:
+            26px
+            14px;
+        }
+
+    .channel-section-header {
+        margin-bottom: 18px;
+    }
+
+    .channel-section-header h2 {
+        font-size: 21px;
+    }
+
+
+    /* VIDEO GRID */
+
+    .channel-video-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 10px;
+    }
+
+    .channel-video-card {
+        border-radius: 14px;
+    }
+
+    .channel-video-content {
+        padding: 10px;
+    }
+
+    .channel-video-title {
+        font-size: 13px;
+    }
+
+    .channel-video-meta {
+        font-size: 11px;
+    }
+
+
+    /* SHORTS */
+
+    .channel-shorts-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 12px;
+    }
+
+    .channel-short-card {
+        border-radius: 15px;
+    }
+
+
+    /* ABOUT */
+
+    .channel-about-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .channel-about-card,
+    .channel-about-card:nth-child(3) {
+        grid-column: span 1;
+
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+
+    /* MODAL */
+
+    .channel-modal {
+        padding: 14px;
+    }
+
+    .channel-modal-dialog {
+        padding: 28px 20px 22px;
+
+        border-radius: 22px;
+    }
+
+    .channel-share-url {
+        flex-direction: column;
+    }
+
+    .channel-share-url .nv-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+
+    /* TOAST */
+
+    .channel-page .nv-toast {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+
+        max-width: none;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .channel-banner {
+        height: 165px;
+    }
+
+    .channel-name {
+        font-size: 23px;
+    }
+
+    .channel-stats {
+        font-size: 12px;
+    }
+
+    .channel-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .channel-video-grid {
+        gap: 12px 8px;
+    }
+
+    .channel-video-card {
+        border-radius: 12px;
+    }
+
+    .channel-video-duration {
+        right: 5px;
+        bottom: 5px;
+
+        padding: 3px 5px;
+
+        font-size: 10px;
+    }
+
+    .channel-shorts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    .channel-page {
+        background:
+            radial-gradient(
+                circle at 15% 0%,
+                rgba(37, 99, 235, 0.15),
+                transparent 32%
+            ),
+            #020617;
+    }
+
+    .channel-page .nv-header {
+        background: rgba(2, 6, 23, 0.88);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .channel-name,
+    .channel-section-header h2,
+    .channel-empty h3,
+    .channel-about-card h2,
+    .channel-state h1,
+    .channel-video-title {
+        color: #f8fafc;
+    }
+
+    .channel-handle,
+    .channel-stats,
+    .channel-section-header p,
+    .channel-empty p,
+    .channel-description,
+    .channel-about-stat span,
+    .channel-state p {
+        color: #94a3b8;
+    }
+
+    .channel-stats strong,
+    .channel-about-stat strong {
+        color: #e2e8f0;
+    }
+
+    .channel-tabs {
+        background: rgba(2, 6, 23, 0.90);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .channel-tab {
+        color: #94a3b8;
+    }
+
+    .channel-tab.active,
+    .channel-tab:hover {
+        color: #60a5fa;
+    }
+
+    .channel-video-card,
+    .channel-about-card,
+    .channel-empty,
+    .channel-state,
+    .channel-modal-dialog {
+        background: rgba(15, 23, 42, 0.92);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .channel-url-row,
+    .channel-share-url input {
+        color: #cbd5e1;
+        background: #020617;
+        border-color: rgba(255, 255, 255, 0.10);
+    }
+
+    .channel-banner {
+        background:
+            linear-gradient(
+                135deg,
+                #172554,
+                #1e3a8a,
+                #312e81
+            );
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .channel-content,
+    .channel-modal-backdrop,
+    .channel-modal-dialog,
+    .channel-page .nv-toast,
+    .skeleton {
+        animation: none !important;
+    }
+
+    .channel-video-card,
+    .channel-short-card,
+    .channel-actions .nv-button,
+    .channel-tab,
+    .channel-tab::after,
+    .channel-video-thumbnail img {
+        transition: none !important;
+    }
+
+}
