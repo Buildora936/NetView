@@ -3,9 +3,7 @@
    js/pages/add-channel.js
    ========================================================= */
 
-import {
-    getCurrentUser
-} from "../core/auth.js";
+import { getUser } from "../core/auth.js";
 
 import {
     getMyChannels,
@@ -152,7 +150,7 @@ async function initializeAddChannel() {
         );
 
         currentUser =
-            await getCurrentUser();
+            await getUser();
 
         if (!currentUser) {
 
