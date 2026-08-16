@@ -9,7 +9,8 @@ import {
 
 import {
     getMyChannels,
-    createChannel
+    createChannel,
+    isChannelHandleAvailable
 } from "../core/data.js";
 
 
@@ -719,6 +720,7 @@ function isValidHandle(
 
 /* =========================================================
    HANDLE AVAILABILITY
+   Vérification réelle dans Supabase
    ========================================================= */
 
 async function checkHandleAvailability() {
@@ -727,19 +729,15 @@ async function checkHandleAvailability() {
         return false;
     }
 
-
     const handle =
         normalizeHandle(
             handleInput.value
         );
 
-
     handleInput.value =
         handle;
 
-
     updateHandlePreview();
-
 
     if (!handle) {
 
@@ -751,7 +749,6 @@ async function checkHandleAvailability() {
         return false;
     }
 
-
     if (!isValidHandle(handle)) {
 
         setHandleStatus(
@@ -762,45 +759,80 @@ async function checkHandleAvailability() {
         return false;
     }
 
+    const sequence =
+        handleCheckSequence;
 
-    /*
-     * Vérification locale des chaînes
-     * déjà récupérées.
-     *
-     * La contrainte UNIQUE de PostgreSQL
-     * reste la vérification finale.
-     */
+    setHandleStatus(
+        "checking",
+        "Vérification de la disponibilité..."
+    );
 
-    const alreadyExists =
-        existingChannels.some(
-            channel =>
-                String(
-                    channel?.handle || ""
-                )
-                    .toLowerCase() ===
-                handle.toLowerCase()
+    try {
+
+        /*
+         * Vérification réelle dans PostgreSQL.
+         *
+         * Ce n'est plus une vérification limitée
+         * aux chaînes du compte actuel.
+         */
+
+        const available =
+            await isChannelHandleAvailable(
+                handle
+            );
+
+        /*
+         * Une ancienne requête ne doit jamais
+         * écraser le résultat de la nouvelle.
+         */
+
+        if (
+            sequence !==
+            handleCheckSequence
+        ) {
+            return false;
+        }
+
+        if (!available) {
+
+            setHandleStatus(
+                "error",
+                "Ce handle est déjà utilisé."
+            );
+
+            markFieldError(
+                handleInput
+            );
+
+            return false;
+        }
+
+        clearFieldError(
+            handleInput
         );
 
+        setHandleStatus(
+            "success",
+            "Handle disponible."
+        );
 
-    if (alreadyExists) {
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "NetView — Vérification handle :",
+            error
+        );
 
         setHandleStatus(
             "error",
-            "Ce handle est déjà utilisé."
+            "Impossible de vérifier ce handle. Réessayez."
         );
 
         return false;
     }
-
-
-    setHandleStatus(
-        "success",
-        "Handle disponible."
-    );
-
-    return true;
 }
-
 
 /* =========================================================
    HANDLE STATUS
@@ -1333,8 +1365,8 @@ async function handleSubmit(
     clearFormMessage();
 
 
-    const validation =
-        validateForm();
+  const validation =
+    await validateForm();
 
 
     if (!validation.valid) {
@@ -1560,7 +1592,7 @@ async function handleSubmit(
    FORM VALIDATION
    ========================================================= */
 
-function validateForm() {
+async function validateForm() {
 
     const name =
         normalizeName(
@@ -1660,29 +1692,21 @@ function validateForm() {
     }
 
 
-    const existing =
-        existingChannels.some(
-            channel =>
-                String(
-                    channel?.handle || ""
-                )
-                    .toLowerCase() ===
-                handle.toLowerCase()
-        );
+   const available =
+    await checkHandleAvailability();
 
+if (!available) {
 
-    if (existing) {
+    markFieldError(
+        handleInput
+    );
 
-        markFieldError(
-            handleInput
-        );
-
-        return {
-            valid: false,
-            message:
-                "Ce handle est déjà utilisé."
-        };
-    }
+    return {
+        valid: false,
+        message:
+            "Ce handle est déjà utilisé ou ne peut pas être vérifié."
+    };
+}
 
 
     return {
