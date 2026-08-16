@@ -405,7 +405,6 @@ function bindEvents() {
 // ==========================================================
 // LOAD CHANNEL
 // ==========================================================
-
 async function loadChannel() {
 
     showLoading();
@@ -415,7 +414,7 @@ async function loadChannel() {
     try {
 
         currentUser =
-            await getCurrentUser();
+            await getUser();
 
         if (!currentUser) {
 
@@ -488,7 +487,6 @@ async function loadChannel() {
     }
 
 }
-
 
 // ==========================================================
 // POPULATE
