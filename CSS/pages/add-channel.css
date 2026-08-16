@@ -3,6 +3,18 @@
    Page: add-channel.html
    ========================================================= */
 
+:root {
+    --nv-bg-main: #0f172a;
+    --nv-background: #0f172a;
+    --nv-surface: #1e293b;
+    --nv-surface-hover: #334155;
+    --nv-border: rgba(255, 255, 255, 0.08);
+    --nv-text: #f8fafc;
+    --nv-text-secondary: #94a3b8;
+    --nv-primary: #2563eb;
+    --nv-header-height: 64px;
+    --nv-sidebar-width: 72px; /* Largeur fixe de la sidebar repliée/fixe */
+}
 
 /* =========================================================
    PAGE
@@ -139,7 +151,53 @@
     line-height: 1.65;
 }
 
+.nv-logo {
+    display: flex;
+    align-items: center;
+}
 
+.nv-logo img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+
+.nv-search-form {
+    display: flex;
+    width: 100%;
+    max-width: 640px;
+    height: 40px;
+}
+
+.nv-search-input {
+    flex: 1;
+    border: 1px solid var(--nv-border);
+    border-right: none;
+    border-radius: 20px 0 0 20px;
+    padding: 0 18px;
+    background: var(--nv-background);
+    color: var(--nv-text);
+    outline: none;
+}
+
+.nv-search-input:focus {
+    border-color: var(--nv-primary);
+}
+
+.nv-search-button {
+    width: 64px;
+    border: 1px solid var(--nv-border);
+    border-radius: 0 20px 20px 0;
+    background: var(--nv-surface-hover);
+    color: var(--nv-text);
+    cursor: pointer;
+}
+.nv-header-center {
+        display: none;
+    }
+ .nv-logo img {
+        width: 100px;
+    }
 /* =========================================================
    MAIN LAYOUT
    ========================================================= */
