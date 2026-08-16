@@ -3,13 +3,14 @@
    js/pages/add-channel.js
    ========================================================= */
 
-import { getUser } from "../core/auth.js";
+import {
+    getUser
+} from "../core/auth.js";
 
 import {
     getMyChannels,
     createChannel
 } from "../core/data.js";
-
 
 
 /* =========================================================
@@ -48,12 +49,62 @@ const bannerInput =
 
 const avatarPreview =
     document.getElementById(
-        "channelAvatarPreview"
+        "avatarPreview"
     );
 
 const bannerPreview =
     document.getElementById(
-        "channelBannerPreview"
+        "bannerPreview"
+    );
+
+const avatarUploadButton =
+    document.getElementById(
+        "avatarUploadButton"
+    );
+
+const avatarRemoveButton =
+    document.getElementById(
+        "avatarRemoveButton"
+    );
+
+const bannerUploadButton =
+    document.getElementById(
+        "bannerUploadButton"
+    );
+
+const bannerRemoveButton =
+    document.getElementById(
+        "bannerRemoveButton"
+    );
+
+const livePreviewBanner =
+    document.getElementById(
+        "livePreviewBanner"
+    );
+
+const livePreviewAvatar =
+    document.getElementById(
+        "livePreviewAvatar"
+    );
+
+const livePreviewName =
+    document.getElementById(
+        "livePreviewName"
+    );
+
+const livePreviewHandle =
+    document.getElementById(
+        "livePreviewHandle"
+    );
+
+const livePreviewDescription =
+    document.getElementById(
+        "livePreviewDescription"
+    );
+
+const handlePreview =
+    document.getElementById(
+        "handlePreview"
     );
 
 const submitButton =
@@ -86,6 +137,30 @@ const formMessage =
         "addChannelMessage"
     );
 
+const loader =
+    document.getElementById(
+        "addChannelLoader"
+    );
+
+const loaderMessage =
+    document.getElementById(
+        "addChannelLoaderMessage"
+    );
+
+const toast =
+    document.getElementById(
+        "addChannelToast"
+    );
+
+const toastIcon =
+    document.getElementById(
+        "addChannelToastIcon"
+    );
+
+const toastMessage =
+    document.getElementById(
+        "addChannelToastMessage"
+    );
 
 
 /* =========================================================
@@ -94,11 +169,11 @@ const formMessage =
 
 const MAX_NAME_LENGTH = 100;
 
-const MAX_HANDLE_LENGTH = 50;
+const MAX_HANDLE_LENGTH = 30;
 
-const MAX_DESCRIPTION_LENGTH = 5000;
+const MAX_DESCRIPTION_LENGTH = 1000;
 
-const HANDLE_MIN_LENGTH = 2;
+const HANDLE_MIN_LENGTH = 3;
 
 const ALLOWED_IMAGE_TYPES = [
     "image/jpeg",
@@ -111,7 +186,6 @@ const MAX_AVATAR_SIZE =
 
 const MAX_BANNER_SIZE =
     10 * 1024 * 1024;
-
 
 
 /* =========================================================
@@ -128,6 +202,9 @@ let handleCheckTimer = null;
 
 let handleCheckSequence = 0;
 
+let avatarObjectUrl = null;
+
+let bannerObjectUrl = null;
 
 
 /* =========================================================
@@ -149,8 +226,21 @@ async function initializeAddChannel() {
             ""
         );
 
+        initializeInputs();
+
+        initializeCounters();
+
+        initializePreview();
+
+        initializeEvents();
+
         currentUser =
             await getUser();
+
+
+        /* -----------------------------------------
+           SESSION
+           ----------------------------------------- */
 
         if (!currentUser) {
 
@@ -160,17 +250,13 @@ async function initializeAddChannel() {
         }
 
 
+        /* -----------------------------------------
+           CHANNEL EXISTANTE
+           ----------------------------------------- */
+
         existingChannels =
             await getMyChannels();
 
-
-        /*
-         * Règle NetView :
-         *
-         * 1 compte Creator / NetViewer
-         * =
-         * 1 seule chaîne.
-         */
 
         if (
             Array.isArray(
@@ -185,26 +271,21 @@ async function initializeAddChannel() {
         }
 
 
-        initializeCounters();
-
-        initializeInputs();
-
-        initializeEvents();
-
     } catch (error) {
 
         console.error(
-            "Erreur initialisation add-channel :",
+            "NetView — Erreur initialisation add-channel :",
             error
         );
 
         setFormMessage(
-            "Impossible de charger la page de création de chaîne.",
+            getReadableError(
+                error
+            ),
             "error"
         );
     }
 }
-
 
 
 /* =========================================================
@@ -213,96 +294,110 @@ async function initializeAddChannel() {
 
 function initializeEvents() {
 
-    if (form) {
-
-        form.addEventListener(
-            "submit",
-            handleSubmit
-        );
-    }
+    form?.addEventListener(
+        "submit",
+        handleSubmit
+    );
 
 
-    if (nameInput) {
-
-        nameInput.addEventListener(
-            "input",
-            handleNameInput
-        );
-    }
+    nameInput?.addEventListener(
+        "input",
+        handleNameInput
+    );
 
 
-    if (handleInput) {
-
-        handleInput.addEventListener(
-            "input",
-            handleHandleInput
-        );
-
-        handleInput.addEventListener(
-            "blur",
-            handleHandleBlur
-        );
-    }
+    handleInput?.addEventListener(
+        "input",
+        handleHandleInput
+    );
 
 
-    if (descriptionInput) {
-
-        descriptionInput.addEventListener(
-            "input",
-            handleDescriptionInput
-        );
-    }
+    handleInput?.addEventListener(
+        "blur",
+        handleHandleBlur
+    );
 
 
-    if (avatarInput) {
-
-        avatarInput.addEventListener(
-            "change",
-            handleAvatarChange
-        );
-    }
+    descriptionInput?.addEventListener(
+        "input",
+        handleDescriptionInput
+    );
 
 
-    if (bannerInput) {
-
-        bannerInput.addEventListener(
-            "change",
-            handleBannerChange
-        );
-    }
+    avatarInput?.addEventListener(
+        "change",
+        handleAvatarChange
+    );
 
 
-    if (cancelButton) {
+    bannerInput?.addEventListener(
+        "change",
+        handleBannerChange
+    );
 
-        cancelButton.addEventListener(
-            "click",
-            handleCancel
-        );
-    }
+
+    avatarUploadButton?.addEventListener(
+        "click",
+        () => {
+
+            avatarInput?.click();
+
+        }
+    );
+
+
+    bannerUploadButton?.addEventListener(
+        "click",
+        () => {
+
+            bannerInput?.click();
+
+        }
+    );
+
+
+    avatarRemoveButton?.addEventListener(
+        "click",
+        removeAvatar
+    );
+
+
+    bannerRemoveButton?.addEventListener(
+        "click",
+        removeBanner
+    );
+
+
+    cancelButton?.addEventListener(
+        "click",
+        handleCancel
+    );
 
 }
 
 
-
 /* =========================================================
-   INITIAL VALUES
+   INITIAL INPUTS
    ========================================================= */
 
 function initializeInputs() {
 
     if (nameInput) {
+
         nameInput.maxLength =
             MAX_NAME_LENGTH;
     }
 
 
     if (handleInput) {
+
         handleInput.maxLength =
             MAX_HANDLE_LENGTH;
     }
 
 
     if (descriptionInput) {
+
         descriptionInput.maxLength =
             MAX_DESCRIPTION_LENGTH;
     }
@@ -323,6 +418,20 @@ function initializeInputs() {
 
 }
 
+
+/* =========================================================
+   INITIAL PREVIEW
+   ========================================================= */
+
+function initializePreview() {
+
+    updateNamePreview();
+
+    updateHandlePreview();
+
+    updateDescriptionPreview();
+
+}
 
 
 /* =========================================================
@@ -347,11 +456,8 @@ function updateNameCounter() {
         return;
     }
 
-    const length =
-        nameInput.value.length;
-
     nameCounter.textContent =
-        `${length}/${MAX_NAME_LENGTH}`;
+        `${nameInput.value.length}/${MAX_NAME_LENGTH}`;
 }
 
 
@@ -364,13 +470,9 @@ function updateDescriptionCounter() {
         return;
     }
 
-    const length =
-        descriptionInput.value.length;
-
     descriptionCounter.textContent =
-        `${length}/${MAX_DESCRIPTION_LENGTH}`;
+        `${descriptionInput.value.length}/${MAX_DESCRIPTION_LENGTH}`;
 }
-
 
 
 /* =========================================================
@@ -381,12 +483,30 @@ function handleNameInput() {
 
     updateNameCounter();
 
+    updateNamePreview();
+
     clearFieldError(
         nameInput
     );
 
 }
 
+
+function updateNamePreview() {
+
+    if (!livePreviewName) {
+        return;
+    }
+
+    const name =
+        normalizeName(
+            nameInput?.value
+        );
+
+    livePreviewName.textContent =
+        name ||
+        "Nom de votre chaîne";
+}
 
 
 /* =========================================================
@@ -400,17 +520,9 @@ function handleHandleInput() {
     }
 
 
-    const cursorPosition =
-        handleInput.selectionStart;
-
-
-    const original =
-        handleInput.value;
-
-
     const normalized =
         normalizeHandle(
-            original
+            handleInput.value
         );
 
 
@@ -418,26 +530,37 @@ function handleHandleInput() {
         normalized;
 
 
-    if (
-        cursorPosition !== null
-    ) {
-
-        try {
-
-            handleInput.setSelectionRange(
-                normalized.length,
-                normalized.length
-            );
-
-        } catch {
-            /* Rien */
-        }
-    }
-
+    updateHandlePreview();
 
     clearFieldError(
         handleInput
     );
+
+
+    if (!normalized) {
+
+        setHandleStatus(
+            "",
+            ""
+        );
+
+        return;
+    }
+
+
+    if (
+        !isValidHandle(
+            normalized
+        )
+    ) {
+
+        setHandleStatus(
+            "error",
+            "Le handle doit contenir au moins 3 caractères."
+        );
+
+        return;
+    }
 
 
     setHandleStatus(
@@ -482,6 +605,32 @@ async function handleHandleBlur() {
 }
 
 
+function updateHandlePreview() {
+
+    const handle =
+        normalizeHandle(
+            handleInput?.value
+        );
+
+
+    if (handlePreview) {
+
+        handlePreview.textContent =
+            handle ||
+            "votreidentifiant";
+    }
+
+
+    if (livePreviewHandle) {
+
+        livePreviewHandle.textContent =
+            handle
+                ? `@${handle}`
+                : "@votreidentifiant";
+    }
+
+}
+
 
 /* =========================================================
    HANDLE NORMALIZATION
@@ -495,8 +644,13 @@ function normalizeHandle(
         value || ""
     )
         .trim()
-        .replace(/^@+/, "")
-        .normalize("NFD")
+        .replace(
+            /^@+/,
+            ""
+        )
+        .normalize(
+            "NFD"
+        )
         .replace(
             /[\u0300-\u036f]/g,
             ""
@@ -526,7 +680,6 @@ function normalizeHandle(
 }
 
 
-
 /* =========================================================
    HANDLE VALIDATION
    ========================================================= */
@@ -535,8 +688,12 @@ function isValidHandle(
     handle
 ) {
 
+    if (!handle) {
+        return false;
+    }
+
+
     if (
-        !handle ||
         handle.length <
         HANDLE_MIN_LENGTH
     ) {
@@ -553,10 +710,11 @@ function isValidHandle(
 
 
     return /^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/
-        .test(handle);
+        .test(
+            handle
+        );
 
 }
-
 
 
 /* =========================================================
@@ -580,6 +738,9 @@ async function checkHandleAvailability() {
         handle;
 
 
+    updateHandlePreview();
+
+
     if (!handle) {
 
         setHandleStatus(
@@ -595,7 +756,7 @@ async function checkHandleAvailability() {
 
         setHandleStatus(
             "error",
-            "Ce handle n'est pas valide."
+            `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères.`
         );
 
         return false;
@@ -603,26 +764,25 @@ async function checkHandleAvailability() {
 
 
     /*
-     * On utilise une requête légère directement
-     * sur Supabase via la fonction disponible
-     * dans data.js si elle existe.
+     * Vérification locale des chaînes
+     * déjà récupérées.
      *
-     * Pour éviter de dépendre d'une fonction
-     * supplémentaire, on vérifie également
-     * contre les chaînes déjà chargées.
+     * La contrainte UNIQUE de PostgreSQL
+     * reste la vérification finale.
      */
 
-    const normalizedExisting =
+    const alreadyExists =
         existingChannels.some(
             channel =>
                 String(
                     channel?.handle || ""
-                ).toLowerCase() ===
+                )
+                    .toLowerCase() ===
                 handle.toLowerCase()
         );
 
 
-    if (normalizedExisting) {
+    if (alreadyExists) {
 
         setHandleStatus(
             "error",
@@ -633,11 +793,6 @@ async function checkHandleAvailability() {
     }
 
 
-    /*
-     * La contrainte UNIQUE de PostgreSQL
-     * reste la protection définitive.
-     */
-
     setHandleStatus(
         "success",
         "Handle disponible."
@@ -645,7 +800,6 @@ async function checkHandleAvailability() {
 
     return true;
 }
-
 
 
 /* =========================================================
@@ -673,22 +827,33 @@ function setHandleStatus(
     );
 
 
-    if (type === "checking") {
+    if (
+        type ===
+        "checking"
+    ) {
 
         handleStatus.classList.add(
             "is-checking"
         );
 
-    } else if (
-        type === "success"
+    }
+
+
+    if (
+        type ===
+        "success"
     ) {
 
         handleStatus.classList.add(
             "is-success"
         );
 
-    } else if (
-        type === "error"
+    }
+
+
+    if (
+        type ===
+        "error"
     ) {
 
         handleStatus.classList.add(
@@ -699,7 +864,6 @@ function setHandleStatus(
 }
 
 
-
 /* =========================================================
    DESCRIPTION
    ========================================================= */
@@ -708,6 +872,8 @@ function handleDescriptionInput() {
 
     updateDescriptionCounter();
 
+    updateDescriptionPreview();
+
     clearFieldError(
         descriptionInput
     );
@@ -715,9 +881,27 @@ function handleDescriptionInput() {
 }
 
 
+function updateDescriptionPreview() {
+
+    if (!livePreviewDescription) {
+        return;
+    }
+
+
+    const description =
+        normalizeDescription(
+            descriptionInput?.value
+        );
+
+
+    livePreviewDescription.textContent =
+        description ||
+        "La description de votre chaîne apparaîtra ici.";
+}
+
 
 /* =========================================================
-   IMAGE — AVATAR
+   AVATAR
    ========================================================= */
 
 function handleAvatarChange(
@@ -749,29 +933,160 @@ function handleAvatarChange(
 
         event.target.value = "";
 
-        clearPreview(
-            avatarPreview
-        );
+        removeAvatar();
 
         return;
     }
 
 
-    previewImage(
-        file,
-        avatarPreview
+    previewAvatar(
+        file
     );
 
     clearFieldError(
         avatarInput
     );
 
+    clearFormMessage();
+
 }
 
 
+function previewAvatar(
+    file
+) {
+
+    if (!livePreviewAvatar) {
+        return;
+    }
+
+
+    if (avatarObjectUrl) {
+
+        URL.revokeObjectURL(
+            avatarObjectUrl
+        );
+    }
+
+
+    avatarObjectUrl =
+        URL.createObjectURL(
+            file
+        );
+
+
+    livePreviewAvatar.innerHTML = "";
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    image.src =
+        avatarObjectUrl;
+
+    image.alt =
+        "Aperçu de la photo de chaîne";
+
+
+    livePreviewAvatar.appendChild(
+        image
+    );
+
+
+    if (avatarPreview) {
+
+        avatarPreview.innerHTML = "";
+
+        const previewImage =
+            document.createElement(
+                "img"
+            );
+
+        previewImage.src =
+            avatarObjectUrl;
+
+        previewImage.alt =
+            "Aperçu";
+
+        avatarPreview.appendChild(
+            previewImage
+        );
+
+        avatarPreview.classList.add(
+            "has-image"
+        );
+
+        avatarPreview.hidden =
+            false;
+    }
+
+
+    if (avatarRemoveButton) {
+
+        avatarRemoveButton.hidden =
+            false;
+    }
+
+}
+
+
+function removeAvatar() {
+
+    if (avatarObjectUrl) {
+
+        URL.revokeObjectURL(
+            avatarObjectUrl
+        );
+
+        avatarObjectUrl =
+            null;
+    }
+
+
+    if (avatarInput) {
+
+        avatarInput.value =
+            "";
+    }
+
+
+    if (avatarPreview) {
+
+        avatarPreview.innerHTML = `
+            <i class="fa-solid fa-user"></i>
+        `;
+
+        avatarPreview.classList.remove(
+            "has-image"
+        );
+
+        avatarPreview.hidden =
+            false;
+    }
+
+
+    if (livePreviewAvatar) {
+
+        livePreviewAvatar.innerHTML = `
+            <i class="fa-solid fa-user"></i>
+        `;
+    }
+
+
+    if (avatarRemoveButton) {
+
+        avatarRemoveButton.hidden =
+            true;
+    }
+
+}
+
 
 /* =========================================================
-   IMAGE — BANNER
+   BANNER
    ========================================================= */
 
 function handleBannerChange(
@@ -803,25 +1118,148 @@ function handleBannerChange(
 
         event.target.value = "";
 
-        clearPreview(
-            bannerPreview
-        );
+        removeBanner();
 
         return;
     }
 
 
-    previewImage(
-        file,
-        bannerPreview
+    previewBanner(
+        file
     );
 
     clearFieldError(
         bannerInput
     );
 
+    clearFormMessage();
+
 }
 
+
+function previewBanner(
+    file
+) {
+
+    if (!bannerObjectUrl) {
+
+        bannerObjectUrl =
+            URL.createObjectURL(
+                file
+            );
+
+    } else {
+
+        URL.revokeObjectURL(
+            bannerObjectUrl
+        );
+
+        bannerObjectUrl =
+            URL.createObjectURL(
+                file
+            );
+    }
+
+
+    if (bannerPreview) {
+
+        bannerPreview.innerHTML = `
+            <img
+                src="${bannerObjectUrl}"
+                alt="Aperçu de la bannière"
+            >
+        `;
+
+        bannerPreview.classList.add(
+            "has-image"
+        );
+
+        bannerPreview.hidden =
+            false;
+    }
+
+
+    if (livePreviewBanner) {
+
+        livePreviewBanner.style.backgroundImage =
+            `url("${bannerObjectUrl}")`;
+
+        livePreviewBanner.classList.add(
+            "has-image"
+        );
+    }
+
+
+    if (bannerRemoveButton) {
+
+        bannerRemoveButton.hidden =
+            false;
+    }
+
+}
+
+
+function removeBanner() {
+
+    if (bannerObjectUrl) {
+
+        URL.revokeObjectURL(
+            bannerObjectUrl
+        );
+
+        bannerObjectUrl =
+            null;
+    }
+
+
+    if (bannerInput) {
+
+        bannerInput.value =
+            "";
+    }
+
+
+    if (bannerPreview) {
+
+        bannerPreview.innerHTML = `
+            <div class="add-channel-banner-placeholder">
+
+                <i class="fa-solid fa-image"></i>
+
+                <span>
+                    Aperçu de votre bannière
+                </span>
+
+            </div>
+        `;
+
+        bannerPreview.classList.remove(
+            "has-image"
+        );
+
+        bannerPreview.hidden =
+            false;
+    }
+
+
+    if (livePreviewBanner) {
+
+        livePreviewBanner.style.backgroundImage =
+            "";
+
+        livePreviewBanner.classList.remove(
+            "has-image"
+        );
+    }
+
+
+    if (bannerRemoveButton) {
+
+        bannerRemoveButton.hidden =
+            true;
+    }
+
+}
 
 
 /* =========================================================
@@ -848,7 +1286,8 @@ function validateImage(
 
 
     if (
-        file.size > maxSize
+        file.size >
+        maxSize
     ) {
 
         const maxMB =
@@ -873,117 +1312,6 @@ function validateImage(
     };
 
 }
-
-
-
-/* =========================================================
-   IMAGE PREVIEW
-   ========================================================= */
-
-function previewImage(
-    file,
-    container
-) {
-
-    if (!container) {
-        return;
-    }
-
-
-    const url =
-        URL.createObjectURL(
-            file
-        );
-
-
-    /*
-     * Supporte plusieurs structures HTML :
-     * - img directement
-     * - conteneur contenant une img
-     */
-
-    let image =
-        container.tagName ===
-        "IMG"
-            ? container
-            : container.querySelector(
-                "img"
-            );
-
-
-    if (!image) {
-
-        image =
-            document.createElement(
-                "img"
-            );
-
-        image.alt =
-            "Aperçu";
-
-
-        container.appendChild(
-            image
-        );
-    }
-
-
-    image.src =
-        url;
-
-
-    container.hidden =
-        false;
-
-
-    image.onload =
-        () => {
-
-            URL.revokeObjectURL(
-                url
-            );
-
-        };
-
-}
-
-
-
-/* =========================================================
-   CLEAR PREVIEW
-   ========================================================= */
-
-function clearPreview(
-    container
-) {
-
-    if (!container) {
-        return;
-    }
-
-
-    const image =
-        container.tagName ===
-        "IMG"
-            ? container
-            : container.querySelector(
-                "img"
-            );
-
-
-    if (image) {
-
-        image.removeAttribute(
-            "src"
-        );
-    }
-
-
-    container.hidden =
-        true;
-
-}
-
 
 
 /* =========================================================
@@ -1023,14 +1351,19 @@ async function handleSubmit(
 
 
     /*
-     * Nouvelle vérification de session.
+     * Vérification de session.
+     *
+     * IMPORTANT :
+     * On utilise getUser().
+     * Il n'existe pas de getCurrentUser()
+     * importé dans ce fichier.
      */
 
-    const user =
-        await getCurrentUser();
+    currentUser =
+        await getUser();
 
 
-    if (!user) {
+    if (!currentUser) {
 
         redirectToAuth();
 
@@ -1039,19 +1372,21 @@ async function handleSubmit(
 
 
     /*
-     * Nouvelle vérification de la règle
-     * 1 compte = 1 chaîne.
+     * Vérification finale :
+     * un compte = une chaîne.
      */
 
     try {
 
-        const channels =
+        existingChannels =
             await getMyChannels();
 
 
         if (
-            channels &&
-            channels.length > 0
+            Array.isArray(
+                existingChannels
+            ) &&
+            existingChannels.length > 0
         ) {
 
             redirectToExistingChannel();
@@ -1059,11 +1394,10 @@ async function handleSubmit(
             return;
         }
 
-
     } catch (error) {
 
         console.error(
-            "Erreur vérification chaîne existante :",
+            "NetView — Vérification chaîne :",
             error
         );
 
@@ -1082,6 +1416,11 @@ async function handleSubmit(
 
     setSubmitLoading(
         true
+    );
+
+
+    showLoader(
+        "Création de votre chaîne..."
     );
 
 
@@ -1106,17 +1445,11 @@ async function handleSubmit(
 
 
         /*
-         * IMPORTANT :
+         * createChannel() ajoute lui-même
+         * owner_id à partir de la session.
          *
-         * On ne transmet volontairement PAS :
-         *
-         * owner_id
-         * verified
-         * subscribers_count
-         * videos_count
-         * total_views
-         *
-         * Ces champs appartiennent au système.
+         * On envoie uniquement les champs
+         * contrôlés par l'utilisateur.
          */
 
         const values = {
@@ -1126,13 +1459,15 @@ async function handleSubmit(
             handle,
 
             description:
-                description || null,
+                description ||
+                null,
 
             avatar_url:
                 null,
 
             banner_url:
                 null
+
         };
 
 
@@ -1143,7 +1478,17 @@ async function handleSubmit(
 
 
         if (
-            result?.error
+            !result
+        ) {
+
+            throw new Error(
+                "Aucune réponse reçue lors de la création de la chaîne."
+            );
+        }
+
+
+        if (
+            result.error
         ) {
 
             throw result.error;
@@ -1151,7 +1496,7 @@ async function handleSubmit(
 
 
         const channel =
-            result?.data;
+            result.data;
 
 
         if (!channel) {
@@ -1163,13 +1508,20 @@ async function handleSubmit(
 
 
         /*
-         * Redirection vers la chaîne créée.
+         * La chaîne est créée.
          *
-         * Le handle est utilisé pour respecter
-         * l'URL publique NetView :
-         *
-         * /@username
+         * Pour l'instant les fichiers image
+         * sont prévisualisés côté navigateur,
+         * mais ne sont PAS envoyés à Supabase
+         * car createChannel() ne gère que les
+         * données de la table channels.
          */
+
+        showToast(
+            "Votre chaîne NetView a été créée.",
+            "success"
+        );
+
 
         redirectToChannel(
             channel
@@ -1179,7 +1531,7 @@ async function handleSubmit(
     } catch (error) {
 
         console.error(
-            "Erreur création chaîne :",
+            "NetView — Erreur création chaîne :",
             error
         );
 
@@ -1197,10 +1549,11 @@ async function handleSubmit(
         setSubmitLoading(
             false
         );
+
+        hideLoader();
     }
 
 }
-
 
 
 /* =========================================================
@@ -1272,7 +1625,11 @@ function validateForm() {
     }
 
 
-    if (!isValidHandle(handle)) {
+    if (
+        !isValidHandle(
+            handle
+        )
+    ) {
 
         markFieldError(
             handleInput
@@ -1281,7 +1638,7 @@ function validateForm() {
         return {
             valid: false,
             message:
-                "Le handle doit contenir uniquement des lettres minuscules, chiffres, tirets ou underscores."
+                `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères, avec uniquement des lettres minuscules, chiffres, tirets ou underscores.`
         };
     }
 
@@ -1308,7 +1665,8 @@ function validateForm() {
             channel =>
                 String(
                     channel?.handle || ""
-                ).toLowerCase() ===
+                )
+                    .toLowerCase() ===
                 handle.toLowerCase()
         );
 
@@ -1333,7 +1691,6 @@ function validateForm() {
     };
 
 }
-
 
 
 /* =========================================================
@@ -1376,9 +1733,8 @@ function normalizeDescription(
 }
 
 
-
 /* =========================================================
-   SUBMIT BUTTON
+   SUBMIT LOADING
    ========================================================= */
 
 function setSubmitLoading(
@@ -1413,11 +1769,10 @@ function setSubmitLoading(
         }
 
 
-        submitButton.innerHTML =
-            `
-                <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>Création...</span>
-            `;
+        submitButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Création...</span>
+        `;
 
     } else {
 
@@ -1432,6 +1787,54 @@ function setSubmitLoading(
 
 }
 
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+function showLoader(
+    message
+) {
+
+    if (!loader) {
+        return;
+    }
+
+
+    if (loaderMessage && message) {
+
+        loaderMessage.textContent =
+            message;
+    }
+
+
+    loader.hidden =
+        false;
+
+    loader.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function hideLoader() {
+
+    if (!loader) {
+        return;
+    }
+
+
+    loader.hidden =
+        true;
+
+    loader.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
 
 
 /* =========================================================
@@ -1450,7 +1853,7 @@ function handleCreationError(
 
 
     /*
-     * PostgreSQL unique violation.
+     * PostgreSQL UNIQUE
      */
 
     if (
@@ -1463,11 +1866,6 @@ function handleCreationError(
         )
     ) {
 
-        /*
-         * Cela peut être le handle
-         * OU owner_id.
-         */
-
         setFormMessage(
             "Cette chaîne ne peut pas être créée : le handle est déjà utilisé ou votre compte possède déjà une chaîne.",
             "error"
@@ -1477,11 +1875,18 @@ function handleCreationError(
     }
 
 
+    /*
+     * RLS
+     */
+
     if (
         /row-level security/i.test(
             message
         ) ||
         /permission denied/i.test(
+            message
+        ) ||
+        /violates row-level security/i.test(
             message
         )
     ) {
@@ -1495,11 +1900,21 @@ function handleCreationError(
     }
 
 
+    /*
+     * Auth
+     */
+
     if (
+        /non connecté/i.test(
+            message
+        ) ||
         /not authenticated/i.test(
             message
         ) ||
         /jwt/i.test(
+            message
+        ) ||
+        /auth/i.test(
             message
         )
     ) {
@@ -1517,7 +1932,6 @@ function handleCreationError(
     );
 
 }
-
 
 
 /* =========================================================
@@ -1567,9 +1981,8 @@ function clearFieldError(
 }
 
 
-
 /* =========================================================
-   FOCUS INVALID FIELD
+   FOCUS INVALID
    ========================================================= */
 
 function focusInvalidField() {
@@ -1588,7 +2001,6 @@ function focusInvalidField() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -1616,22 +2028,33 @@ function setFormMessage(
     );
 
 
-    if (type === "success") {
+    if (
+        type ===
+        "success"
+    ) {
 
         formMessage.classList.add(
             "is-success"
         );
 
-    } else if (
-        type === "error"
+    }
+
+
+    if (
+        type ===
+        "error"
     ) {
 
         formMessage.classList.add(
             "is-error"
         );
 
-    } else if (
-        type === "info"
+    }
+
+
+    if (
+        type ===
+        "info"
     ) {
 
         formMessage.classList.add(
@@ -1656,28 +2079,125 @@ function clearFormMessage() {
 }
 
 
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(
+    message,
+    type = "success"
+) {
+
+    if (
+        !toast ||
+        !toastMessage
+    ) {
+        return;
+    }
+
+
+    toastMessage.textContent =
+        message;
+
+
+    toast.classList.remove(
+        "is-success",
+        "is-error",
+        "is-info"
+    );
+
+
+    if (
+        type ===
+        "success"
+    ) {
+
+        toast.classList.add(
+            "is-success"
+        );
+
+        if (toastIcon) {
+
+            toastIcon.className =
+                "fa-solid fa-circle-check";
+        }
+
+    } else if (
+        type ===
+        "error"
+    ) {
+
+        toast.classList.add(
+            "is-error"
+        );
+
+        if (toastIcon) {
+
+            toastIcon.className =
+                "fa-solid fa-circle-exclamation";
+        }
+
+    } else {
+
+        toast.classList.add(
+            "is-info"
+        );
+
+        if (toastIcon) {
+
+            toastIcon.className =
+                "fa-solid fa-circle-info";
+        }
+    }
+
+
+    toast.hidden =
+        false;
+
+
+    clearTimeout(
+        toast._timer
+    );
+
+
+    toast._timer =
+        setTimeout(
+            () => {
+
+                toast.hidden =
+                    true;
+
+            },
+            3500
+        );
+
+}
+
 
 /* =========================================================
    CANCEL
    ========================================================= */
 
-function handleCancel() {
+function handleCancel(
+    event
+) {
 
     /*
-     * Pas de history.back() aveugle :
-     * l'utilisateur peut arriver directement
-     * sur add-channel.html.
+     * Le HTML possède déjà href="index.html".
+     * On laisse donc le navigateur gérer le lien.
      */
 
-    window.location.href =
-        "index.html";
+    if (
+        event?.defaultPrevented
+    ) {
+        return;
+    }
 
 }
 
 
-
 /* =========================================================
-   REDIRECTIONS
+   REDIRECT AUTH
    ========================================================= */
 
 function redirectToAuth() {
@@ -1699,6 +2219,10 @@ function redirectToAuth() {
 
 }
 
+
+/* =========================================================
+   REDIRECT EXISTING CHANNEL
+   ========================================================= */
 
 function redirectToExistingChannel() {
 
@@ -1741,6 +2265,10 @@ function redirectToExistingChannel() {
 }
 
 
+/* =========================================================
+   REDIRECT CREATED CHANNEL
+   ========================================================= */
+
 function redirectToChannel(
     channel
 ) {
@@ -1780,13 +2308,47 @@ function redirectToChannel(
 }
 
 
+/* =========================================================
+   READABLE ERROR
+   ========================================================= */
+
+function getReadableError(
+    error
+) {
+
+    if (
+        error?.message
+    ) {
+
+        return error.message;
+    }
+
+
+    return "Impossible de charger la page de création de chaîne.";
+
+}
+
 
 /* =========================================================
    DEBUG
    ========================================================= */
 
 window.NetViewAddChannel = {
+
     normalizeHandle,
+
+    normalizeName,
+
+    normalizeDescription,
+
+    isValidHandle,
+
     validateForm,
-    checkHandleAvailability
+
+    checkHandleAvailability,
+
+    removeAvatar,
+
+    removeBanner
+
 };
