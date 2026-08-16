@@ -1260,6 +1260,46 @@ export async function getMyChannels() {
     return data || [];
 }
 
+/* =========================================================
+   CHANNEL HANDLE
+   Vérifie réellement le handle dans Supabase
+   ========================================================= */
+
+export async function isChannelHandleAvailable(handle) {
+
+    const normalizedHandle =
+        String(handle || "")
+            .trim()
+            .replace(/^@+/, "")
+            .toLowerCase();
+
+    if (!normalizedHandle) {
+        return false;
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("channels")
+        .select("id")
+        .eq(
+            "handle",
+            normalizedHandle
+        )
+        .limit(1);
+
+    if (error) {
+        console.error(
+            "NetView — Erreur vérification handle :",
+            error
+        );
+
+        throw error;
+    }
+
+    return !data || data.length === 0;
+}
 
 export async function createChannel(
     values
