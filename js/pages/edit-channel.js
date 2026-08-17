@@ -3,8 +3,9 @@
 // edit-channel.js
 // ==========================================================
 
-import { getUser } from "../core/auth.js";
-
+import {
+    getUser
+} from "../core/auth.js";
 
 import {
     getMyChannels,
@@ -20,14 +21,29 @@ import {
 // CONFIGURATION
 // ==========================================================
 
-const PAGE_URL = "edit-channel.html";
-const CHANNEL_URL = "channel.html";
+const PAGE_URL =
+    "edit-channel.html";
 
-const MAX_NAME_LENGTH = 100;
-const MAX_HANDLE_LENGTH = 50;
-const MAX_DESCRIPTION_LENGTH = 1000;
+const CHANNEL_URL =
+    "channel.html";
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const CHANNEL_BUCKET =
+    "channels";
+
+const MAX_NAME_LENGTH =
+    100;
+
+const MAX_HANDLE_LENGTH =
+    30;
+
+const MAX_DESCRIPTION_LENGTH =
+    1000;
+
+const HANDLE_MIN_LENGTH =
+    3;
+
+const MAX_IMAGE_SIZE =
+    5 * 1024 * 1024;
 
 const ALLOWED_IMAGE_TYPES = [
     "image/jpeg",
@@ -40,20 +56,41 @@ const ALLOWED_IMAGE_TYPES = [
 // STATE
 // ==========================================================
 
-let currentUser = null;
-let currentChannel = null;
+let currentUser =
+    null;
 
-let originalValues = null;
+let currentChannel =
+    null;
 
-let avatarFile = null;
-let bannerFile = null;
+let originalValues =
+    null;
 
-let avatarObjectUrl = null;
-let bannerObjectUrl = null;
+let avatarFile =
+    null;
 
-let isSaving = false;
-let isDirty = false;
-let allowNavigation = false;
+let bannerFile =
+    null;
+
+let avatarObjectUrl =
+    null;
+
+let bannerObjectUrl =
+    null;
+
+let isSaving =
+    false;
+
+let isDirty =
+    false;
+
+let allowNavigation =
+    false;
+
+let handleCheckTimer =
+    null;
+
+let handleCheckSequence =
+    0;
 
 
 // ==========================================================
@@ -243,9 +280,61 @@ document.addEventListener(
 
 async function init() {
 
+    configureInputs();
+
     bindEvents();
 
     await loadChannel();
+
+}
+
+
+// ==========================================================
+// CONFIGURE INPUTS
+// ==========================================================
+
+function configureInputs() {
+
+    if (channelName) {
+
+        channelName.maxLength =
+            MAX_NAME_LENGTH;
+
+    }
+
+    if (channelHandle) {
+
+        channelHandle.maxLength =
+            MAX_HANDLE_LENGTH;
+
+        channelHandle.autocomplete =
+            "off";
+
+        channelHandle.spellcheck =
+            false;
+
+    }
+
+    if (channelDescription) {
+
+        channelDescription.maxLength =
+            MAX_DESCRIPTION_LENGTH;
+
+    }
+
+    if (channelAvatarInput) {
+
+        channelAvatarInput.accept =
+            ALLOWED_IMAGE_TYPES.join(",");
+
+    }
+
+    if (channelBannerInput) {
+
+        channelBannerInput.accept =
+            ALLOWED_IMAGE_TYPES.join(",");
+
+    }
 
 }
 
@@ -256,123 +345,82 @@ async function init() {
 
 function bindEvents() {
 
-    if (form) {
-        form.addEventListener(
-            "submit",
-            handleSubmit
-        );
-    }
+    form?.addEventListener(
+        "submit",
+        handleSubmit
+    );
 
 
-    if (channelName) {
-        channelName.addEventListener(
-            "input",
-            handleFormInput
-        );
-    }
+    channelName?.addEventListener(
+        "input",
+        handleNameInput
+    );
 
 
-    if (channelHandle) {
-
-        channelHandle.addEventListener(
-            "input",
-            handleHandleInput
-        );
-
-        channelHandle.addEventListener(
-            "blur",
-            normalizeHandleField
-        );
-
-    }
+    channelHandle?.addEventListener(
+        "input",
+        handleHandleInput
+    );
 
 
-    if (channelDescription) {
-        channelDescription.addEventListener(
-            "input",
-            handleFormInput
-        );
-    }
+    channelHandle?.addEventListener(
+        "blur",
+        handleHandleBlur
+    );
 
 
-    if (channelAvatarInput) {
-
-        channelAvatarInput.addEventListener(
-            "change",
-            handleAvatarChange
-        );
-
-    }
+    channelDescription?.addEventListener(
+        "input",
+        handleDescriptionInput
+    );
 
 
-    if (channelBannerInput) {
-
-        channelBannerInput.addEventListener(
-            "change",
-            handleBannerChange
-        );
-
-    }
+    channelAvatarInput?.addEventListener(
+        "change",
+        handleAvatarChange
+    );
 
 
-    if (retryButton) {
-
-        retryButton.addEventListener(
-            "click",
-            loadChannel
-        );
-
-    }
+    channelBannerInput?.addEventListener(
+        "change",
+        handleBannerChange
+    );
 
 
-    if (cancelEditButton) {
-
-        cancelEditButton.addEventListener(
-            "click",
-            handleNavigation
-        );
-
-    }
+    retryButton?.addEventListener(
+        "click",
+        loadChannel
+    );
 
 
-    if (viewChannelButton) {
-
-        viewChannelButton.addEventListener(
-            "click",
-            handleNavigation
-        );
-
-    }
+    cancelEditButton?.addEventListener(
+        "click",
+        handleNavigation
+    );
 
 
-    if (unsavedChangesClose) {
-
-        unsavedChangesClose.addEventListener(
-            "click",
-            closeUnsavedModal
-        );
-
-    }
+    viewChannelButton?.addEventListener(
+        "click",
+        handleNavigation
+    );
 
 
-    if (stayOnPageButton) {
-
-        stayOnPageButton.addEventListener(
-            "click",
-            closeUnsavedModal
-        );
-
-    }
+    unsavedChangesClose?.addEventListener(
+        "click",
+        closeUnsavedModal
+    );
 
 
-    if (leaveWithoutSavingButton) {
+    stayOnPageButton?.addEventListener(
+        "click",
+        closeUnsavedModal
+    );
 
-        leaveWithoutSavingButton.addEventListener(
-            "click",
-            confirmLeave
-        );
 
-    }
+    leaveWithoutSavingButton?.addEventListener(
+        "click",
+        confirmLeave
+    );
 
 
     if (unsavedChangesModal) {
@@ -382,14 +430,10 @@ function bindEvents() {
                 ".edit-channel-modal-backdrop"
             );
 
-        if (backdrop) {
-
-            backdrop.addEventListener(
-                "click",
-                closeUnsavedModal
-            );
-
-        }
+        backdrop?.addEventListener(
+            "click",
+            closeUnsavedModal
+        );
 
     }
 
@@ -405,6 +449,7 @@ function bindEvents() {
 // ==========================================================
 // LOAD CHANNEL
 // ==========================================================
+
 async function loadChannel() {
 
     showLoading();
@@ -416,11 +461,13 @@ async function loadChannel() {
         currentUser =
             await getUser();
 
+
         if (!currentUser) {
 
-            redirectToLogin();
+            redirectToAuth();
 
             return;
+
         }
 
 
@@ -438,12 +485,9 @@ async function loadChannel() {
             );
 
             return;
+
         }
 
-
-        // --------------------------------------------------
-        // NetView : un compte = une seule chaîne
-        // --------------------------------------------------
 
         currentChannel =
             channels[0];
@@ -456,26 +500,30 @@ async function loadChannel() {
             );
 
             return;
+
         }
 
 
         populateChannel();
 
-
         hideLoading();
 
         showContent();
 
-        isDirty = false;
+        isDirty =
+            false;
 
-        allowNavigation = false;
+        allowNavigation =
+            false;
+
 
     } catch (error) {
 
         console.error(
-            "Erreur chargement chaîne :",
+            "NetView — Erreur chargement chaîne :",
             error
         );
+
 
         showError(
             getErrorMessage(
@@ -488,50 +536,66 @@ async function loadChannel() {
 
 }
 
+
 // ==========================================================
 // POPULATE
 // ==========================================================
 
 function populateChannel() {
 
-    const channel =
-        currentChannel;
+    if (!currentChannel) {
+        return;
+    }
 
 
     channelName.value =
-        channel.name || "";
+        currentChannel.name || "";
 
 
     channelHandle.value =
         normalizeHandle(
-            channel.handle || ""
+            currentChannel.handle || ""
         );
 
 
     channelDescription.value =
-        channel.description || "";
+        currentChannel.description || "";
+
+
+    avatarFile =
+        null;
+
+    bannerFile =
+        null;
+
+
+    if (channelAvatarInput) {
+        channelAvatarInput.value = "";
+    }
+
+
+    if (channelBannerInput) {
+        channelBannerInput.value = "";
+    }
 
 
     updateCounters();
 
-
     updatePublicUrl();
-
 
     updateStatistics();
 
+    renderAvatar(
+        currentChannel.avatar_url
+    );
 
     renderBanner(
-        channel.banner_url
+        currentChannel.banner_url
     );
 
 
-    renderAvatar(
-        channel.avatar_url
-    );
-
-
-    originalValues = getFormValues();
+    originalValues =
+        getFormValues();
 
 
     updateViewChannelLink();
@@ -546,6 +610,7 @@ function populateChannel() {
 function getFormValues() {
 
     return {
+
         name:
             String(
                 channelName?.value || ""
@@ -562,62 +627,71 @@ function getFormValues() {
             ).trim(),
 
         avatar_url:
-            currentChannel?.avatar_url || null,
+            currentChannel?.avatar_url ||
+            null,
 
         banner_url:
-            currentChannel?.banner_url || null
+            currentChannel?.banner_url ||
+            null
+
     };
 
 }
 
 
 // ==========================================================
-// INPUT
+// NAME
 // ==========================================================
 
-function handleFormInput() {
+function handleNameInput() {
 
     updateCounters();
 
     updateDirtyState();
 
-    clearFieldErrors();
+    clearFieldError(
+        channelNameError
+    );
 
 }
 
 
+// ==========================================================
+// DESCRIPTION
+// ==========================================================
+
+function handleDescriptionInput() {
+
+    updateCounters();
+
+    updateDirtyState();
+
+    clearFieldError(
+        channelDescriptionError
+    );
+
+}
+
+
+// ==========================================================
+// HANDLE INPUT
+// ==========================================================
+
 function handleHandleInput() {
 
-    const cursorPosition =
-        channelHandle.selectionStart;
+    if (!channelHandle) {
+        return;
+    }
 
-    const oldValue =
-        channelHandle.value;
 
     const normalized =
         normalizeHandle(
-            oldValue
+            channelHandle.value
         );
+
 
     channelHandle.value =
         normalized;
-
-    try {
-
-        channelHandle.setSelectionRange(
-            Math.min(
-                cursorPosition,
-                normalized.length
-            ),
-            Math.min(
-                cursorPosition,
-                normalized.length
-            )
-        );
-
-    } catch {
-        // Rien à faire.
-    }
 
 
     updatePublicUrl();
@@ -628,7 +702,110 @@ function handleHandleInput() {
         channelHandleError
     );
 
-    channelHandleStatus.textContent = "";
+
+    handleCheckSequence++;
+
+
+    clearTimeout(
+        handleCheckTimer
+    );
+
+
+    if (!normalized) {
+
+        setHandleStatus(
+            "",
+            ""
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !isValidHandle(
+            normalized
+        )
+    ) {
+
+        setHandleStatus(
+            "error",
+            `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères.`
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Si le handle n'a pas changé,
+     * il est automatiquement disponible
+     * pour cette chaîne.
+     */
+
+    const originalHandle =
+        normalizeHandle(
+            currentChannel?.handle || ""
+        );
+
+
+    if (
+        normalized ===
+        originalHandle
+    ) {
+
+        setHandleStatus(
+            "success",
+            "Votre handle actuel."
+        );
+
+        return;
+
+    }
+
+
+    setHandleStatus(
+        "checking",
+        "Vérification du handle..."
+    );
+
+
+    const sequence =
+        handleCheckSequence;
+
+
+    handleCheckTimer =
+        setTimeout(
+            async () => {
+
+                if (
+                    sequence !==
+                    handleCheckSequence
+                ) {
+                    return;
+                }
+
+
+                await checkHandleAvailability();
+
+            },
+            450
+        );
+
+}
+
+
+// ==========================================================
+// HANDLE BLUR
+// ==========================================================
+
+async function handleHandleBlur() {
+
+    normalizeHandleField();
+
+    await checkHandleAvailability();
 
 }
 
@@ -639,11 +816,38 @@ function handleHandleInput() {
 
 function normalizeHandle(value) {
 
-    return String(value || "")
+    return String(
+        value || ""
+    )
         .trim()
-        .replace(/^@+/, "")
+        .replace(
+            /^@+/,
+            ""
+        )
+        .normalize(
+            "NFD"
+        )
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
         .toLowerCase()
-        .replace(/[^a-z0-9._-]/g, "")
+        .replace(
+            /[^a-z0-9_-]+/g,
+            "-"
+        )
+        .replace(
+            /-+/g,
+            "-"
+        )
+        .replace(
+            /^[-_]+/,
+            ""
+        )
+        .replace(
+            /[-_]+$/,
+            ""
+        )
         .slice(
             0,
             MAX_HANDLE_LENGTH
@@ -652,14 +856,285 @@ function normalizeHandle(value) {
 }
 
 
+// ==========================================================
+// HANDLE VALIDATION
+// ==========================================================
+
+function isValidHandle(handle) {
+
+    if (!handle) {
+        return false;
+    }
+
+
+    if (
+        handle.length <
+        HANDLE_MIN_LENGTH
+    ) {
+        return false;
+    }
+
+
+    if (
+        handle.length >
+        MAX_HANDLE_LENGTH
+    ) {
+        return false;
+    }
+
+
+    return /^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/
+        .test(
+            handle
+        );
+
+}
+
+
+// ==========================================================
+// NORMALIZE HANDLE FIELD
+// ==========================================================
+
 function normalizeHandleField() {
+
+    if (!channelHandle) {
+        return;
+    }
+
 
     channelHandle.value =
         normalizeHandle(
             channelHandle.value
         );
 
+
     updatePublicUrl();
+
+}
+
+
+// ==========================================================
+// REAL HANDLE AVAILABILITY
+// ==========================================================
+
+async function checkHandleAvailability() {
+
+    if (
+        !currentChannel?.id ||
+        !channelHandle
+    ) {
+
+        return false;
+
+    }
+
+
+    const handle =
+        normalizeHandle(
+            channelHandle.value
+        );
+
+
+    if (!handle) {
+
+        setHandleStatus(
+            "error",
+            "Le handle est obligatoire."
+        );
+
+        return false;
+
+    }
+
+
+    if (
+        !isValidHandle(
+            handle
+        )
+    ) {
+
+        setHandleStatus(
+            "error",
+            `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères.`
+        );
+
+        return false;
+
+    }
+
+
+    const currentHandle =
+        normalizeHandle(
+            currentChannel.handle
+        );
+
+
+    /*
+     * Même handle :
+     * aucune recherche nécessaire.
+     */
+
+    if (
+        handle ===
+        currentHandle
+    ) {
+
+        setHandleStatus(
+            "success",
+            "Votre handle actuel."
+        );
+
+        return true;
+
+    }
+
+
+    setHandleStatus(
+        "checking",
+        "Vérification du handle..."
+    );
+
+
+    try {
+
+        /*
+         * Vérification DIRECTE dans PostgreSQL.
+         *
+         * On exclut la chaîne actuellement
+         * modifiée.
+         */
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from("channels")
+                .select("id,handle")
+                .eq(
+                    "handle",
+                    handle
+                )
+                .neq(
+                    "id",
+                    currentChannel.id
+                )
+                .limit(1);
+
+
+        if (error) {
+
+            console.error(
+                "NetView — Vérification handle :",
+                error
+            );
+
+            setHandleStatus(
+                "error",
+                "Impossible de vérifier ce handle."
+            );
+
+            return false;
+
+        }
+
+
+        const exists =
+            Array.isArray(data) &&
+            data.length > 0;
+
+
+        if (exists) {
+
+            setHandleStatus(
+                "error",
+                "Ce handle est déjà utilisé."
+            );
+
+            return false;
+
+        }
+
+
+        setHandleStatus(
+            "success",
+            "Handle disponible."
+        );
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "NetView — Erreur vérification handle :",
+            error
+        );
+
+
+        setHandleStatus(
+            "error",
+            "Impossible de vérifier ce handle."
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+// ==========================================================
+// HANDLE STATUS
+// ==========================================================
+
+function setHandleStatus(
+    type,
+    message
+) {
+
+    if (!channelHandleStatus) {
+        return;
+    }
+
+
+    channelHandleStatus.textContent =
+        message;
+
+
+    channelHandleStatus.classList.remove(
+        "is-checking",
+        "is-success",
+        "is-error"
+    );
+
+
+    if (type === "checking") {
+
+        channelHandleStatus.classList.add(
+            "is-checking"
+        );
+
+    }
+
+
+    if (type === "success") {
+
+        channelHandleStatus.classList.add(
+            "is-success"
+        );
+
+    }
+
+
+    if (type === "error") {
+
+        channelHandleStatus.classList.add(
+            "is-error"
+        );
+
+    }
 
 }
 
@@ -672,22 +1147,16 @@ function updateCounters() {
 
     if (channelNameCount) {
 
-        const length =
-            channelName.value.length;
-
         channelNameCount.textContent =
-            `${length} / ${MAX_NAME_LENGTH}`;
+            `${channelName?.value.length || 0} / ${MAX_NAME_LENGTH}`;
 
     }
 
 
     if (channelDescriptionCount) {
 
-        const length =
-            channelDescription.value.length;
-
         channelDescriptionCount.textContent =
-            `${length} / ${MAX_DESCRIPTION_LENGTH}`;
+            `${channelDescription?.value.length || 0} / ${MAX_DESCRIPTION_LENGTH}`;
 
     }
 
@@ -724,37 +1193,44 @@ function updatePublicUrl() {
 
 
 // ==========================================================
-// CHANNEL LINK
+// CHANNEL LINKS
 // ==========================================================
 
 function updateViewChannelLink() {
 
-    if (!currentChannel?.id) {
+    if (
+        !currentChannel?.id
+    ) {
         return;
     }
 
 
     const handle =
         normalizeHandle(
-            currentChannel.handle || ""
+            channelHandle?.value ||
+            currentChannel.handle ||
+            ""
         );
 
 
-    if (handle) {
+    const url =
+        handle
+            ? `channel.html?handle=${encodeURIComponent(handle)}`
+            : `channel.html?id=${encodeURIComponent(currentChannel.id)}`;
+
+
+    if (viewChannelButton) {
 
         viewChannelButton.href =
-            `channel.html?handle=${encodeURIComponent(handle)}`;
+            url;
+
+    }
+
+
+    if (cancelEditButton) {
 
         cancelEditButton.href =
-            `channel.html?handle=${encodeURIComponent(handle)}`;
-
-    } else {
-
-        viewChannelButton.href =
-            `channel.html?id=${encodeURIComponent(currentChannel.id)}`;
-
-        cancelEditButton.href =
-            `channel.html?id=${encodeURIComponent(currentChannel.id)}`;
+            url;
 
     }
 
@@ -815,7 +1291,7 @@ function updateStatistics() {
 
 
 // ==========================================================
-// AVATAR
+// AVATAR CHANGE
 // ==========================================================
 
 function handleAvatarChange(event) {
@@ -842,9 +1318,11 @@ function handleAvatarChange(event) {
             "error"
         );
 
-        channelAvatarInput.value = "";
+        event.target.value =
+            "";
 
         return;
+
     }
 
 
@@ -878,7 +1356,7 @@ function handleAvatarChange(event) {
 
 
 // ==========================================================
-// BANNER
+// BANNER CHANGE
 // ==========================================================
 
 function handleBannerChange(event) {
@@ -905,9 +1383,11 @@ function handleBannerChange(event) {
             "error"
         );
 
-        channelBannerInput.value = "";
+        event.target.value =
+            "";
 
         return;
+
     }
 
 
@@ -962,7 +1442,8 @@ function validateImage(file) {
 
 
     if (
-        file.size > MAX_IMAGE_SIZE
+        file.size >
+        MAX_IMAGE_SIZE
     ) {
 
         return {
@@ -1001,10 +1482,12 @@ function renderAvatar(url) {
         `;
 
         return;
+
     }
 
 
-    channelAvatarPreview.innerHTML = "";
+    channelAvatarPreview.innerHTML =
+        "";
 
 
     const image =
@@ -1065,10 +1548,12 @@ function renderBanner(url) {
         `;
 
         return;
+
     }
 
 
-    channelBannerPreview.innerHTML = "";
+    channelBannerPreview.innerHTML =
+        "";
 
 
     const image =
@@ -1160,6 +1645,10 @@ async function handleSubmit(event) {
     clearErrors();
 
 
+    /*
+     * Validation locale.
+     */
+
     const validation =
         validateForm();
 
@@ -1171,6 +1660,7 @@ async function handleSubmit(event) {
         );
 
         return;
+
     }
 
 
@@ -1182,14 +1672,79 @@ async function handleSubmit(event) {
         );
 
         return;
+
     }
 
 
-    isSaving = true;
+    /*
+     * Vérification réelle du handle
+     * juste avant l'enregistrement.
+     */
+
+    const handleAvailable =
+        await checkHandleAvailability();
+
+
+    if (!handleAvailable) {
+
+        showFieldError(
+            channelHandleError,
+            "Ce handle n'est pas disponible."
+        );
+
+        channelHandle?.focus();
+
+        return;
+
+    }
+
+
+    /*
+     * Vérification de session.
+     */
+
+    currentUser =
+        await getUser();
+
+
+    if (!currentUser) {
+
+        redirectToAuth();
+
+        return;
+
+    }
+
+
+    isSaving =
+        true;
+
 
     setSaveButtonLoading(
         true
     );
+
+
+    /*
+     * Conserver les anciennes URLs
+     * afin de pouvoir supprimer les
+     * anciens fichiers après succès.
+     */
+
+    const oldAvatarUrl =
+        currentChannel.avatar_url ||
+        null;
+
+    const oldBannerUrl =
+        currentChannel.banner_url ||
+        null;
+
+
+    let uploadedAvatarPath =
+        null;
+
+    let uploadedBannerPath =
+        null;
 
 
     try {
@@ -1199,57 +1754,62 @@ async function handleSubmit(event) {
 
 
         let avatarUrl =
-            currentChannel.avatar_url ||
-            null;
+            oldAvatarUrl;
+
 
         let bannerUrl =
-            currentChannel.banner_url ||
-            null;
+            oldBannerUrl;
 
 
-        // --------------------------------------------------
-        // Avatar
-        // --------------------------------------------------
+        // ==================================================
+        // NOUVEL AVATAR
+        // ==================================================
 
         if (avatarFile) {
 
-            avatarUrl =
+            const upload =
                 await uploadChannelImage(
                     avatarFile,
                     "avatar"
                 );
 
+
+            avatarUrl =
+                upload.publicUrl;
+
+
+            uploadedAvatarPath =
+                upload.path;
+
         }
 
 
-        // --------------------------------------------------
-        // Bannière
-        // --------------------------------------------------
+        // ==================================================
+        // NOUVELLE BANNIÈRE
+        // ==================================================
 
         if (bannerFile) {
 
-            bannerUrl =
+            const upload =
                 await uploadChannelImage(
                     bannerFile,
                     "banner"
                 );
 
+
+            bannerUrl =
+                upload.publicUrl;
+
+
+            uploadedBannerPath =
+                upload.path;
+
         }
 
 
-        // --------------------------------------------------
-        // IMPORTANT :
-        // On ne transmet QUE les champs modifiables.
-        //
-        // verified
-        // subscribers_count
-        // videos_count
-        // total_views
-        // owner_id
-        // created_at
-        //
-        // ne sont jamais envoyés.
-        // --------------------------------------------------
+        // ==================================================
+        // UPDATE DATABASE
+        // ==================================================
 
         const updateValues = {
 
@@ -1260,7 +1820,8 @@ async function handleSubmit(event) {
                 values.handle,
 
             description:
-                values.description || null,
+                values.description ||
+                null,
 
             avatar_url:
                 avatarUrl,
@@ -1271,24 +1832,25 @@ async function handleSubmit(event) {
         };
 
 
-        const {
-            data,
-            error
-        } =
+        const result =
             await updateChannel(
                 currentChannel.id,
                 updateValues
             );
 
 
-        if (error) {
+        if (result?.error) {
 
-            throw error;
+            throw result.error;
 
         }
 
 
-        if (!data) {
+        const updatedChannel =
+            result?.data;
+
+
+        if (!updatedChannel) {
 
             throw new Error(
                 "La chaîne n'a pas pu être mise à jour."
@@ -1297,11 +1859,44 @@ async function handleSubmit(event) {
         }
 
 
-        currentChannel =
-            {
-                ...currentChannel,
-                ...data
-            };
+        /*
+         * La modification DB est maintenant
+         * confirmée.
+         */
+
+        currentChannel = {
+            ...currentChannel,
+            ...updatedChannel
+        };
+
+
+        /*
+         * Suppression des anciens fichiers
+         * uniquement après succès DB.
+         */
+
+        if (
+            avatarFile &&
+            oldAvatarUrl
+        ) {
+
+            await deleteStorageFileFromUrl(
+                oldAvatarUrl
+            );
+
+        }
+
+
+        if (
+            bannerFile &&
+            oldBannerUrl
+        ) {
+
+            await deleteStorageFileFromUrl(
+                oldBannerUrl
+            );
+
+        }
 
 
         avatarFile =
@@ -1312,12 +1907,18 @@ async function handleSubmit(event) {
 
 
         if (channelAvatarInput) {
-            channelAvatarInput.value = "";
+
+            channelAvatarInput.value =
+                "";
+
         }
 
 
         if (channelBannerInput) {
-            channelBannerInput.value = "";
+
+            channelBannerInput.value =
+                "";
+
         }
 
 
@@ -1336,6 +1937,20 @@ async function handleSubmit(event) {
         updateViewChannelLink();
 
 
+        /*
+         * Afficher immédiatement les vraies
+         * URLs Supabase, et non les object URLs.
+         */
+
+        renderAvatar(
+            currentChannel.avatar_url
+        );
+
+        renderBanner(
+            currentChannel.banner_url
+        );
+
+
         showToast(
             "Votre chaîne a été mise à jour.",
             "success"
@@ -1345,9 +1960,34 @@ async function handleSubmit(event) {
     } catch (error) {
 
         console.error(
-            "Erreur modification chaîne :",
+            "NetView — Erreur modification chaîne :",
             error
         );
+
+
+        /*
+         * Si le fichier a été envoyé mais que
+         * la modification DB échoue, on supprime
+         * le nouveau fichier afin d'éviter les
+         * fichiers orphelins.
+         */
+
+        if (uploadedAvatarPath) {
+
+            await removeStorageFile(
+                uploadedAvatarPath
+            );
+
+        }
+
+
+        if (uploadedBannerPath) {
+
+            await removeStorageFile(
+                uploadedBannerPath
+            );
+
+        }
 
 
         showToast(
@@ -1360,7 +2000,8 @@ async function handleSubmit(event) {
 
     } finally {
 
-        isSaving = false;
+        isSaving =
+            false;
 
         setSaveButtonLoading(
             false
@@ -1372,7 +2013,7 @@ async function handleSubmit(event) {
 
 
 // ==========================================================
-// VALIDATION
+// FORM VALIDATION
 // ==========================================================
 
 function validateForm() {
@@ -1382,19 +2023,19 @@ function validateForm() {
 
     const name =
         String(
-            channelName.value || ""
+            channelName?.value || ""
         ).trim();
 
 
     const handle =
         normalizeHandle(
-            channelHandle.value
+            channelHandle?.value || ""
         );
 
 
     const description =
         String(
-            channelDescription.value || ""
+            channelDescription?.value || ""
         ).trim();
 
 
@@ -1424,31 +2065,14 @@ function validateForm() {
     if (!handle) {
 
         errors.handle =
-            "L'identifiant de la chaîne est obligatoire.";
+            "Le handle est obligatoire.";
 
     } else if (
-        handle.length < 3
+        !isValidHandle(handle)
     ) {
 
         errors.handle =
-            "L'identifiant doit contenir au moins 3 caractères.";
-
-    } else if (
-        handle.length >
-        MAX_HANDLE_LENGTH
-    ) {
-
-        errors.handle =
-            `L'identifiant ne peut pas dépasser ${MAX_HANDLE_LENGTH} caractères.`;
-
-    } else if (
-        !/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/.test(
-            handle
-        )
-    ) {
-
-        errors.handle =
-            "L'identifiant contient des caractères non autorisés.";
+            `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères, avec uniquement des lettres minuscules, chiffres, tirets et underscores.`;
 
     }
 
@@ -1465,9 +2089,12 @@ function validateForm() {
 
 
     return {
+
         valid:
             Object.keys(errors).length === 0,
+
         errors
+
     };
 
 }
@@ -1525,8 +2152,11 @@ function showValidationErrors(errors) {
 
 
         firstError.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
+            behavior:
+                "smooth",
+
+            block:
+                "center"
         });
 
     }
@@ -1593,7 +2223,7 @@ function clearFieldErrors() {
 
 
 // ==========================================================
-// UPLOAD STORAGE
+// STORAGE UPLOAD
 // ==========================================================
 
 async function uploadChannelImage(
@@ -1621,17 +2251,12 @@ async function uploadChannelImage(
 
 
     /*
-     * Bucket attendu :
+     * Structure :
      *
-     * channels
-     *
-     * Chemin :
-     *
-     * user_id/avatar-...
-     * user_id/banner-...
-     *
-     * Le fichier est placé dans le dossier
-     * du propriétaire.
+     * channels/
+     * └── USER_ID/
+     *     ├── avatar-xxxx.webp
+     *     └── banner-xxxx.webp
      */
 
     const path =
@@ -1639,19 +2264,24 @@ async function uploadChannelImage(
 
 
     const {
+        data,
         error
     } =
         await supabase
             .storage
-            .from("channels")
+            .from(
+                CHANNEL_BUCKET
+            )
             .upload(
                 path,
                 file,
                 {
                     cacheControl:
-                        "3600",
+                        "31536000",
+
                     upsert:
                         false,
+
                     contentType:
                         file.type
                 }
@@ -1661,33 +2291,53 @@ async function uploadChannelImage(
     if (error) {
 
         console.error(
-            "Erreur upload image chaîne :",
+            "NetView — Storage upload error:",
             error
         );
 
         throw new Error(
-            "Impossible d'envoyer l'image."
+            "Impossible d'envoyer l'image vers le stockage."
         );
 
     }
 
 
+    /*
+     * Récupération de l'URL publique.
+     *
+     * Le bucket "channels" doit être PUBLIC.
+     */
+
     const {
-        data
+        data:
+            publicData
     } =
         supabase
             .storage
-            .from("channels")
+            .from(
+                CHANNEL_BUCKET
+            )
             .getPublicUrl(
                 path
             );
 
 
     const publicUrl =
-        data?.publicUrl;
+        publicData?.publicUrl;
 
 
     if (!publicUrl) {
+
+        /*
+         * Si l'URL publique ne peut pas être
+         * récupérée, supprimer le fichier
+         * nouvellement envoyé.
+         */
+
+        await removeStorageFile(
+            path
+        );
+
 
         throw new Error(
             "Impossible de récupérer l'URL de l'image."
@@ -1696,7 +2346,133 @@ async function uploadChannelImage(
     }
 
 
-    return publicUrl;
+    return {
+
+        path,
+
+        publicUrl,
+
+        storageData:
+            data || null
+
+    };
+
+}
+
+
+// ==========================================================
+// DELETE STORAGE FILE
+// ==========================================================
+
+async function removeStorageFile(
+    path
+) {
+
+    if (!path) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabase
+                .storage
+                .from(
+                    CHANNEL_BUCKET
+                )
+                .remove([
+                    path
+                ]);
+
+
+        if (error) {
+
+            console.warn(
+                "NetView — Impossible de supprimer le fichier Storage :",
+                error
+            );
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "NetView — Erreur suppression Storage :",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// DELETE FILE FROM PUBLIC URL
+// ==========================================================
+
+async function deleteStorageFileFromUrl(
+    publicUrl
+) {
+
+    if (!publicUrl) {
+        return;
+    }
+
+
+    try {
+
+        const marker =
+            `/storage/v1/object/public/${CHANNEL_BUCKET}/`;
+
+
+        const index =
+            publicUrl.indexOf(
+                marker
+            );
+
+
+        if (index === -1) {
+
+            console.warn(
+                "NetView — URL Storage non reconnue :",
+                publicUrl
+            );
+
+            return;
+
+        }
+
+
+        const path =
+            decodeURIComponent(
+                publicUrl.slice(
+                    index +
+                    marker.length
+                )
+            );
+
+
+        if (!path) {
+            return;
+        }
+
+
+        await removeStorageFile(
+            path
+        );
+
+
+    } catch (error) {
+
+        console.warn(
+            "NetView — Impossible d'extraire le chemin Storage :",
+            error
+        );
+
+    }
 
 }
 
@@ -1710,20 +2486,28 @@ function getFileExtension(file) {
     const parts =
         String(
             file.name || ""
-        )
-            .split(".");
+        ).split(".");
+
 
     if (
         parts.length > 1
     ) {
 
         const extension =
-            parts.pop()
+            parts
+                .pop()
                 .toLowerCase();
 
+
         if (
-            ["jpg", "jpeg", "png", "webp"]
-                .includes(extension)
+            [
+                "jpg",
+                "jpeg",
+                "png",
+                "webp"
+            ].includes(
+                extension
+            )
         ) {
 
             return extension;
@@ -1775,7 +2559,25 @@ function setSaveButtonLoading(
         loading;
 
 
+    saveChannelButton.setAttribute(
+        "aria-busy",
+        loading
+            ? "true"
+            : "false"
+    );
+
+
     if (loading) {
+
+        if (
+            !saveChannelButton.dataset.originalContent
+        ) {
+
+            saveChannelButton.dataset.originalContent =
+                saveChannelButton.innerHTML;
+
+        }
+
 
         saveChannelButton.innerHTML = `
             <i class="fa-solid fa-spinner fa-spin"></i>
@@ -1786,12 +2588,25 @@ function setSaveButtonLoading(
 
     } else {
 
-        saveChannelButton.innerHTML = `
-            <i class="fa-solid fa-check"></i>
-            <span>
-                Enregistrer les modifications
-            </span>
-        `;
+        if (
+            saveChannelButton.dataset.originalContent
+        ) {
+
+            saveChannelButton.innerHTML =
+                saveChannelButton.dataset.originalContent;
+
+            delete saveChannelButton.dataset.originalContent;
+
+        } else {
+
+            saveChannelButton.innerHTML = `
+                <i class="fa-solid fa-check"></i>
+                <span>
+                    Enregistrer les modifications
+                </span>
+            `;
+
+        }
 
     }
 
@@ -1802,12 +2617,15 @@ function setSaveButtonLoading(
 // NAVIGATION
 // ==========================================================
 
-function handleNavigation(
-    event
-) {
+function handleNavigation(event) {
 
-    if (!isDirty || allowNavigation) {
+    if (
+        !isDirty ||
+        allowNavigation
+    ) {
+
         return;
+
     }
 
 
@@ -1818,7 +2636,7 @@ function handleNavigation(
         event.currentTarget?.href;
 
 
-    if (target) {
+    if (target && unsavedChangesModal) {
 
         unsavedChangesModal.dataset.target =
             target;
@@ -1830,6 +2648,10 @@ function handleNavigation(
 
 }
 
+
+// ==========================================================
+// OPEN MODAL
+// ==========================================================
 
 function openUnsavedModal() {
 
@@ -1858,14 +2680,14 @@ function openUnsavedModal() {
     );
 
 
-    if (stayOnPageButton) {
-
-        stayOnPageButton.focus();
-
-    }
+    stayOnPageButton?.focus();
 
 }
 
+
+// ==========================================================
+// CLOSE MODAL
+// ==========================================================
 
 function closeUnsavedModal() {
 
@@ -1896,15 +2718,18 @@ function closeUnsavedModal() {
 }
 
 
+// ==========================================================
+// CONFIRM LEAVE
+// ==========================================================
+
 function confirmLeave() {
 
     const target =
-        unsavedChangesModal.dataset.target;
+        unsavedChangesModal?.dataset.target;
 
 
     allowNavigation =
         true;
-
 
     isDirty =
         false;
@@ -1931,9 +2756,7 @@ function confirmLeave() {
 // BEFORE UNLOAD
 // ==========================================================
 
-function handleBeforeUnload(
-    event
-) {
+function handleBeforeUnload(event) {
 
     if (
         !isDirty ||
@@ -1954,7 +2777,7 @@ function handleBeforeUnload(
 
 
 // ==========================================================
-// LOADING / ERROR / CONTENT
+// LOADING
 // ==========================================================
 
 function showLoading() {
@@ -2049,10 +2872,10 @@ function showError(message) {
 
 
 // ==========================================================
-// LOGIN
+// AUTH REDIRECT
 // ==========================================================
 
-function redirectToLogin() {
+function redirectToAuth() {
 
     allowNavigation =
         true;
@@ -2061,14 +2884,20 @@ function redirectToLogin() {
         false;
 
 
-    window.location.href =
-        `login.html?redirect=${encodeURIComponent(PAGE_URL)}`;
+    const currentPath =
+        window.location.pathname +
+        window.location.search;
+
+
+    window.location.replace(
+        `auth.html?redirect=${encodeURIComponent(currentPath)}`
+    );
 
 }
 
 
 // ==========================================================
-// ERROR HANDLING
+// ERROR MESSAGE
 // ==========================================================
 
 function getErrorMessage(
@@ -2085,34 +2914,65 @@ function getErrorMessage(
         String(
             error.message ||
             error.error_description ||
+            error.details ||
             ""
         ).trim();
-
-
-    if (!message) {
-        return fallback;
-    }
 
 
     const lower =
         message.toLowerCase();
 
 
+    /*
+     * PostgreSQL UNIQUE
+     */
+
     if (
+        error.code === "23505" ||
         lower.includes(
             "duplicate key"
         ) ||
         lower.includes(
             "channels_handle_key"
+        ) ||
+        lower.includes(
+            "channels_handle"
         )
     ) {
 
         return (
-            "Cet identifiant de chaîne est déjà utilisé."
+            "Ce handle est déjà utilisé. Choisissez-en un autre."
         );
 
     }
 
+
+    /*
+     * Storage
+     */
+
+    if (
+        lower.includes(
+            "storage"
+        ) ||
+        lower.includes(
+            "bucket"
+        ) ||
+        lower.includes(
+            "object"
+        )
+    ) {
+
+        return (
+            "Impossible de modifier l'image de la chaîne. Vérifiez les permissions du stockage."
+        );
+
+    }
+
+
+    /*
+     * RLS
+     */
 
     if (
         lower.includes(
@@ -2120,6 +2980,9 @@ function getErrorMessage(
         ) ||
         lower.includes(
             "permission denied"
+        ) ||
+        lower.includes(
+            "violates row-level security"
         )
     ) {
 
@@ -2130,13 +2993,37 @@ function getErrorMessage(
     }
 
 
-    return message;
+    /*
+     * Auth
+     */
+
+    if (
+        lower.includes(
+            "not authenticated"
+        ) ||
+        lower.includes(
+            "jwt"
+        ) ||
+        lower.includes(
+            "unauthorized"
+        )
+    ) {
+
+        return (
+            "Votre session a expiré. Veuillez vous reconnecter."
+        );
+
+    }
+
+
+    return message ||
+        fallback;
 
 }
 
 
 // ==========================================================
-// GENERAL ERROR CLEAR
+// CLEAR ERRORS
 // ==========================================================
 
 function clearErrors() {
@@ -2144,12 +3031,10 @@ function clearErrors() {
     clearFieldErrors();
 
 
-    if (channelHandleStatus) {
-
-        channelHandleStatus.textContent =
-            "";
-
-    }
+    setHandleStatus(
+        "",
+        ""
+    );
 
 }
 
@@ -2158,7 +3043,8 @@ function clearErrors() {
 // TOAST
 // ==========================================================
 
-let toastTimer = null;
+let toastTimer =
+    null;
 
 
 function showToast(
@@ -2204,14 +3090,16 @@ function showToast(
     if (toastIcon) {
 
         if (
-            type === "error"
+            type ===
+            "error"
         ) {
 
             toastIcon.className =
                 "fa-solid fa-circle-xmark";
 
         } else if (
-            type === "warning"
+            type ===
+            "warning"
         ) {
 
             toastIcon.className =
@@ -2250,6 +3138,7 @@ function showToast(
                     "is-visible"
                 );
 
+
                 setTimeout(
                     () => {
 
@@ -2271,9 +3160,7 @@ function showToast(
 // FORMAT NUMBER
 // ==========================================================
 
-function formatNumber(
-    value
-) {
+function formatNumber(value) {
 
     const number =
         Number(
@@ -2305,9 +3192,7 @@ function formatNumber(
 // FORMAT DATE
 // ==========================================================
 
-function formatDate(
-    value
-) {
+function formatDate(value) {
 
     if (!value) {
         return "—";
@@ -2362,6 +3247,15 @@ window.addEventListener(
 
 function cleanup() {
 
+    if (handleCheckTimer) {
+
+        clearTimeout(
+            handleCheckTimer
+        );
+
+    }
+
+
     if (avatarObjectUrl) {
 
         URL.revokeObjectURL(
@@ -2386,3 +3280,22 @@ function cleanup() {
     }
 
 }
+
+
+// ==========================================================
+// DEBUG
+// ==========================================================
+
+window.NetViewEditChannel = {
+
+    normalizeHandle,
+
+    isValidHandle,
+
+    validateForm,
+
+    checkHandleAvailability,
+
+    uploadChannelImage
+
+};
