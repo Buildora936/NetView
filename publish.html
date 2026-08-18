@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="description"
+    content="Portail de publication NetView">
+
+<meta
+    name="theme-color"
+    content="#2563EB">
+
+<title>Publier • NetView</title>
+
+<link
+    rel="icon"
+    type="image/png"
+    href="NetView_icone.png">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- ==========================================
+Core CSS
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/core/variables.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/reset.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/typography.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/animations.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/core/utilities.css">
+
+<!-- ==========================================
+Components
+========================================== -->
+
+<link
+    rel="stylesheet"
+    href="CSS/components/buttons.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/cards.css">
+
+<link
+    rel="stylesheet"
+    href="CSS/components/loader.css">
+
+<style>
+
+/* ==================================================
+BODY
+================================================== */
+
+body {
+
+    overflow: auto;
+
+    background:
+        var(--nv-background);
+
+}
+
+/* ==================================================
+BACKGROUND
+================================================== */
+
+.nv-publish-background {
+
+    position: fixed;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    z-index: -10;
+
+    background:
+
+        radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, .25),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at bottom right,
+            rgba(96, 165, 250, .18),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020617,
+            #071124,
+            #0B1120,
+            #020617
+        );
+
+}
+
+.nv-publish-background::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: -20%;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            transparent,
+            rgba(37, 99, 235, .08),
+            transparent,
+            rgba(96, 165, 250, .10),
+            transparent
+        );
+
+    background-size: 300% 300%;
+
+    animation:
+        gradientMove 18s linear infinite;
+
+    filter: blur(80px);
+
+}
+
+.nv-publish-background::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.03) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.03) 1px,
+            transparent 1px
+        );
+
+    background-size: 50px 50px;
+
+    mask-image:
+        radial-gradient(
+            circle,
+            white,
+            transparent 92%
+        );
+
+}
+
+/* ==================================================
+BLUE ORBS
+================================================== */
+
+.nv-orb {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(70px);
+
+    animation:
+        floatOrb 12s ease-in-out infinite;
+
+}
+
+.nv-orb.one {
+
+    width: 320px;
+
+    height: 320px;
+
+    top: -120px;
+
+    left: -120px;
+
+    background:
+        rgba(37, 99, 235, .30);
+
+}
+
+.nv-orb.two {
+
+    width: 260px;
+
+    height: 260px;
+
+    right: -80px;
+
+    bottom: -80px;
+
+    background:
+        rgba(96, 165, 250, .25);
+
+    animation-delay: 2s;
+
+}
+
+.nv-orb.three {
+
+    width: 180px;
+
+    height: 180px;
+
+    left: 60%;
+
+    top: 35%;
+
+    background:
+        rgba(59, 130, 246, .18);
+
+    animation-delay: 5s;
+
+}
+
+/* ==================================================
+PARTICLES
+================================================== */
+
+.nv-particles {
+
+    position: absolute;
+
+    inset: 0;
+
+}
+
+.nv-particles span {
+
+    position: absolute;
+
+    width: 3px;
+
+    height: 3px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.55);
+
+    animation:
+        particleFloat linear infinite;
+
+}
+
+.nv-particles span:nth-child(1) {
+    left: 5%;
+    top: 12%;
+    animation-duration: 20s;
+}
+
+.nv-particles span:nth-child(2) {
+    left: 16%;
+    top: 72%;
+    animation-duration: 16s;
+}
+
+.nv-particles span:nth-child(3) {
+    left: 27%;
+    top: 35%;
+    animation-duration: 18s;
+}
+
+.nv-particles span:nth-child(4) {
+    left: 38%;
+    top: 82%;
+    animation-duration: 24s;
+}
+
+.nv-particles span:nth-child(5) {
+    left: 50%;
+    top: 18%;
+    animation-duration: 15s;
+}
+
+.nv-particles span:nth-child(6) {
+    left: 62%;
+    top: 60%;
+    animation-duration: 20s;
+}
+
+.nv-particles span:nth-child(7) {
+    left: 73%;
+    top: 28%;
+    animation-duration: 19s;
+}
+
+.nv-particles span:nth-child(8) {
+    left: 84%;
+    top: 78%;
+    animation-duration: 22s;
+}
+
+.nv-particles span:nth-child(9) {
+    left: 93%;
+    top: 16%;
+    animation-duration: 17s;
+}
+
+.nv-particles span:nth-child(10) {
+    left: 44%;
+    top: 48%;
+    animation-duration: 23s;
+}
+
+.nv-particles span:nth-child(11) {
+    left: 12%;
+    top: 52%;
+    animation-duration: 21s;
+}
+
+.nv-particles span:nth-child(12) {
+    left: 79%;
+    top: 8%;
+    animation-duration: 18s;
+}
+
+/* ==================================================
+LAYOUT
+================================================== */
+
+.nv-publish {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 2rem;
+
+}
+
+/* ==================================================
+CARD
+================================================== */
+
+.nv-publish-card {
+
+    width: min(100%, 540px);
+
+    padding: 3rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 34px;
+
+    backdrop-filter: blur(30px);
+
+    -webkit-backdrop-filter: blur(30px);
+
+    background:
+        rgba(15,23,42,.72);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 40px 90px rgba(0,0,0,.45);
+
+    animation:
+        fadeUp .8s ease;
+
+}
+
+.nv-publish-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: inherit;
+
+    padding: 1px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(37,99,235,.7),
+            rgba(96,165,250,.15),
+            transparent
+        );
+
+    -webkit-mask:
+
+        linear-gradient(#fff 0 0) content-box,
+
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask-composite: exclude;
+
+    pointer-events: none;
+
+}
+
+/* ==================================================
+LOGO
+================================================== */
+
+.nv-publish-logo {
+
+    width: 120px;
+
+    display: block;
+
+    margin: auto;
+
+    animation:
+        floatLogo 5s ease-in-out infinite;
+
+}
+
+/* ==================================================
+TITLE
+================================================== */
+
+.nv-publish-title {
+
+    margin-top: 1.6rem;
+
+    text-align: center;
+
+}
+
+.nv-publish-subtitle {
+
+    margin-top: .9rem;
+
+    margin-bottom: 2.5rem;
+
+    text-align: center;
+
+    color:
+        var(--nv-text-secondary);
+
+    line-height: 1.8;
+
+}
+
+/* ==================================================
+ACTIONS
+================================================== */
+
+.nv-publish-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+}
+
+/* ==================================================
+PUBLISH BUTTON
+================================================== */
+
+.nv-publish-btn {
+
+    width: 100%;
+
+    min-height: 72px;
+
+    display: flex;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 1rem 1.25rem;
+
+    gap: 1rem;
+
+}
+
+.nv-publish-btn::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -120%;
+
+    width: 55%;
+
+    height: 100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.35),
+            transparent
+        );
+
+    transition: .8s;
+
+}
+
+.nv-publish-btn:hover::before {
+
+    left: 170%;
+
+}
+
+/* ==================================================
+ICON
+================================================== */
+
+.nv-publish-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,.10);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+}
+
+.nv-publish-icon i {
+
+    font-size: 1.25rem;
+
+}
+
+/* ==================================================
+BUTTON CONTENT
+================================================== */
+
+.nv-publish-content {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+.nv-publish-content strong {
+
+    display: block;
+
+    color: #fff;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+}
+
+.nv-publish-content span {
+
+    display: block;
+
+    margin-top: .3rem;
+
+    color:
+        rgba(255,255,255,.62);
+
+    font-size: .85rem;
+
+    line-height: 1.4;
+
+}
+
+/* ==================================================
+ARROW
+================================================== */
+
+.nv-publish-arrow {
+
+    flex: 0 0 auto;
+
+    color:
+        rgba(255,255,255,.55);
+
+    transition:
+        transform .25s ease,
+        color .25s ease;
+
+}
+
+.nv-publish-btn:hover
+.nv-publish-arrow {
+
+    transform: translateX(5px);
+
+    color: #fff;
+
+}
+
+/* ==================================================
+SECONDARY BUTTON
+================================================== */
+
+.nv-publish-btn-secondary {
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: #fff;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+}
+
+.nv-publish-btn-secondary:hover {
+
+    background:
+        rgba(255,255,255,.10);
+
+}
+
+/* ==================================================
+DIVIDER
+================================================== */
+
+.nv-publish-divider {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+
+    margin: 1.5rem 0;
+
+    color:
+        var(--nv-text-muted);
+
+    font-size: .75rem;
+
+}
+
+.nv-publish-divider::before,
+.nv-publish-divider::after {
+
+    content: "";
+
+    height: 1px;
+
+    flex: 1;
+
+    background:
+        rgba(255,255,255,.08);
+
+}
+
+/* ==================================================
+FOOTER
+================================================== */
+
+.nv-publish-footer {
+
+    margin-top: 2rem;
+
+    text-align: center;
+
+    color:
+        var(--nv-text-muted);
+
+    font-size: .85rem;
+
+}
+
+.nv-publish-footer a {
+
+    color:
+        rgba(255,255,255,.65);
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+
+}
+
+.nv-publish-footer a:hover {
+
+    color: #fff;
+
+}
+
+/* ==================================================
+RESPONSIVE
+================================================== */
+
+@media (max-width: 768px) {
+
+    .nv-publish {
+
+        padding: 1rem;
+
+    }
+
+    .nv-publish-card {
+
+        padding: 2rem 1.5rem;
+
+        border-radius: 24px;
+
+    }
+
+    .nv-publish-logo {
+
+        width: 120px;
+
+    }
+
+    .nv-publish-title {
+
+        font-size: 2rem;
+
+    }
+
+    .nv-publish-subtitle {
+
+        font-size: .95rem;
+
+    }
+
+}
+
+@media (max-width: 420px) {
+
+    .nv-publish-card {
+
+        padding: 1.75rem 1rem;
+
+    }
+
+    .nv-publish-title {
+
+        font-size: 1.7rem;
+
+    }
+
+    .nv-publish-btn {
+
+        min-height: 68px;
+
+        padding: .85rem 1rem;
+
+    }
+
+    .nv-publish-icon {
+
+        width: 44px;
+
+        height: 44px;
+
+        flex-basis: 44px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ==================================================
+BACKGROUND
+================================================== -->
+
+<div class="nv-publish-background">
+
+    <div class="nv-orb one"></div>
+
+    <div class="nv-orb two"></div>
+
+    <div class="nv-orb three"></div>
+
+    <div class="nv-particles">
+
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+MAIN
+================================================== -->
+
+<main class="nv-publish">
+
+<section class="nv-publish-card">
+
+    <!-- ==============================================
+    LOGO
+    =============================================== -->
+
+    <img
+        src="NetView.png"
+        alt="NetView"
+        class="nv-publish-logo">
+
+
+    <!-- ==============================================
+    TITLE
+    =============================================== -->
+
+    <h1 class="nv-publish-title">
+
+        Que souhaitez-vous publier ?
+
+    </h1>
+
+
+    <p class="nv-publish-subtitle">
+
+        Choisissez le type de contenu que vous
+        souhaitez créer sur NetView.
+
+    </p>
+
+
+    <!-- ==============================================
+    ACTIONS
+    =============================================== -->
+
+    <div class="nv-publish-actions">
+
+
+        <!-- ==========================================
+        VIDEO
+        =========================================== -->
+
+        <a
+            href="upload.html"
+            class="nv-btn nv-btn-gradient nv-publish-btn">
+
+            <div class="nv-publish-icon">
+
+                <i class="fa-solid fa-video"></i>
+
+            </div>
+
+            <div class="nv-publish-content">
+
+                <strong>
+
+                    Publier une vidéo
+
+                </strong>
+
+                <span>
+
+                    Téléverser et publier une nouvelle vidéo.
+
+                </span>
+
+            </div>
+
+            <div class="nv-publish-arrow">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- ==========================================
+        SHORT
+        =========================================== -->
+
+        <a
+            href="upload-short.html"
+            class="nv-btn nv-btn-gradient nv-publish-btn">
+
+            <div class="nv-publish-icon">
+
+                <i class="fa-solid fa-clapperboard"></i>
+
+            </div>
+
+            <div class="nv-publish-content">
+
+                <strong>
+
+                    Publier un Short
+
+                </strong>
+
+                <span>
+
+                    Créer et publier une vidéo courte.
+
+                </span>
+
+            </div>
+
+            <div class="nv-publish-arrow">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- ==========================================
+        LIVE
+        =========================================== -->
+
+        <a
+            href="add-live.html"
+            class="nv-btn nv-btn-gradient nv-publish-btn">
+
+            <div class="nv-publish-icon">
+
+                <i class="fa-solid fa-tower-broadcast"></i>
+
+            </div>
+
+            <div class="nv-publish-content">
+
+                <strong>
+
+                    Démarrer un Live
+
+                </strong>
+
+                <span>
+
+                    Créer une diffusion en direct sur NetView.
+
+                </span>
+
+            </div>
+
+            <div class="nv-publish-arrow">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+    <!-- ==============================================
+    DIVIDER
+    =============================================== -->
+
+    <div class="nv-publish-divider">
+
+        <span>OU</span>
+
+    </div>
+
+
+    <!-- ==============================================
+    BACK
+    =============================================== -->
+
+    <a
+        href="index.html"
+        class="nv-publish-btn nv-publish-btn-secondary">
+
+        <div class="nv-publish-icon">
+
+            <i class="fa-solid fa-house"></i>
+
+        </div>
+
+        <div class="nv-publish-content">
+
+            <strong>
+
+                Retour à NetView
+
+            </strong>
+
+            <span>
+
+                Revenir à la page d'accueil.
+
+            </span>
+
+        </div>
+
+        <div class="nv-publish-arrow">
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </div>
+
+    </a>
+
+
+    <!-- ==============================================
+    FOOTER
+    =============================================== -->
+
+    <div class="nv-publish-footer">
+
+        NetView v1.0 • Tous droits réservés
+
+    </div>
+
+
+</section>
+
+</main>
+
+
+<!-- ==================================================
+PAGE LOADER
+================================================== -->
+
+<div
+    class="nv-page-loader"
+    id="pageLoader"
+    style="display:none;">
+
+    <div class="nv-spinner nv-spinner-lg"></div>
+
+    <div class="nv-loader-text">
+
+        Chargement...
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+JAVASCRIPT
+================================================== -->
+
+<script type="module">
+
+// ==========================================
+// Imports
+// ==========================================
+
+import {
+
+    getSession
+
+} from "./js/core/auth.js";
+
+
+// ==========================================
+// Check Authentication
+// ==========================================
+
+(async () => {
+
+    try {
+
+        const session =
+            await getSession();
+
+        /*
+         * Le portail de publication est réservé
+         * aux utilisateurs connectés.
+         */
+
+        if (!session) {
+
+            window.location.href =
+                "auth.html";
+
+            return;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Publish authentication error:",
+            error
+        );
+
+    }
+
+})();
+
+
+// ==========================================
+// Button Animation
+// ==========================================
+
+const buttons =
+    document.querySelectorAll(
+        ".nv-publish-btn"
+    );
+
+
+buttons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            button.style.transform =
+                "scale(.97)";
+
+            setTimeout(() => {
+
+                button.style.transform =
+                    "";
+
+            }, 150);
+
+        }
+    );
+
+});
+
+
+// ==========================================
+// Save Last Page
+// ==========================================
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const link =
+            event.target.closest("a");
+
+        if (!link) {
+
+            return;
+
+        }
+
+        const href =
+            link.getAttribute("href");
+
+        if (
+            href &&
+            href.endsWith(".html") &&
+            href !== "publish.html"
+        ) {
+
+            sessionStorage.setItem(
+                "netview_last_page",
+                href
+            );
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// Ready
+// ==========================================
+
+console.log(
+    "NetView Publish Portal Ready"
+);
+
+</script>
+
+</body>
+
+</html>
