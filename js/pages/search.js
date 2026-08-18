@@ -15,7 +15,8 @@ import {
     searchShorts,
     searchChannels,
     searchLives,
-    searchProducts
+    searchProducts,
+    initDeviceRevocationListener
 } from "../core/data.js";
 import {
     showLoader,
@@ -24,6 +25,7 @@ import {
 } from "../core/ui.js";
 import { navigate } from "../core/navigation.js";
 
+initDeviceRevocationListener();
 // ==========================================
 // DOM Elements
 // ==========================================
