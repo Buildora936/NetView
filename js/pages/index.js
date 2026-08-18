@@ -34,13 +34,8 @@ import{
     navigate
 }from "../core/navigation.js";
 
+initDeviceRevocationListener();
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Lancer l'écouteur de révocation d'appareil en temps réel
-    const deviceChannel = initDeviceRevocationListener();
-    
-    // (Optionnel) Vous pouvez le stocker ou le nettoyer si l'utilisateur se déconnecte manuellement
-});
 // ==========================================
 // Header
 // ==========================================
