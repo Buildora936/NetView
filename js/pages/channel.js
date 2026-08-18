@@ -2741,21 +2741,6 @@ function showUserSidebar() {
 
         <hr>
 
-
-        <button
-            id="logoutButton"
-            type="button"
-            class="nv-sidebar-button"
-        >
-
-            <i class="fa-solid fa-right-from-bracket"></i>
-
-            <span>
-                Se déconnecter
-            </span>
-
-        </button>
-
     `;
 
 }
