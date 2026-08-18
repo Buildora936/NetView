@@ -13,7 +13,8 @@ import {
 
 import {
     getUserSettings,
-    updateUserSettings
+    updateUserSettings,
+    initDeviceRevocationListener
 } from "../core/data.js";
 
 import {
@@ -28,7 +29,7 @@ import {
 
 import { supabase } from "../core/supabase.js";
 
-
+initDeviceRevocationListener();
 // ==========================================
 // DOM Elements
 // ==========================================
