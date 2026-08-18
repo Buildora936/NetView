@@ -37,7 +37,8 @@ import {
     deletePlaylist,
     addVideoToPlaylist,
     removeVideoFromPlaylist,
-    updatePlaylistItemPosition
+    updatePlaylistItemPosition,
+    initDeviceRevocationListener
 } from "../core/data.js";
 
 import {
@@ -49,7 +50,7 @@ import {
     navigate
 } from "../core/navigation.js";
 
-
+initDeviceRevocationListener();
 // ==========================================
 // Header
 // ==========================================
