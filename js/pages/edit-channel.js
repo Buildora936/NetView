@@ -27,8 +27,11 @@ const PAGE_URL =
 const CHANNEL_URL =
     "channel.html";
 
-const CHANNEL_BUCKET =
-    "channels";
+const AVATAR_BUCKET =
+    "channel-avatars";
+
+const BANNER_BUCKET =
+    "channel-banners";
 
 const MAX_NAME_LENGTH =
     100;
@@ -91,6 +94,9 @@ let handleCheckTimer =
 
 let handleCheckSequence =
     0;
+
+let toastTimer =
+    null;
 
 
 // ==========================================================
@@ -548,18 +554,30 @@ function populateChannel() {
     }
 
 
-    channelName.value =
-        currentChannel.name || "";
+    if (channelName) {
+
+        channelName.value =
+            currentChannel.name || "";
+
+    }
 
 
-    channelHandle.value =
-        normalizeHandle(
-            currentChannel.handle || ""
-        );
+    if (channelHandle) {
+
+        channelHandle.value =
+            normalizeHandle(
+                currentChannel.handle || ""
+            );
+
+    }
 
 
-    channelDescription.value =
-        currentChannel.description || "";
+    if (channelDescription) {
+
+        channelDescription.value =
+            currentChannel.description || "";
+
+    }
 
 
     avatarFile =
@@ -570,12 +588,18 @@ function populateChannel() {
 
 
     if (channelAvatarInput) {
-        channelAvatarInput.value = "";
+
+        channelAvatarInput.value =
+            "";
+
     }
 
 
     if (channelBannerInput) {
-        channelBannerInput.value = "";
+
+        channelBannerInput.value =
+            "";
+
     }
 
 
@@ -738,12 +762,6 @@ function handleHandleInput() {
 
     }
 
-
-    /*
-     * Si le handle n'a pas changé,
-     * il est automatiquement disponible
-     * pour cette chaîne.
-     */
 
     const originalHandle =
         normalizeHandle(
@@ -969,11 +987,6 @@ async function checkHandleAvailability() {
         );
 
 
-    /*
-     * Même handle :
-     * aucune recherche nécessaire.
-     */
-
     if (
         handle ===
         currentHandle
@@ -996,13 +1009,6 @@ async function checkHandleAvailability() {
 
 
     try {
-
-        /*
-         * Vérification DIRECTE dans PostgreSQL.
-         *
-         * On exclut la chaîne actuellement
-         * modifiée.
-         */
 
         const {
             data,
@@ -1215,8 +1221,8 @@ function updateViewChannelLink() {
 
     const url =
         handle
-            ? `channel.html?handle=${encodeURIComponent(handle)}`
-            : `channel.html?id=${encodeURIComponent(currentChannel.id)}`;
+            ? `${CHANNEL_URL}?handle=${encodeURIComponent(handle)}`
+            : `${CHANNEL_URL}?id=${encodeURIComponent(currentChannel.id)}`;
 
 
     if (viewChannelButton) {
@@ -1425,6 +1431,16 @@ function handleBannerChange(event) {
 // ==========================================================
 
 function validateImage(file) {
+
+    if (!file) {
+
+        return {
+            valid: false,
+            message: "Aucune image sélectionnée."
+        };
+
+    }
+
 
     if (
         !ALLOWED_IMAGE_TYPES.includes(
@@ -1645,10 +1661,6 @@ async function handleSubmit(event) {
     clearErrors();
 
 
-    /*
-     * Validation locale.
-     */
-
     const validation =
         validateForm();
 
@@ -1676,11 +1688,6 @@ async function handleSubmit(event) {
     }
 
 
-    /*
-     * Vérification réelle du handle
-     * juste avant l'enregistrement.
-     */
-
     const handleAvailable =
         await checkHandleAvailability();
 
@@ -1698,10 +1705,6 @@ async function handleSubmit(event) {
 
     }
 
-
-    /*
-     * Vérification de session.
-     */
 
     currentUser =
         await getUser();
@@ -1724,12 +1727,6 @@ async function handleSubmit(event) {
         true
     );
 
-
-    /*
-     * Conserver les anciennes URLs
-     * afin de pouvoir supprimer les
-     * anciens fichiers après succès.
-     */
 
     const oldAvatarUrl =
         currentChannel.avatar_url ||
@@ -1756,13 +1753,12 @@ async function handleSubmit(event) {
         let avatarUrl =
             oldAvatarUrl;
 
-
         let bannerUrl =
             oldBannerUrl;
 
 
         // ==================================================
-        // NOUVEL AVATAR
+        // AVATAR
         // ==================================================
 
         if (avatarFile) {
@@ -1777,7 +1773,6 @@ async function handleSubmit(event) {
             avatarUrl =
                 upload.publicUrl;
 
-
             uploadedAvatarPath =
                 upload.path;
 
@@ -1785,7 +1780,7 @@ async function handleSubmit(event) {
 
 
         // ==================================================
-        // NOUVELLE BANNIÈRE
+        // BANNIÈRE
         // ==================================================
 
         if (bannerFile) {
@@ -1799,7 +1794,6 @@ async function handleSubmit(event) {
 
             bannerUrl =
                 upload.publicUrl;
-
 
             uploadedBannerPath =
                 upload.path;
@@ -1859,21 +1853,15 @@ async function handleSubmit(event) {
         }
 
 
-        /*
-         * La modification DB est maintenant
-         * confirmée.
-         */
-
         currentChannel = {
             ...currentChannel,
             ...updatedChannel
         };
 
 
-        /*
-         * Suppression des anciens fichiers
-         * uniquement après succès DB.
-         */
+        // ==================================================
+        // DELETE OLD AVATAR
+        // ==================================================
 
         if (
             avatarFile &&
@@ -1881,11 +1869,16 @@ async function handleSubmit(event) {
         ) {
 
             await deleteStorageFileFromUrl(
-                oldAvatarUrl
+                oldAvatarUrl,
+                AVATAR_BUCKET
             );
 
         }
 
+
+        // ==================================================
+        // DELETE OLD BANNER
+        // ==================================================
 
         if (
             bannerFile &&
@@ -1893,7 +1886,8 @@ async function handleSubmit(event) {
         ) {
 
             await deleteStorageFileFromUrl(
-                oldBannerUrl
+                oldBannerUrl,
+                BANNER_BUCKET
             );
 
         }
@@ -1937,11 +1931,6 @@ async function handleSubmit(event) {
         updateViewChannelLink();
 
 
-        /*
-         * Afficher immédiatement les vraies
-         * URLs Supabase, et non les object URLs.
-         */
-
         renderAvatar(
             currentChannel.avatar_url
         );
@@ -1966,16 +1955,16 @@ async function handleSubmit(event) {
 
 
         /*
-         * Si le fichier a été envoyé mais que
-         * la modification DB échoue, on supprime
-         * le nouveau fichier afin d'éviter les
-         * fichiers orphelins.
+         * Si l'upload a réussi mais que
+         * l'UPDATE SQL échoue, supprimer
+         * le nouveau fichier.
          */
 
         if (uploadedAvatarPath) {
 
             await removeStorageFile(
-                uploadedAvatarPath
+                uploadedAvatarPath,
+                AVATAR_BUCKET
             );
 
         }
@@ -1984,7 +1973,8 @@ async function handleSubmit(event) {
         if (uploadedBannerPath) {
 
             await removeStorageFile(
-                uploadedBannerPath
+                uploadedBannerPath,
+                BANNER_BUCKET
             );
 
         }
@@ -2240,24 +2230,46 @@ async function uploadChannelImage(
     }
 
 
+    if (
+        type !== "avatar" &&
+        type !== "banner"
+    ) {
+
+        throw new Error(
+            "Type d'image de chaîne invalide."
+        );
+
+    }
+
+
+    const bucket =
+        type === "avatar"
+            ? AVATAR_BUCKET
+            : BANNER_BUCKET;
+
+
     const extension =
         getFileExtension(
             file
         );
 
 
+    /*
+     * Chaque bucket possède son propre
+     * dossier utilisateur.
+     *
+     * channel-avatars/
+     * └── USER_ID/
+     *     └── avatar-xxxx.webp
+     *
+     * channel-banners/
+     * └── USER_ID/
+     *     └── banner-xxxx.webp
+     */
+
     const filename =
         `${type}-${Date.now()}-${crypto.randomUUID()}.${extension}`;
 
-
-    /*
-     * Structure :
-     *
-     * channels/
-     * └── USER_ID/
-     *     ├── avatar-xxxx.webp
-     *     └── banner-xxxx.webp
-     */
 
     const path =
         `${currentUser.id}/${filename}`;
@@ -2269,9 +2281,7 @@ async function uploadChannelImage(
     } =
         await supabase
             .storage
-            .from(
-                CHANNEL_BUCKET
-            )
+            .from(bucket)
             .upload(
                 path,
                 file,
@@ -2292,21 +2302,23 @@ async function uploadChannelImage(
 
         console.error(
             "NetView — Storage upload error:",
-            error
+            {
+                bucket,
+                path,
+                error
+            }
         );
 
+
         throw new Error(
-            "Impossible d'envoyer l'image vers le stockage."
+            getStorageUploadErrorMessage(
+                error,
+                bucket
+            )
         );
 
     }
 
-
-    /*
-     * Récupération de l'URL publique.
-     *
-     * Le bucket "channels" doit être PUBLIC.
-     */
 
     const {
         data:
@@ -2314,9 +2326,7 @@ async function uploadChannelImage(
     } =
         supabase
             .storage
-            .from(
-                CHANNEL_BUCKET
-            )
+            .from(bucket)
             .getPublicUrl(
                 path
             );
@@ -2328,19 +2338,14 @@ async function uploadChannelImage(
 
     if (!publicUrl) {
 
-        /*
-         * Si l'URL publique ne peut pas être
-         * récupérée, supprimer le fichier
-         * nouvellement envoyé.
-         */
-
         await removeStorageFile(
-            path
+            path,
+            bucket
         );
 
 
         throw new Error(
-            "Impossible de récupérer l'URL de l'image."
+            "Impossible de récupérer l'URL publique de l'image."
         );
 
     }
@@ -2352,6 +2357,8 @@ async function uploadChannelImage(
 
         publicUrl,
 
+        bucket,
+
         storageData:
             data || null
 
@@ -2361,14 +2368,91 @@ async function uploadChannelImage(
 
 
 // ==========================================================
+// STORAGE ERROR MESSAGE
+// ==========================================================
+
+function getStorageUploadErrorMessage(
+    error,
+    bucket
+) {
+
+    const message =
+        String(
+            error?.message ||
+            error?.error ||
+            error?.details ||
+            ""
+        ).trim();
+
+
+    const lower =
+        message.toLowerCase();
+
+
+    if (
+        lower.includes("row-level security") ||
+        lower.includes("violates row-level security") ||
+        lower.includes("permission denied")
+    ) {
+
+        return (
+            `Upload refusé par les permissions du bucket "${bucket}". Vérifiez les politiques Storage.`
+        );
+
+    }
+
+
+    if (
+        lower.includes("bucket not found") ||
+        lower.includes("not found")
+    ) {
+
+        return (
+            `Le bucket Storage "${bucket}" est introuvable.`
+        );
+
+    }
+
+
+    if (
+        lower.includes("duplicate") ||
+        lower.includes("already exists")
+    ) {
+
+        return (
+            "Un fichier identique existe déjà. Veuillez réessayer."
+        );
+
+    }
+
+
+    if (message) {
+
+        return message;
+
+    }
+
+
+    return (
+        `Impossible d'envoyer l'image vers le bucket "${bucket}".`
+    );
+
+}
+
+
+// ==========================================================
 // DELETE STORAGE FILE
 // ==========================================================
 
 async function removeStorageFile(
-    path
+    path,
+    bucket
 ) {
 
-    if (!path) {
+    if (
+        !path ||
+        !bucket
+    ) {
         return;
     }
 
@@ -2380,9 +2464,7 @@ async function removeStorageFile(
         } =
             await supabase
                 .storage
-                .from(
-                    CHANNEL_BUCKET
-                )
+                .from(bucket)
                 .remove([
                     path
                 ]);
@@ -2392,7 +2474,11 @@ async function removeStorageFile(
 
             console.warn(
                 "NetView — Impossible de supprimer le fichier Storage :",
-                error
+                {
+                    bucket,
+                    path,
+                    error
+                }
             );
 
         }
@@ -2414,10 +2500,14 @@ async function removeStorageFile(
 // ==========================================================
 
 async function deleteStorageFileFromUrl(
-    publicUrl
+    publicUrl,
+    bucket
 ) {
 
-    if (!publicUrl) {
+    if (
+        !publicUrl ||
+        !bucket
+    ) {
         return;
     }
 
@@ -2425,7 +2515,7 @@ async function deleteStorageFileFromUrl(
     try {
 
         const marker =
-            `/storage/v1/object/public/${CHANNEL_BUCKET}/`;
+            `/storage/v1/object/public/${bucket}/`;
 
 
         const index =
@@ -2438,7 +2528,10 @@ async function deleteStorageFileFromUrl(
 
             console.warn(
                 "NetView — URL Storage non reconnue :",
-                publicUrl
+                {
+                    publicUrl,
+                    bucket
+                }
             );
 
             return;
@@ -2461,7 +2554,8 @@ async function deleteStorageFileFromUrl(
 
 
         await removeStorageFile(
-            path
+            path,
+            bucket
         );
 
 
@@ -2485,7 +2579,7 @@ function getFileExtension(file) {
 
     const parts =
         String(
-            file.name || ""
+            file?.name || ""
         ).split(".");
 
 
@@ -2518,7 +2612,7 @@ function getFileExtension(file) {
 
 
     if (
-        file.type ===
+        file?.type ===
         "image/png"
     ) {
 
@@ -2528,7 +2622,7 @@ function getFileExtension(file) {
 
 
     if (
-        file.type ===
+        file?.type ===
         "image/webp"
     ) {
 
@@ -2636,7 +2730,10 @@ function handleNavigation(event) {
         event.currentTarget?.href;
 
 
-    if (target && unsavedChangesModal) {
+    if (
+        target &&
+        unsavedChangesModal
+    ) {
 
         unsavedChangesModal.dataset.target =
             target;
@@ -2915,6 +3012,7 @@ function getErrorMessage(
             error.message ||
             error.error_description ||
             error.details ||
+            error.hint ||
             ""
         ).trim();
 
@@ -2923,21 +3021,15 @@ function getErrorMessage(
         message.toLowerCase();
 
 
-    /*
-     * PostgreSQL UNIQUE
-     */
+    // ======================================================
+    // POSTGRES UNIQUE
+    // ======================================================
 
     if (
         error.code === "23505" ||
-        lower.includes(
-            "duplicate key"
-        ) ||
-        lower.includes(
-            "channels_handle_key"
-        ) ||
-        lower.includes(
-            "channels_handle"
-        )
+        lower.includes("duplicate key") ||
+        lower.includes("channels_handle_key") ||
+        lower.includes("channels_handle")
     ) {
 
         return (
@@ -2947,43 +3039,30 @@ function getErrorMessage(
     }
 
 
-    /*
-     * Storage
-     */
+    // ======================================================
+    // STORAGE
+    // ======================================================
 
     if (
-        lower.includes(
-            "storage"
-        ) ||
-        lower.includes(
-            "bucket"
-        ) ||
-        lower.includes(
-            "object"
-        )
+        lower.includes("storage") ||
+        lower.includes("bucket") ||
+        lower.includes("object")
     ) {
 
-        return (
-            "Impossible de modifier l'image de la chaîne. Vérifiez les permissions du stockage."
-        );
+        return message ||
+            "Impossible de modifier l'image de la chaîne. Vérifiez les permissions du stockage.";
 
     }
 
 
-    /*
-     * RLS
-     */
+    // ======================================================
+    // RLS
+    // ======================================================
 
     if (
-        lower.includes(
-            "row-level security"
-        ) ||
-        lower.includes(
-            "permission denied"
-        ) ||
-        lower.includes(
-            "violates row-level security"
-        )
+        lower.includes("row-level security") ||
+        lower.includes("permission denied") ||
+        lower.includes("violates row-level security")
     ) {
 
         return (
@@ -2993,20 +3072,14 @@ function getErrorMessage(
     }
 
 
-    /*
-     * Auth
-     */
+    // ======================================================
+    // AUTH
+    // ======================================================
 
     if (
-        lower.includes(
-            "not authenticated"
-        ) ||
-        lower.includes(
-            "jwt"
-        ) ||
-        lower.includes(
-            "unauthorized"
-        )
+        lower.includes("not authenticated") ||
+        lower.includes("jwt") ||
+        lower.includes("unauthorized")
     ) {
 
         return (
@@ -3042,10 +3115,6 @@ function clearErrors() {
 // ==========================================================
 // TOAST
 // ==========================================================
-
-let toastTimer =
-    null;
-
 
 function showToast(
     message,
@@ -3090,16 +3159,14 @@ function showToast(
     if (toastIcon) {
 
         if (
-            type ===
-            "error"
+            type === "error"
         ) {
 
             toastIcon.className =
                 "fa-solid fa-circle-xmark";
 
         } else if (
-            type ===
-            "warning"
+            type === "warning"
         ) {
 
             toastIcon.className =
@@ -3252,6 +3319,9 @@ function cleanup() {
         clearTimeout(
             handleCheckTimer
         );
+
+        handleCheckTimer =
+            null;
 
     }
 
