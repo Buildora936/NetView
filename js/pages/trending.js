@@ -15,7 +15,8 @@ import {
     getShorts,
     getLives,
     getSponsoredProducts,
-    getVideoCategories
+    getVideoCategories,
+    initDeviceRevocationListener
 } from "../core/data.js";
 
 import {
@@ -28,6 +29,7 @@ import {
     navigate
 } from "../core/navigation.js";
 
+initDeviceRevocationListener();
 
 // ==========================================
 // DOM
