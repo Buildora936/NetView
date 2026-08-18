@@ -21,7 +21,8 @@ import {
 import {
     getMyChannels,
     createChannel,
-    isChannelHandleAvailable
+    isChannelHandleAvailable,
+   initDeviceRevocationListener
 } from "../core/data.js";
 
 import {
@@ -29,6 +30,12 @@ import {
 } from "../core/supabase.js";
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Lancer l'écouteur de révocation d'appareil en temps réel
+    const deviceChannel = initDeviceRevocationListener();
+    
+    // (Optionnel) Vous pouvez le stocker ou le nettoyer si l'utilisateur se déconnecte manuellement
+});
 /* =========================================================
    DOM
    ========================================================= */
