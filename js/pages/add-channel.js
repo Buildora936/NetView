@@ -1,6 +1,17 @@
 /* =========================================================
    NETVIEW — ADD CHANNEL
    js/pages/add-channel.js
+
+   Fonctionnalités :
+   - Vérification utilisateur
+   - 1 chaîne maximum par compte
+   - Validation nom / handle / description
+   - Vérification réelle du handle dans Supabase
+   - Aperçu avatar / bannière
+   - Upload réel vers Supabase Storage
+   - Récupération des URLs publiques
+   - Création réelle de la chaîne
+   - Nettoyage Storage si création échoue
    ========================================================= */
 
 import {
@@ -12,6 +23,10 @@ import {
     createChannel,
     isChannelHandleAvailable
 } from "../core/data.js";
+
+import {
+    supabase
+} from "../core/supabase.js";
 
 
 /* =========================================================
@@ -165,6 +180,17 @@ const toastMessage =
 
 
 /* =========================================================
+   STORAGE
+   ========================================================= */
+
+const AVATAR_BUCKET =
+    "channel-avatars";
+
+const BANNER_BUCKET =
+    "channel-banners";
+
+
+/* =========================================================
    CONSTANTS
    ========================================================= */
 
@@ -208,6 +234,17 @@ let avatarObjectUrl = null;
 let bannerObjectUrl = null;
 
 
+/*
+ * Fichiers réellement envoyés à Storage.
+ * On conserve leurs chemins pour pouvoir
+ * les supprimer si createChannel() échoue.
+ */
+
+let uploadedAvatarPath = null;
+
+let uploadedBannerPath = null;
+
+
 /* =========================================================
    INITIALIZATION
    ========================================================= */
@@ -239,10 +276,6 @@ async function initializeAddChannel() {
             await getUser();
 
 
-        /* -----------------------------------------
-           SESSION
-           ----------------------------------------- */
-
         if (!currentUser) {
 
             redirectToAuth();
@@ -250,10 +283,6 @@ async function initializeAddChannel() {
             return;
         }
 
-
-        /* -----------------------------------------
-           CHANNEL EXISTANTE
-           ----------------------------------------- */
 
         existingChannels =
             await getMyChannels();
@@ -271,7 +300,6 @@ async function initializeAddChannel() {
             return;
         }
 
-
     } catch (error) {
 
         console.error(
@@ -280,9 +308,7 @@ async function initializeAddChannel() {
         );
 
         setFormMessage(
-            getReadableError(
-                error
-            ),
+            getReadableError(error),
             "error"
         );
     }
@@ -300,80 +326,60 @@ function initializeEvents() {
         handleSubmit
     );
 
-
     nameInput?.addEventListener(
         "input",
         handleNameInput
     );
-
 
     handleInput?.addEventListener(
         "input",
         handleHandleInput
     );
 
-
     handleInput?.addEventListener(
         "blur",
         handleHandleBlur
     );
-
 
     descriptionInput?.addEventListener(
         "input",
         handleDescriptionInput
     );
 
-
     avatarInput?.addEventListener(
         "change",
         handleAvatarChange
     );
-
 
     bannerInput?.addEventListener(
         "change",
         handleBannerChange
     );
 
-
     avatarUploadButton?.addEventListener(
         "click",
-        () => {
-
-            avatarInput?.click();
-
-        }
+        () => avatarInput?.click()
     );
-
 
     bannerUploadButton?.addEventListener(
         "click",
-        () => {
-
-            bannerInput?.click();
-
-        }
+        () => bannerInput?.click()
     );
-
 
     avatarRemoveButton?.addEventListener(
         "click",
         removeAvatar
     );
 
-
     bannerRemoveButton?.addEventListener(
         "click",
         removeBanner
     );
 
-
     cancelButton?.addEventListener(
         "click",
         handleCancel
     );
-
 }
 
 
@@ -389,13 +395,11 @@ function initializeInputs() {
             MAX_NAME_LENGTH;
     }
 
-
     if (handleInput) {
 
         handleInput.maxLength =
             MAX_HANDLE_LENGTH;
     }
-
 
     if (descriptionInput) {
 
@@ -403,20 +407,17 @@ function initializeInputs() {
             MAX_DESCRIPTION_LENGTH;
     }
 
-
     if (avatarInput) {
 
         avatarInput.accept =
             ALLOWED_IMAGE_TYPES.join(",");
     }
 
-
     if (bannerInput) {
 
         bannerInput.accept =
             ALLOWED_IMAGE_TYPES.join(",");
     }
-
 }
 
 
@@ -489,7 +490,6 @@ function handleNameInput() {
     clearFieldError(
         nameInput
     );
-
 }
 
 
@@ -520,16 +520,13 @@ function handleHandleInput() {
         return;
     }
 
-
     const normalized =
         normalizeHandle(
             handleInput.value
         );
 
-
     handleInput.value =
         normalized;
-
 
     updateHandlePreview();
 
@@ -537,6 +534,9 @@ function handleHandleInput() {
         handleInput
     );
 
+    clearTimeout(
+        handleCheckTimer
+    );
 
     if (!normalized) {
 
@@ -548,7 +548,6 @@ function handleHandleInput() {
         return;
     }
 
-
     if (
         !isValidHandle(
             normalized
@@ -557,27 +556,19 @@ function handleHandleInput() {
 
         setHandleStatus(
             "error",
-            "Le handle doit contenir au moins 3 caractères."
+            `Le handle doit contenir entre ${HANDLE_MIN_LENGTH} et ${MAX_HANDLE_LENGTH} caractères.`
         );
 
         return;
     }
-
 
     setHandleStatus(
         "checking",
         "Vérification..."
     );
 
-
-    clearTimeout(
-        handleCheckTimer
-    );
-
-
     const sequence =
         ++handleCheckSequence;
-
 
     handleCheckTimer =
         setTimeout(
@@ -595,14 +586,18 @@ function handleHandleInput() {
             },
             450
         );
-
 }
 
 
 async function handleHandleBlur() {
 
-    await checkHandleAvailability();
+    clearTimeout(
+        handleCheckTimer
+    );
 
+    ++handleCheckSequence;
+
+    await checkHandleAvailability();
 }
 
 
@@ -613,14 +608,12 @@ function updateHandlePreview() {
             handleInput?.value
         );
 
-
     if (handlePreview) {
 
         handlePreview.textContent =
             handle ||
             "votreidentifiant";
     }
-
 
     if (livePreviewHandle) {
 
@@ -629,7 +622,6 @@ function updateHandlePreview() {
                 ? `@${handle}`
                 : "@votreidentifiant";
     }
-
 }
 
 
@@ -677,7 +669,6 @@ function normalizeHandle(
             0,
             MAX_HANDLE_LENGTH
         );
-
 }
 
 
@@ -693,14 +684,12 @@ function isValidHandle(
         return false;
     }
 
-
     if (
         handle.length <
         HANDLE_MIN_LENGTH
     ) {
         return false;
     }
-
 
     if (
         handle.length >
@@ -709,18 +698,13 @@ function isValidHandle(
         return false;
     }
 
-
     return /^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/
-        .test(
-            handle
-        );
-
+        .test(handle);
 }
 
 
 /* =========================================================
    HANDLE AVAILABILITY
-   Vérification réelle dans Supabase
    ========================================================= */
 
 async function checkHandleAvailability() {
@@ -769,22 +753,10 @@ async function checkHandleAvailability() {
 
     try {
 
-        /*
-         * Vérification réelle dans PostgreSQL.
-         *
-         * Ce n'est plus une vérification limitée
-         * aux chaînes du compte actuel.
-         */
-
         const available =
             await isChannelHandleAvailable(
                 handle
             );
-
-        /*
-         * Une ancienne requête ne doit jamais
-         * écraser le résultat de la nouvelle.
-         */
 
         if (
             sequence !==
@@ -834,6 +806,7 @@ async function checkHandleAvailability() {
     }
 }
 
+
 /* =========================================================
    HANDLE STATUS
    ========================================================= */
@@ -847,10 +820,8 @@ function setHandleStatus(
         return;
     }
 
-
     handleStatus.textContent =
         message;
-
 
     handleStatus.classList.remove(
         "is-checking",
@@ -858,41 +829,26 @@ function setHandleStatus(
         "is-error"
     );
 
-
-    if (
-        type ===
-        "checking"
-    ) {
+    if (type === "checking") {
 
         handleStatus.classList.add(
             "is-checking"
         );
-
     }
 
-
-    if (
-        type ===
-        "success"
-    ) {
+    if (type === "success") {
 
         handleStatus.classList.add(
             "is-success"
         );
-
     }
 
-
-    if (
-        type ===
-        "error"
-    ) {
+    if (type === "error") {
 
         handleStatus.classList.add(
             "is-error"
         );
     }
-
 }
 
 
@@ -909,7 +865,6 @@ function handleDescriptionInput() {
     clearFieldError(
         descriptionInput
     );
-
 }
 
 
@@ -919,12 +874,10 @@ function updateDescriptionPreview() {
         return;
     }
 
-
     const description =
         normalizeDescription(
             descriptionInput?.value
         );
-
 
     livePreviewDescription.textContent =
         description ||
@@ -933,7 +886,7 @@ function updateDescriptionPreview() {
 
 
 /* =========================================================
-   AVATAR
+   AVATAR — SELECT
    ========================================================= */
 
 function handleAvatarChange(
@@ -943,18 +896,15 @@ function handleAvatarChange(
     const file =
         event.target.files?.[0];
 
-
     if (!file) {
         return;
     }
-
 
     const validation =
         validateImage(
             file,
             MAX_AVATAR_SIZE
         );
-
 
     if (!validation.valid) {
 
@@ -970,28 +920,23 @@ function handleAvatarChange(
         return;
     }
 
-
-    previewAvatar(
-        file
-    );
+    previewAvatar(file);
 
     clearFieldError(
         avatarInput
     );
 
     clearFormMessage();
-
 }
 
+
+/* =========================================================
+   AVATAR — PREVIEW
+   ========================================================= */
 
 function previewAvatar(
     file
 ) {
-
-    if (!livePreviewAvatar) {
-        return;
-    }
-
 
     if (avatarObjectUrl) {
 
@@ -1000,32 +945,31 @@ function previewAvatar(
         );
     }
 
-
     avatarObjectUrl =
         URL.createObjectURL(
             file
         );
 
 
-    livePreviewAvatar.innerHTML = "";
+    if (livePreviewAvatar) {
 
+        livePreviewAvatar.innerHTML = "";
 
-    const image =
-        document.createElement(
-            "img"
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.src =
+            avatarObjectUrl;
+
+        image.alt =
+            "Aperçu de la photo de chaîne";
+
+        livePreviewAvatar.appendChild(
+            image
         );
-
-
-    image.src =
-        avatarObjectUrl;
-
-    image.alt =
-        "Aperçu de la photo de chaîne";
-
-
-    livePreviewAvatar.appendChild(
-        image
-    );
+    }
 
 
     if (avatarPreview) {
@@ -1061,9 +1005,12 @@ function previewAvatar(
         avatarRemoveButton.hidden =
             false;
     }
-
 }
 
+
+/* =========================================================
+   AVATAR — REMOVE
+   ========================================================= */
 
 function removeAvatar() {
 
@@ -1077,13 +1024,11 @@ function removeAvatar() {
             null;
     }
 
-
     if (avatarInput) {
 
         avatarInput.value =
             "";
     }
-
 
     if (avatarPreview) {
 
@@ -1099,7 +1044,6 @@ function removeAvatar() {
             false;
     }
 
-
     if (livePreviewAvatar) {
 
         livePreviewAvatar.innerHTML = `
@@ -1107,18 +1051,16 @@ function removeAvatar() {
         `;
     }
 
-
     if (avatarRemoveButton) {
 
         avatarRemoveButton.hidden =
             true;
     }
-
 }
 
 
 /* =========================================================
-   BANNER
+   BANNER — SELECT
    ========================================================= */
 
 function handleBannerChange(
@@ -1128,18 +1070,15 @@ function handleBannerChange(
     const file =
         event.target.files?.[0];
 
-
     if (!file) {
         return;
     }
-
 
     const validation =
         validateImage(
             file,
             MAX_BANNER_SIZE
         );
-
 
     if (!validation.valid) {
 
@@ -1155,52 +1094,55 @@ function handleBannerChange(
         return;
     }
 
-
-    previewBanner(
-        file
-    );
+    previewBanner(file);
 
     clearFieldError(
         bannerInput
     );
 
     clearFormMessage();
-
 }
 
+
+/* =========================================================
+   BANNER — PREVIEW
+   ========================================================= */
 
 function previewBanner(
     file
 ) {
 
-    if (!bannerObjectUrl) {
-
-        bannerObjectUrl =
-            URL.createObjectURL(
-                file
-            );
-
-    } else {
+    if (bannerObjectUrl) {
 
         URL.revokeObjectURL(
             bannerObjectUrl
         );
-
-        bannerObjectUrl =
-            URL.createObjectURL(
-                file
-            );
     }
+
+    bannerObjectUrl =
+        URL.createObjectURL(
+            file
+        );
 
 
     if (bannerPreview) {
 
-        bannerPreview.innerHTML = `
-            <img
-                src="${bannerObjectUrl}"
-                alt="Aperçu de la bannière"
-            >
-        `;
+        bannerPreview.innerHTML = "";
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.src =
+            bannerObjectUrl;
+
+        image.alt =
+            "Aperçu de la bannière";
+
+        bannerPreview.appendChild(
+            image
+        );
 
         bannerPreview.classList.add(
             "has-image"
@@ -1227,9 +1169,12 @@ function previewBanner(
         bannerRemoveButton.hidden =
             false;
     }
-
 }
 
+
+/* =========================================================
+   BANNER — REMOVE
+   ========================================================= */
 
 function removeBanner() {
 
@@ -1243,13 +1188,11 @@ function removeBanner() {
             null;
     }
 
-
     if (bannerInput) {
 
         bannerInput.value =
             "";
     }
-
 
     if (bannerPreview) {
 
@@ -1273,7 +1216,6 @@ function removeBanner() {
             false;
     }
 
-
     if (livePreviewBanner) {
 
         livePreviewBanner.style.backgroundImage =
@@ -1284,13 +1226,11 @@ function removeBanner() {
         );
     }
 
-
     if (bannerRemoveButton) {
 
         bannerRemoveButton.hidden =
             true;
     }
-
 }
 
 
@@ -1302,6 +1242,15 @@ function validateImage(
     file,
     maxSize
 ) {
+
+    if (!file) {
+
+        return {
+            valid: false,
+            message:
+                "Aucune image sélectionnée."
+        };
+    }
 
     if (
         !ALLOWED_IMAGE_TYPES.includes(
@@ -1316,7 +1265,6 @@ function validateImage(
         };
     }
 
-
     if (
         file.size >
         maxSize
@@ -1329,7 +1277,6 @@ function validateImage(
                 1024
             );
 
-
         return {
             valid: false,
             message:
@@ -1337,12 +1284,227 @@ function validateImage(
         };
     }
 
-
     return {
         valid: true,
         message: ""
     };
+}
 
+
+/* =========================================================
+   STORAGE — FILE EXTENSION
+   ========================================================= */
+
+function getFileExtension(
+    file
+) {
+
+    const mimeMap = {
+
+        "image/jpeg": "jpg",
+
+        "image/png": "png",
+
+        "image/webp": "webp"
+
+    };
+
+    return (
+        mimeMap[file.type] ||
+        "jpg"
+    );
+}
+
+
+/* =========================================================
+   STORAGE — UPLOAD IMAGE
+   ========================================================= */
+
+async function uploadChannelImage(
+    file,
+    bucket,
+    folder,
+    userId
+) {
+
+    if (!file) {
+        return null;
+    }
+
+    if (!supabase) {
+
+        throw new Error(
+            "Supabase n'est pas disponible."
+        );
+    }
+
+
+    const extension =
+        getFileExtension(
+            file
+        );
+
+
+    /*
+     * Nom unique.
+     *
+     * Exemple :
+     * user-id/avatar-uuid.webp
+     */
+
+    const filename =
+        `${folder}-${crypto.randomUUID()}.${extension}`;
+
+
+    const path =
+        `${userId}/${filename}`;
+
+
+    const {
+        error: uploadError
+    } =
+        await supabase.storage
+            .from(bucket)
+            .upload(
+                path,
+                file,
+                {
+                    cacheControl: "31536000",
+                    upsert: false,
+                    contentType: file.type
+                }
+            );
+
+
+    if (uploadError) {
+
+        console.error(
+            "NetView — Storage upload error :",
+            uploadError
+        );
+
+        throw uploadError;
+    }
+
+
+    /*
+     * URL publique.
+     */
+
+    const {
+        data: publicData
+    } =
+        supabase.storage
+            .from(bucket)
+            .getPublicUrl(
+                path
+            );
+
+
+    const publicUrl =
+        publicData?.publicUrl;
+
+
+    if (!publicUrl) {
+
+        /*
+         * Si l'URL n'a pas pu être obtenue,
+         * on supprime immédiatement le fichier
+         * qui vient d'être envoyé.
+         */
+
+        await deleteStorageFile(
+            bucket,
+            path
+        );
+
+        throw new Error(
+            "Impossible de récupérer l'URL publique de l'image."
+        );
+    }
+
+
+    return {
+        path,
+        url: publicUrl
+    };
+}
+
+
+/* =========================================================
+   STORAGE — DELETE FILE
+   ========================================================= */
+
+async function deleteStorageFile(
+    bucket,
+    path
+) {
+
+    if (
+        !bucket ||
+        !path ||
+        !supabase
+    ) {
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabase.storage
+                .from(bucket)
+                .remove([
+                    path
+                ]);
+
+        if (error) {
+
+            console.error(
+                "NetView — Impossible de supprimer le fichier Storage :",
+                error
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "NetView — Erreur suppression Storage :",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   STORAGE — CLEANUP
+   ========================================================= */
+
+async function cleanupUploadedFiles() {
+
+    if (uploadedAvatarPath) {
+
+        await deleteStorageFile(
+            AVATAR_BUCKET,
+            uploadedAvatarPath
+        );
+
+        uploadedAvatarPath =
+            null;
+    }
+
+
+    if (uploadedBannerPath) {
+
+        await deleteStorageFile(
+            BANNER_BUCKET,
+            uploadedBannerPath
+        );
+
+        uploadedBannerPath =
+            null;
+    }
 }
 
 
@@ -1365,8 +1527,8 @@ async function handleSubmit(
     clearFormMessage();
 
 
-  const validation =
-    await validateForm();
+    const validation =
+        await validateForm();
 
 
     if (!validation.valid) {
@@ -1382,15 +1544,6 @@ async function handleSubmit(
     }
 
 
-    /*
-     * Vérification de session.
-     *
-     * IMPORTANT :
-     * On utilise getUser().
-     * Il n'existe pas de getCurrentUser()
-     * importé dans ce fichier.
-     */
-
     currentUser =
         await getUser();
 
@@ -1405,7 +1558,7 @@ async function handleSubmit(
 
     /*
      * Vérification finale :
-     * un compte = une chaîne.
+     * une seule chaîne par compte.
      */
 
     try {
@@ -1452,7 +1605,7 @@ async function handleSubmit(
 
 
     showLoader(
-        "Création de votre chaîne..."
+        "Préparation des fichiers..."
     );
 
 
@@ -1463,12 +1616,10 @@ async function handleSubmit(
                 nameInput?.value
             );
 
-
         const handle =
             normalizeHandle(
                 handleInput?.value
             );
-
 
         const description =
             normalizeDescription(
@@ -1477,12 +1628,93 @@ async function handleSubmit(
 
 
         /*
-         * createChannel() ajoute lui-même
-         * owner_id à partir de la session.
-         *
-         * On envoie uniquement les champs
-         * contrôlés par l'utilisateur.
+         * =========================================
+         * UPLOAD AVATAR
+         * =========================================
          */
+
+        let avatarUrl =
+            null;
+
+
+        const avatarFile =
+            avatarInput?.files?.[0];
+
+
+        if (avatarFile) {
+
+            showLoader(
+                "Téléversement de la photo..."
+            );
+
+
+            const avatarResult =
+                await uploadChannelImage(
+                    avatarFile,
+                    AVATAR_BUCKET,
+                    "avatar",
+                    currentUser.id
+                );
+
+
+            avatarUrl =
+                avatarResult.url;
+
+
+            uploadedAvatarPath =
+                avatarResult.path;
+        }
+
+
+        /*
+         * =========================================
+         * UPLOAD BANNER
+         * =========================================
+         */
+
+        let bannerUrl =
+            null;
+
+
+        const bannerFile =
+            bannerInput?.files?.[0];
+
+
+        if (bannerFile) {
+
+            showLoader(
+                "Téléversement de la bannière..."
+            );
+
+
+            const bannerResult =
+                await uploadChannelImage(
+                    bannerFile,
+                    BANNER_BUCKET,
+                    "banner",
+                    currentUser.id
+                );
+
+
+            bannerUrl =
+                bannerResult.url;
+
+
+            uploadedBannerPath =
+                bannerResult.path;
+        }
+
+
+        /*
+         * =========================================
+         * CREATE CHANNEL
+         * =========================================
+         */
+
+        showLoader(
+            "Création de votre chaîne..."
+        );
+
 
         const values = {
 
@@ -1495,10 +1727,10 @@ async function handleSubmit(
                 null,
 
             avatar_url:
-                null,
+                avatarUrl,
 
             banner_url:
-                null
+                bannerUrl
 
         };
 
@@ -1509,9 +1741,7 @@ async function handleSubmit(
             );
 
 
-        if (
-            !result
-        ) {
+        if (!result) {
 
             throw new Error(
                 "Aucune réponse reçue lors de la création de la chaîne."
@@ -1519,9 +1749,7 @@ async function handleSubmit(
         }
 
 
-        if (
-            result.error
-        ) {
+        if (result.error) {
 
             throw result.error;
         }
@@ -1540,14 +1768,22 @@ async function handleSubmit(
 
 
         /*
-         * La chaîne est créée.
+         * =========================================
+         * SUCCÈS
+         * =========================================
          *
-         * Pour l'instant les fichiers image
-         * sont prévisualisés côté navigateur,
-         * mais ne sont PAS envoyés à Supabase
-         * car createChannel() ne gère que les
-         * données de la table channels.
+         * Les fichiers sont maintenant liés
+         * à la chaîne via leurs URLs.
+         *
+         * On ne les supprime donc plus.
          */
+
+        uploadedAvatarPath =
+            null;
+
+        uploadedBannerPath =
+            null;
+
 
         showToast(
             "Votre chaîne NetView a été créée.",
@@ -1568,6 +1804,17 @@ async function handleSubmit(
         );
 
 
+        /*
+         * IMPORTANT :
+         *
+         * Si l'upload a réussi mais que
+         * createChannel() échoue, les fichiers
+         * ne doivent pas rester orphelins.
+         */
+
+        await cleanupUploadedFiles();
+
+
         handleCreationError(
             error
         );
@@ -1584,7 +1831,6 @@ async function handleSubmit(
 
         hideLoader();
     }
-
 }
 
 
@@ -1599,12 +1845,10 @@ async function validateForm() {
             nameInput?.value
         );
 
-
     const handle =
         normalizeHandle(
             handleInput?.value
         );
-
 
     const description =
         normalizeDescription(
@@ -1692,28 +1936,32 @@ async function validateForm() {
     }
 
 
-   const available =
-    await checkHandleAvailability();
+    /*
+     * Vérification réelle du handle.
+     */
 
-if (!available) {
+    const available =
+        await checkHandleAvailability();
 
-    markFieldError(
-        handleInput
-    );
 
-    return {
-        valid: false,
-        message:
-            "Ce handle est déjà utilisé ou ne peut pas être vérifié."
-    };
-}
+    if (!available) {
+
+        markFieldError(
+            handleInput
+        );
+
+        return {
+            valid: false,
+            message:
+                "Ce handle est déjà utilisé ou ne peut pas être vérifié."
+        };
+    }
 
 
     return {
         valid: true,
         message: ""
     };
-
 }
 
 
@@ -1737,7 +1985,6 @@ function normalizeName(
             0,
             MAX_NAME_LENGTH
         );
-
 }
 
 
@@ -1753,7 +2000,6 @@ function normalizeDescription(
             0,
             MAX_DESCRIPTION_LENGTH
         );
-
 }
 
 
@@ -1808,7 +2054,6 @@ function setSubmitLoading(
                 submitButton.dataset.originalContent;
         }
     }
-
 }
 
 
@@ -1825,7 +2070,10 @@ function showLoader(
     }
 
 
-    if (loaderMessage && message) {
+    if (
+        loaderMessage &&
+        message
+    ) {
 
         loaderMessage.textContent =
             message;
@@ -1839,7 +2087,6 @@ function showLoader(
         "aria-hidden",
         "false"
     );
-
 }
 
 
@@ -1857,7 +2104,6 @@ function hideLoader() {
         "aria-hidden",
         "true"
     );
-
 }
 
 
@@ -1877,17 +2123,56 @@ function handleCreationError(
 
 
     /*
+     * Storage bucket absent
+     */
+
+    if (
+        /bucket/i.test(message) &&
+        (
+            /not found/i.test(message) ||
+            /does not exist/i.test(message)
+        )
+    ) {
+
+        setFormMessage(
+            "Le stockage des images de chaîne n'est pas correctement configuré dans Supabase.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /*
+     * Storage / permission
+     */
+
+    if (
+        /storage/i.test(message) &&
+        (
+            /permission/i.test(message) ||
+            /not authorized/i.test(message) ||
+            /row-level security/i.test(message)
+        )
+    ) {
+
+        setFormMessage(
+            "Vous n'êtes pas autorisé à téléverser cette image.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /*
      * PostgreSQL UNIQUE
      */
 
     if (
         error?.code === "23505" ||
-        /duplicate key/i.test(
-            message
-        ) ||
-        /unique/i.test(
-            message
-        )
+        /duplicate key/i.test(message) ||
+        /unique/i.test(message)
     ) {
 
         setFormMessage(
@@ -1904,15 +2189,9 @@ function handleCreationError(
      */
 
     if (
-        /row-level security/i.test(
-            message
-        ) ||
-        /permission denied/i.test(
-            message
-        ) ||
-        /violates row-level security/i.test(
-            message
-        )
+        /row-level security/i.test(message) ||
+        /permission denied/i.test(message) ||
+        /violates row-level security/i.test(message)
     ) {
 
         setFormMessage(
@@ -1929,18 +2208,10 @@ function handleCreationError(
      */
 
     if (
-        /non connecté/i.test(
-            message
-        ) ||
-        /not authenticated/i.test(
-            message
-        ) ||
-        /jwt/i.test(
-            message
-        ) ||
-        /auth/i.test(
-            message
-        )
+        /non connecté/i.test(message) ||
+        /not authenticated/i.test(message) ||
+        /jwt/i.test(message) ||
+        /auth/i.test(message)
     ) {
 
         redirectToAuth();
@@ -1951,10 +2222,9 @@ function handleCreationError(
 
     setFormMessage(
         message ||
-            "Une erreur est survenue lors de la création de votre chaîne.",
+        "Une erreur est survenue lors de la création de votre chaîne.",
         "error"
     );
-
 }
 
 
@@ -1980,7 +2250,6 @@ function markFieldError(
         "aria-invalid",
         "true"
     );
-
 }
 
 
@@ -2001,7 +2270,6 @@ function clearFieldError(
     field.removeAttribute(
         "aria-invalid"
     );
-
 }
 
 
@@ -2023,7 +2291,6 @@ function focusInvalidField() {
             preventScroll: false
         });
     }
-
 }
 
 
@@ -2052,34 +2319,23 @@ function setFormMessage(
     );
 
 
-    if (
-        type ===
-        "success"
-    ) {
+    if (type === "success") {
 
         formMessage.classList.add(
             "is-success"
         );
-
     }
 
 
-    if (
-        type ===
-        "error"
-    ) {
+    if (type === "error") {
 
         formMessage.classList.add(
             "is-error"
         );
-
     }
 
 
-    if (
-        type ===
-        "info"
-    ) {
+    if (type === "info") {
 
         formMessage.classList.add(
             "is-info"
@@ -2089,7 +2345,6 @@ function setFormMessage(
 
     formMessage.hidden =
         !message;
-
 }
 
 
@@ -2099,7 +2354,6 @@ function clearFormMessage() {
         "",
         ""
     );
-
 }
 
 
@@ -2131,10 +2385,7 @@ function showToast(
     );
 
 
-    if (
-        type ===
-        "success"
-    ) {
+    if (type === "success") {
 
         toast.classList.add(
             "is-success"
@@ -2146,10 +2397,7 @@ function showToast(
                 "fa-solid fa-circle-check";
         }
 
-    } else if (
-        type ===
-        "error"
-    ) {
+    } else if (type === "error") {
 
         toast.classList.add(
             "is-error"
@@ -2194,7 +2442,6 @@ function showToast(
             },
             3500
         );
-
 }
 
 
@@ -2208,7 +2455,7 @@ function handleCancel(
 
     /*
      * Le HTML possède déjà href="index.html".
-     * On laisse donc le navigateur gérer le lien.
+     * Aucun redirect JavaScript nécessaire.
      */
 
     if (
@@ -2216,7 +2463,6 @@ function handleCancel(
     ) {
         return;
     }
-
 }
 
 
@@ -2240,7 +2486,6 @@ function redirectToAuth() {
     window.location.replace(
         target
     );
-
 }
 
 
@@ -2285,7 +2530,6 @@ function redirectToExistingChannel() {
     window.location.replace(
         "mes-channel.html"
     );
-
 }
 
 
@@ -2328,7 +2572,6 @@ function redirectToChannel(
     window.location.replace(
         "mes-channel.html"
     );
-
 }
 
 
@@ -2349,8 +2592,33 @@ function getReadableError(
 
 
     return "Impossible de charger la page de création de chaîne.";
-
 }
+
+
+/* =========================================================
+   CLEANUP OBJECT URL
+   ========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (avatarObjectUrl) {
+
+            URL.revokeObjectURL(
+                avatarObjectUrl
+            );
+        }
+
+
+        if (bannerObjectUrl) {
+
+            URL.revokeObjectURL(
+                bannerObjectUrl
+            );
+        }
+    }
+);
 
 
 /* =========================================================
@@ -2373,6 +2641,8 @@ window.NetViewAddChannel = {
 
     removeAvatar,
 
-    removeBanner
+    removeBanner,
+
+    uploadChannelImage
 
 };
