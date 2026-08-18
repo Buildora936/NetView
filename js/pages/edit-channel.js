@@ -17,12 +17,8 @@ import {
     supabase
 } from "../core/supabase.js";
 
-
-
-    // Lancer l'écouteur de révocation d'appareil en temps réel
-    const deviceChannel = initDeviceRevocationListener();
+ initDeviceRevocationListener();
     
-    // (Optionnel) Vous pouvez le stocker ou le nettoyer si l'utilisateur se déconnecte manuellement
 // ==========================================================
 // CONFIGURATION
 // ==========================================================
