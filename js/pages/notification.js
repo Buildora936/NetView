@@ -12,10 +12,11 @@ import {
     markAllNotificationsAsRead,
     getProfileById,
     subscribeToNotifications,
-    unsubscribe
+    unsubscribe,
+    initDeviceRevocationListener
 } from "../core/data.js";
 
-
+initDeviceRevocationListener();
 // ==========================================
 // Configuration
 // ==========================================
