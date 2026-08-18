@@ -13,10 +13,11 @@ import {
     select,
     remove,
     subscribe,
-    unsubscribe
+    unsubscribe,
+    initDeviceRevocationListener
 } from "../core/data.js";
 
-
+initDeviceRevocationListener();
 // ==========================================
 // DOM
 // ==========================================
