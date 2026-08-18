@@ -9,6 +9,9 @@ import {
     hideLoader
 } from "../core/ui.js";
 
+import { initDeviceRevocationListener } from "../core/data.js";
+
+initDeviceRevocationListener();
 // ==========================================
 // DOM Elements
 // ==========================================
