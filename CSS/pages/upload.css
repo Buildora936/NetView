@@ -157,7 +157,6 @@
     height: 100%;
     object-fit: cover;
 }
-
 /* ==========================================
     Bouton S'identifier
 ========================================== */
@@ -259,6 +258,38 @@
     opacity: 1;
     visibility: visible;
 }
+
+/* ==========================================
+    Responsive Header & Sidebar
+========================================== */
+@media(max-width: 900px) {
+    .nv-header-center {
+        padding: 0 10px;
+    }
+    .nv-logo img {
+        width: 100px;
+    }
+}
+
+@media(max-width: 650px) {
+    .nv-header {
+        padding: 0 10px;
+    }
+    .nv-header-center {
+        display: none;
+    }
+    .nv-sidebar {
+        width: 0;
+    }
+    .nv-sidebar.active {
+        width: 240px;
+    }
+    .nv-login-button {
+        padding: 0 12px;
+        font-size: 14px;
+    }
+}
+
 
 /* =========================================================
    FORM
