@@ -410,19 +410,6 @@ function showUserHeader() {
         <button
             type="button"
             class="nv-icon-button"
-            id="uploadButton"
-            aria-label="Publier"
-            title="Publier"
-        >
-
-            <i class="fa-solid fa-plus"></i>
-
-        </button>
-
-
-        <button
-            type="button"
-            class="nv-icon-button"
             id="notificationButton"
             aria-label="Notifications"
             title="Notifications"
