@@ -2,7 +2,6 @@
 // NetView
 // upload.js
 // ==========================================
-
 import {
     getSession,
     getUser
