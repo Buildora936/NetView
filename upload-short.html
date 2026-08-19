@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Publier un Short sur NetView"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Publier un Short — NetView
+    </title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        href="NetView_icone.png"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/pages/upload-short.css"
+    >
+
+</head>
+
+
+<body class="nv-page upload-short-page">
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="nv-header">
+
+    <div class="nv-header-left">
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView"
+        >
+
+            <img
+                src="assets/images/NetView.png"
+                alt="NetView"
+            >
+
+        </a>
+
+    </div>
+
+
+    <div class="nv-header-center">
+
+        <div class="nv-header-title">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span>
+                Publier un Short
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!--
+        Le contenu est injecté par upload-short.js.
+    -->
+
+    <div
+        id="headerRight"
+        class="nv-header-right"
+    ></div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+>
+
+    <nav
+        class="nv-sidebar-nav"
+    ></nav>
+
+</aside>
+
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+    aria-hidden="true"
+></div>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="upload-short-main">
+
+
+    <section class="upload-short-container">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <header class="upload-short-page-header">
+
+            <div class="upload-short-page-icon">
+
+                <i class="fa-solid fa-bolt"></i>
+
+            </div>
+
+
+            <div>
+
+                <h1>
+                    Publier un Short
+                </h1>
+
+                <p>
+                    Créez une vidéo verticale courte et partagez-la
+                    avec la communauté NetView.
+                </p>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             FORM
+             ================================================= -->
+
+        <form
+            id="uploadShortForm"
+            class="upload-short-form"
+            novalidate
+        >
+
+
+            <!-- =================================================
+                 VIDEO
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-video"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Vidéo
+                        </h2>
+
+                        <p>
+                            Importez votre Short.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="shortDropZone"
+                    class="short-drop-zone"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Sélectionner une vidéo Short"
+                >
+
+                    <input
+                        id="shortVideoFile"
+                        name="video"
+                        type="file"
+                        accept="video/mp4,video/webm,video/quicktime"
+                        hidden
+                    >
+
+
+                    <!-- =====================================
+                         PLACEHOLDER
+                         ===================================== -->
+
+                    <div
+                        id="shortUploadPlaceholder"
+                        class="short-upload-placeholder"
+                    >
+
+                        <div class="short-upload-icon">
+
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                        </div>
+
+
+                        <h3>
+                            Sélectionnez votre Short
+                        </h3>
+
+
+                        <p>
+                            Glissez-déposez votre vidéo ici
+                            ou sélectionnez un fichier.
+                        </p>
+
+
+                        <button
+                            id="selectShortButton"
+                            type="button"
+                            class="nv-button nv-button-primary"
+                        >
+
+                            <i class="fa-solid fa-folder-open"></i>
+
+                            Choisir une vidéo
+
+                        </button>
+
+
+                        <small>
+                            MP4, WebM ou MOV
+                        </small>
+
+                        <small>
+                            Vidéo verticale recommandée : 9:16
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         PREVIEW
+                         ===================================== -->
+
+                    <div
+                        id="shortVideoPreview"
+                        class="short-video-preview hidden"
+                    >
+
+                        <video
+                            id="shortPreviewVideo"
+                            class="short-preview-video"
+                            controls
+                            playsinline
+                            preload="metadata"
+                        ></video>
+
+
+                        <div class="short-preview-overlay">
+
+                            <span
+                                id="shortDuration"
+                                class="short-duration"
+                            >
+                                0:00
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         FILE INFORMATION
+                         ===================================== -->
+
+                    <div
+                        id="shortFileInformation"
+                        class="short-file-information hidden"
+                    >
+
+                        <div class="short-file-icon">
+
+                            <i class="fa-solid fa-file-video"></i>
+
+                        </div>
+
+
+                        <div class="short-file-details">
+
+                            <strong
+                                id="shortFileName"
+                            >
+                                —
+                            </strong>
+
+
+                            <span
+                                id="shortFileSize"
+                            >
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            id="removeShortButton"
+                            type="button"
+                            class="nv-icon-button"
+                            aria-label="Supprimer la vidéo"
+                            title="Supprimer"
+                        >
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     VIDEO REQUIREMENTS
+                     ================================================= -->
+
+                <div class="short-requirements">
+
+                    <div class="short-requirement">
+
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+
+                        <span>
+                            Format vertical 9:16 recommandé
+                        </span>
+
+                    </div>
+
+
+                    <div class="short-requirement">
+
+                        <i class="fa-solid fa-clock"></i>
+
+                        <span>
+                            Vidéo courte recommandée
+                        </span>
+
+                    </div>
+
+
+                    <div class="short-requirement">
+
+                        <i class="fa-solid fa-file-video"></i>
+
+                        <span>
+                            MP4, WebM ou MOV
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PROGRESS
+                     ================================================= -->
+
+                <div
+                    id="shortUploadProgressContainer"
+                    class="short-upload-progress-container hidden"
+                >
+
+                    <div class="short-progress-header">
+
+                        <span>
+                            Importation
+                        </span>
+
+
+                        <strong
+                            id="shortUploadProgressPercent"
+                        >
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="short-progress-track"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                    >
+
+                        <div
+                            id="shortUploadProgressBar"
+                            class="short-progress-bar"
+                            style="width: 0%"
+                        ></div>
+
+                    </div>
+
+
+                    <p
+                        id="shortUploadProgressText"
+                        class="short-progress-text"
+                    >
+                        Préparation...
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 INFORMATION
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Informations
+                        </h2>
+
+                        <p>
+                            Présentez votre Short aux spectateurs.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TITLE
+                     ================================================= -->
+
+                <div class="nv-form-group">
+
+                    <label for="shortTitle">
+
+                        Titre
+
+                    </label>
+
+
+                    <input
+                        id="shortTitle"
+                        name="title"
+                        type="text"
+                        maxlength="150"
+                        placeholder="Ajoutez un titre à votre Short"
+                        autocomplete="off"
+                    >
+
+
+                    <div class="short-form-counter">
+
+                        <span></span>
+
+                        <span>
+
+                            <strong
+                                id="shortTitleCounter"
+                            >
+                                0
+                            </strong>
+
+                            /150
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                     ================================================= -->
+
+                <div class="nv-form-group">
+
+                    <label for="shortDescription">
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        id="shortDescription"
+                        name="description"
+                        rows="6"
+                        maxlength="5000"
+                        placeholder="Décrivez votre Short..."
+                    ></textarea>
+
+
+                    <div class="short-form-counter">
+
+                        <span></span>
+
+                        <span>
+
+                            <strong
+                                id="shortDescriptionCounter"
+                            >
+                                0
+                            </strong>
+
+                            /5000
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CHANNEL
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-tv"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Chaîne
+                        </h2>
+
+                        <p>
+                            Choisissez la chaîne qui publiera ce Short.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="nv-form-group">
+
+                    <label for="shortChannel">
+
+                        Chaîne de publication
+
+                        <span>
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <select
+                        id="shortChannel"
+                        name="channel_id"
+                        required
+                    >
+
+                        <option value="">
+                            Chargement des chaînes...
+                        </option>
+
+                    </select>
+
+
+                    <small
+                        id="shortChannelHelp"
+                        class="form-help"
+                    >
+                        Sélectionnez une chaîne que vous possédez.
+                    </small>
+
+                </div>
+
+
+                <!-- =================================================
+                     NO CHANNEL
+                     ================================================= -->
+
+                <div
+                    id="shortNoChannel"
+                    class="short-no-channel hidden"
+                >
+
+                    <div class="short-no-channel-icon">
+
+                        <i class="fa-solid fa-tv"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Aucune chaîne disponible
+                        </strong>
+
+                        <p>
+                            Vous devez posséder une chaîne pour
+                            publier un Short.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="add-channel.html"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Créer une chaîne
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THUMBNAIL
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-image"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Miniature
+                        </h2>
+
+                        <p>
+                            Ajoutez une miniature personnalisée
+                            pour votre Short.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="short-thumbnail-upload">
+
+                    <input
+                        id="shortThumbnailFile"
+                        name="thumbnail"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        hidden
+                    >
+
+
+                    <button
+                        id="selectShortThumbnailButton"
+                        type="button"
+                        class="short-thumbnail-selector"
+                    >
+
+                        <div
+                            id="shortThumbnailPlaceholder"
+                            class="short-thumbnail-placeholder"
+                        >
+
+                            <i class="fa-solid fa-image"></i>
+
+                            <span>
+                                Ajouter une miniature
+                            </span>
+
+                        </div>
+
+
+                        <img
+                            id="shortThumbnailPreview"
+                            class="short-thumbnail-preview hidden"
+                            src=""
+                            alt="Aperçu de la miniature"
+                        >
+
+                    </button>
+
+
+                    <button
+                        id="removeShortThumbnailButton"
+                        type="button"
+                        class="short-remove-thumbnail hidden"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Supprimer la miniature
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 VISIBILITY
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Visibilité
+                        </h2>
+
+                        <p>
+                            Choisissez qui peut regarder votre Short.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="short-visibility-options">
+
+
+                    <!-- PUBLIC -->
+
+                    <label class="short-visibility-option">
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="public"
+                            checked
+                        >
+
+
+                        <span class="short-visibility-radio"></span>
+
+
+                        <span class="short-visibility-content">
+
+                            <strong>
+
+                                <i class="fa-solid fa-earth-americas"></i>
+
+                                Publique
+
+                            </strong>
+
+
+                            <small>
+                                Tout le monde peut regarder ce Short.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+
+                    <!-- UNLISTED -->
+
+                    <label class="short-visibility-option">
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="unlisted"
+                        >
+
+
+                        <span class="short-visibility-radio"></span>
+
+
+                        <span class="short-visibility-content">
+
+                            <strong>
+
+                                <i class="fa-solid fa-link"></i>
+
+                                Non répertoriée
+
+                            </strong>
+
+
+                            <small>
+                                Les personnes possédant le lien
+                                peuvent regarder le Short.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+
+                    <!-- PRIVATE -->
+
+                    <label class="short-visibility-option">
+
+                        <input
+                            type="radio"
+                            name="visibility"
+                            value="private"
+                        >
+
+
+                        <span class="short-visibility-radio"></span>
+
+
+                        <span class="short-visibility-content">
+
+                            <strong>
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                Privée
+
+                            </strong>
+
+
+                            <small>
+                                Seul vous pouvez regarder ce Short.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 TAGS
+                 ================================================= -->
+
+            <section class="upload-short-card">
+
+                <div class="upload-short-card-header">
+
+                    <div class="upload-short-card-icon">
+
+                        <i class="fa-solid fa-tags"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Tags
+                        </h2>
+
+                        <p>
+                            Ajoutez des mots-clés pour faciliter
+                            la découverte de votre Short.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="nv-form-group">
+
+                    <label for="shortTags">
+
+                        Tags
+
+                    </label>
+
+
+                    <input
+                        id="shortTags"
+                        name="tags"
+                        type="text"
+                        maxlength="500"
+                        placeholder="gaming, musique, funny..."
+                        autocomplete="off"
+                    >
+
+
+                    <small class="form-help">
+                        Séparez les tags par des virgules.
+                    </small>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PUBLICATION SUMMARY
+                 ================================================= -->
+
+            <section
+                id="shortPublishSummary"
+                class="short-publish-summary"
+            >
+
+                <div class="short-summary-icon">
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                </div>
+
+
+                <div class="short-summary-content">
+
+                    <strong>
+                        Votre Short est prêt à être publié
+                    </strong>
+
+
+                    <p>
+                        Vérifiez les informations avant de continuer.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ACTIONS
+                 ================================================= -->
+
+            <div class="upload-short-actions">
+
+                <a
+                    href="studio.html"
+                    class="nv-button nv-button-secondary"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Annuler
+
+                </a>
+
+
+                <button
+                    id="publishShortButton"
+                    type="submit"
+                    class="nv-button nv-button-primary"
+                    disabled
+                >
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    Publier le Short
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     PAGE LOADER
+     ========================================================= -->
+
+<div
+    id="pageLoader"
+    class="nv-loader-overlay hidden"
+    aria-hidden="true"
+>
+
+    <div class="nv-loader">
+
+        <div class="nv-spinner"></div>
+
+        <p>
+            Préparation de votre Short...
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     
+     IMPORTANT :
+     Supabase, auth.js et data.js sont gérés par les
+     modules JavaScript de NetView.
+     ========================================================= -->
+
+<script
+    type="module"
+    src="js/pages/upload-short.js"
+></script>
+
+
+</body>
+
+</html>
