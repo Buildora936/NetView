@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Modifier une vidéo ou un Short sur NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Modifier — NetView
+    </title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        href="NetView_icone.png"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/pages/edit-video.css"
+    >
+
+</head>
+
+
+<body class="nv-page edit-video-page">
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="nv-header">
+
+    <div class="nv-header-left">
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView"
+        >
+
+            <img
+                src="assets/images/NetView.png"
+                alt="NetView"
+            >
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER CENTER
+         ===================================================== -->
+
+    <div class="nv-header-center">
+
+        <div
+            id="editHeaderTitle"
+            class="nv-header-title"
+        >
+
+            <i class="fa-solid fa-pen-to-square"></i>
+
+            <span>
+                Modifier
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER RIGHT
+         Rempli par edit-video.js
+         ===================================================== -->
+
+    <div
+        id="headerRight"
+        class="nv-header-right"
+    ></div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+>
+
+    <nav class="nv-sidebar-nav"></nav>
+
+</aside>
+
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+></div>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="edit-video-main">
+
+
+    <!-- =====================================================
+         PAGE CONTAINER
+         ===================================================== -->
+
+    <section class="edit-video-container">
+
+
+        <!-- =================================================
+             LOADING STATE
+             ================================================= -->
+
+        <section
+            id="editLoading"
+            class="edit-state edit-loading-state"
+            aria-live="polite"
+        >
+
+            <div class="nv-spinner"></div>
+
+            <h1>
+                Chargement...
+            </h1>
+
+            <p>
+                Récupération des informations du contenu.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             ERROR STATE
+             ================================================= -->
+
+        <section
+            id="editError"
+            class="edit-state edit-error-state hidden"
+            aria-live="assertive"
+        >
+
+            <div class="edit-state-icon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </div>
+
+            <h1>
+                Impossible de modifier ce contenu
+            </h1>
+
+            <p
+                id="editErrorMessage"
+            >
+                Une erreur est survenue.
+            </p>
+
+            <div class="edit-state-actions">
+
+                <button
+                    id="editRetryButton"
+                    type="button"
+                    class="nv-button nv-button-primary"
+                >
+
+                    <i class="fa-solid fa-rotate-right"></i>
+
+                    Réessayer
+
+                </button>
+
+
+                <a
+                    href="studio.html"
+                    class="nv-button nv-button-secondary"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Retour au Studio
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EDITOR
+             ================================================= -->
+
+        <div
+            id="editEditor"
+            class="edit-editor hidden"
+        >
+
+
+            <!-- =============================================
+                 PAGE HEADER
+                 ============================================= -->
+
+            <div class="edit-page-header">
+
+                <div class="edit-page-header-content">
+
+                    <div
+                        id="contentTypeBadge"
+                        class="edit-content-type-badge"
+                    >
+
+                        <i class="fa-solid fa-video"></i>
+
+                        <span>
+                            Vidéo
+                        </span>
+
+                    </div>
+
+
+                    <h1>
+                        Modifier votre contenu
+                    </h1>
+
+
+                    <p>
+                        Modifiez les informations et les paramètres
+                        de votre publication.
+                    </p>
+
+                </div>
+
+
+                <a
+                    id="previewContentButton"
+                    href="#"
+                    class="nv-button nv-button-secondary"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <i class="fa-solid fa-eye"></i>
+
+                    Aperçu
+
+                </a>
+
+            </div>
+
+
+            <!-- =============================================
+                 FORM
+                 ============================================= -->
+
+            <form
+                id="editVideoForm"
+                class="edit-video-form"
+                novalidate
+            >
+
+
+                <!-- =========================================
+                     BASIC INFORMATION
+                     ========================================= -->
+
+                <section class="edit-card">
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Informations
+                            </h2>
+
+                            <p>
+                                Modifiez le titre et la description
+                                de votre contenu.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TITLE -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoTitle">
+
+                            Titre
+
+                            <span class="required-mark">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            id="videoTitle"
+                            name="title"
+                            type="text"
+                            maxlength="150"
+                            autocomplete="off"
+                            placeholder="Titre de votre contenu"
+                            required
+                        >
+
+
+                        <div class="form-counter">
+
+                            <span></span>
+
+                            <span>
+
+                                <strong
+                                    id="titleCounter"
+                                >
+                                    0
+                                </strong>
+
+                                /150
+
+                            </span>
+
+                        </div>
+
+
+                        <p
+                            id="titleError"
+                            class="form-error hidden"
+                        ></p>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoDescription">
+
+                            Description
+
+                        </label>
+
+
+                        <textarea
+                            id="videoDescription"
+                            name="description"
+                            rows="8"
+                            maxlength="5000"
+                            placeholder="Décrivez votre contenu..."
+                        ></textarea>
+
+
+                        <div class="form-counter">
+
+                            <span></span>
+
+                            <span>
+
+                                <strong
+                                    id="descriptionCounter"
+                                >
+                                    0
+                                </strong>
+
+                                /5000
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+
+                    <div
+                        id="videoCategoryGroup"
+                        class="nv-form-group"
+                    >
+
+                        <label for="videoCategory">
+
+                            Catégorie
+
+                        </label>
+
+
+                        <select
+                            id="videoCategory"
+                            name="category_id"
+                        >
+
+                            <option value="">
+                                Sélectionner une catégorie
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LANGUAGE -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoLanguage">
+
+                            Langue
+
+                        </label>
+
+
+                        <select
+                            id="videoLanguage"
+                            name="language"
+                        >
+
+                            <option value="fr">
+                                Français
+                            </option>
+
+                            <option value="en">
+                                English
+                            </option>
+
+                            <option value="es">
+                                Español
+                            </option>
+
+                            <option value="ht">
+                                Kreyòl
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     THUMBNAIL
+                     ========================================= -->
+
+                <section class="edit-card">
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-image"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Miniature
+                            </h2>
+
+                            <p>
+                                Modifiez l'image de présentation
+                                de votre contenu.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="edit-thumbnail-section">
+
+
+                        <div
+                            id="currentThumbnailContainer"
+                            class="current-thumbnail-container"
+                        >
+
+                            <img
+                                id="currentThumbnail"
+                                class="current-thumbnail"
+                                src="assets/images/default-thumbnail.png"
+                                alt="Miniature actuelle"
+                            >
+
+                            <div
+                                id="thumbnailOverlay"
+                                class="thumbnail-overlay"
+                            >
+
+                                <i class="fa-solid fa-image"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="thumbnail-editor-actions">
+
+                            <input
+                                id="thumbnailFile"
+                                name="thumbnail"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                hidden
+                            >
+
+
+                            <button
+                                id="selectThumbnailButton"
+                                type="button"
+                                class="nv-button nv-button-secondary"
+                            >
+
+                                <i class="fa-solid fa-upload"></i>
+
+                                Modifier la miniature
+
+                            </button>
+
+
+                            <button
+                                id="removeThumbnailButton"
+                                type="button"
+                                class="nv-button nv-button-danger hidden"
+                            >
+
+                                <i class="fa-solid fa-trash"></i>
+
+                                Supprimer
+
+                            </button>
+
+
+                            <p
+                                id="thumbnailFileName"
+                                class="thumbnail-file-name"
+                            ></p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     VISIBILITY
+                     ========================================= -->
+
+                <section class="edit-card">
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Visibilité
+                            </h2>
+
+                            <p>
+                                Contrôlez qui peut accéder à votre contenu.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="visibility-options">
+
+
+                        <!-- PUBLIC -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="public"
+                            >
+
+
+                            <span class="visibility-radio"></span>
+
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-earth-americas"></i>
+
+                                    Publique
+
+                                </strong>
+
+
+                                <small>
+                                    Tout le monde peut regarder
+                                    cette publication.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- UNLISTED -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="unlisted"
+                            >
+
+
+                            <span class="visibility-radio"></span>
+
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-link"></i>
+
+                                    Non répertoriée
+
+                                </strong>
+
+
+                                <small>
+                                    Seules les personnes disposant
+                                    du lien peuvent regarder.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- PRIVATE -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="private"
+                            >
+
+
+                            <span class="visibility-radio"></span>
+
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-lock"></i>
+
+                                    Privée
+
+                                </strong>
+
+
+                                <small>
+                                    Seul vous pouvez regarder
+                                    cette publication.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     TAGS
+                     ========================================= -->
+
+                <section
+                    id="videoTagsCard"
+                    class="edit-card"
+                >
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-tags"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Tags
+                            </h2>
+
+
+                            <p>
+                                Ajoutez des mots-clés pour améliorer
+                                la découverte de votre contenu.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="nv-form-group">
+
+                        <label for="videoTags">
+
+                            Tags
+
+                        </label>
+
+
+                        <input
+                            id="videoTags"
+                            name="tags"
+                            type="text"
+                            maxlength="500"
+                            autocomplete="off"
+                            placeholder="musique, technologie, actualité..."
+                        >
+
+
+                        <small class="form-help">
+
+                            Séparez les tags par des virgules.
+
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     SHORT INFORMATION
+                     ========================================= -->
+
+                <section
+                    id="shortInformationCard"
+                    class="edit-card hidden"
+                >
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Short
+                            </h2>
+
+
+                            <p>
+                                Informations spécifiques à votre Short.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="short-info-grid">
+
+
+                        <div class="short-info-item">
+
+                            <span>
+                                Type
+                            </span>
+
+                            <strong>
+                                Short NetView
+                            </strong>
+
+                        </div>
+
+
+                        <div class="short-info-item">
+
+                            <span>
+                                Durée
+                            </span>
+
+                            <strong
+                                id="shortDuration"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="short-info-item">
+
+                            <span>
+                                Vues
+                            </span>
+
+                            <strong
+                                id="shortViews"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="short-info-item">
+
+                            <span>
+                                J'aime
+                            </span>
+
+                            <strong
+                                id="shortLikes"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     VIDEO INFORMATION
+                     ========================================= -->
+
+                <section
+                    id="videoTechnicalCard"
+                    class="edit-card"
+                >
+
+                    <div class="edit-card-header">
+
+                        <div class="edit-card-icon">
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Informations techniques
+                            </h2>
+
+
+                            <p>
+                                Informations relatives au fichier
+                                actuellement publié.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="technical-information">
+
+
+                        <div class="technical-item">
+
+                            <span>
+                                Identifiant
+                            </span>
+
+                            <code id="contentId">
+                                —
+                            </code>
+
+                        </div>
+
+
+                        <div
+                            id="videoStatusItem"
+                            class="technical-item"
+                        >
+
+                            <span>
+                                Statut
+                            </span>
+
+                            <strong id="videoStatus">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            id="videoDurationItem"
+                            class="technical-item"
+                        >
+
+                            <span>
+                                Durée
+                            </span>
+
+                            <strong id="videoDuration">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="technical-item">
+
+                            <span>
+                                Créé le
+                            </span>
+
+                            <strong id="contentCreatedAt">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            id="publishedAtItem"
+                            class="technical-item"
+                        >
+
+                            <span>
+                                Publié le
+                            </span>
+
+                            <strong id="contentPublishedAt">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     SAVE ACTIONS
+                     ========================================= -->
+
+                <div class="edit-actions">
+
+
+                    <a
+                        id="cancelEditButton"
+                        href="studio.html"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Annuler
+
+                    </a>
+
+
+                    <div class="edit-actions-right">
+
+
+                        <button
+                            id="resetChangesButton"
+                            type="button"
+                            class="nv-button nv-button-secondary"
+                        >
+
+                            <i class="fa-solid fa-rotate-left"></i>
+
+                            Annuler les modifications
+
+                        </button>
+
+
+                        <button
+                            id="saveChangesButton"
+                            type="submit"
+                            class="nv-button nv-button-primary"
+                            disabled
+                        >
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>
+                                Enregistrer
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     SAVE LOADER
+     ========================================================= -->
+
+<div
+    id="saveLoader"
+    class="nv-loader-overlay hidden"
+    aria-hidden="true"
+>
+
+    <div class="nv-loader">
+
+        <div class="nv-spinner"></div>
+
+        <p>
+            Enregistrement des modifications...
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST CONTAINER
+     ========================================================= -->
+
+<div
+    id="editToastContainer"
+    class="edit-toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
+
+
+<!-- =========================================================
+     PAGE JAVASCRIPT
+     ========================================================= -->
+
+<script
+    type="module"
+    src="js/pages/edit-video.js"
+></script>
+
+
+</body>
+
+</html>
