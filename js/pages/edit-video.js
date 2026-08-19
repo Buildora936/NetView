@@ -30,7 +30,7 @@ const DEFAULT_AVATAR =
     "assets/images/default-avatar.png";
 
 const DEFAULT_THUMBNAIL =
-    "assets/images/default-thumbnail.png";
+    "NetView.png";
 
 const VIDEO_BUCKET =
     "videos";
