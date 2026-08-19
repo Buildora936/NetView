@@ -2,10 +2,10 @@
 // NetView
 // upload.js
 // ==========================================
-import {
+import{
     getSession,
     getUser
-} from "../core/auth.js";
+}from "../core/auth.js";
 
 import {
     getMyChannels
