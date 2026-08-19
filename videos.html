@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Gérez vos vidéos et Shorts sur NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Mes vidéos — NetView
+    </title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        href="NetView_icone.png"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/pages/videos.css"
+    >
+
+</head>
+
+
+<body class="nv-page videos-page">
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="nv-header">
+
+    <div class="nv-header-left">
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView — Accueil"
+        >
+
+            <img
+                src="assets/images/NetView.png"
+                alt="NetView"
+            >
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER CENTER
+         ===================================================== -->
+
+    <div class="nv-header-center">
+
+        <form
+            id="searchForm"
+            class="nv-search-form"
+            role="search"
+        >
+
+            <div class="nv-search-wrapper">
+
+                <i
+                    class="fa-solid fa-magnifying-glass"
+                    aria-hidden="true"
+                ></i>
+
+
+                <input
+                    id="searchInput"
+                    name="q"
+                    type="search"
+                    placeholder="Rechercher dans vos contenus..."
+                    autocomplete="off"
+                    maxlength="150"
+                    aria-label="Rechercher dans vos contenus"
+                >
+
+
+                <button
+                    id="clearSearchButton"
+                    class="nv-search-clear"
+                    type="button"
+                    aria-label="Effacer la recherche"
+                    title="Effacer"
+                    hidden
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <button
+                class="nv-search-button"
+                type="submit"
+                aria-label="Rechercher"
+                title="Rechercher"
+            >
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+            </button>
+
+        </form>
+
+
+        <div class="videos-header-title">
+
+            <i
+                class="fa-solid fa-photo-film"
+                aria-hidden="true"
+            ></i>
+
+            <span>
+                Mes contenus
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER RIGHT
+         Généré par videos.js
+         ===================================================== -->
+
+    <div
+        id="headerRight"
+        class="nv-header-right"
+    ></div>
+
+</header>
+
+
+
+<!-- =========================================================
+     SIDEBAR
+     Générée par videos.js
+     ========================================================= -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+    aria-label="Navigation principale"
+>
+
+    <nav
+        class="nv-sidebar-nav"
+        aria-label="Menu NetView"
+    ></nav>
+
+</aside>
+
+
+<!-- =========================================================
+     SIDEBAR OVERLAY
+     ========================================================= -->
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+    aria-hidden="true"
+></div>
+
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="videos-main">
+
+
+    <div class="videos-container">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <section class="videos-page-header">
+
+            <div class="videos-page-header-content">
+
+                <div class="videos-page-heading">
+
+                    <span class="videos-page-icon">
+
+                        <i
+                            class="fa-solid fa-photo-film"
+                            aria-hidden="true"
+                        ></i>
+
+                    </span>
+
+
+                    <div>
+
+                        <h1>
+                            Mes vidéos
+                        </h1>
+
+                        <p>
+                            Gérez vos vidéos et vos Shorts depuis un seul endroit.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="videos-page-actions">
+
+                    <a
+                        href="upload.html"
+                        class="nv-button nv-button-primary"
+                    >
+
+                        <i
+                            class="fa-solid fa-cloud-arrow-up"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Publier une vidéo
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="upload-short.html"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i
+                            class="fa-solid fa-bolt"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Publier un Short
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             STATS
+             ================================================= -->
+
+        <section
+            id="videosStats"
+            class="videos-stats"
+            aria-label="Statistiques de vos contenus"
+        >
+
+            <article class="videos-stat-card">
+
+                <div class="videos-stat-icon">
+
+                    <i
+                        class="fa-solid fa-video"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <div class="videos-stat-content">
+
+                    <span>
+                        Vidéos
+                    </span>
+
+                    <strong id="totalVideosCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="videos-stat-card">
+
+                <div class="videos-stat-icon">
+
+                    <i
+                        class="fa-solid fa-bolt"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <div class="videos-stat-content">
+
+                    <span>
+                        Shorts
+                    </span>
+
+                    <strong id="totalShortsCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="videos-stat-card">
+
+                <div class="videos-stat-icon">
+
+                    <i
+                        class="fa-solid fa-eye"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <div class="videos-stat-content">
+
+                    <span>
+                        Vues
+                    </span>
+
+                    <strong id="totalViewsCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="videos-stat-card">
+
+                <div class="videos-stat-icon">
+
+                    <i
+                        class="fa-solid fa-heart"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <div class="videos-stat-content">
+
+                    <span>
+                        J'aime
+                    </span>
+
+                    <strong id="totalLikesCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TOOLBAR
+             ================================================= -->
+
+        <section class="videos-toolbar">
+
+
+            <!-- =============================================
+                 SEARCH
+                 ============================================= -->
+
+            <div class="videos-content-search">
+
+                <label
+                    for="contentSearchInput"
+                    class="sr-only"
+                >
+                    Rechercher un contenu
+                </label>
+
+
+                <i
+                    class="fa-solid fa-magnifying-glass"
+                    aria-hidden="true"
+                ></i>
+
+
+                <input
+                    id="contentSearchInput"
+                    type="search"
+                    placeholder="Rechercher une vidéo ou un Short..."
+                    autocomplete="off"
+                    maxlength="150"
+                >
+
+
+                <button
+                    id="contentSearchClear"
+                    type="button"
+                    aria-label="Effacer"
+                    title="Effacer"
+                    hidden
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 FILTER
+                 ============================================= -->
+
+            <div class="videos-filter-wrapper">
+
+                <label
+                    for="contentFilter"
+                    class="videos-toolbar-label"
+                >
+                    Filtrer
+                </label>
+
+
+                <select
+                    id="contentFilter"
+                    class="videos-select"
+                    aria-label="Filtrer les contenus"
+                >
+
+                    <option value="all">
+                        Tous les contenus
+                    </option>
+
+                    <option value="videos">
+                        Vidéos
+                    </option>
+
+                    <option value="shorts">
+                        Shorts
+                    </option>
+
+                    <option value="published">
+                        Publiés
+                    </option>
+
+                    <option value="processing">
+                        En traitement
+                    </option>
+
+                    <option value="private">
+                        Privés
+                    </option>
+
+                    <option value="unlisted">
+                        Non répertoriés
+                    </option>
+
+                    <option value="draft">
+                        Brouillons
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 SORT
+                 ============================================= -->
+
+            <div class="videos-sort-wrapper">
+
+                <label
+                    for="contentSort"
+                    class="videos-toolbar-label"
+                >
+                    Trier
+                </label>
+
+
+                <select
+                    id="contentSort"
+                    class="videos-select"
+                    aria-label="Trier les contenus"
+                >
+
+                    <option value="recent">
+                        Plus récent
+                    </option>
+
+                    <option value="oldest">
+                        Plus ancien
+                    </option>
+
+                    <option value="views">
+                        Plus de vues
+                    </option>
+
+                    <option value="likes">
+                        Plus de likes
+                    </option>
+
+                    <option value="alphabetical">
+                        Alphabétique
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ACTIVE FILTER INFO
+             ================================================= -->
+
+        <div
+            id="activeFilterInfo"
+            class="videos-active-filter-info"
+            hidden
+        >
+
+            <div>
+
+                <i
+                    class="fa-solid fa-filter"
+                    aria-hidden="true"
+                ></i>
+
+                <span id="activeFilterText">
+                    Filtre actif
+                </span>
+
+            </div>
+
+
+            <button
+                id="resetFiltersButton"
+                type="button"
+                class="videos-reset-filter"
+            >
+
+                Réinitialiser
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BULK ACTIONS
+             ================================================= -->
+
+        <section
+            id="bulkActions"
+            class="videos-bulk-actions"
+            hidden
+        >
+
+            <div class="videos-bulk-selection">
+
+                <i
+                    class="fa-solid fa-check-double"
+                    aria-hidden="true"
+                ></i>
+
+
+                <strong id="selectedContentCount">
+                    0
+                </strong>
+
+
+                <span>
+                    sélectionné(s)
+                </span>
+
+            </div>
+
+
+            <div class="videos-bulk-buttons">
+
+                <button
+                    id="bulkDeleteButton"
+                    type="button"
+                    class="nv-button nv-button-danger"
+                >
+
+                    <i
+                        class="fa-solid fa-trash"
+                        aria-hidden="true"
+                    ></i>
+
+                    Supprimer
+
+                </button>
+
+
+                <button
+                    id="clearSelectionButton"
+                    type="button"
+                    class="nv-button nv-button-secondary"
+                >
+
+                    Annuler
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CONTENT AREA
+             ================================================= -->
+
+        <section
+            id="contentArea"
+            class="videos-content-area"
+            aria-live="polite"
+        >
+
+
+            <!-- =============================================
+                 LOADING
+                 ============================================= -->
+
+            <div
+                id="videosLoading"
+                class="videos-state videos-loading-state"
+            >
+
+                <div class="videos-loading-spinner">
+
+                    <i
+                        class="fa-solid fa-spinner fa-spin"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <h2>
+                    Chargement de vos contenus
+                </h2>
+
+
+                <p>
+                    Récupération de vos vidéos et Shorts...
+                </p>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 ERROR
+                 ============================================= -->
+
+            <div
+                id="videosError"
+                class="videos-state videos-error-state"
+                hidden
+            >
+
+                <div class="videos-state-icon">
+
+                    <i
+                        class="fa-solid fa-triangle-exclamation"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <h2>
+                    Impossible de charger vos contenus
+                </h2>
+
+
+                <p id="videosErrorMessage">
+                    Une erreur est survenue.
+                </p>
+
+
+                <button
+                    id="videosRetryButton"
+                    type="button"
+                    class="nv-button nv-button-primary"
+                >
+
+                    <i
+                        class="fa-solid fa-rotate-right"
+                        aria-hidden="true"
+                    ></i>
+
+                    Réessayer
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 EMPTY
+                 ============================================= -->
+
+            <div
+                id="videosEmpty"
+                class="videos-state videos-empty-state"
+                hidden
+            >
+
+                <div class="videos-state-icon">
+
+                    <i
+                        class="fa-solid fa-photo-film"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <h2 id="videosEmptyTitle">
+                    Aucun contenu
+                </h2>
+
+
+                <p id="videosEmptyMessage">
+                    Vous n'avez encore publié aucune vidéo ou aucun Short.
+                </p>
+
+
+                <div class="videos-empty-actions">
+
+                    <a
+                        href="upload.html"
+                        class="nv-button nv-button-primary"
+                    >
+
+                        <i
+                            class="fa-solid fa-video"
+                            aria-hidden="true"
+                        ></i>
+
+                        Publier une vidéo
+
+                    </a>
+
+
+                    <a
+                        href="upload-short.html"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i
+                            class="fa-solid fa-bolt"
+                            aria-hidden="true"
+                        ></i>
+
+                        Publier un Short
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 NO SEARCH RESULTS
+                 ============================================= -->
+
+            <div
+                id="videosNoResults"
+                class="videos-state videos-no-results-state"
+                hidden
+            >
+
+                <div class="videos-state-icon">
+
+                    <i
+                        class="fa-solid fa-magnifying-glass"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+
+                <h2>
+                    Aucun résultat
+                </h2>
+
+
+                <p id="videosNoResultsMessage">
+                    Aucun contenu ne correspond à votre recherche.
+                </p>
+
+
+                <button
+                    id="clearContentFiltersButton"
+                    type="button"
+                    class="nv-button nv-button-secondary"
+                >
+
+                    <i
+                        class="fa-solid fa-filter-circle-xmark"
+                        aria-hidden="true"
+                    ></i>
+
+                    Effacer les filtres
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 VIDEOS SECTION
+                 ============================================= -->
+
+            <section
+                id="videosSection"
+                class="content-section videos-section"
+                hidden
+            >
+
+                <div class="content-section-header">
+
+                    <div>
+
+                        <div class="content-section-title-row">
+
+                            <i
+                                class="fa-solid fa-video"
+                                aria-hidden="true"
+                            ></i>
+
+
+                            <h2>
+                                Vidéos
+                            </h2>
+
+                        </div>
+
+
+                        <p id="videosSectionSubtitle">
+                            Vos vidéos publiées et en préparation.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="videosSectionCount"
+                        class="content-section-count"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     VIDEO TABLE
+                     ========================================= -->
+
+                <div class="videos-table-wrapper">
+
+                    <table class="videos-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th
+                                    class="videos-checkbox-column"
+                                >
+
+                                    <label
+                                        class="videos-checkbox"
+                                        aria-label="Sélectionner toutes les vidéos"
+                                    >
+
+                                        <input
+                                            id="selectAllVideos"
+                                            type="checkbox"
+                                        >
+
+                                        <span></span>
+
+                                    </label>
+
+                                </th>
+
+
+                                <th>
+                                    Contenu
+                                </th>
+
+
+                                <th>
+                                    Visibilité
+                                </th>
+
+
+                                <th>
+                                    Statut
+                                </th>
+
+
+                                <th>
+                                    Statistiques
+                                </th>
+
+
+                                <th>
+                                    Date
+                                </th>
+
+
+                                <th
+                                    class="videos-actions-column"
+                                >
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="videosTableBody"
+                        ></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 SHORTS SECTION
+                 ============================================= -->
+
+            <section
+                id="shortsSection"
+                class="content-section shorts-section"
+                hidden
+            >
+
+                <div class="content-section-header">
+
+                    <div>
+
+                        <div class="content-section-title-row">
+
+                            <i
+                                class="fa-solid fa-bolt"
+                                aria-hidden="true"
+                            ></i>
+
+
+                            <h2>
+                                Shorts
+                            </h2>
+
+                        </div>
+
+
+                        <p id="shortsSectionSubtitle">
+                            Vos contenus courts.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="shortsSectionCount"
+                        class="content-section-count"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     SHORTS GRID
+                     ========================================= -->
+
+                <div
+                    id="shortsGrid"
+                    class="shorts-management-grid"
+                ></div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PAGINATION
+             ================================================= -->
+
+        <nav
+            id="videosPagination"
+            class="videos-pagination"
+            aria-label="Pagination des contenus"
+            hidden
+        >
+
+            <button
+                id="previousPageButton"
+                type="button"
+                class="videos-pagination-button"
+                aria-label="Page précédente"
+                disabled
+            >
+
+                <i
+                    class="fa-solid fa-chevron-left"
+                    aria-hidden="true"
+                ></i>
+
+            </button>
+
+
+            <div
+                id="paginationPages"
+                class="videos-pagination-pages"
+            ></div>
+
+
+            <button
+                id="nextPageButton"
+                type="button"
+                class="videos-pagination-button"
+                aria-label="Page suivante"
+                disabled
+            >
+
+                <i
+                    class="fa-solid fa-chevron-right"
+                    aria-hidden="true"
+                ></i>
+
+            </button>
+
+        </nav>
+
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     DELETE MODAL
+     ========================================================= -->
+
+<div
+    id="deleteModal"
+    class="nv-modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="deleteModalTitle"
+    hidden
+>
+
+    <div class="nv-modal videos-delete-modal">
+
+        <button
+            id="closeDeleteModalButton"
+            type="button"
+            class="nv-modal-close"
+            aria-label="Fermer"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="videos-delete-icon">
+
+            <i
+                class="fa-solid fa-trash"
+                aria-hidden="true"
+            ></i>
+
+        </div>
+
+
+        <h2 id="deleteModalTitle">
+            Supprimer ce contenu ?
+        </h2>
+
+
+        <p id="deleteModalMessage">
+            Cette action est définitive. Le contenu sera supprimé de NetView.
+        </p>
+
+
+        <div class="nv-modal-actions">
+
+            <button
+                id="cancelDeleteButton"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+                Annuler
+            </button>
+
+
+            <button
+                id="confirmDeleteButton"
+                type="button"
+                class="nv-button nv-button-danger"
+            >
+
+                <i
+                    class="fa-solid fa-trash"
+                    aria-hidden="true"
+                ></i>
+
+                Supprimer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    id="videosToast"
+    class="videos-toast"
+    role="status"
+    aria-live="polite"
+    hidden
+>
+
+    <div class="videos-toast-icon">
+
+        <i
+            id="videosToastIcon"
+            class="fa-solid fa-circle-check"
+            aria-hidden="true"
+        ></i>
+
+    </div>
+
+
+    <div class="videos-toast-content">
+
+        <strong id="videosToastTitle">
+            NetView
+        </strong>
+
+
+        <span id="videosToastMessage">
+            Opération effectuée.
+        </span>
+
+    </div>
+
+
+    <button
+        id="closeVideosToast"
+        type="button"
+        aria-label="Fermer la notification"
+    >
+
+        <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE LOADER
+     ========================================================= -->
+
+<div
+    id="pageLoader"
+    class="nv-loader-overlay hidden"
+    aria-hidden="true"
+>
+
+    <div class="nv-loader">
+
+        <div class="nv-spinner"></div>
+
+        <p id="pageLoaderText">
+            Chargement...
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE JAVASCRIPT
+     
+     IMPORTANT :
+     Les dépendances Supabase / Auth / Data sont gérées
+     par l'architecture JS du projet et ne sont PAS placées
+     directement dans ce HTML.
+     ========================================================= -->
+
+<script
+    type="module"
+    src="js/pages/videos.js"
+></script>
+
+
+</body>
+
+</html>
