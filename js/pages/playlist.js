@@ -30,7 +30,7 @@
    - Gestion des états
    - Authentification
    - Synchronisation avec data.js
-   ========================================================= */ User
+   ========================================================= */ 
 
 import { getUser } from "../core/auth.js";
 
