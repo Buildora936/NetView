@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Playlist NetView"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Playlist — NetView
+    </title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        href="NetView_icone.png"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/pages/playlist.css"
+    >
+
+</head>
+
+
+<body class="nv-page playlist-page">
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="nv-header">
+
+    <div class="nv-header-left">
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+            title="Menu"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView - Accueil"
+            title="NetView"
+        >
+
+            <img
+                src="NetView.png"
+                alt="NetView"
+            >
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH
+         ===================================================== -->
+
+    <div class="nv-header-center">
+
+        <form
+            id="searchForm"
+            class="nv-search"
+            role="search"
+            autocomplete="off"
+        >
+
+            <label
+                for="searchInput"
+                class="sr-only"
+            >
+                Rechercher sur NetView
+            </label>
+
+
+            <input
+                id="searchInput"
+                name="q"
+                type="search"
+                maxlength="200"
+                placeholder="Rechercher"
+                autocomplete="off"
+            >
+
+
+            <button
+                type="submit"
+                class="nv-search-button"
+                aria-label="Rechercher"
+                title="Rechercher"
+            >
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER RIGHT
+         ===================================================== -->
+
+    <div
+        id="headerRight"
+        class="nv-header-right"
+    ></div>
+
+</header>
+
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+    aria-label="Navigation principale"
+>
+
+    <nav
+        class="nv-sidebar-nav"
+        aria-label="Navigation NetView"
+    ></nav>
+
+</aside>
+
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+    aria-hidden="true"
+></div>
+
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="playlist-main">
+
+
+    <!-- =====================================================
+         LOADING STATE
+         ===================================================== -->
+
+    <section
+        id="playlistLoading"
+        class="playlist-state playlist-loading-state"
+        aria-live="polite"
+    >
+
+        <div class="playlist-loading-icon">
+
+            <div class="nv-spinner"></div>
+
+        </div>
+
+
+        <h1>
+            Chargement de la playlist...
+        </h1>
+
+
+        <p>
+            Préparation de votre contenu.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ERROR STATE
+         ===================================================== -->
+
+    <section
+        id="playlistError"
+        class="playlist-state playlist-error-state"
+        hidden
+        aria-live="assertive"
+    >
+
+        <div class="playlist-state-icon">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+        </div>
+
+
+        <h1 id="playlistErrorTitle">
+            Playlist introuvable
+        </h1>
+
+
+        <p id="playlistErrorMessage">
+            Cette playlist n'existe pas ou n'est plus disponible.
+        </p>
+
+
+        <div class="playlist-state-actions">
+
+            <button
+                id="playlistRetryButton"
+                type="button"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-rotate-right"></i>
+
+                Réessayer
+
+            </button>
+
+
+            <a
+                href="index.html"
+                class="nv-button nv-button-secondary"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                Accueil
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PRIVATE STATE
+         ===================================================== -->
+
+    <section
+        id="playlistPrivate"
+        class="playlist-state playlist-private-state"
+        hidden
+        aria-live="polite"
+    >
+
+        <div class="playlist-state-icon">
+
+            <i class="fa-solid fa-lock"></i>
+
+        </div>
+
+
+        <h1>
+            Playlist privée
+        </h1>
+
+
+        <p>
+            Cette playlist est privée et n'est pas accessible
+            avec ce compte.
+        </p>
+
+
+        <a
+            href="index.html"
+            class="nv-button nv-button-primary"
+        >
+
+            <i class="fa-solid fa-house"></i>
+
+            Retour à l'accueil
+
+        </a>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PLAYLIST CONTENT
+         ===================================================== -->
+
+    <div
+        id="playlistContent"
+        class="playlist-content"
+        hidden
+    >
+
+
+        <!-- =================================================
+             PLAYLIST HERO
+             ================================================= -->
+
+        <section
+            id="playlistHero"
+            class="playlist-hero"
+        >
+
+
+            <!-- =============================================
+                 COVER
+                 ============================================= -->
+
+            <div class="playlist-cover-wrapper">
+
+                <div
+                    id="playlistCover"
+                    class="playlist-cover"
+                >
+
+                    <div class="playlist-cover-placeholder">
+
+                        <i class="fa-solid fa-list"></i>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="playlistCoverCount"
+                    class="playlist-cover-count"
+                >
+
+                    <i class="fa-solid fa-list"></i>
+
+                    <span id="playlistCoverVideoCount">
+                        0 vidéos
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 INFORMATION
+                 ============================================= -->
+
+            <div class="playlist-information">
+
+
+                <div class="playlist-breadcrumb">
+
+                    <a href="index.html">
+                        Accueil
+                    </a>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                    <span>
+                        Playlist
+                    </span>
+
+                </div>
+
+
+                <div class="playlist-title-row">
+
+                    <h1
+                        id="playlistTitle"
+                        class="playlist-title"
+                    >
+                        Playlist
+                    </h1>
+
+
+                    <span
+                        id="playlistVisibility"
+                        class="playlist-visibility"
+                    >
+
+                        <i class="fa-solid fa-earth-americas"></i>
+
+                        Publique
+
+                    </span>
+
+                </div>
+
+
+                <p
+                    id="playlistDescription"
+                    class="playlist-description"
+                ></p>
+
+
+
+                <!-- =========================================
+                     OWNER
+                     ========================================= -->
+
+                <div
+                    id="playlistOwner"
+                    class="playlist-owner"
+                >
+
+                    <a
+                        id="playlistOwnerLink"
+                        href="profile.html"
+                        class="playlist-owner-link"
+                    >
+
+                        <img
+                            id="playlistOwnerAvatar"
+                            class="playlist-owner-avatar"
+                            src="assets/images/default-avatar.png"
+                            alt=""
+                        >
+
+
+                        <div class="playlist-owner-information">
+
+                            <div class="playlist-owner-name-row">
+
+                                <strong
+                                    id="playlistOwnerName"
+                                >
+                                    Utilisateur
+                                </strong>
+
+
+                                <i
+                                    id="playlistOwnerVerified"
+                                    class="fa-solid fa-circle-check"
+                                    hidden
+                                    aria-label="Compte vérifié"
+                                ></i>
+
+                            </div>
+
+
+                            <span>
+                                Propriétaire de la playlist
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     METADATA
+                     ========================================= -->
+
+                <div class="playlist-meta">
+
+                    <span>
+
+                        <i class="fa-solid fa-video"></i>
+
+                        <strong id="playlistVideoCount">
+                            0
+                        </strong>
+
+                        vidéos
+
+                    </span>
+
+
+                    <span
+                        class="playlist-meta-separator"
+                        aria-hidden="true"
+                    >
+                        •
+                    </span>
+
+
+                    <span>
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <span id="playlistCreatedAt">
+                            —
+                        </span>
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     ACTIONS
+                     ========================================= -->
+
+                <div class="playlist-actions">
+
+
+                    <button
+                        id="playlistPlayButton"
+                        type="button"
+                        class="nv-button nv-button-primary"
+                        disabled
+                    >
+
+                        <i class="fa-solid fa-play"></i>
+
+                        Lire tout
+
+                    </button>
+
+
+                    <button
+                        id="playlistShuffleButton"
+                        type="button"
+                        class="nv-button nv-button-secondary"
+                        disabled
+                    >
+
+                        <i class="fa-solid fa-shuffle"></i>
+
+                        Aléatoire
+
+                    </button>
+
+
+                    <button
+                        id="playlistShareButton"
+                        type="button"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i class="fa-solid fa-share-nodes"></i>
+
+                        Partager
+
+                    </button>
+
+
+                    <div class="playlist-more-container">
+
+                        <button
+                            id="playlistMoreButton"
+                            type="button"
+                            class="nv-icon-button"
+                            aria-label="Plus d'options"
+                            title="Plus"
+                            aria-expanded="false"
+                            aria-controls="playlistMoreMenu"
+                        >
+
+                            <i class="fa-solid fa-ellipsis"></i>
+
+                        </button>
+
+
+                        <div
+                            id="playlistMoreMenu"
+                            class="playlist-more-menu"
+                            hidden
+                        >
+
+                            <button
+                                id="playlistCopyLinkButton"
+                                type="button"
+                            >
+
+                                <i class="fa-solid fa-link"></i>
+
+                                Copier le lien
+
+                            </button>
+
+
+                            <button
+                                id="playlistEditButton"
+                                type="button"
+                                hidden
+                            >
+
+                                <i class="fa-solid fa-pen"></i>
+
+                                Modifier la playlist
+
+                            </button>
+
+
+                            <button
+                                id="playlistDeleteButton"
+                                type="button"
+                                class="danger"
+                                hidden
+                            >
+
+                                <i class="fa-regular fa-trash-can"></i>
+
+                                Supprimer la playlist
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PLAYLIST TOOLBAR
+             ================================================= -->
+
+        <section
+            class="playlist-toolbar"
+            aria-label="Options de playlist"
+        >
+
+            <div class="playlist-toolbar-left">
+
+                <button
+                    id="playlistSortButton"
+                    type="button"
+                    class="playlist-toolbar-button"
+                    aria-expanded="false"
+                    aria-controls="playlistSortMenu"
+                >
+
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+
+                    Trier
+
+                </button>
+
+
+                <div
+                    id="playlistSortMenu"
+                    class="playlist-dropdown-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        data-sort="position"
+                    >
+
+                        <i class="fa-solid fa-list-ol"></i>
+
+                        Ordre de la playlist
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        data-sort="newest"
+                    >
+
+                        <i class="fa-solid fa-arrow-down"></i>
+
+                        Plus récentes
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        data-sort="oldest"
+                    >
+
+                        <i class="fa-solid fa-arrow-up"></i>
+
+                        Plus anciennes
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="playlist-toolbar-right">
+
+                <span
+                    id="playlistEditingHint"
+                    class="playlist-editing-hint"
+                    hidden
+                >
+
+                    <i class="fa-solid fa-grip-vertical"></i>
+
+                    Faites glisser les vidéos pour les réorganiser.
+
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             EMPTY PLAYLIST
+             ================================================= -->
+
+        <section
+            id="playlistEmpty"
+            class="playlist-empty-state"
+            hidden
+        >
+
+            <div class="playlist-empty-icon">
+
+                <i class="fa-solid fa-list"></i>
+
+            </div>
+
+
+            <h2>
+                Cette playlist est vide
+            </h2>
+
+
+            <p>
+                Ajoutez des vidéos à cette playlist pour les retrouver
+                facilement.
+            </p>
+
+
+            <a
+                href="videos.html"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-compass"></i>
+
+                Explorer les vidéos
+
+            </a>
+
+        </section>
+
+
+
+        <!-- =================================================
+             VIDEOS
+             ================================================= -->
+
+        <section
+            id="playlistVideosSection"
+            class="playlist-videos-section"
+        >
+
+            <div class="playlist-videos-header">
+
+                <div>
+
+                    <h2>
+                        Vidéos
+                    </h2>
+
+                    <span
+                        id="playlistVideosHeaderCount"
+                    >
+                        0 vidéo
+                    </span>
+
+                </div>
+
+
+                <button
+                    id="playlistManageButton"
+                    type="button"
+                    class="nv-button nv-button-secondary"
+                    hidden
+                >
+
+                    <i class="fa-solid fa-up-down-left-right"></i>
+
+                    Réorganiser
+
+                </button>
+
+            </div>
+
+
+            <!-- =============================================
+                 VIDEOS LIST
+                 ============================================= -->
+
+            <div
+                id="playlistVideos"
+                class="playlist-videos-list"
+            ></div>
+
+
+            <!-- =============================================
+                 LOADING MORE
+                 ============================================= -->
+
+            <div
+                id="playlistVideosLoading"
+                class="playlist-videos-loading"
+                hidden
+            >
+
+                <div class="nv-spinner"></div>
+
+                <span>
+                    Chargement des vidéos...
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     SHARE MODAL
+     ========================================================= -->
+
+<div
+    id="playlistShareModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal playlist-share-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playlistShareModalTitle"
+    >
+
+        <div class="nv-modal-header">
+
+            <h2 id="playlistShareModalTitle">
+                Partager la playlist
+            </h2>
+
+
+            <button
+                id="closePlaylistShareModal"
+                type="button"
+                class="nv-icon-button"
+                aria-label="Fermer"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="nv-modal-body">
+
+            <div
+                id="playlistShareOptions"
+                class="playlist-share-options"
+            >
+
+                <button
+                    type="button"
+                    class="playlist-share-option"
+                    data-share="native"
+                >
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+                    <span>
+                        Partager
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="playlist-share-option"
+                    data-share="copy"
+                >
+
+                    <i class="fa-solid fa-link"></i>
+
+                    <span>
+                        Copier le lien
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <div class="playlist-share-link">
+
+                <input
+                    id="playlistShareLinkInput"
+                    type="text"
+                    readonly
+                    aria-label="Lien de la playlist"
+                >
+
+
+                <button
+                    id="playlistCopyShareLinkButton"
+                    type="button"
+                    class="nv-button nv-button-primary"
+                >
+
+                    <i class="fa-regular fa-copy"></i>
+
+                    Copier
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+     ========================================================= -->
+
+<div
+    id="playlistDeleteModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal playlist-delete-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playlistDeleteModalTitle"
+    >
+
+        <div class="playlist-delete-icon">
+
+            <i class="fa-regular fa-trash-can"></i>
+
+        </div>
+
+
+        <h2 id="playlistDeleteModalTitle">
+            Supprimer cette playlist ?
+        </h2>
+
+
+        <p id="playlistDeleteModalMessage">
+            Cette action supprimera définitivement la playlist.
+            Les vidéos elles-mêmes ne seront pas supprimées.
+        </p>
+
+
+        <div class="nv-modal-actions">
+
+            <button
+                id="cancelPlaylistDeleteButton"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+
+                Annuler
+
+            </button>
+
+
+            <button
+                id="confirmPlaylistDeleteButton"
+                type="button"
+                class="nv-button nv-button-danger"
+            >
+
+                <i class="fa-regular fa-trash-can"></i>
+
+                Supprimer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     REMOVE VIDEO MODAL
+     ========================================================= -->
+
+<div
+    id="playlistRemoveVideoModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playlistRemoveVideoTitle"
+    >
+
+        <div class="nv-modal-header">
+
+            <h2 id="playlistRemoveVideoTitle">
+                Retirer cette vidéo ?
+            </h2>
+
+
+            <button
+                id="closeRemoveVideoModal"
+                type="button"
+                class="nv-icon-button"
+                aria-label="Fermer"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="nv-modal-body">
+
+            <p id="playlistRemoveVideoMessage">
+                Cette vidéo sera retirée de la playlist.
+            </p>
+
+        </div>
+
+
+        <div class="nv-modal-actions">
+
+            <button
+                id="cancelRemoveVideoButton"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+
+                Annuler
+
+            </button>
+
+
+            <button
+                id="confirmRemoveVideoButton"
+                type="button"
+                class="nv-button nv-button-danger"
+            >
+
+                <i class="fa-solid fa-minus"></i>
+
+                Retirer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     LOGIN REQUIRED MODAL
+     ========================================================= -->
+
+<div
+    id="playlistLoginModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal playlist-login-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playlistLoginTitle"
+    >
+
+        <div class="playlist-login-icon">
+
+            <i class="fa-regular fa-user"></i>
+
+        </div>
+
+
+        <h2 id="playlistLoginTitle">
+            Connectez-vous à NetView
+        </h2>
+
+
+        <p>
+            Connectez-vous pour gérer vos playlists.
+        </p>
+
+
+        <div class="nv-modal-actions">
+
+            <button
+                id="closePlaylistLoginModal"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+
+                Annuler
+
+            </button>
+
+
+            <a
+                href="auth.html"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+
+                Se connecter
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     VIDEO CONTEXT MENU
+     ========================================================= -->
+
+<div
+    id="playlistVideoContextMenu"
+    class="playlist-video-context-menu"
+    hidden
+>
+
+    <button
+        type="button"
+        data-action="play"
+    >
+
+        <i class="fa-solid fa-play"></i>
+
+        Lire
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="open"
+    >
+
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+        Ouvrir la vidéo
+
+    </button>
+
+
+    <button
+        type="button"
+        data-action="remove"
+        class="danger"
+        hidden
+    >
+
+        <i class="fa-solid fa-minus"></i>
+
+        Retirer de la playlist
+
+    </button>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    id="playlistToast"
+    class="nv-toast"
+    role="status"
+    aria-live="polite"
+    hidden
+>
+
+    <i
+        id="playlistToastIcon"
+        class="fa-solid fa-circle-check"
+    ></i>
+
+
+    <span id="playlistToastMessage">
+        Terminé
+    </span>
+
+</div>
+
+
+
+<!-- =========================================================
+     GLOBAL LOADER
+     ========================================================= -->
+
+<div
+    id="pageLoader"
+    class="nv-loader-overlay"
+    hidden
+>
+
+    <div class="nv-loader">
+
+        <div class="nv-spinner"></div>
+
+        <p id="pageLoaderText">
+            Chargement...
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE JAVASCRIPT
+     ========================================================= -->
+
+<script
+    type="module"
+    src="js/pages/playlist.js"
+></script>
+
+
+</body>
+
+</html>
