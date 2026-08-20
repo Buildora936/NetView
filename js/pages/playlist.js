@@ -3653,9 +3653,9 @@ async function initialize() {
 
     try {
 
-        state.currentUser =
-            await getCurrentUser();
-
+       state.currentUser =
+                     await getUser();
+       
     } catch (error) {
 
         console.error(
