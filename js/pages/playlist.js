@@ -30,17 +30,16 @@
    - Gestion des états
    - Authentification
    - Synchronisation avec data.js
-   ========================================================= */
+   ========================================================= */ User
 
-
+import { getUser } from "../core/auth.js";
 
 import {
     getPlaylist,
     updatePlaylist,
     deletePlaylist,
     removeVideoFromPlaylist,
-    updatePlaylistItemPosition,
-    getCurrentUser
+    updatePlaylistItemPosition
 } from "../core/data.js";
 
 import {
