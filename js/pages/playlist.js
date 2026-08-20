@@ -32,16 +32,15 @@
    - Synchronisation avec data.js
    ========================================================= */
 
-import {
-    getCurrentUser
-} from "../core/auth.js";
+
 
 import {
     getPlaylist,
     updatePlaylist,
     deletePlaylist,
     removeVideoFromPlaylist,
-    updatePlaylistItemPosition
+    updatePlaylistItemPosition,
+    getCurrentUser
 } from "../core/data.js";
 
 import {
