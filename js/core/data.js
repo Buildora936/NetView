@@ -17,20 +17,6 @@ export const MAX_PAGE_LIMIT = 100;
 const DEFAULT_AVATAR = "images/default-avatar.png";
 
 
-export async function getCurrentUser() {
-    const {
-        data: { user },
-        error
-    } = await supabase.auth.getUser();
-
-    if (error || !user) {
-        return null;
-    }
-
-    return user;
-}
-
-
 // ==========================================
 // Helpers
 // ==========================================
