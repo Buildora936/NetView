@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Regardez des vidéos sur NetView."
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563EB"
+    >
+
+    <title>
+        Vidéo — NetView
+    </title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        href="NetView_icone.png"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/pages/player.css"
+    >
+
+</head>
+
+
+<body class="nv-page player-page">
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="nv-header">
+
+    <div class="nv-header-left">
+
+        <!-- MENU -->
+
+        <button
+            id="menuButton"
+            class="nv-icon-button"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+            title="Menu"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="nv-logo"
+            aria-label="NetView - Accueil"
+            title="NetView"
+        >
+
+            <img
+                src="NetView.png"
+                alt="NetView"
+            >
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH
+         ===================================================== -->
+
+    <div class="nv-header-center">
+
+        <form
+            id="searchForm"
+            class="nv-search"
+            role="search"
+            autocomplete="off"
+        >
+
+            <label
+                for="searchInput"
+                class="sr-only"
+            >
+                Rechercher sur NetView
+            </label>
+
+
+            <input
+                id="searchInput"
+                name="q"
+                type="search"
+                placeholder="Rechercher"
+                autocomplete="off"
+                maxlength="200"
+            >
+
+
+            <button
+                type="submit"
+                class="nv-search-button"
+                aria-label="Rechercher"
+                title="Rechercher"
+            >
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         DYNAMIC HEADER RIGHT
+         ===================================================== -->
+
+    <div
+        id="headerRight"
+        class="nv-header-right"
+    ></div>
+
+</header>
+
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside
+    id="sidebar"
+    class="nv-sidebar"
+    aria-label="Navigation principale"
+>
+
+    <nav
+        class="nv-sidebar-nav"
+        aria-label="Navigation NetView"
+    ></nav>
+
+</aside>
+
+
+<!-- =========================================================
+     SIDEBAR OVERLAY
+     ========================================================= -->
+
+<div
+    id="sidebarOverlay"
+    class="nv-sidebar-overlay"
+    aria-hidden="true"
+></div>
+
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="player-main">
+
+
+    <!-- =====================================================
+         PAGE LOADING
+         ===================================================== -->
+
+    <section
+        id="playerLoading"
+        class="player-loading-state"
+        aria-live="polite"
+    >
+
+        <div class="player-loading-spinner">
+
+            <div class="nv-spinner"></div>
+
+        </div>
+
+
+        <p>
+            Chargement de la vidéo...
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PAGE ERROR
+         ===================================================== -->
+
+    <section
+        id="playerError"
+        class="player-error-state"
+        hidden
+        aria-live="assertive"
+    >
+
+        <div class="player-error-icon">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+        </div>
+
+
+        <h1 id="playerErrorTitle">
+            Impossible de lire cette vidéo
+        </h1>
+
+
+        <p id="playerErrorMessage">
+            Une erreur est survenue lors du chargement de la vidéo.
+        </p>
+
+
+        <div class="player-error-actions">
+
+            <button
+                id="playerRetryButton"
+                type="button"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-rotate-right"></i>
+
+                Réessayer
+
+            </button>
+
+
+            <a
+                href="index.html"
+                class="nv-button nv-button-secondary"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                Accueil
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PLAYER LAYOUT
+         ===================================================== -->
+
+    <div
+        id="playerLayout"
+        class="player-layout"
+        hidden
+    >
+
+
+        <!-- =================================================
+             MAIN PLAYER COLUMN
+             ================================================= -->
+
+        <section class="player-primary-column">
+
+
+            <!-- =============================================
+                 VIDEO PLAYER
+                 ============================================= -->
+
+            <section
+                id="videoPlayerSection"
+                class="video-player-section"
+            >
+
+                <div
+                    id="videoPlayerWrapper"
+                    class="video-player-wrapper"
+                >
+
+
+                    <!-- VIDEO -->
+
+                    <video
+                        id="videoPlayer"
+                        class="video-player"
+                        playsinline
+                        preload="metadata"
+                        crossorigin="anonymous"
+                    ></video>
+
+
+                    <!-- =====================================
+                         PLAYER OVERLAY
+                         ===================================== -->
+
+                    <div
+                        id="videoPlayerOverlay"
+                        class="video-player-overlay"
+                    >
+
+                        <button
+                            id="centerPlayButton"
+                            type="button"
+                            class="player-center-play"
+                            aria-label="Lire la vidéo"
+                            title="Lire"
+                        >
+
+                            <i class="fa-solid fa-play"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         BUFFERING
+                         ===================================== -->
+
+                    <div
+                        id="playerBuffering"
+                        class="player-buffering"
+                        hidden
+                        aria-hidden="true"
+                    >
+
+                        <div class="nv-spinner"></div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PLAYER ERROR
+                         ===================================== -->
+
+                    <div
+                        id="playerVideoError"
+                        class="player-video-error"
+                        hidden
+                    >
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        <span>
+                            La vidéo ne peut pas être lue.
+                        </span>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PLAYER CONTROLS
+                         ===================================== -->
+
+                    <div
+                        id="playerControls"
+                        class="player-controls"
+                    >
+
+
+                        <!-- PROGRESS -->
+
+                        <div
+                            class="player-progress-area"
+                            id="playerProgressArea"
+                        >
+
+                            <input
+                                id="playerProgress"
+                                class="player-progress"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="0"
+                                step="0.1"
+                                aria-label="Progression de la vidéo"
+                            >
+
+                        </div>
+
+
+                        <div class="player-controls-row">
+
+
+                            <!-- LEFT CONTROLS -->
+
+                            <div class="player-controls-left">
+
+
+                                <!-- PLAY -->
+
+                                <button
+                                    id="playerPlayButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Lire"
+                                    title="Lire"
+                                >
+
+                                    <i class="fa-solid fa-play"></i>
+
+                                </button>
+
+
+                                <!-- PREVIOUS -->
+
+                                <button
+                                    id="playerPreviousButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Vidéo précédente"
+                                    title="Vidéo précédente"
+                                >
+
+                                    <i class="fa-solid fa-backward-step"></i>
+
+                                </button>
+
+
+                                <!-- NEXT -->
+
+                                <button
+                                    id="playerNextButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Vidéo suivante"
+                                    title="Vidéo suivante"
+                                >
+
+                                    <i class="fa-solid fa-forward-step"></i>
+
+                                </button>
+
+
+                                <!-- VOLUME -->
+
+                                <button
+                                    id="playerMuteButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Activer ou désactiver le son"
+                                    title="Son"
+                                >
+
+                                    <i class="fa-solid fa-volume-high"></i>
+
+                                </button>
+
+
+                                <div class="player-volume-container">
+
+                                    <input
+                                        id="playerVolume"
+                                        class="player-volume"
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        value="1"
+                                        step="0.01"
+                                        aria-label="Volume"
+                                    >
+
+                                </div>
+
+
+                                <!-- TIME -->
+
+                                <span
+                                    id="playerTime"
+                                    class="player-time"
+                                >
+                                    0:00 / 0:00
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- RIGHT CONTROLS -->
+
+                            <div class="player-controls-right">
+
+
+                                <!-- AUTOPLAY -->
+
+                                <button
+                                    id="playerAutoplayButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Lecture automatique"
+                                    title="Lecture automatique"
+                                    aria-pressed="true"
+                                >
+
+                                    <i class="fa-solid fa-play"></i>
+
+                                </button>
+
+
+                                <!-- SUBTITLES -->
+
+                                <button
+                                    id="playerCaptionsButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Sous-titres"
+                                    title="Sous-titres"
+                                    hidden
+                                >
+
+                                    <i class="fa-solid fa-closed-captioning"></i>
+
+                                </button>
+
+
+                                <!-- SETTINGS -->
+
+                                <div
+                                    id="playerSettingsContainer"
+                                    class="player-settings-container"
+                                >
+
+                                    <button
+                                        id="playerSettingsButton"
+                                        type="button"
+                                        class="player-control-button"
+                                        aria-label="Paramètres du lecteur"
+                                        title="Paramètres"
+                                        aria-expanded="false"
+                                        aria-controls="playerSettingsMenu"
+                                    >
+
+                                        <i class="fa-solid fa-gear"></i>
+
+                                    </button>
+
+
+                                    <div
+                                        id="playerSettingsMenu"
+                                        class="player-settings-menu"
+                                        hidden
+                                    >
+
+                                        <div
+                                            class="player-settings-panel"
+                                            data-panel="main"
+                                        >
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-item"
+                                                data-setting="speed"
+                                            >
+
+                                                <span>
+                                                    Vitesse
+                                                </span>
+
+                                                <span
+                                                    id="playerCurrentSpeed"
+                                                >
+                                                    1x
+                                                </span>
+
+                                                <i class="fa-solid fa-chevron-right"></i>
+
+                                            </button>
+
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-item"
+                                                data-setting="quality"
+                                            >
+
+                                                <span>
+                                                    Qualité
+                                                </span>
+
+                                                <span
+                                                    id="playerCurrentQuality"
+                                                >
+                                                    Auto
+                                                </span>
+
+                                                <i class="fa-solid fa-chevron-right"></i>
+
+                                            </button>
+
+                                        </div>
+
+
+                                        <div
+                                            class="player-settings-panel"
+                                            data-panel="speed"
+                                            hidden
+                                        >
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-back"
+                                                data-back="main"
+                                            >
+
+                                                <i class="fa-solid fa-arrow-left"></i>
+
+                                                <span>
+                                                    Vitesse
+                                                </span>
+
+                                            </button>
+
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="0.5"
+                                            >
+                                                0.5x
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="0.75"
+                                            >
+                                                0.75x
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="1"
+                                            >
+                                                Normal
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="1.25"
+                                            >
+                                                1.25x
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="1.5"
+                                            >
+                                                1.5x
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="1.75"
+                                            >
+                                                1.75x
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-option"
+                                                data-speed="2"
+                                            >
+                                                2x
+                                            </button>
+
+                                        </div>
+
+
+                                        <div
+                                            class="player-settings-panel"
+                                            data-panel="quality"
+                                            hidden
+                                        >
+
+                                            <button
+                                                type="button"
+                                                class="player-setting-back"
+                                                data-back="main"
+                                            >
+
+                                                <i class="fa-solid fa-arrow-left"></i>
+
+                                                <span>
+                                                    Qualité
+                                                </span>
+
+                                            </button>
+
+
+                                            <div
+                                                id="playerQualityOptions"
+                                                class="player-quality-options"
+                                            ></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- THEATER -->
+
+                                <button
+                                    id="playerTheaterButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Mode théâtre"
+                                    title="Mode théâtre"
+                                    aria-pressed="false"
+                                >
+
+                                    <i class="fa-solid fa-table-columns"></i>
+
+                                </button>
+
+
+                                <!-- MINI PLAYER -->
+
+                                <button
+                                    id="playerMiniButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Mini-lecteur"
+                                    title="Mini-lecteur"
+                                >
+
+                                    <i class="fa-solid fa-window-restore"></i>
+
+                                </button>
+
+
+                                <!-- FULLSCREEN -->
+
+                                <button
+                                    id="playerFullscreenButton"
+                                    type="button"
+                                    class="player-control-button"
+                                    aria-label="Plein écran"
+                                    title="Plein écran"
+                                >
+
+                                    <i class="fa-solid fa-expand"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 VIDEO INFORMATION
+                 ============================================= -->
+
+            <section
+                id="videoInformation"
+                class="video-information"
+            >
+
+
+                <!-- TITLE -->
+
+                <div class="video-title-row">
+
+                    <h1
+                        id="videoTitle"
+                        class="video-title"
+                    >
+                        Chargement...
+                    </h1>
+
+                </div>
+
+
+                <!-- META -->
+
+                <div
+                    id="videoMeta"
+                    class="video-meta"
+                >
+
+                    <span id="videoViews">
+                        0 vues
+                    </span>
+
+                    <span aria-hidden="true">
+                        •
+                    </span>
+
+                    <span id="videoPublishedDate">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- =========================================
+                     ACTION BAR
+                     ========================================= -->
+
+                <div
+                    id="videoActionBar"
+                    class="video-action-bar"
+                >
+
+
+                    <!-- LIKE -->
+
+                    <div class="video-reaction-group">
+
+                        <button
+                            id="videoLikeButton"
+                            type="button"
+                            class="video-action-button"
+                            aria-label="J'aime"
+                            title="J'aime"
+                        >
+
+                            <i class="fa-regular fa-thumbs-up"></i>
+
+                            <span id="videoLikesCount">
+                                0
+                            </span>
+
+                        </button>
+
+
+                        <!-- DISLIKE -->
+
+                        <button
+                            id="videoDislikeButton"
+                            type="button"
+                            class="video-action-button"
+                            aria-label="Je n'aime pas"
+                            title="Je n'aime pas"
+                        >
+
+                            <i class="fa-regular fa-thumbs-down"></i>
+
+                            <span id="videoDislikesCount">
+                                0
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- SHARE -->
+
+                    <button
+                        id="videoShareButton"
+                        type="button"
+                        class="video-action-button"
+                        aria-label="Partager"
+                        title="Partager"
+                    >
+
+                        <i class="fa-solid fa-share"></i>
+
+                        <span>
+                            Partager
+                        </span>
+
+                    </button>
+
+
+                    <!-- WATCH LATER -->
+
+                    <button
+                        id="videoWatchLaterButton"
+                        type="button"
+                        class="video-action-button"
+                        aria-label="À regarder plus tard"
+                        title="À regarder plus tard"
+                    >
+
+                        <i class="fa-regular fa-clock"></i>
+
+                        <span>
+                            À regarder
+                        </span>
+
+                    </button>
+
+
+                    <!-- MORE -->
+
+                    <div class="video-more-container">
+
+                        <button
+                            id="videoMoreButton"
+                            type="button"
+                            class="video-action-button video-more-button"
+                            aria-label="Plus d'options"
+                            title="Plus"
+                            aria-expanded="false"
+                            aria-controls="videoMoreMenu"
+                        >
+
+                            <i class="fa-solid fa-ellipsis"></i>
+
+                        </button>
+
+
+                        <div
+                            id="videoMoreMenu"
+                            class="video-more-menu"
+                            hidden
+                        >
+
+                            <button
+                                type="button"
+                                id="reportVideoButton"
+                            >
+
+                                <i class="fa-regular fa-flag"></i>
+
+                                <span>
+                                    Signaler
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                id="copyVideoLinkButton"
+                            >
+
+                                <i class="fa-solid fa-link"></i>
+
+                                <span>
+                                    Copier le lien
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     CHANNEL
+                     ========================================= -->
+
+                <section
+                    id="videoChannel"
+                    class="video-channel"
+                >
+
+                    <a
+                        id="videoChannelLink"
+                        class="video-channel-link"
+                        href="channel.html"
+                        aria-label="Voir la chaîne"
+                    >
+
+                        <img
+                            id="videoChannelAvatar"
+                            class="video-channel-avatar"
+                            src="assets/images/default-avatar.png"
+                            alt=""
+                        >
+
+
+                        <div class="video-channel-information">
+
+                            <div class="video-channel-name-row">
+
+                                <strong
+                                    id="videoChannelName"
+                                >
+                                    Chaîne
+                                </strong>
+
+
+                                <i
+                                    id="videoChannelVerified"
+                                    class="fa-solid fa-circle-check"
+                                    aria-label="Compte vérifié"
+                                    hidden
+                                ></i>
+
+                            </div>
+
+
+                            <span
+                                id="videoChannelSubscribers"
+                                class="video-channel-subscribers"
+                            >
+                                0 abonnés
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <button
+                        id="subscribeButton"
+                        type="button"
+                        class="nv-button nv-button-primary"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        S'abonner
+
+                    </button>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     DESCRIPTION
+                     ========================================= -->
+
+                <section
+                    id="videoDescriptionContainer"
+                    class="video-description-container"
+                >
+
+                    <div
+                        id="videoDescription"
+                        class="video-description"
+                    ></div>
+
+
+                    <div
+                        id="videoTags"
+                        class="video-tags"
+                    ></div>
+
+
+                    <button
+                        id="descriptionToggle"
+                        type="button"
+                        class="description-toggle"
+                        aria-expanded="false"
+                    >
+
+                        Afficher plus
+
+                    </button>
+
+                </section>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 COMMENTS
+                 ============================================= -->
+
+            <section
+                id="commentsSection"
+                class="comments-section"
+            >
+
+                <div class="comments-header">
+
+                    <h2>
+
+                        <span>
+                            Commentaires
+                        </span>
+
+                        <span
+                            id="commentsCount"
+                            class="comments-count"
+                        >
+                            0
+                        </span>
+
+                    </h2>
+
+
+                    <button
+                        id="commentsSortButton"
+                        type="button"
+                        class="comments-sort-button"
+                        aria-expanded="false"
+                    >
+
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+
+                        Trier
+
+                    </button>
+
+                </div>
+
+
+                <!-- COMMENT SORT -->
+
+                <div
+                    id="commentsSortMenu"
+                    class="comments-sort-menu"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        data-sort="top"
+                    >
+                        Les plus pertinents
+                    </button>
+
+                    <button
+                        type="button"
+                        data-sort="newest"
+                    >
+                        Les plus récents
+                    </button>
+
+                </div>
+
+
+                <!-- COMMENT FORM -->
+
+                <form
+                    id="commentForm"
+                    class="comment-form"
+                    novalidate
+                >
+
+                    <img
+                        id="commentUserAvatar"
+                        class="comment-user-avatar"
+                        src="assets/images/default-avatar.png"
+                        alt=""
+                    >
+
+
+                    <div class="comment-input-container">
+
+                        <textarea
+                            id="commentInput"
+                            name="comment"
+                            rows="1"
+                            maxlength="2000"
+                            placeholder="Ajoutez un commentaire..."
+                        ></textarea>
+
+
+                        <div class="comment-form-actions">
+
+                            <button
+                                id="cancelCommentButton"
+                                type="button"
+                                class="nv-button nv-button-secondary"
+                                hidden
+                            >
+                                Annuler
+                            </button>
+
+
+                            <button
+                                id="submitCommentButton"
+                                type="submit"
+                                class="nv-button nv-button-primary"
+                                disabled
+                            >
+                                Commenter
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+
+                <!-- COMMENTS LIST -->
+
+                <div
+                    id="commentsList"
+                    class="comments-list"
+                ></div>
+
+
+                <!-- COMMENTS LOADING -->
+
+                <div
+                    id="commentsLoading"
+                    class="comments-loading"
+                    hidden
+                >
+
+                    <div class="nv-spinner"></div>
+
+                    <span>
+                        Chargement des commentaires...
+                    </span>
+
+                </div>
+
+
+                <!-- LOAD MORE -->
+
+                <button
+                    id="loadMoreCommentsButton"
+                    type="button"
+                    class="comments-load-more"
+                    hidden
+                >
+
+                    Charger plus de commentaires
+
+                </button>
+
+
+                <!-- EMPTY -->
+
+                <div
+                    id="commentsEmpty"
+                    class="comments-empty"
+                    hidden
+                >
+
+                    <i class="fa-regular fa-comments"></i>
+
+                    <p>
+                        Aucun commentaire pour le moment.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             RECOMMENDATIONS COLUMN
+             ================================================= -->
+
+        <aside
+            id="recommendationsSidebar"
+            class="recommendations-sidebar"
+        >
+
+            <!-- =============================================
+                 UP NEXT
+                 ============================================= -->
+
+            <section class="recommendations-section">
+
+                <div class="recommendations-header">
+
+                    <h2>
+                        À suivre
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="upNextContainer"
+                    class="recommendations-list"
+                ></div>
+
+            </section>
+
+
+            <!-- =============================================
+                 RECOMMENDED
+                 ============================================= -->
+
+            <section class="recommendations-section">
+
+                <div class="recommendations-header">
+
+                    <h2>
+                        Recommandé pour vous
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="recommendedVideos"
+                    class="recommendations-list"
+                ></div>
+
+            </section>
+
+
+            <!-- =============================================
+                 SHORTS RECOMMENDATION
+                 ============================================= -->
+
+            <section
+                id="recommendedShortsSection"
+                class="recommendations-section recommended-shorts-section"
+            >
+
+                <div class="recommendations-header">
+
+                    <h2>
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                        Shorts
+
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="recommendedShorts"
+                    class="recommended-shorts-grid"
+                ></div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     SHARE MODAL
+     ========================================================= -->
+
+<div
+    id="shareModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shareModalTitle"
+    >
+
+        <div class="nv-modal-header">
+
+            <h2 id="shareModalTitle">
+                Partager
+            </h2>
+
+
+            <button
+                id="closeShareModal"
+                type="button"
+                class="nv-icon-button"
+                aria-label="Fermer"
+                title="Fermer"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="nv-modal-body">
+
+            <div
+                id="shareOptions"
+                class="share-options"
+            >
+
+                <button
+                    type="button"
+                    data-share="copy"
+                    class="share-option"
+                >
+
+                    <i class="fa-solid fa-link"></i>
+
+                    <span>
+                        Copier le lien
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    data-share="native"
+                    class="share-option"
+                >
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+                    <span>
+                        Partager
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <div class="share-link-container">
+
+                <input
+                    id="shareLinkInput"
+                    type="text"
+                    readonly
+                    aria-label="Lien de la vidéo"
+                >
+
+
+                <button
+                    id="copyShareLinkButton"
+                    type="button"
+                    class="nv-button nv-button-primary"
+                >
+
+                    <i class="fa-regular fa-copy"></i>
+
+                    Copier
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     REPORT MODAL
+     ========================================================= -->
+
+<div
+    id="reportModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reportModalTitle"
+    >
+
+        <div class="nv-modal-header">
+
+            <h2 id="reportModalTitle">
+                Signaler cette vidéo
+            </h2>
+
+
+            <button
+                id="closeReportModal"
+                type="button"
+                class="nv-icon-button"
+                aria-label="Fermer"
+                title="Fermer"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form
+            id="reportForm"
+            class="nv-modal-body"
+            novalidate
+        >
+
+            <fieldset class="report-options">
+
+                <legend>
+                    Pourquoi signalez-vous cette vidéo ?
+                </legend>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="report_reason"
+                        value="spam"
+                    >
+
+                    <span>
+                        Spam ou contenu trompeur
+                    </span>
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="report_reason"
+                        value="copyright"
+                    >
+
+                    <span>
+                        Violation des droits d'auteur
+                    </span>
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="report_reason"
+                        value="harassment"
+                    >
+
+                    <span>
+                        Harcèlement ou intimidation
+                    </span>
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="report_reason"
+                        value="violence"
+                    >
+
+                    <span>
+                        Contenu violent ou dangereux
+                    </span>
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="report_reason"
+                        value="other"
+                    >
+
+                    <span>
+                        Autre
+                    </span>
+
+                </label>
+
+            </fieldset>
+
+
+            <textarea
+                id="reportDetails"
+                name="details"
+                rows="4"
+                maxlength="2000"
+                placeholder="Informations complémentaires (facultatif)"
+            ></textarea>
+
+
+            <div class="nv-modal-actions">
+
+                <button
+                    id="cancelReportButton"
+                    type="button"
+                    class="nv-button nv-button-secondary"
+                >
+
+                    Annuler
+
+                </button>
+
+
+                <button
+                    id="submitReportButton"
+                    type="submit"
+                    class="nv-button nv-button-primary"
+                    disabled
+                >
+
+                    <i class="fa-regular fa-flag"></i>
+
+                    Signaler
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     LOGIN MODAL
+     ========================================================= -->
+
+<div
+    id="loginRequiredModal"
+    class="nv-modal-overlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="nv-modal login-required-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="loginRequiredTitle"
+    >
+
+        <div class="login-required-icon">
+
+            <i class="fa-regular fa-user"></i>
+
+        </div>
+
+
+        <h2 id="loginRequiredTitle">
+            Connectez-vous à NetView
+        </h2>
+
+
+        <p id="loginRequiredMessage">
+            Connectez-vous pour utiliser cette fonctionnalité.
+        </p>
+
+
+        <div class="nv-modal-actions">
+
+            <button
+                id="closeLoginRequiredModal"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+
+                Annuler
+
+            </button>
+
+
+            <a
+                href="auth.html"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+
+                Se connecter
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     AUTOPLAY / NEXT VIDEO
+     ========================================================= -->
+
+<div
+    id="nextVideoOverlay"
+    class="next-video-overlay"
+    hidden
+>
+
+    <div class="next-video-card">
+
+        <span class="next-video-label">
+            À suivre
+        </span>
+
+
+        <div
+            id="nextVideoPreview"
+            class="next-video-preview"
+        ></div>
+
+
+        <div class="next-video-actions">
+
+            <button
+                id="playNextNowButton"
+                type="button"
+                class="nv-button nv-button-primary"
+            >
+
+                <i class="fa-solid fa-play"></i>
+
+                Lire maintenant
+
+            </button>
+
+
+            <button
+                id="cancelAutoplayButton"
+                type="button"
+                class="nv-button nv-button-secondary"
+            >
+
+                Annuler
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MINI PLAYER
+     ========================================================= -->
+
+<div
+    id="miniPlayer"
+    class="mini-player"
+    hidden
+>
+
+    <div class="mini-player-video-container">
+
+        <video
+            id="miniPlayerVideo"
+            class="mini-player-video"
+            playsinline
+            muted
+        ></video>
+
+
+        <button
+            id="miniPlayerClose"
+            type="button"
+            class="mini-player-button"
+            aria-label="Fermer le mini-lecteur"
+            title="Fermer"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <button
+            id="miniPlayerExpand"
+            type="button"
+            class="mini-player-button"
+            aria-label="Revenir au lecteur"
+            title="Revenir au lecteur"
+        >
+
+            <i class="fa-solid fa-expand"></i>
+
+        </button>
+
+    </div>
+
+
+    <div class="mini-player-information">
+
+        <strong id="miniPlayerTitle">
+            Vidéo
+        </strong>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    id="playerToast"
+    class="nv-toast"
+    role="status"
+    aria-live="polite"
+    hidden
+>
+
+    <i
+        id="playerToastIcon"
+        class="fa-solid fa-circle-check"
+    ></i>
+
+
+    <span id="playerToastMessage">
+        Terminé
+    </span>
+
+</div>
+
+
+
+<!-- =========================================================
+     GLOBAL LOADER
+     ========================================================= -->
+
+<div
+    id="pageLoader"
+    class="nv-loader-overlay"
+    hidden
+>
+
+    <div class="nv-loader">
+
+        <div class="nv-spinner"></div>
+
+        <p>
+            Chargement...
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE JAVASCRIPT
+     
+     Les modules core sont importés par player.js.
+     Aucun script Supabase n'est placé ici.
+     ========================================================= -->
+
+<script
+    type="module"
+    src="js/pages/player.js"
+></script>
+
+
+</body>
+
+</html>
