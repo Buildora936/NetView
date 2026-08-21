@@ -41,27 +41,27 @@
 
     <link
         rel="stylesheet"
-        href="css/core/variables.css"
+        href="CSS/core/variables.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/reset.css"
+        href="CSS/core/reset.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/typography.css"
+        href="CSS/core/typography.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/animations.css"
+        href="CSS/core/animations.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/utilities.css"
+        href="CSS/core/utilities.css"
     >
 
 
@@ -71,42 +71,42 @@
 
     <link
         rel="stylesheet"
-        href="css/components/buttons.css"
+        href="CSS/components/buttons.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/cards.css"
+        href="CSS/components/cards.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/modal.css"
+        href="CSS/components/modal.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/toast.css"
+        href="CSS/components/toast.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/sidebar.css"
+        href="CSS/components/sidebar.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/header.css"
+        href="CSS/components/header.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/footer.css"
+        href="CSS/components/footer.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/loader.css"
+        href="CSS/components/loader.css"
     >
 
 
@@ -116,7 +116,7 @@
 
     <link
         rel="stylesheet"
-        href="css/pages/history.css"
+        href="CSS/pages/history.css"
     >
 
 </head>
@@ -239,372 +239,13 @@
         <!-- =================================================
              HEADER ACTIONS
              ================================================= -->
+  <div id="headerRight" class="nv-header-right"></div>
 
-        <div class="nv-header-right">
+</header>
 
-
-            <button
-                id="mobileSearchButton"
-                class="nv-icon-button nv-mobile-search-button"
-                type="button"
-                aria-label="Rechercher"
-            >
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-            </button>
-
-
-            <a
-                href="publish.html"
-                class="nv-icon-button"
-                aria-label="Créer"
-                title="Créer"
-            >
-
-                <i class="fa-solid fa-plus"></i>
-
-            </a>
-
-
-            <a
-                href="notification.html"
-                class="nv-icon-button nv-notification-button"
-                aria-label="Notifications"
-                title="Notifications"
-            >
-
-                <i class="fa-regular fa-bell"></i>
-
-                <span
-                    id="notificationBadge"
-                    class="nv-notification-badge"
-                    hidden
-                >
-                    0
-                </span>
-
-            </a>
-
-
-            <button
-                id="profileMenuButton"
-                class="nv-profile-button"
-                type="button"
-                aria-label="Menu du profil"
-                aria-expanded="false"
-                aria-controls="profileMenu"
-            >
-
-                <img
-                    id="headerAvatar"
-                    src="assets/images/default-avatar.png"
-                    alt=""
-                    class="nv-header-avatar"
-                >
-
-            </button>
-
-
-            <!-- PROFILE MENU -->
-
-            <div
-                id="profileMenu"
-                class="nv-profile-menu"
-                hidden
-            >
-
-                <div
-                    id="profileMenuUser"
-                    class="nv-profile-menu-user"
-                >
-
-                    <img
-                        id="profileMenuAvatar"
-                        src="assets/images/default-avatar.png"
-                        alt=""
-                    >
-
-                    <div>
-
-                        <strong
-                            id="profileMenuName"
-                        >
-                            NetView
-                        </strong>
-
-                        <span
-                            id="profileMenuUsername"
-                        >
-                            @netview
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="nv-profile-menu-divider"></div>
-
-
-                <a href="profile.html">
-                    <i class="fa-regular fa-user"></i>
-                    <span>Votre profil</span>
-                </a>
-
-
-                <a href="settings.html">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Paramètres</span>
-                </a>
-
-
-                <a href="mes-channel.html">
-                    <i class="fa-solid fa-tv"></i>
-                    <span>Mes chaînes</span>
-                </a>
-
-
-                <div class="nv-profile-menu-divider"></div>
-
-
-                <button
-                    id="logoutButton"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>
-                        Se déconnecter
-                    </span>
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </header>
-
-
-
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
-
-    <aside
-        id="mainSidebar"
-        class="nv-sidebar"
-        aria-label="Navigation principale"
-    >
-
-        <nav class="nv-sidebar-nav">
-
-
-            <a
-                href="index.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-house"></i>
-
-                <span>
-                    Accueil
-                </span>
-
-            </a>
-
-
-            <a
-                href="trending.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-fire"></i>
-
-                <span>
-                    Tendances
-                </span>
-
-            </a>
-
-
-            <a
-                href="subscriptions.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-play"></i>
-
-                <span>
-                    Abonnements
-                </span>
-
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="library.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-book"></i>
-
-                <span>
-                    Bibliothèque
-                </span>
-
-            </a>
-
-
-            <a
-                href="history.html"
-                class="nv-sidebar-item active"
-                aria-current="page"
-            >
-
-                <i class="fa-solid fa-clock-rotate-left"></i>
-
-                <span>
-                    Historique
-                </span>
-
-            </a>
-
-
-            <a
-                href="watch-later.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-regular fa-clock"></i>
-
-                <span>
-                    À regarder plus tard
-                </span>
-
-            </a>
-
-
-            <a
-                href="liked-videos.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-thumbs-up"></i>
-
-                <span>
-                    Vidéos aimées
-                </span>
-
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="playlist.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-list"></i>
-
-                <span>
-                    Playlists
-                </span>
-
-            </a>
-
-
-            <a
-                href="downloads.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-download"></i>
-
-                <span>
-                    Téléchargements
-                </span>
-
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="netview-shop.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-store"></i>
-
-                <span>
-                    Marketplace
-                </span>
-
-            </a>
-
-
-            <a
-                href="lives.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-tower-broadcast"></i>
-
-                <span>
-                    Lives
-                </span>
-
-            </a>
-
-
-            <a
-                href="shorts.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-film"></i>
-
-                <span>
-                    Shorts
-                </span>
-
-            </a>
-
-        </nav>
-
-
-        <div class="nv-sidebar-footer">
-
-            <a href="help.html">
-                Aide
-            </a>
-
-            <a href="privacy.html">
-                Confidentialité
-            </a>
-
-            <a href="conditions-utilisation.html">
-                Conditions
-            </a>
-
-            <span>
-                © 2026 NetView
-            </span>
-
-        </div>
-
-    </aside>
-
-
+<aside id="sidebar" class="nv-sidebar">
+    <nav class="nv-sidebar-nav"></nav>
+</aside>
 
     <!-- =====================================================
          SIDEBAR OVERLAY
@@ -799,43 +440,6 @@
 
                 </button>
 
-
-                <button
-                    class="history-filter"
-                    type="button"
-                    role="tab"
-                    aria-selected="false"
-                    data-history-type="downloads"
-                >
-
-                    <i class="fa-solid fa-download"></i>
-
-                    <span>
-                        Téléchargements
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="history-filter"
-                    type="button"
-                    role="tab"
-                    aria-selected="false"
-                    data-history-type="playlists"
-                >
-
-                    <i class="fa-solid fa-list"></i>
-
-                    <span>
-                        Playlists
-                    </span>
-
-                </button>
-
-            </div>
-
-        </section>
 
 
 
