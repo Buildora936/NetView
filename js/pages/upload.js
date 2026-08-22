@@ -1,14 +1,35 @@
 // ==========================================
 // NetView
-// upload.js
+// js/pages/upload.js
+//
+// J18 — Upload vidéo
+//
+// Cette page sert uniquement à téléverser
+// une vidéo classique.
+//
+// Portail : publish.html
+// Vidéo : upload.html
+// Short : upload-short.html
+// Live : add-live.html
 // ==========================================
-import{
-    getSession,
-    getUser
-}from "../core/auth.js";
+
+
+// ==========================================
+// IMPORTS
+// ==========================================
 
 import {
-    getMyChannels
+    getSession,
+    getUser
+} from "../core/auth.js";
+
+import {
+    getMyChannels,
+    createVideo,
+    addVideoFile,
+    addVideoTag,
+    updateVideo,
+    deleteVideo
 } from "../core/data.js";
 
 import {
@@ -17,19 +38,16 @@ import {
 
 
 // ==========================================
-// CONSTANTS
+// CONFIGURATION
 // ==========================================
 
 const VIDEO_BUCKET = "videos";
 
-const DEFAULT_AVATAR =
-    "assets/images/default-avatar.png";
-
 const MAX_VIDEO_SIZE =
-    5 * 1024 * 1024 * 1024; // 5 GB
+    5 * 1024 * 1024 * 1024;
 
 const MAX_THUMBNAIL_SIZE =
-    10 * 1024 * 1024; // 10 MB
+    10 * 1024 * 1024;
 
 const ALLOWED_VIDEO_TYPES = [
     "video/mp4",
@@ -55,7 +73,7 @@ const ALLOWED_IMAGE_TYPES = [
 
 
 // ==========================================
-// DOM
+// DOM — GLOBAL
 // ==========================================
 
 const sidebar =
@@ -67,7 +85,9 @@ const sidebarNav =
     );
 
 const sidebarToggle =
-    document.getElementById("menuButton");
+    document.getElementById(
+        "menuButton"
+    );
 
 const sidebarOverlay =
     document.getElementById(
@@ -91,7 +111,7 @@ const searchInput =
 
 
 // ==========================================
-// FORM
+// DOM — FORMULAIRE
 // ==========================================
 
 const uploadForm =
@@ -146,7 +166,7 @@ const tagsInput =
 
 
 // ==========================================
-// VIDEO PREVIEW
+// DOM — VIDEO PREVIEW
 // ==========================================
 
 const videoPreview =
@@ -181,7 +201,7 @@ const thumbnailFileName =
 
 
 // ==========================================
-// PROGRESS
+// DOM — PROGRESSION
 // ==========================================
 
 const progressContainer =
@@ -208,6 +228,11 @@ const submitButton =
     document.getElementById(
         "publishButton"
     );
+
+
+// ==========================================
+// DOM — MESSAGES
+// ==========================================
 
 const errorContainer =
     document.getElementById(
@@ -236,8 +261,6 @@ const successMessage =
 
 let currentUser = null;
 
-let currentProfile = null;
-
 let channels = [];
 
 let selectedVideo = null;
@@ -258,7 +281,7 @@ let uploadedThumbnailPath = null;
 
 
 // ==========================================
-// INITIALIZATION
+// INITIALISATION
 // ==========================================
 
 document.addEventListener(
@@ -279,7 +302,14 @@ async function init() {
 
     setupThumbnailInput();
 
+    setupDefaultValues();
+
     try {
+
+        updateProgress(
+            0,
+            "Initialisation..."
+        );
 
         const session =
             await getSession();
@@ -295,12 +325,10 @@ async function init() {
             return;
         }
 
-
         currentUser =
             await getUser();
 
-
-        if (!currentUser) {
+        if (!currentUser?.id) {
 
             showGuestHeader();
 
@@ -311,15 +339,13 @@ async function init() {
             return;
         }
 
-
         showUserHeader();
 
         showUserSidebar();
 
-
         await loadUserChannels();
 
-        setupDefaultValues();
+        updateSubmitState();
 
     } catch (error) {
 
@@ -329,16 +355,14 @@ async function init() {
         );
 
         showError(
-            "Impossible d'initialiser la publication."
+            getErrorMessage(error)
         );
-
     }
-
 }
 
 
 // ==========================================
-// HEADER — GUEST
+// HEADER — VISITEUR
 // ==========================================
 
 function showGuestHeader() {
@@ -357,7 +381,9 @@ function showGuestHeader() {
             title="S'identifier"
         >
 
-            <i class="fa-regular fa-user"></i>
+            <i
+                class="fa-regular fa-user"
+            ></i>
 
             <span>
                 S'identifier
@@ -367,9 +393,10 @@ function showGuestHeader() {
 
     `;
 
-
     document
-        .getElementById("loginButton")
+        .getElementById(
+            "loginButton"
+        )
         ?.addEventListener(
             "click",
             () => {
@@ -383,7 +410,7 @@ function showGuestHeader() {
 
 
 // ==========================================
-// HEADER — USER
+// HEADER — UTILISATEUR
 // ==========================================
 
 function showUserHeader() {
@@ -392,18 +419,13 @@ function showUserHeader() {
         return;
     }
 
-
-    const avatar =
-        currentProfile?.avatar_url ||
-        DEFAULT_AVATAR;
-
-
     const displayName =
-        currentProfile?.display_name ||
-        currentProfile?.username ||
+        currentUser?.user_metadata
+            ?.display_name ||
+        currentUser?.user_metadata
+            ?.username ||
         currentUser?.email ||
         "Utilisateur";
-
 
     headerRight.innerHTML = `
 
@@ -415,10 +437,11 @@ function showUserHeader() {
             title="Notifications"
         >
 
-            <i class="fa-regular fa-bell"></i>
+            <i
+                class="fa-regular fa-bell"
+            ></i>
 
         </button>
-
 
         <a
             href="profile.html"
@@ -429,35 +452,13 @@ function showUserHeader() {
             )}"
         >
 
-            <img
-                src="${escapeAttribute(
-                    avatar
-                )}"
-                alt="${escapeAttribute(
-                    displayName
-                )}"
-                loading="lazy"
-            >
+            <i
+                class="fa-regular fa-user"
+            ></i>
 
         </a>
 
     `;
-
-
-    document
-        .getElementById(
-            "uploadButton"
-        )
-        ?.addEventListener(
-            "click",
-            () => {
-
-                window.location.href =
-                    "upload.html";
-
-            }
-        );
-
 
     document
         .getElementById(
@@ -476,7 +477,7 @@ function showUserHeader() {
 
 
 // ==========================================
-// SIDEBAR — GUEST
+// SIDEBAR — VISITEUR
 // ==========================================
 
 function showGuestSidebar() {
@@ -485,7 +486,6 @@ function showGuestSidebar() {
         return;
     }
 
-
     sidebarNav.innerHTML = `
 
         <a
@@ -493,7 +493,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-house"></i>
+            <i
+                class="fa-solid fa-house"
+            ></i>
 
             <span>
                 Accueil
@@ -507,7 +509,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-bolt"></i>
+            <i
+                class="fa-solid fa-bolt"
+            ></i>
 
             <span>
                 Shorts
@@ -521,7 +525,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-tower-broadcast"></i>
+            <i
+                class="fa-solid fa-tower-broadcast"
+            ></i>
 
             <span>
                 Lives
@@ -535,7 +541,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-compass"></i>
+            <i
+                class="fa-solid fa-compass"
+            ></i>
 
             <span>
                 Explorer
@@ -549,7 +557,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-store"></i>
+            <i
+                class="fa-solid fa-store"
+            ></i>
 
             <span>
                 Boutique
@@ -566,7 +576,9 @@ function showGuestSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-regular fa-user"></i>
+            <i
+                class="fa-regular fa-user"
+            ></i>
 
             <span>
                 S'identifier
@@ -579,7 +591,7 @@ function showGuestSidebar() {
 
 
 // ==========================================
-// SIDEBAR — USER
+// SIDEBAR — UTILISATEUR
 // ==========================================
 
 function showUserSidebar() {
@@ -588,7 +600,6 @@ function showUserSidebar() {
         return;
     }
 
-
     sidebarNav.innerHTML = `
 
         <a
@@ -596,7 +607,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-house"></i>
+            <i
+                class="fa-solid fa-house"
+            ></i>
 
             <span>
                 Accueil
@@ -610,7 +623,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-bolt"></i>
+            <i
+                class="fa-solid fa-bolt"
+            ></i>
 
             <span>
                 Shorts
@@ -624,7 +639,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-tv"></i>
+            <i
+                class="fa-solid fa-tv"
+            ></i>
 
             <span>
                 Abonnements
@@ -638,7 +655,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-list"></i>
+            <i
+                class="fa-solid fa-list"
+            ></i>
 
             <span>
                 Playlists
@@ -652,7 +671,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-clock-rotate-left"></i>
+            <i
+                class="fa-solid fa-clock-rotate-left"
+            ></i>
 
             <span>
                 Historique
@@ -666,7 +687,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-regular fa-clock"></i>
+            <i
+                class="fa-regular fa-clock"
+            ></i>
 
             <span>
                 À regarder
@@ -680,7 +703,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-thumbs-up"></i>
+            <i
+                class="fa-solid fa-thumbs-up"
+            ></i>
 
             <span>
                 J'aime
@@ -697,7 +722,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-tower-broadcast"></i>
+            <i
+                class="fa-solid fa-tower-broadcast"
+            ></i>
 
             <span>
                 Lives
@@ -711,7 +738,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-store"></i>
+            <i
+                class="fa-solid fa-store"
+            ></i>
 
             <span>
                 Boutique
@@ -725,7 +754,9 @@ function showUserSidebar() {
             class="nv-sidebar-item"
         >
 
-            <i class="fa-solid fa-gear"></i>
+            <i
+                class="fa-solid fa-gear"
+            ></i>
 
             <span>
                 Paramètres
@@ -785,7 +816,6 @@ function setupSidebarEvents() {
 
         }
     );
-
 }
 
 
@@ -808,7 +838,6 @@ function openSidebar() {
         "aria-hidden",
         "false"
     );
-
 }
 
 
@@ -831,7 +860,6 @@ function closeSidebar() {
         "aria-hidden",
         "true"
     );
-
 }
 
 
@@ -861,7 +889,6 @@ function setupSearch() {
 
         }
     );
-
 }
 
 
@@ -874,7 +901,6 @@ async function loadUserChannels() {
     channels =
         await getMyChannels();
 
-
     if (
         !Array.isArray(channels)
     ) {
@@ -883,14 +909,12 @@ async function loadUserChannels() {
 
     }
 
-
     renderChannels();
-
 }
 
 
 // ==========================================
-// CHANNEL SELECT
+// RENDER CHANNELS
 // ==========================================
 
 function renderChannels() {
@@ -898,7 +922,6 @@ function renderChannels() {
     if (!channelSelect) {
         return;
     }
-
 
     channelSelect.innerHTML = "";
 
@@ -923,6 +946,8 @@ function renderChannels() {
 
         channelSelect.disabled =
             true;
+
+        updateSubmitState();
 
         return;
     }
@@ -954,7 +979,6 @@ function renderChannels() {
 
         }
     );
-
 }
 
 
@@ -966,7 +990,7 @@ function setupDefaultValues() {
 
     if (languageSelect) {
 
-        const exists =
+        const frenchExists =
             Array.from(
                 languageSelect.options
             ).some(
@@ -974,35 +998,32 @@ function setupDefaultValues() {
                     option.value === "fr"
             );
 
-
-        if (exists) {
+        if (frenchExists) {
 
             languageSelect.value =
                 "fr";
 
         }
-
     }
 
 
     if (visibilitySelect) {
 
-        if (
+        const publicExists =
             Array.from(
                 visibilitySelect.options
             ).some(
                 option =>
                     option.value === "public"
-            )
-        ) {
+            );
+
+        if (publicExists) {
 
             visibilitySelect.value =
                 "public";
 
         }
-
     }
-
 }
 
 
@@ -1016,7 +1037,6 @@ function setupForm() {
         "submit",
         handleSubmit
     );
-
 }
 
 
@@ -1030,7 +1050,6 @@ function setupVideoInput() {
         "change",
         handleVideoSelection
     );
-
 }
 
 
@@ -1041,18 +1060,14 @@ async function handleVideoSelection(
     const file =
         event.target.files?.[0];
 
-
     if (!file) {
         return;
     }
 
-
     clearError();
-
 
     const validation =
         validateVideo(file);
-
 
     if (!validation.valid) {
 
@@ -1109,7 +1124,6 @@ async function handleVideoSelection(
 
 
     updateSubmitState();
-
 }
 
 
@@ -1123,7 +1137,6 @@ function setupThumbnailInput() {
         "change",
         handleThumbnailSelection
     );
-
 }
 
 
@@ -1134,18 +1147,14 @@ function handleThumbnailSelection(
     const file =
         event.target.files?.[0];
 
-
     if (!file) {
         return;
     }
 
-
     clearError();
-
 
     const validation =
         validateThumbnail(file);
-
 
     if (!validation.valid) {
 
@@ -1197,7 +1206,6 @@ function handleThumbnailSelection(
             file.name;
 
     }
-
 }
 
 
@@ -1219,7 +1227,6 @@ function validateVideo(
             message:
                 "Veuillez sélectionner une vidéo."
         };
-
     }
 
 
@@ -1232,7 +1239,6 @@ function validateVideo(
             message:
                 "Le fichier vidéo est vide."
         };
-
     }
 
 
@@ -1246,7 +1252,6 @@ function validateVideo(
             message:
                 "La vidéo dépasse la taille maximale autorisée de 5 Go."
         };
-
     }
 
 
@@ -1278,14 +1283,12 @@ function validateVideo(
             message:
                 "Format vidéo non pris en charge. Utilisez MP4, WebM, MOV, MKV ou AVI."
         };
-
     }
 
 
     return {
         valid: true
     };
-
 }
 
 
@@ -1307,7 +1310,18 @@ function validateThumbnail(
             message:
                 "Veuillez sélectionner une miniature."
         };
+    }
 
+
+    if (
+        file.size <= 0
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Le fichier de miniature est vide."
+        };
     }
 
 
@@ -1321,7 +1335,6 @@ function validateThumbnail(
             message:
                 "La miniature dépasse 10 Mo."
         };
-
     }
 
 
@@ -1336,14 +1349,12 @@ function validateThumbnail(
             message:
                 "Format de miniature non pris en charge. Utilisez JPG, PNG ou WebP."
         };
-
     }
 
 
     return {
         valid: true
     };
-
 }
 
 
@@ -1400,9 +1411,9 @@ async function handleSubmit(
 
     try {
 
-        // --------------------------------------
+        // ==================================
         // SESSION
-        // --------------------------------------
+        // ==================================
 
         const session =
             await getSession();
@@ -1413,7 +1424,6 @@ async function handleSubmit(
             throw new Error(
                 "Vous devez être connecté pour publier une vidéo."
             );
-
         }
 
 
@@ -1426,25 +1436,24 @@ async function handleSubmit(
             throw new Error(
                 "Impossible de récupérer votre compte NetView."
             );
-
         }
 
 
-        // --------------------------------------
+        // ==================================
         // FORM DATA
-        // --------------------------------------
+        // ==================================
 
         const formData =
             getFormData();
 
 
-        // --------------------------------------
+        // ==================================
         // CREATE VIDEO
-        // --------------------------------------
+        // ==================================
 
         updateProgress(
             5,
-            "Création de la publication..."
+            "Création de la vidéo..."
         );
 
 
@@ -1458,9 +1467,9 @@ async function handleSubmit(
             video.id;
 
 
-        // --------------------------------------
+        // ==================================
         // VIDEO STORAGE
-        // --------------------------------------
+        // ==================================
 
         updateProgress(
             15,
@@ -1475,12 +1484,12 @@ async function handleSubmit(
             );
 
 
-        // --------------------------------------
-        // VIDEO FILE
-        // --------------------------------------
+        // ==================================
+        // VIDEO FILE RECORD
+        // ==================================
 
         updateProgress(
-            70,
+            75,
             "Enregistrement du fichier vidéo..."
         );
 
@@ -1492,17 +1501,16 @@ async function handleSubmit(
         );
 
 
-        // --------------------------------------
+        // ==================================
         // THUMBNAIL
-        // --------------------------------------
+        // ==================================
 
-        let thumbnailUrl = null;
-
-
-        if (selectedThumbnail) {
+        if (
+            selectedThumbnail
+        ) {
 
             updateProgress(
-                75,
+                80,
                 "Envoi de la miniature..."
             );
 
@@ -1514,35 +1522,23 @@ async function handleSubmit(
                 );
 
 
-            thumbnailUrl =
-                uploadedThumbnailPath;
-
-        }
-
-
-        // --------------------------------------
-        // UPDATE THUMBNAIL
-        // --------------------------------------
-
-        if (thumbnailUrl) {
-
             updateProgress(
                 85,
-                "Mise à jour de la publication..."
+                "Enregistrement de la miniature..."
             );
 
 
             await updateVideoThumbnail(
                 video.id,
-                thumbnailUrl
+                uploadedThumbnailPath
             );
 
         }
 
 
-        // --------------------------------------
+        // ==================================
         // TAGS
-        // --------------------------------------
+        // ==================================
 
         updateProgress(
             90,
@@ -1556,18 +1552,19 @@ async function handleSubmit(
         );
 
 
-        // --------------------------------------
+        // ==================================
         // FINALIZE
-        // --------------------------------------
+        // ==================================
 
         updateProgress(
             96,
-            "Finalisation..."
+            "Finalisation de la publication..."
         );
 
 
         await finalizeVideo(
-            video.id
+            video.id,
+            formData.visibility
         );
 
 
@@ -1582,6 +1579,10 @@ async function handleSubmit(
         );
 
 
+        // ==================================
+        // REDIRECTION
+        // ==================================
+
         setTimeout(
             () => {
 
@@ -1591,7 +1592,7 @@ async function handleSubmit(
                     )}`;
 
             },
-            800
+            900
         );
 
 
@@ -1616,12 +1617,14 @@ async function handleSubmit(
         isUploading =
             false;
 
+
         setUploadingState(
             false
         );
 
-    }
+        updateSubmitState();
 
+    }
 }
 
 
@@ -1638,7 +1641,6 @@ function validateForm() {
             message:
                 "Veuillez sélectionner une vidéo."
         };
-
     }
 
 
@@ -1649,9 +1651,8 @@ function validateForm() {
         return {
             valid: false,
             message:
-                "Veuillez sélectionner une chaîne."
+                "Veuillez sélectionner votre chaîne."
         };
-
     }
 
 
@@ -1670,7 +1671,6 @@ function validateForm() {
             message:
                 "La chaîne sélectionnée n'appartient pas à votre compte."
         };
-
     }
 
 
@@ -1685,24 +1685,28 @@ function validateForm() {
             message:
                 "Veuillez saisir un titre."
         };
-
     }
 
 
-    if (title.length > 200) {
+    if (
+        title.length > 200
+    ) {
 
         return {
             valid: false,
             message:
                 "Le titre ne peut pas dépasser 200 caractères."
         };
-
     }
 
 
+    const description =
+        descriptionInput?.value?.trim() ||
+        "";
+
+
     if (
-        descriptionInput?.value?.length >
-        5000
+        description.length > 5000
     ) {
 
         return {
@@ -1710,14 +1714,12 @@ function validateForm() {
             message:
                 "La description ne peut pas dépasser 5000 caractères."
         };
-
     }
 
 
     return {
         valid: true
     };
-
 }
 
 
@@ -1736,29 +1738,34 @@ function getFormData() {
             titleInput.value.trim(),
 
         description:
-            descriptionInput?.value?.trim() ||
+            descriptionInput
+                ?.value
+                ?.trim() ||
             null,
 
         categoryId:
-            categorySelect?.value ||
+            categorySelect
+                ?.value ||
             null,
 
         language:
-            languageSelect?.value ||
+            languageSelect
+                ?.value ||
             "fr",
 
         visibility:
-            visibilitySelect?.value ||
+            visibilitySelect
+                ?.value ||
             "public",
 
         tags:
             normalizeTags(
-                tagsInput?.value ||
+                tagsInput
+                    ?.value ||
                 ""
             )
 
     };
-
 }
 
 
@@ -1774,7 +1781,9 @@ function normalizeTags(
         ...new Set(
 
             String(value)
+
                 .split(",")
+
                 .map(
                     tag =>
                         tag
@@ -1784,12 +1793,16 @@ function normalizeTags(
                                 ""
                             )
                 )
+
                 .filter(Boolean)
-                .slice(0, 30)
+
+                .slice(
+                    0,
+                    30
+                )
 
         )
     ];
-
 }
 
 
@@ -1801,73 +1814,65 @@ async function createVideoRecord(
     formData
 ) {
 
-    const payload = {
+    const result =
+        await createVideo({
 
-        channel_id:
-            formData.channelId,
+            channel_id:
+                formData.channelId,
 
-        title:
-            formData.title,
+            title:
+                formData.title,
 
-        description:
-            formData.description,
+            description:
+                formData.description,
 
-        thumbnail_url:
-            null,
+            thumbnail_url:
+                null,
 
-        visibility:
-            formData.visibility,
+            visibility:
+                formData.visibility,
 
-        status:
-            "processing",
+            status:
+                "processing",
 
-        duration:
-            0,
+            duration:
+                0,
 
-        category_id:
-            formData.categoryId,
+            category_id:
+                formData.categoryId,
 
-        language:
-            formData.language,
+            language:
+                formData.language,
 
-        published_at:
-            null
+            published_at:
+                null
 
-    };
-
-
-    const {
-        data,
-        error
-    } =
-        await supabase
-            .from("videos")
-            .insert(payload)
-            .select("*")
-            .single();
+        });
 
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
 
-    if (!data?.id) {
+    const video =
+        result?.data;
+
+
+    if (!video?.id) {
 
         throw new Error(
             "La vidéo n'a pas pu être créée."
         );
-
     }
 
 
-    return data;
-
+    return video;
 }
 
 
 // ==========================================
-// UPLOAD VIDEO
+// UPLOAD VIDEO STORAGE
 // ==========================================
 
 async function uploadVideoFile(
@@ -1884,14 +1889,14 @@ async function uploadVideoFile(
         throw new Error(
             "Informations vidéo invalides."
         );
-
     }
 
 
     const extension =
         getFileExtension(
             file.name
-        ) || "mp4";
+        ) ||
+        "mp4";
 
 
     const path =
@@ -1903,11 +1908,14 @@ async function uploadVideoFile(
     } =
         await supabase
             .storage
-            .from(VIDEO_BUCKET)
+            .from(
+                VIDEO_BUCKET
+            )
             .upload(
                 path,
                 file,
                 {
+
                     cacheControl:
                         "3600",
 
@@ -1917,6 +1925,7 @@ async function uploadVideoFile(
                     contentType:
                         file.type ||
                         "video/mp4"
+
                 }
             );
 
@@ -1927,12 +1936,11 @@ async function uploadVideoFile(
 
 
     return path;
-
 }
 
 
 // ==========================================
-// CREATE VIDEO FILE
+// CREATE VIDEO FILE RECORD
 // ==========================================
 
 async function createVideoFileRecord(
@@ -1941,32 +1949,30 @@ async function createVideoFileRecord(
     file
 ) {
 
-    const {
-        error
-    } =
-        await supabase
-            .from("video_files")
-            .insert({
+    const result =
+        await addVideoFile({
 
-                video_id:
-                    videoId,
+            video_id:
+                videoId,
 
-                quality:
-                    "original",
+            quality:
+                "original",
 
-                file_url:
-                    filePath,
+            file_url:
+                filePath,
 
-                file_size:
-                    file.size
+            file_size:
+                file.size
 
-            });
+        });
 
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
+
+    return result;
 }
 
 
@@ -1988,14 +1994,14 @@ async function uploadThumbnail(
         throw new Error(
             "Miniature invalide."
         );
-
     }
 
 
     const extension =
         getFileExtension(
             file.name
-        ) || "jpg";
+        ) ||
+        "jpg";
 
 
     const path =
@@ -2007,11 +2013,14 @@ async function uploadThumbnail(
     } =
         await supabase
             .storage
-            .from(VIDEO_BUCKET)
+            .from(
+                VIDEO_BUCKET
+            )
             .upload(
                 path,
                 file,
                 {
+
                     cacheControl:
                         "3600",
 
@@ -2019,7 +2028,9 @@ async function uploadThumbnail(
                         false,
 
                     contentType:
-                        file.type
+                        file.type ||
+                        "image/jpeg"
+
                 }
             );
 
@@ -2030,12 +2041,11 @@ async function uploadThumbnail(
 
 
     return path;
-
 }
 
 
 // ==========================================
-// UPDATE THUMBNAIL
+// UPDATE VIDEO THUMBNAIL
 // ==========================================
 
 async function updateVideoThumbnail(
@@ -2043,35 +2053,29 @@ async function updateVideoThumbnail(
     thumbnailPath
 ) {
 
-    const {
-        error
-    } =
-        await supabase
-            .from("videos")
-            .update({
+    const result =
+        await updateVideo(
+            videoId,
+            {
 
                 thumbnail_url:
-                    thumbnailPath,
+                    thumbnailPath
 
-                updated_at:
-                    new Date().toISOString()
-
-            })
-            .eq(
-                "id",
-                videoId
-            );
+            }
+        );
 
 
-    if (error) {
-        throw error;
+    if (result?.error) {
+        throw result.error;
     }
 
+
+    return result;
 }
 
 
 // ==========================================
-// CREATE TAGS
+// CREATE VIDEO TAGS
 // ==========================================
 
 async function createVideoTags(
@@ -2088,32 +2092,22 @@ async function createVideoTags(
     }
 
 
-    const rows =
-        tags.map(
-            tag => ({
+    for (
+        const tag of tags
+    ) {
 
-                video_id:
-                    videoId,
-
-                tag:
-                    tag
-
-            })
-        );
+        const result =
+            await addVideoTag(
+                videoId,
+                tag
+            );
 
 
-    const {
-        error
-    } =
-        await supabase
-            .from("video_tags")
-            .insert(rows);
+        if (result?.error) {
+            throw result.error;
+        }
 
-
-    if (error) {
-        throw error;
     }
-
 }
 
 
@@ -2122,36 +2116,50 @@ async function createVideoTags(
 // ==========================================
 
 async function finalizeVideo(
-    videoId
+    videoId,
+    visibility
 ) {
 
-    const {
-        error
-    } =
-        await supabase
-            .from("videos")
-            .update({
+    const values = {
 
-                status:
-                    "published",
+        status:
+            "published",
 
-                published_at:
-                    new Date().toISOString(),
+        published_at:
+            new Date().toISOString()
 
-                updated_at:
-                    new Date().toISOString()
-
-            })
-            .eq(
-                "id",
-                videoId
-            );
+    };
 
 
-    if (error) {
-        throw error;
+    /*
+     * Une vidéo privée/non répertoriée
+     * peut tout de même être publiée.
+     *
+     * Le champ visibility conserve
+     * son comportement propre.
+     */
+
+    if (visibility) {
+
+        values.visibility =
+            visibility;
+
     }
 
+
+    const result =
+        await updateVideo(
+            videoId,
+            values
+        );
+
+
+    if (result?.error) {
+        throw result.error;
+    }
+
+
+    return result;
 }
 
 
@@ -2161,9 +2169,9 @@ async function finalizeVideo(
 
 async function cleanupUpload() {
 
-    // ------------------------------------------
-    // Delete video file
-    // ------------------------------------------
+    // --------------------------------------
+    // VIDEO STORAGE
+    // --------------------------------------
 
     if (
         uploadedVideoPath
@@ -2173,7 +2181,9 @@ async function cleanupUpload() {
 
             await supabase
                 .storage
-                .from(VIDEO_BUCKET)
+                .from(
+                    VIDEO_BUCKET
+                )
                 .remove([
                     uploadedVideoPath
                 ]);
@@ -2186,13 +2196,12 @@ async function cleanupUpload() {
             );
 
         }
-
     }
 
 
-    // ------------------------------------------
-    // Delete thumbnail
-    // ------------------------------------------
+    // --------------------------------------
+    // THUMBNAIL STORAGE
+    // --------------------------------------
 
     if (
         uploadedThumbnailPath
@@ -2202,7 +2211,9 @@ async function cleanupUpload() {
 
             await supabase
                 .storage
-                .from(VIDEO_BUCKET)
+                .from(
+                    VIDEO_BUCKET
+                )
                 .remove([
                     uploadedThumbnailPath
                 ]);
@@ -2215,13 +2226,12 @@ async function cleanupUpload() {
             );
 
         }
-
     }
 
 
-    // ------------------------------------------
-    // Delete database record
-    // ------------------------------------------
+    // --------------------------------------
+    // VIDEO DATABASE
+    // --------------------------------------
 
     if (
         createdVideoId
@@ -2229,13 +2239,9 @@ async function cleanupUpload() {
 
         try {
 
-            await supabase
-                .from("videos")
-                .delete()
-                .eq(
-                    "id",
-                    createdVideoId
-                );
+            await deleteVideo(
+                createdVideoId
+            );
 
         } catch (error) {
 
@@ -2245,7 +2251,6 @@ async function cleanupUpload() {
             );
 
         }
-
     }
 
 
@@ -2257,7 +2262,6 @@ async function cleanupUpload() {
 
     uploadedThumbnailPath =
         null;
-
 }
 
 
@@ -2275,7 +2279,9 @@ function updateProgress(
             0,
             Math.min(
                 100,
-                Number(percentage)
+                Number(
+                    percentage
+                )
             )
         );
 
@@ -2296,7 +2302,9 @@ function updateProgress(
     if (progressText) {
 
         progressText.textContent =
-            `${Math.round(value)}%`;
+            `${Math.round(
+                value
+            )}%`;
 
     }
 
@@ -2313,7 +2321,6 @@ function updateProgress(
     showElement(
         progressContainer
     );
-
 }
 
 
@@ -2338,8 +2345,16 @@ function setUploadingState(
 
         if (uploading) {
 
-            submitButton.dataset.originalText =
-                submitButton.innerHTML;
+            if (
+                !submitButton.dataset
+                    .originalText
+            ) {
+
+                submitButton.dataset
+                    .originalText =
+                    submitButton.innerHTML;
+
+            }
 
 
             submitButton.innerHTML = `
@@ -2354,15 +2369,20 @@ function setUploadingState(
 
             `;
 
-        } else if (
-            submitButton.dataset.originalText
-        ) {
+        } else {
 
-            submitButton.innerHTML =
-                submitButton.dataset.originalText;
+            if (
+                submitButton.dataset
+                    .originalText
+            ) {
+
+                submitButton.innerHTML =
+                    submitButton.dataset
+                        .originalText;
+
+            }
 
         }
-
     }
 
 
@@ -2370,10 +2390,17 @@ function setUploadingState(
 
         uploadForm
             .querySelectorAll(
-                "input, textarea, select"
+                "input, textarea, select, button"
             )
             .forEach(
                 element => {
+
+                    if (
+                        element ===
+                        submitButton
+                    ) {
+                        return;
+                    }
 
                     element.disabled =
                         uploading;
@@ -2382,7 +2409,6 @@ function setUploadingState(
             );
 
     }
-
 }
 
 
@@ -2402,12 +2428,11 @@ function updateSubmitState() {
         !currentUser ||
         channels.length === 0 ||
         isUploading;
-
 }
 
 
 // ==========================================
-// AUTHENTICATION REQUIRED
+// AUTH REQUIRED
 // ==========================================
 
 function showAuthenticationRequired() {
@@ -2423,7 +2448,6 @@ function showAuthenticationRequired() {
     showError(
         "Connectez-vous à votre compte NetView pour publier une vidéo."
     );
-
 }
 
 
@@ -2437,10 +2461,11 @@ function showError(
 
     if (!errorContainer) {
 
-        alert(message);
+        alert(
+            message
+        );
 
         return;
-
     }
 
 
@@ -2458,10 +2483,11 @@ function showError(
 
 
     errorContainer.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
+        behavior:
+            "smooth",
+        block:
+            "center"
     });
-
 }
 
 
@@ -2471,13 +2497,13 @@ function clearError() {
         errorContainer
     );
 
+
     if (errorMessage) {
 
         errorMessage.textContent =
             "";
 
     }
-
 }
 
 
@@ -2505,7 +2531,6 @@ function showSuccess(
     showElement(
         successContainer
     );
-
 }
 
 
@@ -2524,7 +2549,6 @@ function showElement(
 
     element.hidden =
         false;
-
 }
 
 
@@ -2539,7 +2563,6 @@ function hideElement(
 
     element.hidden =
         true;
-
 }
 
 
@@ -2559,7 +2582,9 @@ function getFileExtension(
 
 
     const index =
-        name.lastIndexOf(".");
+        name.lastIndexOf(
+            "."
+        );
 
 
     if (
@@ -2572,12 +2597,13 @@ function getFileExtension(
 
 
     return name
-        .slice(index + 1)
+        .slice(
+            index + 1
+        )
         .replace(
             /[^a-z0-9]/g,
             ""
         );
-
 }
 
 
@@ -2594,7 +2620,6 @@ function getErrorMessage(
         return (
             "Une erreur est survenue pendant la publication."
         );
-
     }
 
 
@@ -2607,24 +2632,27 @@ function getErrorMessage(
         );
 
 
+    const normalized =
+        message.toLowerCase();
+
+
     if (
-        message.includes(
-            "Payload too large"
+        normalized.includes(
+            "payload too large"
         )
     ) {
 
         return (
             "La vidéo est trop volumineuse."
         );
-
     }
 
 
     if (
-        message.includes(
+        normalized.includes(
             "duplicate"
         ) ||
-        message.includes(
+        normalized.includes(
             "already exists"
         )
     ) {
@@ -2632,28 +2660,41 @@ function getErrorMessage(
         return (
             "Un fichier portant ce nom existe déjà."
         );
-
     }
 
 
     if (
-        message.includes(
+        normalized.includes(
             "row-level security"
         ) ||
-        message.includes(
-            "RLS"
+        normalized.includes(
+            "rls"
+        ) ||
+        normalized.includes(
+            "permission denied"
         )
     ) {
 
         return (
             "Vous n'avez pas l'autorisation d'effectuer cette opération."
         );
-
     }
 
 
     if (
-        message.includes(
+        normalized.includes(
+            "bucket not found"
+        )
+    ) {
+
+        return (
+            "Le stockage vidéo NetView est introuvable."
+        );
+    }
+
+
+    if (
+        normalized.includes(
             "not found"
         )
     ) {
@@ -2661,7 +2702,6 @@ function getErrorMessage(
         return (
             "La ressource demandée est introuvable."
         );
-
     }
 
 
@@ -2669,7 +2709,6 @@ function getErrorMessage(
         message ||
         "Une erreur est survenue pendant la publication."
     );
-
 }
 
 
@@ -2684,27 +2723,26 @@ function escapeHTML(
     return String(
         value ?? ""
     )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 }
 
 
@@ -2715,7 +2753,6 @@ function escapeAttribute(
     return escapeHTML(
         value
     );
-
 }
 
 
@@ -2733,6 +2770,8 @@ window.addEventListener(
                 videoObjectUrl
             );
 
+            videoObjectUrl =
+                null;
         }
 
 
@@ -2742,6 +2781,8 @@ window.addEventListener(
                 thumbnailObjectUrl
             );
 
+            thumbnailObjectUrl =
+                null;
         }
 
     }
