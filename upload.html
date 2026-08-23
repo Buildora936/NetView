@@ -20,30 +20,107 @@
         content="#2563EB"
     >
 
-    <title>
-        Publier une vidéo — NetView
-    </title>
+    <title>Publier une vidéo — NetView</title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="NetView_icone.png"
+    >
 
 
     <!-- =====================================================
          FONT AWESOME
          ===================================================== -->
 
- <link rel="icon" href="NetView_icone.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="CSS/core/reset.css">
-    <link rel="stylesheet" href="CSS/core/variables.css">
-    <link rel="stylesheet" href="CSS/core/typography.css">
-    <link rel="stylesheet" href="CSS/core/utilities.css">
-    <link rel="stylesheet" href="CSS/core/animations.css">
-    <link rel="stylesheet" href="CSS/components/header.css">
-    <link rel="stylesheet" href="CSS/components/sidebar.css">
-    <link rel="stylesheet" href="CSS/components/buttons.css">
-    <link rel="stylesheet" href="CSS/components/cards.css">
-    <link rel="stylesheet" href="CSS/components/modal.css">
-    <link rel="stylesheet" href="CSS/components/toast.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
     <!-- =====================================================
-         PAGE
+         CORE CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/reset.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/variables.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/typography.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/utilities.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/core/animations.css"
+    >
+
+
+    <!-- =====================================================
+         COMPONENTS CSS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/sidebar.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/buttons.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/cards.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/modal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/toast.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/forms.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="CSS/components/loader.css"
+    >
+
+
+    <!-- =====================================================
+         PAGE CSS
          ===================================================== -->
 
     <link
@@ -57,875 +134,1266 @@
 <body class="nv-page upload-page">
 
 
-<!-- =========================================================
-     HEADER
-     ========================================================= -->
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<header class="nv-header">
+    <header class="nv-header">
 
-    <div class="nv-header-left">
+        <div class="nv-header-left">
 
-        <button
-            id="menuButton"
-            class="nv-icon-button"
-            type="button"
-            aria-label="Menu"
-        >
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
-
-        <a
-            href="index.html"
-            class="nv-logo"
-            aria-label="NetView"
-        >
-
-            <img
-                src="NetView.png"
-                alt="NetView"
+            <button
+                id="menuButton"
+                class="nv-icon-button"
+                type="button"
+                aria-label="Ouvrir le menu"
+                aria-controls="sidebar"
+                aria-expanded="false"
             >
 
-        </a>
+                <i class="fa-solid fa-bars"></i>
 
-    </div>
+            </button>
 
 
-    <div class="nv-header-center">
+            <a
+                href="index.html"
+                class="nv-logo"
+                aria-label="NetView - Accueil"
+            >
 
-        <div class="nv-header-title">
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                >
 
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-
-            <span>
-                Publier une vidéo
-            </span>
+            </a>
 
         </div>
 
-    </div>
 
+        <div class="nv-header-center">
 
-    <div id="headerRight" class="nv-header-right"></div>
+            <div class="nv-header-title">
 
-</header>
+                <i class="fa-solid fa-cloud-arrow-up"></i>
 
-<aside id="sidebar" class="nv-sidebar">
-    <nav class="nv-sidebar-nav"></nav>
-</aside>
-<div id="sidebarOverlay" class="nv-sidebar-overlay"></div>
-
-<!-- =========================================================
-     MAIN
-     ========================================================= -->
-
-<main class="upload-main">
-
-
-    <section class="upload-container">
-
-
-        <!-- =================================================
-             PAGE HEADER
-             ================================================= -->
-
-        <div class="upload-page-header">
-
-            <div>
-
-                <h1>
+                <span>
                     Publier une vidéo
-                </h1>
-
-                <p>
-                    Importez votre vidéo et préparez sa publication
-                    sur NetView.
-                </p>
+                </span>
 
             </div>
 
         </div>
 
 
+        <!-- Rempli dynamiquement par navigation.js -->
 
-        <!-- =================================================
-             UPLOAD CARD
-             ================================================= -->
+        <div
+            id="headerRight"
+            class="nv-header-right"
+        ></div>
 
-        <form
-            id="uploadForm"
-            class="upload-form"
-            novalidate
-        >
+    </header>
 
 
-            <!-- =============================================
-                 VIDEO FILE
-                 ============================================= -->
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
-            <section class="upload-card">
+    <aside
+        id="sidebar"
+        class="nv-sidebar"
+        aria-label="Navigation principale"
+    >
 
-                <div class="upload-card-header">
+        <nav
+            class="nv-sidebar-nav"
+            aria-label="Menu NetView"
+        ></nav>
 
-                    <div class="upload-card-icon">
+    </aside>
 
-                        <i class="fa-solid fa-video"></i>
 
-                    </div>
+    <div
+        id="sidebarOverlay"
+        class="nv-sidebar-overlay"
+        aria-hidden="true"
+    ></div>
 
-                    <div>
 
-                        <h2>
-                            Fichier vidéo
-                        </h2>
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
 
-                        <p>
-                            Sélectionnez la vidéo à publier.
-                        </p>
+    <main class="upload-main">
 
-                    </div>
+        <section class="upload-container">
 
-                </div>
 
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
 
-                <div
-                    id="videoDropZone"
-                    class="video-drop-zone"
-                >
+            <div class="upload-page-header">
 
-                    <input
-                        id="videoFile"
-                        name="video"
-                        type="file"
-                        accept="video/mp4,video/webm,video/quicktime,video/x-matroska"
-                        hidden
-                    >
+                <div>
 
+                    <h1>
+                        Publier une vidéo
+                    </h1>
 
-                    <div
-                        id="videoUploadPlaceholder"
-                        class="upload-placeholder"
-                    >
-
-                        <div class="upload-placeholder-icon">
-
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-
-                        </div>
-
-
-                        <h3>
-                            Sélectionnez votre vidéo
-                        </h3>
-
-
-                        <p>
-                            Glissez-déposez votre fichier ici
-                            ou cliquez pour parcourir.
-                        </p>
-
-
-                        <button
-                            id="selectVideoButton"
-                            type="button"
-                            class="nv-button nv-button-primary"
-                        >
-
-                            <i class="fa-solid fa-folder-open"></i>
-
-                            Choisir une vidéo
-
-                        </button>
-
-
-                        <small>
-                            MP4, WebM, MOV ou MKV
-                        </small>
-
-                    </div>
-
-
-
-                    <!-- =====================================
-                         SELECTED FILE
-                         ===================================== -->
-
-                    <div
-                        id="videoFilePreview"
-                        class="video-file-preview hidden"
-                    >
-
-                        <div class="video-preview-icon">
-
-                            <i class="fa-solid fa-file-video"></i>
-
-                        </div>
-
-
-                        <div class="video-file-information">
-
-                            <strong
-                                id="videoFileName"
-                            >
-                                video.mp4
-                            </strong>
-
-
-                            <span
-                                id="videoFileSize"
-                            >
-                                0 MB
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            id="removeVideoButton"
-                            type="button"
-                            class="nv-icon-button"
-                            aria-label="Supprimer la vidéo"
-                        >
-
-                            <i class="fa-solid fa-xmark"></i>
-
-                        </button>
-
-                    </div>
-
-
-                </div>
-
-
-                <!-- =========================================
-                     PROGRESS
-                     ========================================= -->
-
-                <div
-                    id="uploadProgressContainer"
-                    class="upload-progress-container hidden"
-                >
-
-                    <div class="upload-progress-header">
-
-                        <span>
-                            Importation
-                        </span>
-
-                        <strong
-                            id="uploadProgressPercent"
-                        >
-                            0%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="upload-progress">
-
-                        <div
-                            id="uploadProgressBar"
-                            class="upload-progress-bar"
-                            style="width: 0%"
-                        ></div>
-
-                    </div>
-
-
-                    <p
-                        id="uploadProgressText"
-                        class="upload-progress-text"
-                    >
-                        Préparation...
+                    <p>
+                        Importez votre vidéo et préparez sa
+                        publication sur NetView.
                     </p>
 
                 </div>
 
-            </section>
-
+            </div>
 
 
             <!-- =================================================
-                 VIDEO INFORMATION
+                 FORM
                  ================================================= -->
 
-            <section class="upload-card">
-
-                <div class="upload-card-header">
-
-                    <div class="upload-card-icon">
-
-                        <i class="fa-solid fa-pen"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Informations
-                        </h2>
-
-                        <p>
-                            Présentez votre vidéo aux spectateurs.
-                        </p>
-
-                    </div>
-
-                </div>
+            <form
+                id="uploadForm"
+                class="upload-form"
+                novalidate
+            >
 
 
+                <!-- =================================================
+                     GLOBAL ERROR
+                     ================================================= -->
 
-                <!-- TITLE -->
-
-                <div class="nv-form-group">
-
-                    <label for="videoTitle">
-
-                        Titre
-
-                        <span>
-                            *
-                        </span>
-
-                    </label>
+                <div
+                    id="uploadError"
+                    class="upload-error hidden"
+                    role="alert"
+                    aria-live="assertive"
+                ></div>
 
 
-                    <input
-                        id="videoTitle"
-                        name="title"
-                        type="text"
-                        maxlength="150"
-                        placeholder="Ajoutez un titre à votre vidéo"
-                        autocomplete="off"
-                        required
-                    >
+                <!-- =================================================
+                     CHANNEL
+                     ================================================= -->
 
+                <section class="upload-card">
 
-                    <div class="form-counter">
+                    <div class="upload-card-header">
 
-                        <span></span>
+                        <div class="upload-card-icon">
 
-                        <span>
-                            <strong id="titleCounter">0</strong>/150
-                        </span>
+                            <i class="fa-solid fa-tv"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Chaîne
+                            </h2>
+
+                            <p>
+                                Sélectionnez la chaîne associée
+                                à cette vidéo.
+                            </p>
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    <div class="nv-form-group">
+
+                        <label for="videoChannel">
+
+                            Chaîne
+
+                            <span aria-hidden="true">
+                                *
+                            </span>
+
+                        </label>
 
 
-
-                <!-- DESCRIPTION -->
-
-                <div class="nv-form-group">
-
-                    <label for="videoDescription">
-
-                        Description
-
-                    </label>
-
-
-                    <textarea
-                        id="videoDescription"
-                        name="description"
-                        rows="7"
-                        maxlength="5000"
-                        placeholder="Décrivez votre vidéo..."
-                    ></textarea>
-
-
-                    <div class="form-counter">
-
-                        <span></span>
-
-                        <span>
-                            <strong id="descriptionCounter">0</strong>/5000
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- CATEGORY -->
-
-                <div class="nv-form-group">
-
-                    <label for="videoCategory">
-
-                        Catégorie
-
-                    </label>
-
-
-                    <select
-                        id="videoCategory"
-                        name="category_id"
-                    >
-
-                        <option value="">
-                            Sélectionner une catégorie
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
-             <!-- LANGUAGE -->
-
-                <div class="nv-form-group">
-
-                    <label for="videoLanguage">
-                        Langue
-                    </label>
-
-                    <select
-                        id="videoLanguage"
-                        name="language"
-                    >
-                        <!-- Langues principales / favoris en haut -->
-                        <option value="fr">Français</option>
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-
-                        <option value="" disabled>────────────────────────</option>
-
-                        <!-- Langues du monde (ordre alphabétique) -->
-                        <option value="af">Afrikaans</option>
-                        <option value="sq">Shqip (Albanais)</option>
-                        <option value="am">አማርኛ (Amharique)</option>
-                        <option value="ar">العربية (Arabe)</option>
-                        <option value="hy">Հայերեն (Arménien)</option>
-                        <option value="az">Azərbaycan (Azéri)</option>
-                        <option value="eu">Euskara (Basque)</option>
-                        <option value="bn">বাংলা (Bengali)</option>
-                        <option value="my">မြန်မာဘာသာ (Birman)</option>
-                        <option value="bs">Bosanski (Bosniaque)</option>
-                        <option value="bg">Български (Bulgare)</option>
-                        <option value="ca">Català (Catalan)</option>
-                        <option value="zh">中文 (Chinois)</option>
-                        <option value="ko">한국어 (Coréen)</option>
-                        <option value="co">Corsu (Corse)</option>
-                        <option value="hr">Hrvatski (Croate)</option>
-                        <option value="ht">Kreyòl ayisyen</option>
-                        <option value="da">Dansk (Danois)</option>
-                        <option value="es-mx">Español (Latinoamérica)</option>
-                        <option value="eo">Esperanto</option>
-                        <option value="et">Eesti (Estonien)</option>
-                        <option value="fi">Suomi (Finnois)</option>
-                        <option value="gd">Gàidhlig (Géodique écossais)</option>
-                        <option value="gl">Galego (Galicien)</option>
-                        <option value="cy">Cymraeg (Gallois)</option>
-                        <option value="ka">ქართული (Géorgien)</option>
-                        <option value="el">Ελληνικά (Grec)</option>
-                        <option value="gu">ગુજરાતી (Gujarati)</option>
-                        <option value="ha">Hausa</option>
-                        <option value="he">עברית (Hébreu)</option>
-                        <option value="hi">हिन्दी (Hindi)</option>
-                        <option value="hu">Magyar (Hongrois)</option>
-                        <option value="ig">Igbo</option>
-                        <option value="id">Bahasa Indonesia (Indonésien)</option>
-                        <option value="ga">Gaeilge (Irlandais)</option>
-                        <option value="is">Íslenska (Islandais)</option>
-                        <option value="it">Italiano (Italien)</option>
-                        <option value="ja">日本語 (Japonais)</option>
-                        <option value="jv">Basa Jawa (Javanais)</option>
-                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                        <option value="kk">Қазақ тілі (Kazakh)</option>
-                        <option value="km">ខ្មែរ (Khmer)</option>
-                        <option value="ku">Kurdî (Kurde)</option>
-                        <option value="ky">Кыргызча (Kirghize)</option>
-                        <option value="lo">ລາວ (Lao)</option>
-                        <option value="la">Latina (Latin)</option>
-                        <option value="lv">Latviešu (Letton)</option>
-                        <option value="lt">Lietuvių (Lituanien)</option>
-                        <option value="lb">Lëtzebuergesch (Luxembourgeois)</option>
-                        <option value="mk">Македонски (Macédonien)</option>
-                        <option value="ms">Bahasa Melayu (Malais)</option>
-                        <option value="ml">മലയാളം (Malayalam)</option>
-                        <option value="mt">Malti (Maltais)</option>
-                        <option value="mi">Māori</option>
-                        <option value="mr">मराठी (Marathi)</option>
-                        <option value="mn">Монгол (Mongol)</option>
-                        <option value="ne">नेपाली (Népalais)</option>
-                        <option value="no">Norsk (Norvégien)</option>
-                        <option value="nl">Nederlands (Néerlandais)</option>
-                        <option value="uz">Oʻzbekcha (Ouzbek)</option>
-                        <option value="ps">پښتو (Pachto)</option>
-                        <option value="pa">ਪੰਜਾਬੀ (Pendjabi)</option>
-                        <option value="fa">فارسی (Persan)</option>
-                        <option value="pl">Polski (Polonais)</option>
-                        <option value="pt">Português (Portugais)</option>
-                        <option value="ro">Română (Roumain)</option>
-                        <option value="ru">Русский (Russe)</option>
-                        <option value="so">Soomaaliga (Somali)</option>
-                        <option value="sv">Svenska (Suédois)</option>
-                        <option value="tl">Tagalog (Tagalog / Filipino)</option>
-                        <option value="tg">Тоҷикӣ (Tadjik)</option>
-                        <option value="ta">தமிழ் (Tamoul)</option>
-                        <option value="cs">Čeština (Tchèque)</option>
-                        <option value="te">తెలుగు (Télougou)</option>
-                        <option value="th">ไทย (Thaï)</option>
-                        <option value="tr">Türkçe (Turc)</option>
-                        <option value="uk">Українська (Ukrainien)</option>
-                        <option value="ur">اردو (Ourdou)</option>
-                        <option value="vi">Tiếng Việt (Vietnamien)</option>
-                        <option value="yi">ייִדיש (Yiddish)</option>
-                        <option value="yo">Yoruba</option>
-                        <option value="zu">isiZulu (Zoulou)</option>
-
-                    </select>
-
-                </div>
-
-            </section>
-            <!-- =================================================
-                 THUMBNAIL
-                 ================================================= -->
-
-            <section class="upload-card">
-
-                <div class="upload-card-header">
-
-                    <div class="upload-card-icon">
-
-                        <i class="fa-solid fa-image"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Miniature
-                        </h2>
-
-                        <p>
-                            Ajoutez une image représentant votre vidéo.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="thumbnail-upload">
-
-                    <input
-                        id="thumbnailFile"
-                        name="thumbnail"
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        hidden
-                    >
-
-
-                    <button
-                        id="selectThumbnailButton"
-                        type="button"
-                        class="thumbnail-selector"
-                    >
-
-                        <div
-                            id="thumbnailPlaceholder"
-                            class="thumbnail-placeholder"
+                        <select
+                            id="videoChannel"
+                            name="channel_id"
+                            required
                         >
 
-                            <i class="fa-solid fa-image"></i>
+                            <option value="">
+                                Chargement de votre chaîne...
+                            </option>
 
-                            <span>
-                                Ajouter une miniature
-                            </span>
+                        </select>
+
+
+                        <small class="form-help">
+                            La vidéo sera publiée sur cette chaîne.
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     VIDEO FILE
+                     ================================================= -->
+
+                <section class="upload-card">
+
+                    <div class="upload-card-header">
+
+                        <div class="upload-card-icon">
+
+                            <i class="fa-solid fa-video"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Fichier vidéo
+                            </h2>
+
+                            <p>
+                                Sélectionnez la vidéo à publier.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="videoDropZone"
+                        class="video-drop-zone"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Sélectionner une vidéo"
+                    >
+
+                        <input
+                            id="videoFile"
+                            name="video"
+                            type="file"
+                            accept="video/mp4,video/webm,video/quicktime,video/x-matroska"
+                            hidden
+                        >
+
+
+                        <!-- =================================================
+                             PLACEHOLDER
+                             ================================================= -->
+
+                        <div
+                            id="videoUploadPlaceholder"
+                            class="upload-placeholder"
+                        >
+
+                            <div class="upload-placeholder-icon">
+
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                            </div>
+
+
+                            <h3>
+                                Sélectionnez votre vidéo
+                            </h3>
+
+
+                            <p>
+                                Glissez-déposez votre fichier ici
+                                ou cliquez pour parcourir.
+                            </p>
+
+
+                            <button
+                                id="selectVideoButton"
+                                type="button"
+                                class="nv-button nv-button-primary"
+                            >
+
+                                <i class="fa-solid fa-folder-open"></i>
+
+                                Choisir une vidéo
+
+                            </button>
+
+
+                            <small>
+                                MP4, WebM, MOV ou MKV
+                            </small>
 
                         </div>
 
 
-                        <img
-                            id="thumbnailPreview"
-                            class="thumbnail-preview hidden"
-                            src=""
-                            alt="Aperçu de la miniature"
+                        <!-- =================================================
+                             SELECTED FILE
+                             ================================================= -->
+
+                        <div
+                            id="videoFilePreview"
+                            class="video-file-preview hidden"
                         >
+
+                            <div class="video-preview-icon">
+
+                                <i class="fa-solid fa-file-video"></i>
+
+                            </div>
+
+
+                            <div class="video-file-information">
+
+                                <strong id="videoFileName">
+                                    video.mp4
+                                </strong>
+
+                                <span id="videoFileSize">
+                                    0 MB
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                id="removeVideoButton"
+                                type="button"
+                                class="nv-icon-button"
+                                aria-label="Supprimer la vidéo"
+                            >
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         UPLOAD PROGRESS
+                         ================================================= -->
+
+                    <div
+                        id="uploadProgressContainer"
+                        class="upload-progress-container hidden"
+                        aria-live="polite"
+                    >
+
+                        <div class="upload-progress-header">
+
+                            <span>
+                                Importation
+                            </span>
+
+                            <strong id="uploadProgressPercent">
+                                0%
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="upload-progress"
+                            role="progressbar"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                            aria-label="Progression de l'importation"
+                        >
+
+                            <div
+                                id="uploadProgressBar"
+                                class="upload-progress-bar"
+                                style="width: 0%"
+                            ></div>
+
+                        </div>
+
+
+                        <p
+                            id="uploadProgressText"
+                            class="upload-progress-text"
+                        >
+                            Préparation...
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     VIDEO INFORMATION
+                     ================================================= -->
+
+                <section class="upload-card">
+
+                    <div class="upload-card-header">
+
+                        <div class="upload-card-icon">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Informations
+                            </h2>
+
+                            <p>
+                                Présentez votre vidéo aux spectateurs.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         TITLE
+                         ================================================= -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoTitle">
+
+                            Titre
+
+                            <span aria-hidden="true">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            id="videoTitle"
+                            name="title"
+                            type="text"
+                            maxlength="150"
+                            minlength="1"
+                            placeholder="Ajoutez un titre à votre vidéo"
+                            autocomplete="off"
+                            required
+                        >
+
+
+                        <div class="form-counter">
+
+                            <span></span>
+
+                            <span>
+                                <strong id="titleCounter">
+                                    0
+                                </strong>/150
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         DESCRIPTION
+                         ================================================= -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoDescription">
+                            Description
+                        </label>
+
+
+                        <textarea
+                            id="videoDescription"
+                            name="description"
+                            rows="7"
+                            maxlength="5000"
+                            placeholder="Décrivez votre vidéo..."
+                        ></textarea>
+
+
+                        <div class="form-counter">
+
+                            <span></span>
+
+                            <span>
+                                <strong id="descriptionCounter">
+                                    0
+                                </strong>/5000
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CATEGORY
+                         ================================================= -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoCategory">
+                            Catégorie
+                        </label>
+
+
+                        <select
+                            id="videoCategory"
+                            name="category_id"
+                        >
+
+                            <option value="">
+                                Sélectionner une catégorie
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         LANGUAGE
+                         ================================================= -->
+
+                    <div class="nv-form-group">
+
+                        <label for="videoLanguage">
+                            Langue
+                        </label>
+
+
+                        <select
+                            id="videoLanguage"
+                            name="language"
+                        >
+
+                            <!-- Langues principales -->
+
+                            <option value="fr">
+                                Français
+                            </option>
+
+                            <option value="en">
+                                English
+                            </option>
+
+                            <option value="es">
+                                Español
+                            </option>
+
+                            <option
+                                value=""
+                                disabled
+                            >
+                                ────────────────────────
+                            </option>
+
+
+                            <!-- Langues du monde -->
+
+                            <option value="af">
+                                Afrikaans
+                            </option>
+
+                            <option value="sq">
+                                Shqip (Albanais)
+                            </option>
+
+                            <option value="am">
+                                አማርኛ (Amharique)
+                            </option>
+
+                            <option value="ar">
+                                العربية (Arabe)
+                            </option>
+
+                            <option value="hy">
+                                Հայերեն (Arménien)
+                            </option>
+
+                            <option value="az">
+                                Azərbaycan (Azéri)
+                            </option>
+
+                            <option value="eu">
+                                Euskara (Basque)
+                            </option>
+
+                            <option value="bn">
+                                বাংলা (Bengali)
+                            </option>
+
+                            <option value="my">
+                                မြန်မာဘာသာ (Birman)
+                            </option>
+
+                            <option value="bs">
+                                Bosanski (Bosniaque)
+                            </option>
+
+                            <option value="bg">
+                                Български (Bulgare)
+                            </option>
+
+                            <option value="ca">
+                                Català (Catalan)
+                            </option>
+
+                            <option value="zh">
+                                中文 (Chinois)
+                            </option>
+
+                            <option value="ko">
+                                한국어 (Coréen)
+                            </option>
+
+                            <option value="co">
+                                Corsu (Corse)
+                            </option>
+
+                            <option value="hr">
+                                Hrvatski (Croate)
+                            </option>
+
+                            <option value="ht">
+                                Kreyòl ayisyen
+                            </option>
+
+                            <option value="da">
+                                Dansk (Danois)
+                            </option>
+
+                            <option value="es-mx">
+                                Español (Latinoamérica)
+                            </option>
+
+                            <option value="eo">
+                                Esperanto
+                            </option>
+
+                            <option value="et">
+                                Eesti (Estonien)
+                            </option>
+
+                            <option value="fi">
+                                Suomi (Finnois)
+                            </option>
+
+                            <option value="gd">
+                                Gàidhlig (Gaélique écossais)
+                            </option>
+
+                            <option value="gl">
+                                Galego (Galicien)
+                            </option>
+
+                            <option value="cy">
+                                Cymraeg (Gallois)
+                            </option>
+
+                            <option value="ka">
+                                ქართული (Géorgien)
+                            </option>
+
+                            <option value="el">
+                                Ελληνικά (Grec)
+                            </option>
+
+                            <option value="gu">
+                                ગુજરાતી (Gujarati)
+                            </option>
+
+                            <option value="ha">
+                                Hausa
+                            </option>
+
+                            <option value="he">
+                                עברית (Hébreu)
+                            </option>
+
+                            <option value="hi">
+                                हिन्दी (Hindi)
+                            </option>
+
+                            <option value="hu">
+                                Magyar (Hongrois)
+                            </option>
+
+                            <option value="ig">
+                                Igbo
+                            </option>
+
+                            <option value="id">
+                                Bahasa Indonesia (Indonésien)
+                            </option>
+
+                            <option value="ga">
+                                Gaeilge (Irlandais)
+                            </option>
+
+                            <option value="is">
+                                Íslenska (Islandais)
+                            </option>
+
+                            <option value="it">
+                                Italiano (Italien)
+                            </option>
+
+                            <option value="ja">
+                                日本語 (Japonais)
+                            </option>
+
+                            <option value="jv">
+                                Basa Jawa (Javanais)
+                            </option>
+
+                            <option value="kn">
+                                ಕನ್ನಡ (Kannada)
+                            </option>
+
+                            <option value="kk">
+                                Қазақ тілі (Kazakh)
+                            </option>
+
+                            <option value="km">
+                                ខ្មែរ (Khmer)
+                            </option>
+
+                            <option value="ku">
+                                Kurdî (Kurde)
+                            </option>
+
+                            <option value="ky">
+                                Кыргызча (Kirghize)
+                            </option>
+
+                            <option value="lo">
+                                ລາວ (Lao)
+                            </option>
+
+                            <option value="la">
+                                Latina (Latin)
+                            </option>
+
+                            <option value="lv">
+                                Latviešu (Letton)
+                            </option>
+
+                            <option value="lt">
+                                Lietuvių (Lituanien)
+                            </option>
+
+                            <option value="lb">
+                                Lëtzebuergesch (Luxembourgeois)
+                            </option>
+
+                            <option value="mk">
+                                Македонски (Macédonien)
+                            </option>
+
+                            <option value="ms">
+                                Bahasa Melayu (Malais)
+                            </option>
+
+                            <option value="ml">
+                                മലയാളം (Malayalam)
+                            </option>
+
+                            <option value="mt">
+                                Malti (Maltais)
+                            </option>
+
+                            <option value="mi">
+                                Māori
+                            </option>
+
+                            <option value="mr">
+                                मराठी (Marathi)
+                            </option>
+
+                            <option value="mn">
+                                Монгол (Mongol)
+                            </option>
+
+                            <option value="ne">
+                                नेपाली (Népalais)
+                            </option>
+
+                            <option value="no">
+                                Norsk (Norvégien)
+                            </option>
+
+                            <option value="nl">
+                                Nederlands (Néerlandais)
+                            </option>
+
+                            <option value="uz">
+                                Oʻzbekcha (Ouzbek)
+                            </option>
+
+                            <option value="ps">
+                                پښتو (Pachto)
+                            </option>
+
+                            <option value="pa">
+                                ਪੰਜਾਬੀ (Pendjabi)
+                            </option>
+
+                            <option value="fa">
+                                فارسی (Persan)
+                            </option>
+
+                            <option value="pl">
+                                Polski (Polonais)
+                            </option>
+
+                            <option value="pt">
+                                Português (Portugais)
+                            </option>
+
+                            <option value="ro">
+                                Română (Roumain)
+                            </option>
+
+                            <option value="ru">
+                                Русский (Russe)
+                            </option>
+
+                            <option value="so">
+                                Soomaaliga (Somali)
+                            </option>
+
+                            <option value="sv">
+                                Svenska (Suédois)
+                            </option>
+
+                            <option value="tl">
+                                Tagalog (Filipino)
+                            </option>
+
+                            <option value="tg">
+                                Тоҷикӣ (Tadjik)
+                            </option>
+
+                            <option value="ta">
+                                தமிழ் (Tamoul)
+                            </option>
+
+                            <option value="cs">
+                                Čeština (Tchèque)
+                            </option>
+
+                            <option value="te">
+                                తెలుగు (Télougou)
+                            </option>
+
+                            <option value="th">
+                                ไทย (Thaï)
+                            </option>
+
+                            <option value="tr">
+                                Türkçe (Turc)
+                            </option>
+
+                            <option value="uk">
+                                Українська (Ukrainien)
+                            </option>
+
+                            <option value="ur">
+                                اردو (Ourdou)
+                            </option>
+
+                            <option value="vi">
+                                Tiếng Việt (Vietnamien)
+                            </option>
+
+                            <option value="yi">
+                                ייִדיש (Yiddish)
+                            </option>
+
+                            <option value="yo">
+                                Yoruba
+                            </option>
+
+                            <option value="zu">
+                                isiZulu (Zoulou)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     THUMBNAIL
+                     ================================================= -->
+
+                <section class="upload-card">
+
+                    <div class="upload-card-header">
+
+                        <div class="upload-card-icon">
+
+                            <i class="fa-solid fa-image"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Miniature
+                            </h2>
+
+                            <p>
+                                Ajoutez une image représentant
+                                votre vidéo.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="thumbnail-upload">
+
+                        <input
+                            id="thumbnailFile"
+                            name="thumbnail"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            hidden
+                        >
+
+
+                        <button
+                            id="selectThumbnailButton"
+                            type="button"
+                            class="thumbnail-selector"
+                            aria-label="Ajouter une miniature"
+                        >
+
+                            <div
+                                id="thumbnailPlaceholder"
+                                class="thumbnail-placeholder"
+                            >
+
+                                <i class="fa-solid fa-image"></i>
+
+                                <span>
+                                    Ajouter une miniature
+                                </span>
+
+                            </div>
+
+
+                            <img
+                                id="thumbnailPreview"
+                                class="thumbnail-preview hidden"
+                                src=""
+                                alt="Aperçu de la miniature"
+                            >
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     VISIBILITY
+                     ================================================= -->
+
+                <section class="upload-card">
+
+                    <div class="upload-card-header">
+
+                        <div class="upload-card-icon">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Visibilité
+                            </h2>
+
+                            <p>
+                                Choisissez qui peut regarder
+                                cette vidéo.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="visibility-options">
+
+
+                        <!-- PUBLIC -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="public"
+                                checked
+                            >
+
+                            <span
+                                class="visibility-radio"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-earth-americas"></i>
+
+                                    Publique
+
+                                </strong>
+
+                                <small>
+                                    Tout le monde peut regarder
+                                    cette vidéo.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- UNLISTED -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="unlisted"
+                            >
+
+                            <span
+                                class="visibility-radio"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-link"></i>
+
+                                    Non répertoriée
+
+                                </strong>
+
+                                <small>
+                                    Seules les personnes possédant
+                                    le lien peuvent regarder la vidéo.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- PRIVATE -->
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="radio"
+                                name="visibility"
+                                value="private"
+                            >
+
+                            <span
+                                class="visibility-radio"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="visibility-content">
+
+                                <strong>
+
+                                    <i class="fa-solid fa-lock"></i>
+
+                                    Privée
+
+                                </strong>
+
+                                <small>
+                                    Seul vous pouvez regarder
+                                    cette vidéo.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     TAGS
+                     ================================================= -->
+
+                <section class="upload-card">
+
+                    <div class="upload-card-header">
+
+                        <div class="upload-card-icon">
+
+                            <i class="fa-solid fa-tags"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Tags
+                            </h2>
+
+                            <p>
+                                Ajoutez des mots-clés pour aider
+                                à trouver votre vidéo.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="nv-form-group">
+
+                        <label for="videoTags">
+                            Tags
+                        </label>
+
+
+                        <input
+                            id="videoTags"
+                            name="tags"
+                            type="text"
+                            maxlength="500"
+                            placeholder="musique, technologie, actualité..."
+                            autocomplete="off"
+                        >
+
+
+                        <small class="form-help">
+                            Séparez les tags par des virgules.
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ACTIONS
+                     ================================================= -->
+
+                <div class="upload-actions">
+
+                    <a
+                        href="studio.html"
+                        class="nv-button nv-button-secondary"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Annuler
+
+                    </a>
+
+
+                    <button
+                        id="publishButton"
+                        type="submit"
+                        class="nv-button nv-button-primary"
+                        disabled
+                    >
+
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                        <span>
+                            Publier la vidéo
+                        </span>
 
                     </button>
 
                 </div>
 
-            </section>
 
+            </form>
 
+        </section>
 
-            <!-- =================================================
-                 VISIBILITY
-                 ================================================= -->
+    </main>
 
-            <section class="upload-card">
 
-                <div class="upload-card-header">
+    <!-- =====================================================
+         PAGE LOADER
+         ===================================================== -->
 
-                    <div class="upload-card-icon">
+    <div
+        id="pageLoader"
+        class="nv-loader-overlay hidden"
+        aria-hidden="true"
+    >
 
-                        <i class="fa-solid fa-eye"></i>
+        <div
+            class="nv-loader"
+            role="status"
+            aria-live="polite"
+        >
 
-                    </div>
+            <div class="nv-spinner"></div>
 
-                    <div>
+            <p>
+                Préparation de la publication...
+            </p>
 
-                        <h2>
-                            Visibilité
-                        </h2>
-
-                        <p>
-                            Choisissez qui peut regarder cette vidéo.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="visibility-options">
-
-
-                    <label class="visibility-option">
-
-                        <input
-                            type="radio"
-                            name="visibility"
-                            value="public"
-                            checked
-                        >
-
-
-                        <span class="visibility-radio"></span>
-
-
-                        <span class="visibility-content">
-
-                            <strong>
-
-                                <i class="fa-solid fa-earth-americas"></i>
-
-                                Publique
-
-                            </strong>
-
-                            <small>
-                                Tout le monde peut regarder cette vidéo.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-
-
-                    <label class="visibility-option">
-
-                        <input
-                            type="radio"
-                            name="visibility"
-                            value="unlisted"
-                        >
-
-
-                        <span class="visibility-radio"></span>
-
-
-                        <span class="visibility-content">
-
-                            <strong>
-
-                                <i class="fa-solid fa-link"></i>
-
-                                Non répertoriée
-
-                            </strong>
-
-                            <small>
-                                Seules les personnes possédant le lien
-                                peuvent regarder la vidéo.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-
-
-                    <label class="visibility-option">
-
-                        <input
-                            type="radio"
-                            name="visibility"
-                            value="private"
-                        >
-
-
-                        <span class="visibility-radio"></span>
-
-
-                        <span class="visibility-content">
-
-                            <strong>
-
-                                <i class="fa-solid fa-lock"></i>
-
-                                Privée
-
-                            </strong>
-
-                            <small>
-                                Seul vous pouvez regarder cette vidéo.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-
-                </div>
-
-            </section>
-
-
-
-            <!-- =================================================
-                 TAGS
-                 ================================================= -->
-
-            <section class="upload-card">
-
-                <div class="upload-card-header">
-
-                    <div class="upload-card-icon">
-
-                        <i class="fa-solid fa-tags"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Tags
-                        </h2>
-
-                        <p>
-                            Ajoutez des mots-clés pour aider à trouver
-                            votre vidéo.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="nv-form-group">
-
-                    <label for="videoTags">
-
-                        Tags
-
-                    </label>
-
-
-                    <input
-                        id="videoTags"
-                        type="text"
-                        maxlength="500"
-                        placeholder="musique, technologie, actualité..."
-                        autocomplete="off"
-                    >
-
-
-                    <small class="form-help">
-                        Séparez les tags par des virgules.
-                    </small>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- =================================================
-                 ACTIONS
-                 ================================================= -->
-
-            <div class="upload-actions">
-
-                <a
-                    href="studio.html"
-                    class="nv-button nv-button-secondary"
-                >
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                    Annuler
-
-                </a>
-
-
-                <button
-                    id="publishButton"
-                    type="submit"
-                    class="nv-button nv-button-primary"
-                    disabled
-                >
-
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-
-                    Publier la vidéo
-
-                </button>
-
-            </div>
-
-
-        </form>
-
-
-    </section>
-
-</main>
-
-
-
-<!-- =========================================================
-     LOADER
-     ========================================================= -->
-
-<div
-    id="pageLoader"
-    class="nv-loader-overlay hidden"
->
-
-    <div class="nv-loader">
-
-        <div class="nv-spinner"></div>
-
-        <p>
-            Préparation de la publication...
-        </p>
+        </div>
 
     </div>
 
-</div>
 
+    <!-- =====================================================
+         PAGE JAVASCRIPT
+         ===================================================== -->
 
-<!-- =========================================================
-     PAGE
-     ========================================================= -->
-
-<!-- Incorrect -->
-<!-- <script src="js/upload.js"></script> -->
-
-<!-- Correct -->
-<script type="module" src="js/pages/upload.js"></script>
-
+    <script
+        type="module"
+        src="js/pages/upload.js"
+    ></script>
 
 </body>
 
