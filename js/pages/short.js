@@ -392,7 +392,7 @@ function buildHeader() {
             <img
                 id="headerAvatar"
                 class="nv-header-avatar"
-                src="NetView_icone.png"
+                src="assets/images/default-avatar.png"
                 alt="Profil"
             >
 
