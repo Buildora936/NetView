@@ -9,7 +9,6 @@ import {
 } from "../core/supabase.js";
 
 import {
-    getCurrentUser,
     getShort,
     getShorts,
     setShortReaction,
@@ -26,7 +25,7 @@ import {
     setActiveNav
 } from "../core/navigation.js";
 
-
+import { getUser }"../core/auth.js";
 // =========================================================
 // STATE
 // =========================================================
@@ -110,7 +109,7 @@ async function init() {
     bindGlobalEvents();
 
     state.currentUser =
-        await getCurrentUser();
+        await getUser();
 
     if (state.currentUser) {
 
