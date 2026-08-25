@@ -25,7 +25,7 @@ import {
     setActiveNav
 } from "../core/navigation.js";
 
-import { getUser }"../core/auth.js";
+import { getUser } from "../core/auth.js";
 // =========================================================
 // STATE
 // =========================================================
