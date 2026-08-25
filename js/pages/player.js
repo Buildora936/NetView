@@ -32,6 +32,7 @@
 
 import * as Data from "../core/data.js";
 import { supabase } from "../core/supabase.js";
+import { getCurrentUser } from "../core/auth.js";
 
 
 /* =========================================================
