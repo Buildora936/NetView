@@ -1,0 +1,1178 @@
+/* =========================================================
+   NetView — Shorts
+   shorts.css
+   Jour 26
+   ========================================================= */
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.nv-page.shorts-page {
+    min-height: 100vh;
+    background: #0B1220;
+    color: #FFFFFF;
+    overflow-x: hidden;
+}
+
+.shorts-main {
+    min-height: 100vh;
+    margin-left: 0;
+    padding-top: 64px;
+}
+
+/* =========================================================
+   SHORTS APP
+   ========================================================= */
+
+.shorts-app {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(37, 99, 235, 0.08),
+            transparent 38%
+        ),
+        #0B1220;
+}
+/* ==========================================
+    Header Left
+========================================== */
+.nv-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.nv-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nv-logo img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+/* ==========================================
+    Header Right
+========================================== */
+.nv-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.nv-icon-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--nv-text);
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.nv-icon-button:hover {
+    background: var(--nv-surface-hover);
+}
+
+.nv-header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.nv-header-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================
+    Bouton S'identifier
+========================================== */
+.nv-login-button {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 20px;
+    border: 1px solid var(--nv-primary);
+    background: transparent;
+    color: var(--nv-primary);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nv-login-button:hover {
+    background: rgba(37, 99, 235, .12);
+}
+
+/* ==========================================
+    Sidebar
+========================================== */
+.nv-sidebar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    width: 72px;
+    background: var(--nv-surface);
+    border-right: 1px solid var(--nv-border);
+    overflow: hidden;
+    z-index: 900;
+    transition: width .3s ease, transform .3s ease;
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+}
+
+.nv-sidebar.active {
+    width: 240px;
+    animation: nvSidebarOpen .3s ease;
+}
+
+/* La zone de navigation interne fixe (sans défilement) */
+.nv-sidebar-nav {
+    overflow-y: hidden;   /* Désactive le défilement vertical */
+    flex-grow: 1;       
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 8px;
+}
+
+.nv-sidebar a {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 14px;
+    border-radius: 12px;
+    color: var(--nv-text);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nv-sidebar a:hover {
+    background: var(--nv-surface-hover);
+}
+
+.nv-sidebar i {
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+}
+
+@keyframes nvSidebarOpen {
+    from {
+        transform: translateX(-20px);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* ==========================================
+    Overlay Mobile
+========================================== */
+.nv-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s ease;
+    z-index: 850;
+}
+
+.nv-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==========================================
+    Responsive Header & Sidebar
+========================================== */
+@media(max-width: 900px) {
+    .nv-header-center {
+        padding: 0 10px;
+    }
+    .nv-logo img {
+        width: 100px;
+    }
+}
+
+@media(max-width: 650px) {
+    .nv-header {
+        padding: 0 10px;
+    }
+    .nv-header-center {
+        display: none;
+    }
+    .nv-sidebar {
+        width: 0;
+    }
+    .nv-sidebar.active {
+        width: 240px;
+    }
+    .nv-login-button {
+        padding: 0 12px;
+        font-size: 14px;
+    }
+}
+
+
+/* =========================================================
+   SHORTS FEED
+   ========================================================= */
+
+.shorts-feed {
+    width: 100%;
+    max-width: 520px;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 18px 0 32px;
+}
+
+/* =========================================================
+   SHORT ITEM
+   ========================================================= */
+
+.short-item {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 82px);
+    min-height: 560px;
+    max-height: 920px;
+    overflow: hidden;
+    background: #111827;
+    border-radius: 18px;
+    scroll-snap-align: start;
+    isolation: isolate;
+}
+
+.short-item video,
+.short-item .short-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000000;
+}
+
+/* =========================================================
+   VIDEO OVERLAY
+   ========================================================= */
+
+.short-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.25),
+            transparent 25%,
+            transparent 55%,
+            rgba(0, 0, 0, 0.72) 100%
+        );
+}
+
+/* =========================================================
+   TOP AREA
+   ========================================================= */
+
+.short-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    pointer-events: none;
+}
+
+.short-top-left,
+.short-top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+/* =========================================================
+   CHANNEL
+   ========================================================= */
+
+.short-channel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.short-channel-avatar {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #1F2937;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.short-channel-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.short-channel-name {
+    max-width: 190px;
+    overflow: hidden;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.short-channel-meta {
+    color: #C5CEDB;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+/* =========================================================
+   FOLLOW BUTTON
+   ========================================================= */
+
+.short-follow-button {
+    min-height: 34px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: #FFFFFF;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        background 0.2s ease;
+}
+
+.short-follow-button:hover {
+    transform: translateY(-1px);
+}
+
+.short-follow-button:active {
+    transform: scale(0.96);
+}
+
+.short-follow-button.is-subscribed {
+    background: rgba(255, 255, 255, 0.14);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* =========================================================
+   SHORT ACTIONS
+   ========================================================= */
+
+.short-actions {
+    position: absolute;
+    right: 12px;
+    bottom: 118px;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.short-action {
+    width: 48px;
+    min-height: 48px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 14px;
+    background: rgba(17, 24, 39, 0.58);
+    color: #FFFFFF;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.short-action:hover {
+    transform: scale(1.06);
+    background: rgba(37, 99, 235, 0.75);
+}
+
+.short-action:active {
+    transform: scale(0.94);
+}
+
+.short-action i,
+.short-action svg {
+    font-size: 21px;
+}
+
+.short-action-count {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* =========================================================
+   ACTIVE REACTION
+   ========================================================= */
+
+.short-action.is-active {
+    background: rgba(37, 99, 235, 0.85);
+}
+
+.short-action.is-liked {
+    background: rgba(37, 99, 235, 0.9);
+}
+
+.short-action.is-disliked {
+    background: rgba(239, 68, 68, 0.82);
+}
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.short-content {
+    position: absolute;
+    left: 16px;
+    right: 78px;
+    bottom: 18px;
+    z-index: 5;
+}
+
+.short-title {
+    margin: 0 0 8px;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.short-description {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 14px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.short-description.is-expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+}
+
+.short-more {
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #C5CEDB;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* =========================================================
+   HASHTAGS
+   ========================================================= */
+
+.short-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.short-tag {
+    color: #93C5FD;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.short-tag:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+/* =========================================================
+   MUSIC / AUDIO
+   ========================================================= */
+
+.short-audio {
+    max-width: calc(100% - 50px);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    color: #FFFFFF;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.short-audio i {
+    flex: 0 0 auto;
+    font-size: 13px;
+}
+
+.short-audio-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   PLAY / PAUSE
+   ========================================================= */
+
+.short-play-button {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    z-index: 7;
+    width: 66px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%) scale(0.9);
+    border: 0;
+    border-radius: 50%;
+    background: rgba(17, 24, 39, 0.62);
+    color: #FFFFFF;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease,
+        transform 0.2s ease;
+}
+
+.short-item.is-paused .short-play-button,
+.short-item:hover .short-play-button {
+    opacity: 1;
+    visibility: visible;
+}
+
+.short-play-button:hover {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.short-play-button i {
+    font-size: 25px;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.short-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.short-progress-bar {
+    width: 0;
+    height: 100%;
+    background: #2563EB;
+    transition: width 0.1s linear;
+}
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+.shorts-loader {
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shorts-loader-spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid rgba(255, 255, 255, 0.14);
+    border-top-color: #2563EB;
+    border-radius: 50%;
+    animation: shorts-spin 0.8s linear infinite;
+}
+
+@keyframes shorts-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.shorts-empty {
+    min-height: 360px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.shorts-empty-icon {
+    width: 68px;
+    height: 68px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #1F2937;
+    color: #94A3B8;
+}
+
+.shorts-empty-icon i {
+    font-size: 28px;
+}
+
+.shorts-empty-title {
+    margin: 0 0 8px;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.shorts-empty-text {
+    max-width: 420px;
+    margin: 0;
+    color: #94A3B8;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.shorts-error {
+    width: min(92%, 520px);
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    border-radius: 14px;
+    background: rgba(239, 68, 68, 0.08);
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.shorts-error-title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.shorts-error-message {
+    margin: 0;
+    color: #C5CEDB;
+    font-size: 13px;
+}
+
+/* =========================================================
+   COMMENTS PANEL
+   ========================================================= */
+
+.shorts-comments {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: min(430px, 100%);
+    display: flex;
+    flex-direction: column;
+    background: #111827;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+}
+
+.shorts-comments.is-open {
+    transform: translateX(0);
+}
+
+.shorts-comments-header {
+    min-height: 64px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.shorts-comments-title {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.shorts-comments-close {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.shorts-comments-close:hover {
+    background: #1F2937;
+}
+
+.shorts-comments-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.short-comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.short-comment-avatar {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #1F2937;
+}
+
+.short-comment-body {
+    min-width: 0;
+}
+
+.short-comment-author {
+    margin-bottom: 3px;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.short-comment-text {
+    margin: 0;
+    color: #C5CEDB;
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.short-comment-meta {
+    margin-top: 5px;
+    color: #64748B;
+    font-size: 11px;
+}
+
+/* =========================================================
+   COMMENTS FORM
+   ========================================================= */
+
+.shorts-comments-form {
+    padding: 12px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #111827;
+}
+
+.shorts-comment-input-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 8px 8px 8px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: #1F2937;
+}
+
+.shorts-comment-input {
+    flex: 1;
+    min-width: 0;
+    max-height: 110px;
+    padding: 5px 0;
+    resize: none;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #FFFFFF;
+    font: inherit;
+    font-size: 13px;
+}
+
+.shorts-comment-input::placeholder {
+    color: #94A3B8;
+}
+
+.shorts-comment-send {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: #2563EB;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.shorts-comment-send:hover {
+    background: #1D4ED8;
+}
+
+/* =========================================================
+   COMMENTS BACKDROP
+   ========================================================= */
+
+.shorts-comments-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.28s ease,
+        visibility 0.28s ease;
+}
+
+.shorts-comments-backdrop.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================================================
+   SHARE MENU
+   ========================================================= */
+
+.short-share-menu {
+    position: absolute;
+    right: 70px;
+    bottom: 108px;
+    z-index: 20;
+    width: 190px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(17, 24, 39, 0.96);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease,
+        transform 0.2s ease;
+}
+
+.short-share-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.short-share-option {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #FFFFFF;
+    text-align: left;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.short-share-option:hover {
+    background: #1F2937;
+}
+
+.short-share-option i {
+    width: 18px;
+    text-align: center;
+    color: #C5CEDB;
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+    .shorts-main {
+        margin-left: 240px;
+    }
+
+    .shorts-feed {
+        padding-top: 22px;
+        padding-bottom: 40px;
+        gap: 24px;
+    }
+
+    .short-item {
+        border-radius: 20px;
+    }
+
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 899px) {
+
+    .shorts-main {
+        padding-top: 60px;
+    }
+
+    .shorts-feed {
+        max-width: 500px;
+        padding: 10px 8px 24px;
+    }
+
+    .short-item {
+        min-height: 540px;
+        border-radius: 16px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .shorts-main {
+        padding-top: 56px;
+    }
+
+    .shorts-app {
+        min-height: calc(100svh - 56px);
+    }
+
+    .shorts-feed {
+        width: 100%;
+        max-width: none;
+        min-height: calc(100svh - 56px);
+        padding: 0;
+        gap: 0;
+    }
+
+    .short-item {
+        width: 100%;
+        height: calc(100svh - 56px);
+        min-height: 0;
+        max-height: none;
+        border-radius: 0;
+    }
+
+    .short-top {
+        padding: 13px 12px;
+    }
+
+    .short-channel-avatar {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .short-channel-name {
+        max-width: 150px;
+        font-size: 13px;
+    }
+
+    .short-channel-meta {
+        font-size: 11px;
+    }
+
+    .short-follow-button {
+        min-height: 31px;
+        padding: 0 11px;
+        font-size: 12px;
+    }
+
+    .short-actions {
+        right: 8px;
+        bottom: 110px;
+        gap: 12px;
+    }
+
+    .short-action {
+        width: 44px;
+        min-height: 44px;
+        border-radius: 13px;
+    }
+
+    .short-action i,
+    .short-action svg {
+        font-size: 19px;
+    }
+
+    .short-action-count {
+        font-size: 10px;
+    }
+
+    .short-content {
+        left: 12px;
+        right: 62px;
+        bottom: 18px;
+    }
+
+    .short-title {
+        font-size: 16px;
+    }
+
+    .short-description {
+        font-size: 13px;
+        -webkit-line-clamp: 2;
+    }
+
+    .short-tags {
+        margin-top: 7px;
+    }
+
+    .short-tag {
+        font-size: 12px;
+    }
+
+    .short-play-button {
+        width: 58px;
+        height: 58px;
+    }
+
+    .short-play-button i {
+        font-size: 22px;
+    }
+
+    .shorts-comments {
+        top: auto;
+        width: 100%;
+        max-height: 82svh;
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px 18px 0 0;
+        transform: translateY(100%);
+    }
+
+    .shorts-comments.is-open {
+        transform: translateY(0);
+    }
+
+    .short-share-menu {
+        right: 58px;
+        bottom: 100px;
+        width: 175px;
+    }
+
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.short-action:focus-visible,
+.short-follow-button:focus-visible,
+.short-play-button:focus-visible,
+.short-more:focus-visible,
+.short-share-option:focus-visible,
+.shorts-comments-close:focus-visible,
+.shorts-comment-send:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .short-action,
+    .short-follow-button,
+    .short-play-button,
+    .shorts-comments,
+    .shorts-comments-backdrop,
+    .short-share-menu {
+        transition: none;
+    }
+
+    .shorts-loader-spinner {
+        animation: none;
+    }
+
+}
