@@ -7,22 +7,23 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
     <meta
         name="description"
-        content="Regardez les Shorts sur NetView."
+        content="Shorts NetView"
     >
 
     <meta
         name="theme-color"
-        content="#2563EB"
+        content="#000000"
     >
 
     <title>
         Shorts — NetView
     </title>
+
 
     <!-- =====================================================
          FONT AWESOME
@@ -33,34 +34,36 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
 
+
     <!-- =====================================================
-         CORE CSS
+         CORE
          ===================================================== -->
 
     <link
         rel="stylesheet"
-        href="css/core/variables.css"
+        href="CSS/core/variables.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/reset.css"
+        href="CSS/core/reset.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/typography.css"
+        href="CSS/core/typography.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/animations.css"
+        href="CSS/core/animations.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/core/utilities.css"
+        href="CSS/core/utilities.css"
     >
+
 
     <!-- =====================================================
          COMPONENTS
@@ -68,56 +71,47 @@
 
     <link
         rel="stylesheet"
-        href="css/components/buttons.css"
+        href="CSS/components/buttons.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/cards.css"
+        href="CSS/components/forms.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/forms.css"
+        href="CSS/components/modal.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/modal.css"
+        href="CSS/components/toast.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/toast.css"
+        href="CSS/components/header.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/sidebar.css"
+        href="CSS/components/sidebar.css"
     >
 
     <link
         rel="stylesheet"
-        href="css/components/header.css"
+        href="CSS/components/loader.css"
     >
 
-    <link
-        rel="stylesheet"
-        href="css/components/footer.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="css/components/loader.css"
-    >
 
     <!-- =====================================================
-         SHORTS CSS
+         PAGE
          ===================================================== -->
 
     <link
         rel="stylesheet"
-        href="css/pages/shorts.css"
+        href="CSS/pages/shorts.css"
     >
 
 </head>
@@ -127,320 +121,127 @@
 
 
     <!-- =====================================================
-         PAGE LOADER
+         APPLICATION
          ===================================================== -->
 
     <div
-        id="pageLoader"
-        class="nv-page-loader"
-        aria-hidden="true"
+        id="shortsApp"
+        class="shorts-app"
     >
-
-        <div class="nv-loader"></div>
-
-    </div>
-
-
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
-
-    <header
-        class="nv-header"
-        id="nvHeader"
-    >
-
-        <div class="nv-header-left">
-
-            <button
-                id="menuButton"
-                class="nv-icon-button"
-                type="button"
-                aria-label="Ouvrir le menu"
-                aria-controls="nvSidebar"
-                aria-expanded="false"
-            >
-
-                <i class="fa-solid fa-bars"></i>
-
-            </button>
-
-
-            <a
-                href="index.html"
-                class="nv-logo"
-                aria-label="NetView"
-            >
-
-                <img
-                    src="NetView.png"
-                    alt="NetView"
-                >
-
-            </a>
-
-        </div>
 
 
         <!-- =================================================
-             SEARCH
+             HEADER
              ================================================= -->
 
-        <form
-            id="headerSearchForm"
-            class="nv-header-search"
-            action="search.html"
-            method="get"
+        <header
+            id="nvHeader"
+            class="nv-header shorts-header"
         >
 
-            <label
-                for="headerSearchInput"
-                class="sr-only"
+            <div class="nv-header-left">
+
+                <button
+                    id="menuButton"
+                    class="nv-icon-button"
+                    type="button"
+                    aria-label="Menu"
+                    aria-controls="nvSidebar"
+                    aria-expanded="false"
+                >
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+
+                <a
+                    href="index.html"
+                    class="nv-logo"
+                    aria-label="NetView"
+                >
+
+                    <img
+                        src="NetView.png"
+                        alt="NetView"
+                    >
+
+                </a>
+
+            </div>
+
+
+            <!-- =============================================
+                 SEARCH
+                 ============================================= -->
+
+            <form
+                id="headerSearchForm"
+                class="nv-header-search"
+                action="search.html"
+                method="get"
             >
-                Rechercher
-            </label>
 
-            <input
-                id="headerSearchInput"
-                name="q"
-                type="search"
-                placeholder="Rechercher"
-                autocomplete="off"
-            >
+                <label
+                    class="sr-only"
+                    for="headerSearchInput"
+                >
+                    Rechercher
+                </label>
 
-            <button
-                type="submit"
-                class="nv-icon-button"
-                aria-label="Rechercher"
-            >
+                <input
+                    id="headerSearchInput"
+                    name="q"
+                    type="search"
+                    placeholder="Rechercher"
+                    autocomplete="off"
+                >
 
-                <i class="fa-solid fa-magnifying-glass"></i>
 
-            </button>
+                <button
+                    type="submit"
+                    class="nv-icon-button"
+                    aria-label="Rechercher"
+                >
 
-        </form>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- =============================================
+                 RIGHT
+                 ============================================= -->
+
+            <div id="headerRight" class="nv-header-right"></div>
+
+</header>
+
+<aside id="sidebar" class="nv-sidebar">
+    <nav class="nv-sidebar-nav"></nav>
+</aside>
 
 
         <!-- =================================================
-             HEADER RIGHT
+             SIDEBAR OVERLAY
              ================================================= -->
 
-        <div class="nv-header-right">
+        <div
+            id="sidebarOverlay"
+            class="shorts-sidebar-overlay"
+            hidden
+        ></div>
 
-            <button
-                id="searchMobileButton"
-                class="nv-icon-button nv-mobile-search"
-                type="button"
-                aria-label="Rechercher"
-            >
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-            </button>
-
-
-            <a
-                href="upload.html"
-                class="nv-icon-button"
-                aria-label="Créer"
-            >
-
-                <i class="fa-solid fa-plus"></i>
-
-            </a>
-
-
-            <a
-                href="notification.html"
-                class="nv-icon-button nv-notification-button"
-                aria-label="Notifications"
-            >
-
-                <i class="fa-regular fa-bell"></i>
-
-                <span
-                    id="notificationBadge"
-                    class="nv-notification-badge"
-                    hidden
-                >
-                    0
-                </span>
-
-            </a>
-
-
-            <a
-                href="profile.html"
-                id="headerProfileLink"
-                class="nv-header-avatar-link"
-                aria-label="Profil"
-            >
-
-                <img
-                    id="headerAvatar"
-                    class="nv-header-avatar"
-                    src="NetView_icone.png"
-                    alt="Profil"
-                >
-
-            </a>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
-
-    <aside
-        id="nvSidebar"
-        class="nv-sidebar"
-        aria-label="Navigation principale"
-    >
-
-        <nav class="nv-sidebar-nav">
-
-            <a
-                href="index.html"
-                data-nav="index"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-house"></i>
-
-                <span>
-                    Accueil
-                </span>
-
-            </a>
-
-
-            <a
-                href="shorts.html"
-                data-nav="shorts"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-bolt"></i>
-
-                <span>
-                    Shorts
-                </span>
-
-            </a>
-
-
-            <a
-                href="subscriptions.html"
-                data-nav="subscriptions"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-tv"></i>
-
-                <span>
-                    Abonnements
-                </span>
-
-            </a>
-
-
-            <a
-                href="trending.html"
-                data-nav="trending"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-fire"></i>
-
-                <span>
-                    Tendances
-                </span>
-
-            </a>
-
-
-            <div class="nv-sidebar-divider"></div>
-
-
-            <a
-                href="library.html"
-                data-nav="library"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-photo-film"></i>
-
-                <span>
-                    Bibliothèque
-                </span>
-
-            </a>
-
-
-            <a
-                href="playlist.html"
-                data-nav="playlist"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-solid fa-list"></i>
-
-                <span>
-                    Playlists
-                </span>
-
-            </a>
-
-
-            <a
-                href="watch-later.html"
-                class="nv-sidebar-item"
-            >
-
-                <i class="fa-regular fa-clock"></i>
-
-                <span>
-                    À regarder plus tard
-                </span>
-
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-    <!-- =====================================================
-         SIDEBAR OVERLAY
-         ===================================================== -->
-
-    <div
-        id="sidebarOverlay"
-        class="nv-sidebar-overlay"
-        hidden
-    ></div>
-
-
-    <!-- =====================================================
-         MAIN
-         ===================================================== -->
-
-    <main
-        id="shortsMain"
-        class="shorts-main"
-    >
 
         <!-- =================================================
-             SHORTS VIEWER
+             MAIN SHORTS
              ================================================= -->
 
-        <section
-            id="shortsViewer"
-            class="shorts-viewer"
-            aria-label="Lecteur Shorts"
+        <main
+            id="shortsMain"
+            class="shorts-main"
         >
 
 
@@ -455,116 +256,302 @@
 
                 <div class="nv-loader"></div>
 
-                <p>
-                    Chargement des Shorts...
+            </div>
+
+
+            <!-- =============================================
+                 ERROR
+                 ============================================= -->
+
+            <section
+                id="shortsError"
+                class="shorts-state shorts-error"
+                hidden
+            >
+
+                <div class="shorts-state-icon">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                </div>
+
+                <h1>
+                    Impossible de charger ce Short
+                </h1>
+
+                <p id="shortsErrorMessage">
+                    Une erreur est survenue.
                 </p>
 
-            </div>
+                <button
+                    id="retryShortButton"
+                    type="button"
+                    class="nv-button nv-button-primary"
+                >
+                    Réessayer
+                </button>
+
+            </section>
 
 
             <!-- =============================================
                  EMPTY
                  ============================================= -->
 
-            <div
+            <section
                 id="shortsEmpty"
-                class="shorts-empty"
+                class="shorts-state"
                 hidden
             >
 
-                <div class="shorts-empty-icon">
+                <div class="shorts-state-icon">
 
                     <i class="fa-solid fa-bolt"></i>
 
                 </div>
 
                 <h1>
-                    Aucun Short disponible
+                    Aucun Short
                 </h1>
 
                 <p>
-                    Aucun Short n'est disponible pour le moment.
+                    Aucun Short disponible actuellement.
                 </p>
 
                 <a
                     href="index.html"
                     class="nv-button nv-button-primary"
                 >
-                    Retour à l'accueil
+                    Accueil
                 </a>
 
-            </div>
+            </section>
 
 
             <!-- =============================================
-                 CURRENT SHORT
+                 SHORT VIEWPORT
                  ============================================= -->
 
-            <article
-                id="shortCard"
-                class="short-card"
+            <section
+                id="shortViewport"
+                class="short-viewport"
+                aria-label="Short"
                 hidden
             >
 
+
                 <!-- =========================================
-                     VIDEO
+                     PREVIOUS
                      ========================================= -->
 
-                <div class="short-video-container">
+                <button
+                    id="previousShortButton"
+                    class="short-nav-button short-nav-up"
+                    type="button"
+                    aria-label="Short précédent"
+                >
 
-                    <video
-                        id="shortVideo"
-                        class="short-video"
-                        playsinline
-                        preload="metadata"
-                        loop
-                    ></video>
+                    <i class="fa-solid fa-chevron-up"></i>
+
+                </button>
+
+
+                <!-- =========================================
+                     VIDEO CARD
+                     ========================================= -->
+
+                <article
+                    id="shortItem"
+                    class="short-item"
+                >
 
 
                     <!-- =====================================
-                         VIDEO LOADER
+                         VIDEO
                          ===================================== -->
 
                     <div
-                        id="shortVideoLoader"
-                        class="short-video-loader"
-                        hidden
+                        id="shortMedia"
+                        class="short-media"
                     >
 
-                        <div class="nv-loader"></div>
-
-                    </div>
-
-
-                    <!-- =====================================
-                         PLAY OVERLAY
-                         ===================================== -->
-
-                    <button
-                        id="shortPlayButton"
-                        class="short-play-button"
-                        type="button"
-                        aria-label="Lire"
-                    >
-
-                        <i class="fa-solid fa-play"></i>
-
-                    </button>
+                        <video
+                            id="shortVideo"
+                            class="short-video"
+                            playsinline
+                            webkit-playsinline
+                            preload="auto"
+                        ></video>
 
 
-                    <!-- =====================================
-                         VIDEO CONTROLS
-                         ===================================== -->
+                        <!-- =================================
+                             VIDEO LOADING
+                             ================================= -->
 
-                    <div
-                        class="short-video-controls"
-                    >
+                        <div
+                            id="shortMediaLoader"
+                            class="short-media-loader"
+                            hidden
+                        >
+
+                            <div class="nv-loader"></div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             PLAY
+                             ================================= -->
+
+                        <button
+                            id="shortPlayButton"
+                            class="short-play-button"
+                            type="button"
+                            aria-label="Lecture"
+                        >
+
+                            <i class="fa-solid fa-play"></i>
+
+                        </button>
+
+
+                        <!-- =================================
+                             VIDEO BOTTOM GRADIENT
+                             ================================= -->
+
+                        <div
+                            class="short-bottom-gradient"
+                            aria-hidden="true"
+                        ></div>
+
+
+                        <!-- =================================
+                             PROGRESS
+                             ================================= -->
+
+                        <div
+                            class="short-progress-container"
+                        >
+
+                            <div
+                                id="shortProgress"
+                                class="short-progress"
+                            ></div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             INFO
+                             ================================= -->
+
+                        <div
+                            class="short-content"
+                        >
+
+
+                            <!-- CHANNEL -->
+
+                            <div
+                                class="short-channel-row"
+                            >
+
+                                <a
+                                    id="shortChannelLink"
+                                    href="#"
+                                    class="short-channel-link"
+                                >
+
+                                    <img
+                                        id="shortChannelAvatar"
+                                        class="short-channel-avatar"
+                                        src="NetView_icone.png"
+                                        alt=""
+                                    >
+
+                                </a>
+
+
+                                <div
+                                    class="short-channel-info"
+                                >
+
+                                    <a
+                                        id="shortChannelName"
+                                        href="#"
+                                        class="short-channel-name"
+                                    >
+                                        Chaîne
+                                    </a>
+
+
+                                    <span
+                                        id="shortChannelVerified"
+                                        class="short-channel-verified"
+                                        hidden
+                                    >
+
+                                        <i class="fa-solid fa-circle-check"></i>
+
+                                    </span>
+
+                                </div>
+
+
+                                <button
+                                    id="shortSubscribeButton"
+                                    class="short-subscribe-button"
+                                    type="button"
+                                >
+                                    S'abonner
+                                </button>
+
+                            </div>
+
+
+                            <!-- TITLE -->
+
+                            <h1
+                                id="shortTitle"
+                                class="short-title"
+                            ></h1>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <button
+                                id="shortDescriptionButton"
+                                class="short-description-button"
+                                type="button"
+                            >
+
+                                <span
+                                    id="shortDescription"
+                                ></span>
+
+                            </button>
+
+
+                            <!-- TAGS -->
+
+                            <div
+                                id="shortTags"
+                                class="short-tags"
+                            ></div>
+
+
+                        </div>
+
+
+                        <!-- =================================
+                             SOUND
+                             ================================= -->
 
                         <button
                             id="shortMuteButton"
-                            class="short-control-button"
+                            class="short-media-control short-mute-button"
                             type="button"
-                            aria-label="Activer ou désactiver le son"
+                            aria-label="Son"
                         >
 
                             <i class="fa-solid fa-volume-high"></i>
@@ -572,21 +559,13 @@
                         </button>
 
 
-                        <div
-                            class="short-progress"
-                        >
-
-                            <div
-                                id="shortProgressBar"
-                                class="short-progress-bar"
-                            ></div>
-
-                        </div>
-
+                        <!-- =================================
+                             FULLSCREEN
+                             ================================= -->
 
                         <button
                             id="shortFullscreenButton"
-                            class="short-control-button"
+                            class="short-media-control short-fullscreen-button"
                             type="button"
                             aria-label="Plein écran"
                         >
@@ -599,449 +578,216 @@
 
 
                     <!-- =====================================
-                         GRADIENT
+                         ACTIONS
                          ===================================== -->
 
-                    <div
-                        class="short-video-gradient"
-                    ></div>
-
-
-                    <!-- =====================================
-                         SHORT INFORMATION
-                         ===================================== -->
-
-                    <div
-                        class="short-info"
+                    <aside
+                        class="short-actions"
+                        aria-label="Actions"
                     >
 
+
+                        <!-- LIKE -->
+
+                        <button
+                            id="shortLikeButton"
+                            class="short-action"
+                            type="button"
+                            aria-label="J'aime"
+                        >
+
+                            <span class="short-action-icon">
+
+                                <i class="fa-regular fa-thumbs-up"></i>
+
+                            </span>
+
+                            <span
+                                id="shortLikeCount"
+                                class="short-action-count"
+                            >
+                                0
+                            </span>
+
+                        </button>
+
+
+                        <!-- COMMENTS -->
+
+                        <button
+                            id="shortCommentsButton"
+                            class="short-action"
+                            type="button"
+                            aria-label="Commentaires"
+                        >
+
+                            <span class="short-action-icon">
+
+                                <i class="fa-regular fa-comment"></i>
+
+                            </span>
+
+                            <span
+                                id="shortCommentCount"
+                                class="short-action-count"
+                            >
+                                0
+                            </span>
+
+                        </button>
+
+
+                        <!-- SHARE -->
+
+                        <button
+                            id="shortShareButton"
+                            class="short-action"
+                            type="button"
+                            aria-label="Partager"
+                        >
+
+                            <span class="short-action-icon">
+
+                                <i class="fa-solid fa-share"></i>
+
+                            </span>
+
+                            <span class="short-action-label">
+                                Partager
+                            </span>
+
+                        </button>
+
+
+                        <!-- SAVE -->
+
+                        <button
+                            id="shortSaveButton"
+                            class="short-action"
+                            type="button"
+                            aria-label="Enregistrer"
+                        >
+
+                            <span class="short-action-icon">
+
+                                <i class="fa-regular fa-bookmark"></i>
+
+                            </span>
+
+                            <span class="short-action-label">
+                                Enregistrer
+                            </span>
+
+                        </button>
+
+
+                        <!-- MORE -->
+
+                        <button
+                            id="shortMoreButton"
+                            class="short-action"
+                            type="button"
+                            aria-label="Plus"
+                        >
+
+                            <span class="short-action-icon">
+
+                                <i class="fa-solid fa-ellipsis"></i>
+
+                            </span>
+
+                        </button>
+
+
+                        <!-- CHANNEL AVATAR -->
+
                         <a
-                            id="shortChannelLink"
-                            class="short-channel"
+                            id="shortActionChannel"
                             href="#"
+                            class="short-action-avatar"
+                            aria-label="Chaîne"
                         >
 
                             <img
-                                id="shortChannelAvatar"
-                                class="short-channel-avatar"
+                                id="shortActionChannelAvatar"
                                 src="NetView_icone.png"
                                 alt=""
                             >
 
-                            <span
-                                id="shortChannelName"
-                                class="short-channel-name"
-                            >
-                                Chaîne
-                            </span>
-
-                            <span
-                                id="shortChannelVerified"
-                                class="short-verified"
-                                hidden
-                                aria-label="Chaîne vérifiée"
-                            >
-
-                                <i class="fa-solid fa-circle-check"></i>
-
-                            </span>
-
                         </a>
 
-
-                        <button
-                            id="shortSubscribeButton"
-                            class="short-subscribe-button"
-                            type="button"
-                        >
-                            S'abonner
-                        </button>
+                    </aside>
 
 
-                        <h1
-                            id="shortTitle"
-                            class="short-title"
-                        ></h1>
-
-
-                        <p
-                            id="shortDescription"
-                            class="short-description"
-                        ></p>
-
-
-                        <div
-                            id="shortTags"
-                            class="short-tags"
-                        ></div>
-
-                    </div>
-
-                </div>
+                </article>
 
 
                 <!-- =========================================
-                     ACTIONS
+                     NEXT
                      ========================================= -->
-
-                <aside
-                    class="short-actions"
-                    aria-label="Actions du Short"
-                >
-
-                    <button
-                        id="shortLikeButton"
-                        class="short-action-button"
-                        type="button"
-                        aria-label="J'aime"
-                    >
-
-                        <span class="short-action-icon">
-
-                            <i class="fa-regular fa-thumbs-up"></i>
-
-                        </span>
-
-                        <span
-                            id="shortLikeCount"
-                            class="short-action-count"
-                        >
-                            0
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="shortCommentButton"
-                        class="short-action-button"
-                        type="button"
-                        aria-label="Commentaires"
-                    >
-
-                        <span class="short-action-icon">
-
-                            <i class="fa-regular fa-comment"></i>
-
-                        </span>
-
-                        <span
-                            id="shortCommentCount"
-                            class="short-action-count"
-                        >
-                            0
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="shortShareButton"
-                        class="short-action-button"
-                        type="button"
-                        aria-label="Partager"
-                    >
-
-                        <span class="short-action-icon">
-
-                            <i class="fa-solid fa-share"></i>
-
-                        </span>
-
-                        <span class="short-action-label">
-                            Partager
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="shortSaveButton"
-                        class="short-action-button"
-                        type="button"
-                        aria-label="Enregistrer"
-                    >
-
-                        <span class="short-action-icon">
-
-                            <i class="fa-regular fa-bookmark"></i>
-
-                        </span>
-
-                        <span class="short-action-label">
-                            Enregistrer
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="shortMoreButton"
-                        class="short-action-button"
-                        type="button"
-                        aria-label="Plus d'options"
-                    >
-
-                        <span class="short-action-icon">
-
-                            <i class="fa-solid fa-ellipsis"></i>
-
-                        </span>
-
-                    </button>
-
-
-                    <!-- =====================================
-                         CHANNEL AVATAR
-                         ===================================== -->
-
-                    <a
-                        id="shortActionChannel"
-                        class="short-action-channel"
-                        href="#"
-                        aria-label="Ouvrir la chaîne"
-                    >
-
-                        <img
-                            id="shortActionChannelAvatar"
-                            src="NetView_icone.png"
-                            alt=""
-                        >
-
-                    </a>
-
-                </aside>
-
-
-                <!-- =========================================
-                     NAVIGATION
-                     ========================================= -->
-
-                <div
-                    class="short-navigation"
-                >
-
-                    <button
-                        id="previousShortButton"
-                        class="short-navigation-button"
-                        type="button"
-                        aria-label="Short précédent"
-                    >
-
-                        <i class="fa-solid fa-chevron-up"></i>
-
-                    </button>
-
-
-                    <button
-                        id="nextShortButton"
-                        class="short-navigation-button"
-                        type="button"
-                        aria-label="Short suivant"
-                    >
-
-                        <i class="fa-solid fa-chevron-down"></i>
-
-                    </button>
-
-                </div>
-
-            </article>
-
-        </section>
-
-    </main>
-
-
-    <!-- =====================================================
-         COMMENTS DRAWER
-         ===================================================== -->
-
-    <section
-        id="commentsPanel"
-        class="short-comments-panel"
-        aria-label="Commentaires"
-        aria-hidden="true"
-        hidden
-    >
-
-        <div class="short-comments-header">
-
-            <div>
-
-                <h2>
-                    Commentaires
-                </h2>
-
-                <span
-                    id="commentsTotal"
-                    class="short-comments-total"
-                >
-                    0
-                </span>
-
-            </div>
-
-
-            <button
-                id="closeCommentsButton"
-                class="nv-icon-button"
-                type="button"
-                aria-label="Fermer les commentaires"
-            >
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
-        </div>
-
-
-        <!-- ===============================================
-             COMMENT FORM
-             =============================================== -->
-
-        <form
-            id="shortCommentForm"
-            class="short-comment-form"
-        >
-
-            <img
-                id="commentUserAvatar"
-                class="short-comment-avatar"
-                src="NetView_icone.png"
-                alt=""
-            >
-
-            <div class="short-comment-input-wrapper">
-
-                <label
-                    for="shortCommentInput"
-                    class="sr-only"
-                >
-                    Ajouter un commentaire
-                </label>
-
-                <textarea
-                    id="shortCommentInput"
-                    name="content"
-                    rows="1"
-                    maxlength="5000"
-                    placeholder="Ajouter un commentaire..."
-                    required
-                ></textarea>
-
-                <div
-                    class="short-comment-form-actions"
-                >
-
-                    <button
-                        id="cancelCommentButton"
-                        type="button"
-                        class="nv-button nv-button-secondary"
-                        hidden
-                    >
-                        Annuler
-                    </button>
-
-                    <button
-                        id="submitCommentButton"
-                        type="submit"
-                        class="nv-button nv-button-primary"
-                    >
-                        Commenter
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
-
-        <!-- ===============================================
-             COMMENTS LIST
-             =============================================== -->
-
-        <div
-            id="shortCommentsList"
-            class="short-comments-list"
-        >
-
-            <div
-                id="commentsLoading"
-                class="short-comments-loading"
-                hidden
-            >
-
-                <div class="nv-loader"></div>
-
-            </div>
-
-
-            <div
-                id="commentsEmpty"
-                class="short-comments-empty"
-                hidden
-            >
-
-                <i class="fa-regular fa-comment"></i>
-
-                <p>
-                    Aucun commentaire pour le moment.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         COMMENTS OVERLAY
-         ===================================================== -->
-
-    <div
-        id="commentsOverlay"
-        class="short-comments-overlay"
-        hidden
-    ></div>
-
-
-    <!-- =====================================================
-         SHARE MODAL
-         ===================================================== -->
-
-    <div
-        id="shareModal"
-        class="nv-modal"
-        hidden
-    >
-
-        <div
-            class="nv-modal-backdrop"
-            data-close-modal="shareModal"
-        ></div>
-
-
-        <div
-            class="nv-modal-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="shareModalTitle"
-        >
-
-            <div class="nv-modal-header">
-
-                <h2 id="shareModalTitle">
-                    Partager
-                </h2>
 
                 <button
+                    id="nextShortButton"
+                    class="short-nav-button short-nav-down"
+                    type="button"
+                    aria-label="Short suivant"
+                >
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </button>
+
+
+            </section>
+
+
+            <!-- =============================================
+                 MOBILE SWIPE TARGET
+                 ============================================= -->
+
+            <div
+                id="shortSwipeArea"
+                class="short-swipe-area"
+                aria-hidden="true"
+            ></div>
+
+        </main>
+
+
+        <!-- =================================================
+             COMMENTS PANEL
+             ================================================= -->
+
+        <aside
+            id="shortCommentsPanel"
+            class="short-comments-panel"
+            aria-hidden="true"
+            hidden
+        >
+
+            <header
+                class="short-comments-header"
+            >
+
+                <div>
+
+                    <h2>
+                        Commentaires
+                    </h2>
+
+                    <span
+                        id="shortCommentsTotal"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+                <button
+                    id="closeShortComments"
                     class="nv-icon-button"
                     type="button"
-                    data-close-modal="shareModal"
                     aria-label="Fermer"
                 >
 
@@ -1049,41 +795,259 @@
 
                 </button>
 
-            </div>
+            </header>
 
 
-            <div class="nv-modal-body">
+            <!-- =============================================
+                 COMMENT FORM
+                 ============================================= -->
 
-                <button
-                    id="nativeShareButton"
-                    class="nv-share-option"
-                    type="button"
+            <form
+                id="shortCommentForm"
+                class="short-comment-form"
+            >
+
+                <img
+                    id="shortCommentAvatar"
+                    class="short-comment-user-avatar"
+                    src="NetView_icone.png"
+                    alt=""
                 >
 
-                    <i class="fa-solid fa-share-nodes"></i>
 
-                    <span>
+                <div
+                    class="short-comment-input-container"
+                >
+
+                    <textarea
+                        id="shortCommentInput"
+                        name="content"
+                        maxlength="5000"
+                        rows="1"
+                        placeholder="Ajouter un commentaire..."
+                    ></textarea>
+
+
+                    <div
+                        class="short-comment-actions"
+                    >
+
+                        <button
+                            id="cancelShortComment"
+                            type="button"
+                            class="nv-button nv-button-secondary"
+                            hidden
+                        >
+                            Annuler
+                        </button>
+
+
+                        <button
+                            id="submitShortComment"
+                            type="submit"
+                            class="nv-button nv-button-primary"
+                        >
+                            Commenter
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- =============================================
+                 COMMENTS
+                 ============================================= -->
+
+            <div
+                id="shortCommentsList"
+                class="short-comments-list"
+            >
+
+                <div
+                    id="shortCommentsLoading"
+                    class="short-comments-loading"
+                    hidden
+                >
+
+                    <div class="nv-loader"></div>
+
+                </div>
+
+
+                <div
+                    id="shortCommentsEmpty"
+                    class="short-comments-empty"
+                    hidden
+                >
+
+                    <i class="fa-regular fa-comment"></i>
+
+                    <p>
+                        Aucun commentaire pour le moment.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             COMMENTS OVERLAY
+             ================================================= -->
+
+        <div
+            id="shortCommentsOverlay"
+            class="short-comments-overlay"
+            hidden
+        ></div>
+
+
+        <!-- =================================================
+             SHARE
+             ================================================= -->
+
+        <div
+            id="shortShareModal"
+            class="short-share-modal"
+            hidden
+        >
+
+            <div
+                class="short-share-backdrop"
+                data-close-share
+            ></div>
+
+
+            <div
+                class="short-share-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="shortShareTitle"
+            >
+
+                <header
+                    class="short-share-dialog-header"
+                >
+
+                    <h2 id="shortShareTitle">
                         Partager
-                    </span>
-
-                </button>
+                    </h2>
 
 
-                <button
-                    id="copyShortLinkButton"
-                    class="nv-share-option"
-                    type="button"
+                    <button
+                        id="closeShortShare"
+                        class="nv-icon-button"
+                        type="button"
+                        aria-label="Fermer"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </header>
+
+
+                <div
+                    class="short-share-options"
                 >
 
-                    <i class="fa-solid fa-link"></i>
+                    <button
+                        id="nativeShortShare"
+                        type="button"
+                        class="short-share-option"
+                    >
 
-                    <span>
-                        Copier le lien
-                    </span>
+                        <i class="fa-solid fa-share-nodes"></i>
 
-                </button>
+                        <span>
+                            Partager
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="copyShortLink"
+                        type="button"
+                        class="short-share-option"
+                    >
+
+                        <i class="fa-solid fa-link"></i>
+
+                        <span>
+                            Copier le lien
+                        </span>
+
+                    </button>
+
+                </div>
 
             </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MORE MENU
+             ================================================= -->
+
+        <div
+            id="shortMoreMenu"
+            class="short-more-menu"
+            hidden
+        >
+
+            <button
+                id="shortReportButton"
+                type="button"
+            >
+
+                <i class="fa-regular fa-flag"></i>
+
+                <span>
+                    Signaler
+                </span>
+
+            </button>
+
+
+            <button
+                id="shortNotInterestedButton"
+                type="button"
+            >
+
+                <i class="fa-regular fa-eye-slash"></i>
+
+                <span>
+                    Pas intéressé
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             TOAST
+             ================================================= -->
+
+        <div
+            id="nvToast"
+            class="nv-toast"
+            role="status"
+            aria-live="polite"
+            hidden
+        >
+
+            <span
+                id="nvToastMessage"
+            ></span>
 
         </div>
 
@@ -1091,64 +1055,7 @@
 
 
     <!-- =====================================================
-         MORE OPTIONS MENU
-         ===================================================== -->
-
-    <div
-        id="shortMoreMenu"
-        class="short-more-menu"
-        hidden
-    >
-
-        <button
-            id="reportShortButton"
-            type="button"
-        >
-
-            <i class="fa-regular fa-flag"></i>
-
-            <span>
-                Signaler
-            </span>
-
-        </button>
-
-
-        <button
-            id="notInterestedButton"
-            type="button"
-        >
-
-            <i class="fa-regular fa-eye-slash"></i>
-
-            <span>
-                Pas intéressé
-            </span>
-
-        </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         TOAST
-         ===================================================== -->
-
-    <div
-        id="toast"
-        class="nv-toast"
-        role="status"
-        aria-live="polite"
-        hidden
-    >
-
-        <span id="toastMessage"></span>
-
-    </div>
-
-
-    <!-- =====================================================
-         APP SCRIPT
+         JAVASCRIPT
          ===================================================== -->
 
     <script
