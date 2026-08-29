@@ -10,10 +10,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // Project Configuration
 // ==========================================
 
-const SUPABASE_URL = "https://orgkcanbzcgetduanvhd.supabase.co";
+const SUPABASE_URL = "https://vmgkugwhvmkxvavumxvd.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yZ2tjYW5iemNnZXRkdWFudmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2ODE5MDUsImV4cCI6MjA5NjI1NzkwNX0.hRFtHctWNzbnaSEPzjqAIg2AseVbXs3EphcPTWsrWf4";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2t1Z3dodm1reHZhdnVteHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NjIyMTYsImV4cCI6MjEwMzUzODIxNn0.eA_uXX4-EBvfOjHFO77tQNz46e6B76cCkpve-QYotyA";
 
 // ==========================================
 // Create Client
