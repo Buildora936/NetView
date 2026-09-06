@@ -270,7 +270,6 @@
 <!-- =====================================================
      SCRIPTS
      ===================================================== -->
-
 <script type="module">
 
     import {
@@ -283,9 +282,7 @@
 
     import {
         initUI,
-        showError,
-        showLoader,
-        hideLoader
+        showError
     } from "./js/ui.js";
 
 
@@ -297,17 +294,25 @@
         "DOMContentLoaded",
         async () => {
 
+            // ======================================
+            // Initialisation
+            // ======================================
+
             initNavigation();
 
             initUI();
 
+
+            // ======================================
+            // Année
+            // ======================================
 
             const year =
                 document.getElementById(
                     "currentYear"
                 );
 
-            if(year){
+            if (year) {
 
                 year.textContent =
                     new Date().getFullYear();
@@ -316,42 +321,62 @@
 
 
             // ======================================
-            // Vérification session
+            // Loader
+            // ======================================
+            /*
+             * Le portail doit rester immédiatement
+             * utilisable.
+             *
+             * On masque le loader dès que le DOM
+             * est prêt au lieu d'attendre Supabase.
+             */
+
+            const loader =
+                document.getElementById(
+                    "pageLoader"
+                );
+
+            if (loader) {
+
+                loader.style.display =
+                    "none";
+
+            }
+
+
+            // ======================================
+            // Vérification de session
             // ======================================
 
             try {
-
-                showLoader();
-
 
                 const session =
                     await getSession();
 
 
-                /*
-                 * Un utilisateur déjà connecté
-                 * n'a pas besoin de passer par
-                 * le portail d'authentification.
-                 */
+                // ==================================
+                // Utilisateur déjà connecté
+                // ==================================
 
-                if(session){
+                if (session) {
 
-                    window.location.href =
-                        "index.html";
+                    window.location.replace(
+                        "index.html"
+                    );
 
                     return;
 
                 }
 
             }
-            catch(error){
+            catch (error) {
+
+                /*
+                 * Une erreur de vérification de session
+                 * ne doit pas bloquer le portail.
+                 */
 
                 showError(error);
-
-            }
-            finally{
-
-                hideLoader();
 
             }
 
@@ -359,7 +384,6 @@
     );
 
 </script>
-```
 
 </body>
 </html>
