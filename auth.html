@@ -1,985 +1,379 @@
 <!DOCTYPE html>
+
 <html lang="fr">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+```
+<meta name="description" content="NetView — Accédez à votre compte ou créez votre compte NetView.">
+<meta name="theme-color" content="#2563EB">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<title>NetView — Authentification</title>
 
-<meta
-    name="description"
-    content="Portail d'accès NetView">
-
-<meta
-    name="theme-color"
-    content="#2563EB">
-
-<title>Bienvenue • NetView</title>
-
-<link
-    rel="icon"
-    type="image/png"
-    href="NetView_icone.png">
-
+<!-- Font Awesome -->
 <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<!-- ==========================================
-Core CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/core/variables.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/reset.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/typography.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/animations.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<!-- ==========================================
-Components
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/components/buttons.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/cards.css">
-
-<link
-    rel="stylesheet"
-    href="CSS/components/loader.css">
-
-<style>
-
-/* ==================================================
-BODY
-================================================== */
-
-body{
-
-    overflow:auto;
-
-    background:
-    var(--nv-background);
-
-}
-
-/* ==================================================
-BACKGROUND
-================================================== */
-
-.nv-auth-background{
-
-    position:fixed;
-
-    inset:0;
-
-    overflow:hidden;
-
-    z-index:-10;
-
-    background:
-
-    radial-gradient(circle at top left,
-    rgba(37,99,235,.25),
-    transparent 35%),
-
-    radial-gradient(circle at bottom right,
-    rgba(96,165,250,.18),
-    transparent 45%),
-
-    linear-gradient(
-        135deg,
-        #020617,
-        #071124,
-        #0B1120,
-        #020617
-    );
-
-}
-
-.nv-auth-background::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:-20%;
-
-    background:
-
-    linear-gradient(
-
-        135deg,
-
-        transparent,
-
-        rgba(37,99,235,.08),
-
-        transparent,
-
-        rgba(96,165,250,.10),
-
-        transparent
-
-    );
-
-    background-size:300% 300%;
-
-    animation:
-
-    gradientMove 18s linear infinite;
-
-    filter:blur(80px);
-
-}
-
-.nv-auth-background::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background-image:
-
-    linear-gradient(
-        rgba(255,255,255,.03) 1px,
-        transparent 1px),
-
-    linear-gradient(
-        90deg,
-        rgba(255,255,255,.03) 1px,
-        transparent 1px);
-
-    background-size:
-
-    50px 50px;
-
-    mask-image:
-
-    radial-gradient(circle,
-    white,
-    transparent 92%);
-
-}
-
-/* ==================================================
-BLUE ORBS
-================================================== */
-
-.nv-orb{
-
-    position:absolute;
-
-    border-radius:50%;
-
-    filter:blur(70px);
-
-    animation:
-
-    floatOrb 12s ease-in-out infinite;
-
-}
-
-.nv-orb.one{
-
-    width:320px;
-
-    height:320px;
-
-    top:-120px;
-
-    left:-120px;
-
-    background:
-
-    rgba(37,99,235,.30);
-
-}
-
-.nv-orb.two{
-
-    width:260px;
-
-    height:260px;
-
-    bottom:-80px;
-
-    right:-80px;
-
-    background:
-
-    rgba(96,165,250,.25);
-
-    animation-delay:2s;
-
-}
-
-.nv-orb.three{
-
-    width:180px;
-
-    height:180px;
-
-    left:60%;
-
-    top:35%;
-
-    background:
-
-    rgba(59,130,246,.18);
-
-    animation-delay:5s;
-
-}
-
-/* ==================================================
-PARTICLES
-================================================== */
-
-.nv-particles{
-
-    position:absolute;
-
-    inset:0;
-
-}
-
-.nv-particles span{
-
-    position:absolute;
-
-    width:3px;
-
-    height:3px;
-
-    border-radius:50%;
-
-    background:
-
-    rgba(255,255,255,.55);
-
-    animation:
-
-    particleFloat linear infinite;
-
-}
-
-.nv-particles span:nth-child(1){left:5%;top:12%;animation-duration:20s;}
-.nv-particles span:nth-child(2){left:16%;top:72%;animation-duration:16s;}
-.nv-particles span:nth-child(3){left:27%;top:35%;animation-duration:18s;}
-.nv-particles span:nth-child(4){left:38%;top:82%;animation-duration:24s;}
-.nv-particles span:nth-child(5){left:50%;top:18%;animation-duration:15s;}
-.nv-particles span:nth-child(6){left:62%;top:60%;animation-duration:20s;}
-.nv-particles span:nth-child(7){left:73%;top:28%;animation-duration:19s;}
-.nv-particles span:nth-child(8){left:84%;top:78%;animation-duration:22s;}
-.nv-particles span:nth-child(9){left:93%;top:16%;animation-duration:17s;}
-.nv-particles span:nth-child(10){left:44%;top:48%;animation-duration:23s;}
-.nv-particles span:nth-child(11){left:12%;top:52%;animation-duration:21s;}
-.nv-particles span:nth-child(12){left:79%;top:8%;animation-duration:18s;}
-
-/* ==================================================
-LAYOUT
-================================================== */
-
-.nv-auth{
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:2rem;
-
-}
-
-.nv-auth-card{
-
-    width:min(100%,540px);
-
-    padding:3rem;
-
-    position:relative;
-
-    overflow:hidden;
-
-    border-radius:34px;
-
-    backdrop-filter:blur(30px);
-
-    background:
-
-    rgba(15,23,42,.72);
-
-    border:
-
-    1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-
-    0 40px 90px rgba(0,0,0,.45);
-
-    animation:
-
-    fadeUp .8s ease;
-
-}
-
-.nv-auth-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    border-radius:inherit;
-
-    padding:1px;
-
-    background:
-
-    linear-gradient(
-
-        135deg,
-
-        rgba(37,99,235,.7),
-
-        rgba(96,165,250,.15),
-
-        transparent
-
-    );
-
-    -webkit-mask:
-
-        linear-gradient(#fff 0 0) content-box,
-
-        linear-gradient(#fff 0 0);
-
-    -webkit-mask-composite:xor;
-
-    mask-composite:exclude;
-
-    pointer-events:none;
-
-}
-
-/* ==================================================
-LOGO
-================================================== */
-
-.nv-auth-logo{
-
-    width:120px;
-
-    display:block;
-
-    margin:auto;
-
-    animation:
-
-    floatLogo 5s ease-in-out infinite;
-
-}
-
-.nv-auth-title{
-
-    margin-top:1.6rem;
-
-    text-align:center;
-
-}
-
-.nv-auth-subtitle{
-
-    margin-top:.9rem;
-
-    margin-bottom:2.5rem;
-
-    text-align:center;
-
-    color:var(--nv-text-secondary);
-
-    line-height:1.8;
-
-}
-
-/* ==================================================
-BUTTONS
-================================================== */
-
-.nv-auth-actions{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:1rem;
-
-}
-
-.nv-auth-btn{
-
-    width:100%;
-
-    height:62px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:.9rem;
-
-    font-size:1rem;
-
-    text-decoration:none;
-
-    position:relative;
-
-    overflow:hidden;
-
-}
-
-.nv-auth-btn i{
-
-    font-size:1.1rem;
-
-}
-
-.nv-auth-btn::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-
-    left:-120%;
-
-    width:55%;
-
-    height:100%;
-
-    background:
-
-    linear-gradient(
-
-        90deg,
-
-        transparent,
-
-        rgba(255,255,255,.35),
-
-        transparent
-
-    );
-
-    transition:.8s;
-
-}
-
-.nv-auth-btn:hover::before{
-
-    left:170%;
-
-}
-
-.nv-auth-btn-secondary{
-
-    background:
-
-    rgba(255,255,255,.06);
-
-    color:#fff;
-
-    border:
-
-    1px solid rgba(255,255,255,.08);
-
-}
-
-.nv-auth-btn-secondary:hover{
-
-    background:
-
-    rgba(255,255,255,.10);
-
-}
-
-.nv-auth-btn-outline{
-
-    background:transparent;
-
-    color:#fff;
-
-    border:
-
-    1px solid rgba(255,255,255,.10);
-
-}
-
-.nv-auth-btn-outline:hover{
-
-    border-color:
-
-    rgba(37,99,235,.5);
-
-    background:
-
-    rgba(37,99,235,.08);
-
-}
-
-/* ==================================================
-FOOTER
-================================================== */
-
-.nv-auth-footer{
-
-    margin-top:2rem;
-
-    text-align:center;
-
-    color:var(--nv-text-muted);
-
-    font-size:.85rem;
-
-}
-
-/* ==================================================
-RESPONSIVE
-================================================== */
-
-@media(max-width:768px){
-
-    .nv-auth{
-
-        padding:1rem;
-
-    }
-
-    .nv-auth-card{
-
-        padding:2rem 1.5rem;
-
-        border-radius:24px;
-
-    }
-
-    .nv-auth-logo{
-
-        width:220px;
-
-    }
-
-    .nv-auth-title{
-
-        font-size:2rem;
-
-    }
-
-    .nv-auth-subtitle{
-
-        font-size:.95rem;
-
-    }
-
-}
-
-</style>
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<!-- NetView CSS -->
+<link rel="stylesheet" href="CSS/core/variables.css">
+<link rel="stylesheet" href="CSS/core/reset.css">
+<link rel="stylesheet" href="CSS/core/typography.css">
+<link rel="stylesheet" href="CSS/core/animations.css">
+<link rel="stylesheet" href="CSS/core/utilities.css">
+
+<link rel="stylesheet" href="CSS/components/buttons.css">
+<link rel="stylesheet" href="CSS/components/forms.css">
+<link rel="stylesheet" href="CSS/components/header.css">
+<link rel="stylesheet" href="CSS/components/footer.css">
+<link rel="stylesheet" href="CSS/components/loader.css">
+<link rel="stylesheet" href="CSS/components/toast.css">
+
+<link rel="stylesheet" href="CSS/pages/auth.css">
+```
 
 </head>
-<body>
 
+<body class="nv-page auth-page">
 
-<div class="nv-auth-background">
+```
+<!-- =====================================================
+     PAGE LOADER
+     ===================================================== -->
 
-    <div class="nv-orb one"></div>
-
-    <div class="nv-orb two"></div>
-
-    <div class="nv-orb three"></div>
-
-
-    <div class="nv-particles">
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
+<div
+    class="nv-page-loader"
+    id="pageLoader"
+    aria-hidden="true"
+>
+    <div class="nv-spinner"></div>
 </div>
 
 
-<main class="nv-auth">
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
+
+<main class="auth-main">
+
+    <section
+        class="auth-container"
+        aria-labelledby="authTitle"
+    >
+
+        <!-- =================================================
+             BRAND
+             ================================================= -->
+
+        <div class="auth-brand">
+
+            <a
+                href="index.html"
+                class="auth-brand-link"
+                aria-label="NetView — Accueil"
+                data-link
+            >
+
+                <div class="auth-brand-logo">
+                    <span class="auth-brand-eye">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+
+                    <span class="auth-brand-play">
+                        <i class="fa-solid fa-play"></i>
+                    </span>
+                </div>
+
+                <span class="auth-brand-name">
+                    NetView
+                </span>
+
+            </a>
+
+        </div>
 
 
-<section class="nv-auth-card">
+        <!-- =================================================
+             CONTENT
+             ================================================= -->
+
+        <div class="auth-card">
+
+            <div class="auth-card-header">
+
+                <div class="auth-icon" aria-hidden="true">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+
+                <h1 id="authTitle">
+                    Bienvenue sur NetView
+                </h1>
+
+                <p>
+                    Connectez-vous à votre compte ou créez votre compte
+                    pour commencer à utiliser NetView.
+                </p>
+
+            </div>
 
 
-<img
+            <!-- =================================================
+                 AUTH ACTIONS
+                 ================================================= -->
 
-    src="NetView.png"
+            <div class="auth-actions">
 
-    alt="NetView"
+                <a
+                    href="login.html"
+                    class="nv-btn nv-btn-primary auth-action"
+                    data-link="login.html"
+                >
+                    <i class="fa-solid fa-right-to-bracket"></i>
 
-    class="nv-auth-logo">
+                    <span>
+                        Se connecter
+                    </span>
 
-
-<h1 class="nv-auth-title">
-
-    Bienvenue sur NetView
-
-</h1>
-
-
-<p class="nv-auth-subtitle">
-
-    La plateforme qui réunit vidéos, shorts, lives,
-    communautés, messagerie et marketplace.
-
-</p>
+                </a>
 
 
+                <a
+                    href="signup.html"
+                    class="nv-btn nv-btn-secondary auth-action"
+                    data-link="signup.html"
+                >
+                    <i class="fa-solid fa-user-plus"></i>
 
-<div class="nv-auth-actions">
+                    <span>
+                        Créer un compte
+                    </span>
 
+                </a>
 
-<a
-
-href="login.html"
-
-class="nv-btn nv-btn-gradient nv-auth-btn">
-
-<i class="fa-solid fa-right-to-bracket"></i>
-
-<span>
-
-    Se connecter
-
-</span>
-
-</a>
+            </div>
 
 
+            <!-- =================================================
+                 FEATURES
+                 ================================================= -->
 
-<a
+            <div class="auth-features">
 
-href="signup.html"
+                <div class="auth-feature">
 
-class="nv-btn nv-btn-gradient nv-auth-btn">
+                    <div class="auth-feature-icon">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
 
-<i class="fa-solid fa-user-plus"></i>
+                    <div class="auth-feature-content">
 
-<span>
+                        <strong>
+                            Vidéos & Shorts
+                        </strong>
 
-    Créer un compte
+                        <span>
+                            Découvrez et partagez du contenu.
+                        </span>
 
-</span>
+                    </div>
 
-</a>
-
-
-
-<a
-
-href="index.html"
-
-class="nv-auth-btn nv-auth-btn-secondary">
-
-<i class="fa-solid fa-user-secret"></i>
-
-<span>
-
-    Continuer en tant que visiteur
-
-</span>
-
-</a>
+                </div>
 
 
+                <div class="auth-feature">
 
-</div>
+                    <div class="auth-feature-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div class="auth-feature-content">
+
+                        <strong>
+                            Communauté
+                        </strong>
+
+                        <span>
+                            Suivez vos chaînes et échangez avec la communauté.
+                        </span>
+
+                    </div>
+
+                </div>
 
 
+                <div class="auth-feature">
 
-<div class="nv-auth-footer">
+                    <div class="auth-feature-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
 
-    NetView v1.0 • Tous droits réservés
+                    <div class="auth-feature-content">
 
-</div>
+                        <strong>
+                            Marketplace
+                        </strong>
+
+                        <span>
+                            Découvrez des produits numériques et physiques.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
+            <!-- =================================================
+                 FOOTER LINKS
+                 ================================================= -->
 
-</section>
+            <div class="auth-card-footer">
 
+                <a
+                    href="index.html"
+                    class="auth-home-link"
+                    data-link="index.html"
+                >
+                    <i class="fa-solid fa-house"></i>
+
+                    Retour à l'accueil
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LEGAL
+             ================================================= -->
+
+        <p class="auth-legal">
+
+            En continuant, vous acceptez les conditions d'utilisation
+            et la politique de confidentialité de NetView.
+
+        </p>
+
+    </section>
 
 </main>
 
 
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
 
-<div
+<footer class="nv-footer auth-footer">
 
-class="nv-page-loader"
+    <div class="nv-footer-content">
 
-id="pageLoader"
+        <span>
+            © <span id="currentYear"></span> NetView
+        </span>
 
-style="display:none;">
+    </div>
 
-
-<div class="nv-spinner nv-spinner-lg"></div>
-
-
-<div class="nv-loader-text">
-
-Chargement...
-
-</div>
+</footer>
 
 
-</div>
+<!-- =====================================================
+     SCRIPTS
+     ===================================================== -->
+
 <script type="module">
 
+    import {
+        getSession
+    } from "./js/core/auth.js";
 
-// ==========================================
-// Imports
-// ==========================================
+    import {
+        initNavigation
+    } from "./js/navigation.js";
 
-import {
-
-    getSession
-
-} from "./js/core/auth.js";
-
-
-import {
-
-    navigate
-
-} from "./js/core/navigation.js";
+    import {
+        initUI,
+        showError,
+        showLoader,
+        hideLoader
+    } from "./js/ui.js";
 
 
+    // ==========================================
+    // DOM READY
+    // ==========================================
 
-// ==========================================
-// Check Existing Session
-// ==========================================
+    document.addEventListener(
+        "DOMContentLoaded",
+        async () => {
 
-(async()=>{
+            initNavigation();
 
-
-    try{
-
-
-        const session =
-
-            await getSession();
+            initUI();
 
 
+            const year =
+                document.getElementById(
+                    "currentYear"
+                );
 
-        if(session){
+            if(year){
+
+                year.textContent =
+                    new Date().getFullYear();
+
+            }
 
 
-            navigate(
+            // ======================================
+            // Vérification session
+            // ======================================
 
-                "index.html"
+            try {
 
-            );
+                showLoader();
 
+
+                const session =
+                    await getSession();
+
+
+                /*
+                 * Un utilisateur déjà connecté
+                 * n'a pas besoin de passer par
+                 * le portail d'authentification.
+                 */
+
+                if(session){
+
+                    window.location.href =
+                        "index.html";
+
+                    return;
+
+                }
+
+            }
+            catch(error){
+
+                showError(error);
+
+            }
+            finally{
+
+                hideLoader();
+
+            }
 
         }
-
-
-    }
-
-    catch(error){
-
-
-        console.error(
-
-            "Auth check error:",
-
-            error
-
-        );
-
-
-    }
-
-
-})();
-
-
-
-// ==========================================
-// Button Animation Protection
-// ==========================================
-
-const buttons =
-
-document.querySelectorAll(
-
-    ".nv-auth-btn"
-
-);
-
-
-
-buttons.forEach(button=>{
-
-
-    button.addEventListener(
-
-        "click",
-
-        ()=>{
-
-
-            button.style.transform =
-
-            "scale(.97)";
-
-
-
-            setTimeout(()=>{
-
-
-                button.style.transform =
-
-                "";
-
-
-            },150);
-
-
-
-        }
-
     );
 
-
-});
-
-
-
-// ==========================================
-// Save Last Page
-// ==========================================
-
-document.addEventListener(
-
-    "click",
-
-    event=>{
-
-
-        const link =
-
-        event.target.closest("a");
-
-
-
-        if(!link){
-
-            return;
-
-        }
-
-
-
-        const href =
-
-        link.getAttribute("href");
-
-
-
-        if(
-
-            href &&
-
-            href.endsWith(".html") &&
-
-            ![
-
-                "auth.html",
-
-                "login.html",
-
-                "signup.html"
-
-            ].includes(href)
-
-        ){
-
-
-            sessionStorage.setItem(
-
-                "netview_last_page",
-
-                href
-
-            );
-
-
-        }
-
-
-    }
-
-);
-
-
-
-// ==========================================
-// Ready
-// ==========================================
-
-console.log(
-
-    "NetView Auth Portal Ready"
-
-);
-
-
 </script>
-
+```
 
 </body>
-
 </html>
