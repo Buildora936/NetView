@@ -1,250 +1,898 @@
 <!DOCTYPE html>
+
 <html lang="fr">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
+```
 <meta
     name="description"
-    content="Connectez-vous à votre compte NetView.">
+    content="Connectez-vous à votre compte NetView."
+>
 
 <meta
     name="theme-color"
-    content="#2563EB">
+    content="#2563EB"
+>
 
-<title>Connexion • NetView</title>
+<title>NetView — Connexion</title>
 
-<link
-    rel="icon"
-    type="image/png"
-    href="NetView_icone.png">
-
-<!-- Font Awesome -->
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<!-- ==========================================
-Core CSS
-========================================== -->
+<!-- =====================================================
+     Font Awesome
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/core/variables.css">
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<!-- =====================================================
+     NetView Core CSS
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/core/reset.css">
+    href="CSS/core/variables.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/typography.css">
+    href="CSS/core/reset.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/animations.css">
+    href="CSS/core/typography.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<!-- ==========================================
-Components
-========================================== -->
+    href="CSS/core/animations.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/buttons.css">
+    href="CSS/core/utilities.css"
+>
+
+<!-- =====================================================
+     NetView Components
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/components/forms.css">
+    href="CSS/components/buttons.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/cards.css">
+    href="CSS/components/forms.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/modal.css">
+    href="CSS/components/footer.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/toast.css">
+    href="CSS/components/loader.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/loader.css">
+    href="CSS/components/toast.css"
+>
 
-<!-- ==========================================
-Page CSS
-========================================== -->
+<!-- =====================================================
+     Page CSS
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/pages/login.css">
+    href="CSS/pages/login.css"
+>
+```
 
 </head>
 
-<body>
+<body class="nv-page login-page">
 
-<div class="nv-login-background">
+```
+<!-- =====================================================
+     PAGE LOADER
+     ===================================================== -->
 
-    <div class="nv-orb one"></div>
-
-    <div class="nv-orb two"></div>
-
-    <div class="nv-orb three"></div>
-
-    <div class="nv-particles">
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-</div>
-
-<main class="nv-login">
-
-<section class="nv-login-card">
-
-<img
-    src="NetView.png"
-    alt="NetView"
-    class="nv-login-logo">
-
-<h1 class="nv-login-title">
-Content de vous revoir
-</h1>
-
-<p class="nv-login-subtitle">
-Connectez-vous pour retrouver vos vidéos, lives, messages, communautés et achats.
-</p>
-
-<form id="loginForm" class="nv-login-form">
-
-<div class="nv-form-group">
-
-<label class="nv-label" for="email">
-Adresse e-mail
-</label>
-
-<input
-    id="email"
-    type="email"
-    class="nv-input"
-    placeholder="exemple@email.com"
-    autocomplete="email"
-    required
+<div
+    class="nv-page-loader"
+    id="pageLoader"
+    aria-hidden="true"
 >
-
-<div class="nv-input-icon">
-    <i class="fa-regular fa-envelope"></i>
+    <div class="nv-spinner"></div>
 </div>
 
-</div>
 
-<div class="nv-form-group">
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
 
-<label class="nv-label" for="password">
-Mot de passe
-</label>
+<main class="login-main">
 
-<input
-    id="password"
-    type="password"
-    class="nv-input"
-    placeholder="Votre mot de passe"
-    autocomplete="current-password"
-    required
->
+    <section
+        class="login-container"
+        aria-labelledby="loginTitle"
+    >
 
-<div class="nv-input-icon">
-    <i class="fa-solid fa-lock"></i>
-</div>
+        <!-- =================================================
+             BRAND
+             ================================================= -->
 
-<button
-    type="button"
-    id="togglePassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-    <i class="fa-regular fa-eye"></i>
-</button>
+        <div class="login-brand">
 
-</div>
+            <a
+                href="index.html"
+                class="login-brand-link"
+                data-link="index.html"
+                aria-label="NetView — Accueil"
+            >
 
-<div class="nv-login-options">
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                    class="login-brand-logo"
+                >
 
-<label class="nv-remember">
-<input type="checkbox" id="rememberMe">
-<span>Se souvenir de moi</span>
-</label>
+            </a>
 
-<a href="forgot-password.html" class="nv-forgot">
-Mot de passe oublié ?
-</a>
+        </div>
 
-</div>
 
-<button
-    type="submit"
-    id="loginButton"
-    class="nv-btn nv-btn-gradient nv-login-button">
-    Se connecter
-</button>
-    
-<div class="error" id="loginError"></div>
+        <!-- =================================================
+             LOGIN CARD
+             ================================================= -->
 
-</form>
+        <div class="login-card">
 
-<div class="nv-divider">
-    <span>Nouveau sur NetView ?</span>
-</div>
+            <!-- =============================================
+                 HEADER
+                 ============================================= -->
 
-<div class="nv-signup">
-  Créez gratuitement votre compte et profitez de l'expérience complète NetView : vidéos, shorts, lives, communautés, messagerie et marketplace, réunis sur une seule plateforme.
-    <br><br>
-    <a href="signup.html">
-        Créer un compte
-    </a>
-</div>
+            <div class="login-header">
 
-<div class="nv-version">
-    NetView v1.0 • Tous droits réservés
-</div>
+                <div
+                    class="login-icon"
+                    aria-hidden="true"
+                >
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
 
-</section>
+                <h1 id="loginTitle">
+                    Se connecter
+                </h1>
+
+                <p>
+                    Connectez-vous à votre compte NetView
+                    pour continuer.
+                </p>
+
+            </div>
+
+
+            <!-- =============================================
+                 FORM
+                 ============================================= -->
+
+            <form
+                id="loginForm"
+                class="login-form"
+                novalidate
+            >
+
+                <!-- =========================================
+                     EMAIL
+                     ========================================= -->
+
+                <div class="nv-form-group">
+
+                    <label
+                        for="email"
+                        class="nv-form-label"
+                    >
+                        Adresse e-mail
+                    </label>
+
+                    <div class="login-input-wrapper">
+
+                        <i
+                            class="fa-regular fa-envelope login-input-icon"
+                            aria-hidden="true"
+                        ></i>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            class="nv-form-input login-input"
+                            autocomplete="email"
+                            inputmode="email"
+                            placeholder="vous@exemple.com"
+                            required
+                        >
+
+                    </div>
+
+                    <span
+                        id="emailError"
+                        class="login-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     PASSWORD
+                     ========================================= -->
+
+                <div class="nv-form-group">
+
+                    <div class="login-password-label-row">
+
+                        <label
+                            for="password"
+                            class="nv-form-label"
+                        >
+                            Mot de passe
+                        </label>
+
+                        <a
+                            href="forgot-password.html"
+                            class="login-forgot-link"
+                        >
+                            Mot de passe oublié ?
+                        </a>
+
+                    </div>
+
+                    <div class="login-input-wrapper">
+
+                        <i
+                            class="fa-solid fa-lock login-input-icon"
+                            aria-hidden="true"
+                        ></i>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            class="nv-form-input login-input"
+                            autocomplete="current-password"
+                            placeholder="Votre mot de passe"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="login-password-toggle"
+                            aria-label="Afficher le mot de passe"
+                            aria-pressed="false"
+                        >
+                            <i
+                                class="fa-regular fa-eye"
+                                aria-hidden="true"
+                            ></i>
+                        </button>
+
+                    </div>
+
+                    <span
+                        id="passwordError"
+                        class="login-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     REMEMBER
+                     ========================================= -->
+
+                <div class="login-options">
+
+                    <label class="login-remember">
+
+                        <input
+                            id="remember"
+                            name="remember"
+                            type="checkbox"
+                        >
+
+                        <span>
+                            Se souvenir de moi
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- =========================================
+                     SUBMIT
+                     ========================================= -->
+
+                <button
+                    type="submit"
+                    id="loginButton"
+                    class="nv-btn nv-btn-primary login-submit"
+                >
+
+                    <span class="login-submit-content">
+
+                        <i
+                            class="fa-solid fa-right-to-bracket"
+                            aria-hidden="true"
+                        ></i>
+
+                        <span>
+                            Se connecter
+                        </span>
+
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- =============================================
+                 DIVIDER
+                 ============================================= -->
+
+            <div
+                class="login-divider"
+                aria-hidden="true"
+            >
+                <span></span>
+
+                <strong>
+                    ou
+                </strong>
+
+                <span></span>
+            </div>
+
+
+            <!-- =============================================
+                 SIGNUP
+                 ============================================= -->
+
+            <div class="login-signup">
+
+                <p>
+                    Vous n'avez pas encore de compte ?
+                </p>
+
+                <a
+                    href="signup.html"
+                    class="nv-btn nv-btn-secondary login-signup-button"
+                    data-link="signup.html"
+                >
+                    <i
+                        class="fa-solid fa-user-plus"
+                        aria-hidden="true"
+                    ></i>
+
+                    Créer un compte
+
+                </a>
+
+            </div>
+
+
+            <!-- =============================================
+                 BACK HOME
+                 ============================================= -->
+
+            <div class="login-footer">
+
+                <a
+                    href="auth.html"
+                    class="login-back-link"
+                    data-link="auth.html"
+                >
+                    <i
+                        class="fa-solid fa-arrow-left"
+                        aria-hidden="true"
+                    ></i>
+
+                    Retour au portail
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LEGAL
+             ================================================= -->
+
+        <p class="login-legal">
+
+            En vous connectant, vous acceptez les conditions
+            d'utilisation et la politique de confidentialité
+            de NetView.
+
+        </p>
+
+    </section>
 
 </main>
 
-<div class="nv-page-loader" id="pageLoader" style="display:none;">
-    <div class="nv-spinner nv-spinner-lg"></div>
-    <div class="nv-loader-text">
-        Connexion en cours...
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="nv-footer login-footer-global">
+
+    <div class="nv-footer-content">
+
+        <span>
+            © <span id="currentYear"></span> NetView
+        </span>
+
     </div>
-</div>
 
-<!-- ==========================================
-Page JS Module
-========================================== -->
+</footer>
 
-<script type="module" src="js/pages/login.js"></script>
+
+<!-- =====================================================
+     JAVASCRIPT
+     ===================================================== -->
+
+<script type="module">
+
+    import {
+        signIn,
+        getSession
+    } from "./js/core/auth.js";
+
+    import {
+        initNavigation
+    } from "./js/navigation.js";
+
+    import {
+        initUI,
+        buttonLoading,
+        showError,
+        showSuccess
+    } from "./js/ui.js";
+
+
+    // ==========================================
+    // DOM READY
+    // ==========================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async () => {
+
+            initNavigation();
+
+            initUI();
+
+
+            // ======================================
+            // Current year
+            // ======================================
+
+            const year =
+                document.getElementById(
+                    "currentYear"
+                );
+
+            if(year){
+
+                year.textContent =
+                    new Date().getFullYear();
+
+            }
+
+
+            // ======================================
+            // Password visibility
+            // ======================================
+
+            const password =
+                document.getElementById(
+                    "password"
+                );
+
+            const togglePassword =
+                document.getElementById(
+                    "togglePassword"
+                );
+
+
+            if(
+                password &&
+                togglePassword
+            ){
+
+                togglePassword.addEventListener(
+                    "click",
+                    () => {
+
+                        const isPassword =
+                            password.type === "password";
+
+
+                        password.type =
+                            isPassword
+                                ? "text"
+                                : "password";
+
+
+                        togglePassword.setAttribute(
+                            "aria-pressed",
+                            String(isPassword)
+                        );
+
+
+                        togglePassword.setAttribute(
+                            "aria-label",
+                            isPassword
+                                ? "Masquer le mot de passe"
+                                : "Afficher le mot de passe"
+                        );
+
+
+                        const icon =
+                            togglePassword.querySelector(
+                                "i"
+                            );
+
+
+                        if(icon){
+
+                            icon.classList.toggle(
+                                "fa-eye",
+                                !isPassword
+                            );
+
+                            icon.classList.toggle(
+                                "fa-eye-slash",
+                                isPassword
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            // ======================================
+            // Session existante
+            // ======================================
+
+            try {
+
+                const session =
+                    await getSession();
+
+
+                if(session){
+
+                    window.location.replace(
+                        "index.html"
+                    );
+
+                    return;
+
+                }
+
+            }
+            catch(error){
+
+                console.error(
+                    "Erreur lors de la vérification de session :",
+                    error
+                );
+
+            }
+
+
+            // ======================================
+            // Login form
+            // ======================================
+
+            const form =
+                document.getElementById(
+                    "loginForm"
+                );
+
+
+            if(!form) return;
+
+
+            form.addEventListener(
+                "submit",
+                async (event) => {
+
+                    event.preventDefault();
+
+
+                    // ==================================
+                    // Elements
+                    // ==================================
+
+                    const emailInput =
+                        document.getElementById(
+                            "email"
+                        );
+
+                    const passwordInput =
+                        document.getElementById(
+                            "password"
+                        );
+
+                    const button =
+                        document.getElementById(
+                            "loginButton"
+                        );
+
+                    const emailError =
+                        document.getElementById(
+                            "emailError"
+                        );
+
+                    const passwordError =
+                        document.getElementById(
+                            "passwordError"
+                        );
+
+
+                    // ==================================
+                    // Reset errors
+                    // ==================================
+
+                    if(emailError){
+
+                        emailError.textContent =
+                            "";
+
+                    }
+
+                    if(passwordError){
+
+                        passwordError.textContent =
+                            "";
+
+                    }
+
+
+                    const email =
+                        emailInput
+                            ?.value
+                            .trim();
+
+
+                    const passwordValue =
+                        passwordInput
+                            ?.value || "";
+
+
+                    // ==================================
+                    // Validation
+                    // ==================================
+
+                    let valid = true;
+
+
+                    if(!email){
+
+                        if(emailError){
+
+                            emailError.textContent =
+                                "Veuillez saisir votre adresse e-mail.";
+
+                        }
+
+                        valid = false;
+
+                    }
+                    else if(
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                            email
+                        )
+                    ){
+
+                        if(emailError){
+
+                            emailError.textContent =
+                                "Veuillez saisir une adresse e-mail valide.";
+
+                        }
+
+                        valid = false;
+
+                    }
+
+
+                    if(!passwordValue){
+
+                        if(passwordError){
+
+                            passwordError.textContent =
+                                "Veuillez saisir votre mot de passe.";
+
+                        }
+
+                        valid = false;
+
+                    }
+
+
+                    if(!valid){
+
+                        return;
+
+                    }
+
+
+                    // ==================================
+                    // Loading
+                    // ==================================
+
+                    buttonLoading(
+                        button,
+                        true
+                    );
+
+
+                    try {
+
+                        const {
+                            data,
+                            error
+                        } = await signIn(
+                            email,
+                            passwordValue
+                        );
+
+
+                        if(error){
+
+                            throw error;
+
+                        }
+
+
+                        if(
+                            !data ||
+                            !data.session
+                        ){
+
+                            throw new Error(
+                                "La connexion n'a pas pu être établie."
+                            );
+
+                        }
+
+
+                        // ==================================
+                        // Success
+                        // ==================================
+
+                        showSuccess(
+                            "Connexion réussie."
+                        );
+
+
+                        /*
+                         * Laisser le message de succès
+                         * apparaître brièvement avant
+                         * la navigation.
+                         */
+
+                        setTimeout(
+                            () => {
+
+                                window.location.replace(
+                                    "index.html"
+                                );
+
+                            },
+                            500
+                        );
+
+                    }
+                    catch(error){
+
+                        buttonLoading(
+                            button,
+                            false
+                        );
+
+
+                        // ==================================
+                        // Friendly Supabase errors
+                        // ==================================
+
+                        let message =
+                            "Impossible de vous connecter.";
+
+
+                        const errorMessage =
+                            (
+                                error?.message ||
+                                ""
+                            ).toLowerCase();
+
+
+                        if(
+                            errorMessage.includes(
+                                "invalid login credentials"
+                            )
+                        ){
+
+                            message =
+                                "Adresse e-mail ou mot de passe incorrect.";
+
+                        }
+                        else if(
+                            errorMessage.includes(
+                                "email not confirmed"
+                            )
+                        ){
+
+                            message =
+                                "Votre adresse e-mail n'est pas encore confirmée.";
+
+                        }
+                        else if(
+                            errorMessage.includes(
+                                "too many requests"
+                            )
+                        ){
+
+                            message =
+                                "Trop de tentatives. Veuillez patienter avant de réessayer.";
+
+                        }
+                        else if(
+                            error?.message
+                        ){
+
+                            message =
+                                error.message;
+
+                        }
+
+
+                        showError(
+                            new Error(
+                                message
+                            )
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+```
 
 </body>
 </html>
