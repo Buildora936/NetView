@@ -260,40 +260,53 @@ export function confirmAction(
 // Loading
 // ==========================================
 
-
 export function showLoader(){
 
-    let loader =
-        document.querySelector(
-            ".nv-page-loader"
-        );
+```
+const loader =
+    document.querySelector(
+        ".nv-page-loader"
+    );
 
 
-    if(loader){
+if(!loader) return;
 
-        loader.style.display =
-            "flex";
 
-    }
+loader.classList.add(
+    "active"
+);
+
+
+loader.setAttribute(
+    "aria-hidden",
+    "false"
+);
+```
 
 }
 
-
-
 export function hideLoader(){
 
-    let loader =
-        document.querySelector(
-            ".nv-page-loader"
-        );
+```
+const loader =
+    document.querySelector(
+        ".nv-page-loader"
+    );
 
 
-    if(loader){
+if(!loader) return;
 
-        loader.style.display =
-            "none";
 
-    }
+loader.classList.remove(
+    "active"
+);
+
+
+loader.setAttribute(
+    "aria-hidden",
+    "true"
+);
+```
 
 }
 
