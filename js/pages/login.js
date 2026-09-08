@@ -1,258 +1,938 @@
-// ==========================================
-// NetView
-// login.js
-// ==========================================
+/* =========================================================
+NetView
+login.js
+Page de connexion
+========================================================= */
 
-import { supabase } from "../core/supabase.js";
+import {
+signIn,
+getSession,
+getUser
+} from "../core/auth.js";
 
-// ==========================================
-// Elements
-// ==========================================
+import {
+navigate,
+initNavigation
+} from "../navigation.js";
 
-const loginForm = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const rememberMeCheckbox = document.getElementById("rememberMe");
-const loginButton = document.getElementById("loginButton");
-const loginError = document.getElementById("loginError");
-const togglePasswordButton = document.getElementById("togglePassword");
-const pageLoader = document.getElementById("pageLoader");
+import {
+showError,
+showSuccess,
+buttonLoading,
+showLoader,
+hideLoader
+} from "../core/ui.js";
 
-// ==========================================
-// Vérification Session Existante
-// ==========================================
+// =========================================================
+// DOM
+// =========================================================
 
-(async () => {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            window.location.replace("index.html");
-        }
-    } catch (err) {
-        console.error("Erreur de session :", err);
-    }
-})();
+const loginForm =
+document.getElementById("loginForm");
 
-// ==========================================
-// Se souvenir de moi (Email sauvegardé)
-// ==========================================
+const emailInput =
+document.getElementById("email");
 
-const savedEmail = localStorage.getItem("netview_saved_email");
-if (savedEmail) {
-    emailInput.value = savedEmail;
-    rememberMeCheckbox.checked = true;
+const passwordInput =
+document.getElementById("password");
+
+const rememberInput =
+document.getElementById("remember");
+
+const loginButton =
+document.getElementById("loginButton");
+
+const togglePasswordButton =
+document.getElementById("togglePassword");
+
+const emailError =
+document.getElementById("emailError");
+
+const passwordError =
+document.getElementById("passwordError");
+
+const currentYear =
+document.getElementById("currentYear");
+
+// =========================================================
+// INITIALIZATION
+// =========================================================
+
+document.addEventListener(
+"DOMContentLoaded",
+initLogin
+);
+
+// =========================================================
+// INIT LOGIN
+// =========================================================
+
+async function initLogin() {
+
+```
+try {
+
+    setCurrentYear();
+
+    initNavigation();
+
+    setupPasswordToggle();
+
+    setupFormValidation();
+
+    setupLoginForm();
+
+    await checkExistingSession();
+
+} catch (error) {
+
+    console.error(
+        "NetView Login initialization error:",
+        error
+    );
+
+    hideLoader();
+
+}
+```
+
 }
 
-// ==========================================
-// Afficher / Masquer le mot de passe
-// ==========================================
+// =========================================================
+// CURRENT YEAR
+// =========================================================
 
-if (togglePasswordButton) {
-    togglePasswordButton.addEventListener("click", () => {
-        const isPassword = passwordInput.type === "password";
-        passwordInput.type = isPassword ? "text" : "password";
+function setCurrentYear() {
 
-        togglePasswordButton.innerHTML = isPassword
-            ? '<i class="fa-regular fa-eye-slash"></i>'
-            : '<i class="fa-regular fa-eye"></i>';
+```
+if (!currentYear) {
+    return;
+}
+
+currentYear.textContent =
+    new Date().getFullYear();
+```
+
+}
+
+// =========================================================
+// EXISTING SESSION
+// =========================================================
+
+async function checkExistingSession() {
+
+```
+showLoader();
+
+try {
+
+    const session =
+        await getSession();
+
+    if (session) {
+
+        navigate(
+            getRedirectUrl()
+        );
+
+        return;
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Session verification error:",
+        error
+    );
+
+} finally {
+
+    /*
+     * Important :
+     * Le loader doit réellement disparaître.
+     * Le CSS définit display:flex par défaut,
+     * donc on force explicitement display:none.
+     */
+
+    hideLoader();
+
+}
+```
+
+}
+
+// =========================================================
+// LOGIN FORM
+// =========================================================
+
+function setupLoginForm() {
+
+```
+if (!loginForm) {
+    return;
+}
+
+loginForm.addEventListener(
+    "submit",
+    handleLogin
+);
+```
+
+}
+
+// =========================================================
+// LOGIN
+// =========================================================
+
+async function handleLogin(event) {
+
+```
+event.preventDefault();
+
+clearErrors();
+
+const email =
+    emailInput?.value.trim() || "";
+
+const password =
+    passwordInput?.value || "";
+
+if (!validateForm(email, password)) {
+    return;
+}
+
+if (loginButton) {
+
+    buttonLoading(
+        loginButton,
+        true
+    );
+
+}
+
+showLoader();
+
+try {
+
+    const result =
+        await signIn(
+            email,
+            password
+        );
+
+    if (result?.error) {
+
+        throw result.error;
+
+    }
+
+    /*
+     * Vérification supplémentaire de la session
+     * après authentification.
+     */
+
+    const session =
+        await getSession();
+
+    if (!session) {
+
+        throw new Error(
+            "La session n'a pas pu être créée."
+        );
+
+    }
+
+    /*
+     * Récupération de l'utilisateur.
+     * Cela permet de confirmer que Supabase
+     * possède bien l'utilisateur connecté.
+     */
+
+    const user =
+        await getUser();
+
+    if (!user) {
+
+        throw new Error(
+            "Utilisateur introuvable après connexion."
+        );
+
+    }
+
+    showSuccess(
+        "Connexion réussie."
+    );
+
+    /*
+     * Petite pause afin de laisser le message
+     * de succès être visible avant la navigation.
+     */
+
+    await wait(300);
+
+    navigate(
+        getRedirectUrl()
+    );
+
+} catch (error) {
+
+    handleLoginError(
+        error
+    );
+
+} finally {
+
+    /*
+     * Si une navigation a lieu, cette partie peut
+     * être exécutée juste avant le changement de page.
+     * Dans tous les cas, le loader est explicitement caché.
+     */
+
+    hideLoader();
+
+    if (loginButton) {
+
+        buttonLoading(
+            loginButton,
+            false
+        );
+
+    }
+
+}
+```
+
+}
+
+// =========================================================
+// FORM VALIDATION
+// =========================================================
+
+function setupFormValidation() {
+
+```
+if (emailInput) {
+
+    emailInput.addEventListener(
+        "input",
+        () => {
+
+            clearFieldError(
+                emailInput,
+                emailError
+            );
+
+        }
+    );
+
+    emailInput.addEventListener(
+        "blur",
+        () => {
+
+            const email =
+                emailInput.value.trim();
+
+            if (
+                email &&
+                !isValidEmail(email)
+            ) {
+
+                setFieldError(
+                    emailInput,
+                    emailError,
+                    "Veuillez saisir une adresse e-mail valide."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+if (passwordInput) {
+
+    passwordInput.addEventListener(
+        "input",
+        () => {
+
+            clearFieldError(
+                passwordInput,
+                passwordError
+            );
+
+        }
+    );
+
+}
+```
+
+}
+
+// =========================================================
+// VALIDATE FORM
+// =========================================================
+
+function validateForm(
+email,
+password
+) {
+
+```
+let valid = true;
+
+
+if (!email) {
+
+    setFieldError(
+        emailInput,
+        emailError,
+        "Veuillez saisir votre adresse e-mail."
+    );
+
+    valid = false;
+
+} else if (!isValidEmail(email)) {
+
+    setFieldError(
+        emailInput,
+        emailError,
+        "Veuillez saisir une adresse e-mail valide."
+    );
+
+    valid = false;
+
+}
+
+
+if (!password) {
+
+    setFieldError(
+        passwordInput,
+        passwordError,
+        "Veuillez saisir votre mot de passe."
+    );
+
+    valid = false;
+
+}
+
+
+if (!valid) {
+
+    const firstInvalid =
+        document.querySelector(
+            ".login-input[aria-invalid='true']"
+        );
+
+    if (firstInvalid) {
+
+        firstInvalid.focus();
+
+    }
+
+}
+
+
+return valid;
+```
+
+}
+
+// =========================================================
+// EMAIL VALIDATION
+// =========================================================
+
+function isValidEmail(email) {
+
+```
+return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    .test(email);
+```
+
+}
+
+// =========================================================
+// FIELD ERROR
+// =========================================================
+
+function setFieldError(
+input,
+errorElement,
+message
+) {
+
+```
+if (input) {
+
+    input.classList.add(
+        "nv-input-error"
+    );
+
+    input.setAttribute(
+        "aria-invalid",
+        "true"
+    );
+
+}
+
+if (errorElement) {
+
+    errorElement.textContent =
+        message;
+
+}
+```
+
+}
+
+// =========================================================
+// CLEAR FIELD ERROR
+// =========================================================
+
+function clearFieldError(
+input,
+errorElement
+) {
+
+```
+if (input) {
+
+    input.classList.remove(
+        "nv-input-error"
+    );
+
+    input.removeAttribute(
+        "aria-invalid"
+    );
+
+}
+
+if (errorElement) {
+
+    errorElement.textContent =
+        "";
+
+}
+```
+
+}
+
+// =========================================================
+// CLEAR ALL ERRORS
+// =========================================================
+
+function clearErrors() {
+
+```
+clearFieldError(
+    emailInput,
+    emailError
+);
+
+clearFieldError(
+    passwordInput,
+    passwordError
+);
+```
+
+}
+
+// =========================================================
+// PASSWORD VISIBILITY
+// =========================================================
+
+function setupPasswordToggle() {
+
+```
+if (
+    !togglePasswordButton ||
+    !passwordInput
+) {
+    return;
+}
+
+
+togglePasswordButton.addEventListener(
+    "click",
+    () => {
+
+        const isPassword =
+            passwordInput.type === "password";
+
+
+        passwordInput.type =
+            isPassword
+                ? "text"
+                : "password";
+
+
+        togglePasswordButton.setAttribute(
+            "aria-pressed",
+            String(isPassword)
+        );
+
 
         togglePasswordButton.setAttribute(
             "aria-label",
-            isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
+            isPassword
+                ? "Masquer le mot de passe"
+                : "Afficher le mot de passe"
         );
-    });
+
+
+        const icon =
+            togglePasswordButton.querySelector(
+                "i"
+            );
+
+
+        if (icon) {
+
+            icon.classList.toggle(
+                "fa-eye",
+                !isPassword
+            );
+
+            icon.classList.toggle(
+                "fa-eye-slash",
+                isPassword
+            );
+
+        }
+
+    }
+);
+```
+
 }
 
-// ==========================================
-// Détection intelligente de l'appareil et IP
-// ==========================================
+// =========================================================
+// LOGIN ERROR HANDLER
+// =========================================================
 
-async function registerDevice(userId) {
-    try {
-        const ua = navigator.userAgent;
+function handleLoginError(error) {
 
-        // 1. Récupération de l'adresse IP publique
-        let ipAddress = null;
-        try {
-            const ipResponse = await fetch("https://api.ipify.org?format=json");
-            if (ipResponse.ok) {
-                const ipData = await ipResponse.json();
-                ipAddress = ipData.ip;
-            }
-        } catch (ipErr) {
-            console.warn("Impossible de récupérer l'adresse IP :", ipErr);
-        }
+```
+console.error(
+    "NetView Login Error:",
+    error
+);
 
-        // 2. Détection intelligente de l'OS avec versions et subtilités
-        let os = "Système inconnu";
-        if (/windows NT 10.0/.test(ua)) os = "Windows 10/11";
-        else if (/windows NT 6.3/.test(ua)) os = "Windows 8.1";
-        else if (/windows NT 6.2/.test(ua)) os = "Windows 8";
-        else if (/windows NT 6.1/.test(ua)) os = "Windows 7";
-        else if (/android/.test(ua)) os = "Android";
-        else if (/iphone|ipad|ipod/.test(ua)) os = "iOS";
-        else if (/mac os x/.test(ua)) os = "macOS";
-        else if (/linux/.test(ua)) os = "Linux";
-        else if (/cros/.test(ua)) os = "Chrome OS";
 
-        // 3. Détection intelligente du navigateur réel
-        let browser = "Navigateur inconnu";
-        if (/edg/i.test(ua)) browser = "Microsoft Edge";
-        else if (/opr|opera/i.test(ua)) browser = "Opera";
-        else if (/samsungbrowser/i.test(ua)) browser = "Samsung Internet";
-        else if (/firefox/i.test(ua)) browser = "Firefox";
-        else if (/chrome/i.test(ua) && !/chromium/i.test(ua)) browser = "Google Chrome";
-        else if (/safari/i.test(ua) && !/chrome/i.test(ua)) browser = "Safari";
+const message =
+    getLoginErrorMessage(
+        error
+    );
 
-        // 4. Détection intelligente du type d'appareil
-        let deviceType = "Ordinateur";
-        if (/mobi|android/i.test(ua) && !/ipad|tablet/i.test(ua)) {
-            deviceType = "Téléphone mobile";
-        } else if (/ipad|tablet|kindle/i.test(ua) || (navigator.maxTouchPoints > 1 && /macintosh/i.test(ua))) {
-            deviceType = "Tablette";
-        }
 
-        // 5. Construction automatique du nom de l'appareil
-        const deviceName = `${deviceType} - ${os} (${browser})`;
+if (
+    isEmailConfirmationError(
+        error
+    )
+) {
 
-        // 6. Enregistrement en base de données Supabase et récupération de l'ID créé (.select().single())
-        const { data, error } = await supabase
-            .from("devices")
-            .insert([
-                {
-                    user_id: userId,
-                    device_name: deviceName,
-                    browser: browser,
-                    operating_system: `${os} (${deviceType})`,
-                    ip_address: ipAddress,
-                    last_seen: new Date().toISOString()
-                }
-            ])
-            .select()
-            .single();
+    setFieldError(
+        emailInput,
+        emailError,
+        message
+    );
 
-        if (error) {
-            console.error("Erreur lors de l'enregistrement intelligent de l'appareil :", error.message);
-        } else if (data && data.id) {
-            // STOCKAGE DE L'ID DE L'APPAREIL ACTUEL POUR LE TEMPS RÉEL (Étape 1 validée)
-            localStorage.setItem("netview_current_device_id", data.id);
-        }
-    } catch (err) {
-        console.error("Erreur technique (registerDevice) :", err);
-    }
+    showError(
+        message
+    );
+
+    return;
+
 }
-// ==========================================
-// Soumission du Formulaire de Connexion
-// ==========================================
 
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
 
-    // Réinitialisation des erreurs
-    loginError.textContent = "";
-    loginError.classList.remove("show");
+if (
+    isCredentialError(
+        error
+    )
+) {
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
+    setFieldError(
+        passwordInput,
+        passwordError,
+        message
+    );
 
-    if (!email || !password) {
-        loginError.textContent = "Veuillez remplir tous les champs.";
-        loginError.classList.add("show");
-        return;
-    }
+    showError(
+        message
+    );
 
-    // Activation du loader visuel
-    loginButton.disabled = true;
-    loginButton.style.opacity = "0.7";
-    if (pageLoader) pageLoader.style.display = "flex";
+    return;
 
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
+}
 
-        if (error) throw error;
 
-        // Enregistrement intelligent de l'appareil connecté
-        const userId = data.user?.id;
-        if (userId) {
-            await registerDevice(userId);
-        }
+showError(
+    message
+);
+```
 
-        // Gestion "Se souvenir de moi"
-        if (rememberMeCheckbox.checked) {
-            localStorage.setItem("netview_saved_email", email);
-        } else {
-            localStorage.removeItem("netview_saved_email");
-        }
+}
 
-        // Redirection intelligente ou vers l'accueil
-        const lastPage = sessionStorage.getItem("netview_last_page");
-        if (
-            lastPage &&
-            !["login.html", "signup.html", "forgot-password.html", "confirm-email.html"].includes(lastPage)
-        ) {
-            sessionStorage.removeItem("netview_last_page");
-            window.location.replace(lastPage);
-        } else {
-            window.location.replace("index.html");
-        }
+// =========================================================
+// ERROR MESSAGE
+// =========================================================
 
-    } catch (err) {
-        console.error("Erreur de connexion :", err);
-        
-        let message = "Identifiants incorrects ou erreur de connexion.";
-        if (err.message.includes("Invalid login credentials")) {
-            message = "E-mail ou mot de passe incorrect.";
-        } else if (err.message.includes("Email not confirmed")) {
-            message = "Veuillez confirmer votre adresse e-mail avant de vous connecter.";
-        }
+function getLoginErrorMessage(error) {
 
-        loginError.textContent = message;
-        loginError.classList.add("show");
+```
+if (!error) {
 
-        // Désactivation du loader en cas d'erreur
-        loginButton.disabled = false;
-        loginButton.style.opacity = "1";
-        if (pageLoader) pageLoader.style.display = "none";
-    }
-});
+    return "Impossible de vous connecter. Veuillez réessayer.";
 
-// ==========================================
-// Effacer l'erreur lors de la frappe
-// ==========================================
+}
 
-[emailInput, passwordInput].forEach((input) => {
-    input.addEventListener("input", () => {
-        if (loginError.classList.contains("show")) {
-            loginError.textContent = "";
-            loginError.classList.remove("show");
-        }
-    });
-});
 
-// ==========================================
-// Sauvegarde de la dernière page visitée
-// ==========================================
+const message =
+    String(
+        error.message || ""
+    ).toLowerCase();
 
-document.addEventListener("click", (e) => {
-    const link = e.target.closest("a");
-    if (!link) return;
-    const href = link.getAttribute("href");
-    if (href && href.endsWith(".html")) {
-        sessionStorage.setItem("netview_last_page", href);
-    }
-});
 
-// ==========================================
-// Focus automatique initial
-// ==========================================
+const code =
+    String(
+        error.code || ""
+    ).toLowerCase();
 
-window.addEventListener("load", () => {
-    if (emailInput.value) {
-        passwordInput.focus();
-    } else {
-        emailInput.focus();
-    }
-});
+
+/*
+ * Email non confirmé
+ */
+
+if (
+    message.includes("email not confirmed") ||
+    message.includes("email_not_confirmed") ||
+    code === "email_not_confirmed"
+) {
+
+    return (
+        "Votre adresse e-mail n'est pas encore confirmée. " +
+        "Veuillez confirmer votre adresse e-mail avant de vous connecter."
+    );
+
+}
+
+
+/*
+ * Identifiants incorrects
+ */
+
+if (
+    message.includes("invalid login credentials") ||
+    message.includes("invalid credentials") ||
+    code === "invalid_credentials"
+) {
+
+    return (
+        "Adresse e-mail ou mot de passe incorrect."
+    );
+
+}
+
+
+/*
+ * Trop de tentatives
+ */
+
+if (
+    message.includes("too many requests") ||
+    message.includes("rate limit") ||
+    code.includes("rate")
+) {
+
+    return (
+        "Trop de tentatives. Veuillez patienter quelques instants avant de réessayer."
+    );
+
+}
+
+
+/*
+ * Réseau
+ */
+
+if (
+    message.includes("network") ||
+    message.includes("fetch") ||
+    message.includes("failed to fetch")
+) {
+
+    return (
+        "Impossible de contacter NetView. Vérifiez votre connexion Internet puis réessayez."
+    );
+
+}
+
+
+/*
+ * Compte désactivé
+ */
+
+if (
+    message.includes("disabled") ||
+    message.includes("banned")
+) {
+
+    return (
+        "Ce compte ne peut actuellement pas être utilisé."
+    );
+
+}
+
+
+/*
+ * Erreur générique
+ */
+
+return (
+    "Impossible de vous connecter pour le moment. " +
+    "Veuillez vérifier vos informations et réessayer."
+);
+```
+
+}
+
+// =========================================================
+// ERROR TYPES
+// =========================================================
+
+function isEmailConfirmationError(error) {
+
+```
+if (!error) {
+    return false;
+}
+
+const message =
+    String(
+        error.message || ""
+    ).toLowerCase();
+
+const code =
+    String(
+        error.code || ""
+    ).toLowerCase();
+
+return (
+    message.includes("email not confirmed") ||
+    message.includes("email_not_confirmed") ||
+    code === "email_not_confirmed"
+);
+```
+
+}
+
+function isCredentialError(error) {
+
+```
+if (!error) {
+    return false;
+}
+
+const message =
+    String(
+        error.message || ""
+    ).toLowerCase();
+
+const code =
+    String(
+        error.code || ""
+    ).toLowerCase();
+
+return (
+    message.includes("invalid login credentials") ||
+    message.includes("invalid credentials") ||
+    code === "invalid_credentials"
+);
+```
+
+}
+
+// =========================================================
+// REDIRECT
+// =========================================================
+
+function getRedirectUrl() {
+
+```
+/*
+ * Si une page protégée avait demandé une connexion,
+ * elle peut transmettre l'URL via ?redirect=...
+ *
+ * Sinon NetView retourne à l'accueil.
+ */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const redirect =
+    params.get(
+        "redirect"
+    );
+
+
+if (!redirect) {
+
+    return "index.html";
+
+}
+
+
+/*
+ * Sécurité :
+ * uniquement des chemins internes NetView.
+ */
+
+if (
+    redirect.startsWith("/") &&
+    !redirect.startsWith("//")
+) {
+
+    return redirect;
+
+}
+
+
+if (
+    !redirect.includes("://") &&
+    !redirect.startsWith("//")
+) {
+
+    return redirect;
+
+}
+
+
+return "index.html";
+```
+
+}
+
+// =========================================================
+// WAIT
+// =========================================================
+
+function wait(milliseconds) {
+
+```
+return new Promise(
+    resolve =>
+        setTimeout(
+            resolve,
+            milliseconds
+        )
+);
+```
+
+}
