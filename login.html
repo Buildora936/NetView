@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
+
 <meta
     name="description"
     content="Connectez-vous à votre compte NetView."
@@ -13,13 +13,13 @@
 
 <meta
     name="theme-color"
-    content="#2563EB"
+    content="#0B1220"
 >
 
-<title>NetView — Connexion</title>
+<title>Connexion — NetView</title>
 
 <!-- =====================================================
-     Font Awesome
+     FONT AWESOME
      ===================================================== -->
 
 <link
@@ -28,7 +28,7 @@
 >
 
 <!-- =====================================================
-     NetView Core CSS
+     NETVIEW CORE
      ===================================================== -->
 
 <link
@@ -57,7 +57,7 @@
 >
 
 <!-- =====================================================
-     NetView Components
+     NETVIEW COMPONENTS
      ===================================================== -->
 
 <link
@@ -72,7 +72,7 @@
 
 <link
     rel="stylesheet"
-    href="CSS/components/footer.css"
+    href="CSS/components/toast.css"
 >
 
 <link
@@ -80,13 +80,8 @@
     href="CSS/components/loader.css"
 >
 
-<link
-    rel="stylesheet"
-    href="CSS/components/toast.css"
->
-
 <!-- =====================================================
-     Page CSS
+     PAGE
      ===================================================== -->
 
 <link
@@ -105,11 +100,14 @@
      ===================================================== -->
 
 <div
-    class="nv-page-loader"
     id="pageLoader"
+    class="nv-page-loader"
     aria-hidden="true"
 >
-    <div class="nv-spinner"></div>
+    <div
+        class="nv-spinner"
+        aria-label="Chargement"
+    ></div>
 </div>
 
 
@@ -158,23 +156,39 @@
                  HEADER
                  ============================================= -->
 
-            <div class="login-header">
-
-                <div
-                    class="login-icon"
-                    aria-hidden="true"
-                >
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                </div>
+            <header class="login-header">
 
                 <h1 id="loginTitle">
-                    Se connecter
+                    Connectez-vous à NetView
                 </h1>
 
                 <p>
-                    Connectez-vous à votre compte NetView
-                    pour continuer.
+                    Accédez à vos vidéos, chaînes, messages,
+                    achats et à votre espace personnel.
                 </p>
+
+            </header>
+
+
+            <!-- =============================================
+                 TRUST INDICATOR
+                 ============================================= -->
+
+            <div
+                class="login-trust"
+                aria-label="Connexion sécurisée"
+            >
+
+                <span class="login-trust-icon">
+                    <i
+                        class="fa-solid fa-shield-halved"
+                        aria-hidden="true"
+                    ></i>
+                </span>
+
+                <span class="login-trust-text">
+                    Connexion sécurisée par NetView
+                </span>
 
             </div>
 
@@ -193,7 +207,7 @@
                      EMAIL
                      ========================================= -->
 
-                <div class="nv-form-group">
+                <div class="nv-form-group login-field">
 
                     <label
                         for="email"
@@ -204,11 +218,6 @@
 
                     <div class="login-input-wrapper">
 
-                        <i
-                            class="fa-regular fa-envelope login-input-icon"
-                            aria-hidden="true"
-                        ></i>
-
                         <input
                             id="email"
                             name="email"
@@ -216,8 +225,9 @@
                             class="nv-form-input login-input"
                             autocomplete="email"
                             inputmode="email"
-                            placeholder="vous@exemple.com"
+                            placeholder="nom@exemple.com"
                             required
+                            autofocus
                         >
 
                     </div>
@@ -235,9 +245,9 @@
                      PASSWORD
                      ========================================= -->
 
-                <div class="nv-form-group">
+                <div class="nv-form-group login-field">
 
-                    <div class="login-password-label-row">
+                    <div class="login-password-heading">
 
                         <label
                             for="password"
@@ -255,12 +265,8 @@
 
                     </div>
 
-                    <div class="login-input-wrapper">
 
-                        <i
-                            class="fa-solid fa-lock login-input-icon"
-                            aria-hidden="true"
-                        ></i>
+                    <div class="login-input-wrapper">
 
                         <input
                             id="password"
@@ -273,16 +279,18 @@
                         >
 
                         <button
-                            type="button"
                             id="togglePassword"
                             class="login-password-toggle"
+                            type="button"
                             aria-label="Afficher le mot de passe"
                             aria-pressed="false"
                         >
+
                             <i
                                 class="fa-regular fa-eye"
                                 aria-hidden="true"
                             ></i>
+
                         </button>
 
                     </div>
@@ -297,7 +305,7 @@
 
 
                 <!-- =========================================
-                     REMEMBER
+                     REMEMBER ME
                      ========================================= -->
 
                 <div class="login-options">
@@ -311,7 +319,7 @@
                         >
 
                         <span>
-                            Se souvenir de moi
+                            Rester connecté
                         </span>
 
                     </label>
@@ -324,21 +332,21 @@
                      ========================================= -->
 
                 <button
-                    type="submit"
                     id="loginButton"
+                    type="submit"
                     class="nv-btn nv-btn-primary login-submit"
                 >
 
                     <span class="login-submit-content">
 
-                        <i
-                            class="fa-solid fa-right-to-bracket"
-                            aria-hidden="true"
-                        ></i>
-
                         <span>
                             Se connecter
                         </span>
+
+                        <i
+                            class="fa-solid fa-arrow-right"
+                            aria-hidden="true"
+                        ></i>
 
                     </span>
 
@@ -347,70 +355,112 @@
             </form>
 
 
-            <!-- =============================================
-                 DIVIDER
-                 ============================================= -->
+            <!-- =================================================
+                 SECURITY NOTE
+                 ================================================= -->
 
-            <div
-                class="login-divider"
-                aria-hidden="true"
-            >
-                <span></span>
+            <div class="login-security">
 
-                <strong>
-                    ou
-                </strong>
+                <i
+                    class="fa-solid fa-lock"
+                    aria-hidden="true"
+                ></i>
 
-                <span></span>
+                <p>
+                    Votre mot de passe est transmis uniquement
+                    au système d'authentification sécurisé de NetView.
+                    Il n'est jamais enregistré dans votre navigateur
+                    par cette page.
+                </p>
+
             </div>
 
 
-            <!-- =============================================
+            <!-- =================================================
                  SIGNUP
-                 ============================================= -->
+                 ================================================= -->
 
             <div class="login-signup">
 
-                <p>
+                <span>
                     Vous n'avez pas encore de compte ?
-                </p>
+                </span>
 
                 <a
                     href="signup.html"
-                    class="nv-btn nv-btn-secondary login-signup-button"
+                    class="login-signup-link"
                     data-link="signup.html"
                 >
-                    <i
-                        class="fa-solid fa-user-plus"
-                        aria-hidden="true"
-                    ></i>
-
                     Créer un compte
-
                 </a>
 
             </div>
 
 
-            <!-- =============================================
-                 BACK HOME
-                 ============================================= -->
+            <!-- =================================================
+                 BACK TO PORTAL
+                 ================================================= -->
 
-            <div class="login-footer">
+            <div class="login-back">
 
                 <a
                     href="auth.html"
                     class="login-back-link"
                     data-link="auth.html"
                 >
+
                     <i
                         class="fa-solid fa-arrow-left"
                         aria-hidden="true"
                     ></i>
 
-                    Retour au portail
+                    Retour
 
                 </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PAGE TRUST
+             ================================================= -->
+
+        <div class="login-trust-footer">
+
+            <div class="login-trust-item">
+
+                <i
+                    class="fa-solid fa-shield-halved"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Authentification sécurisée
+                </span>
+
+            </div>
+
+
+            <span
+                class="login-trust-separator"
+                aria-hidden="true"
+            >
+                •
+            </span>
+
+
+            <div class="login-trust-item">
+
+                <i
+                    class="fa-solid fa-lock"
+                    aria-hidden="true"
+                ></i>
+
+                <span>
+                    Données protégées
+                </span>
 
             </div>
 
@@ -423,8 +473,14 @@
 
         <p class="login-legal">
 
-            En vous connectant, vous acceptez les conditions
-            d'utilisation et la politique de confidentialité
+            En vous connectant, vous acceptez les
+            <a href="#">
+                conditions d'utilisation
+            </a>
+            et la
+            <a href="#">
+                politique de confidentialité
+            </a>
             de NetView.
 
         </p>
@@ -438,461 +494,23 @@
      FOOTER
      ===================================================== -->
 
-<footer class="nv-footer login-footer-global">
+<footer class="login-footer">
 
-    <div class="nv-footer-content">
-
-        <span>
-            © <span id="currentYear"></span> NetView
-        </span>
-
-    </div>
+    <span>
+        © <span id="currentYear"></span> NetView
+    </span>
 
 </footer>
 
 
 <!-- =====================================================
-     JAVASCRIPT
+     PAGE JAVASCRIPT
      ===================================================== -->
 
-<script type="module">
-
-    import {
-        signIn,
-        getSession
-    } from "./js/core/auth.js";
-
-    import {
-        initNavigation
-    } from "./js/navigation.js";
-
-    import {
-        initUI,
-        buttonLoading,
-        showError,
-        showSuccess
-    } from "./js/ui.js";
-
-
-    // ==========================================
-    // DOM READY
-    // ==========================================
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        async () => {
-
-            initNavigation();
-
-            initUI();
-
-
-            // ======================================
-            // Current year
-            // ======================================
-
-            const year =
-                document.getElementById(
-                    "currentYear"
-                );
-
-            if(year){
-
-                year.textContent =
-                    new Date().getFullYear();
-
-            }
-
-
-            // ======================================
-            // Password visibility
-            // ======================================
-
-            const password =
-                document.getElementById(
-                    "password"
-                );
-
-            const togglePassword =
-                document.getElementById(
-                    "togglePassword"
-                );
-
-
-            if(
-                password &&
-                togglePassword
-            ){
-
-                togglePassword.addEventListener(
-                    "click",
-                    () => {
-
-                        const isPassword =
-                            password.type === "password";
-
-
-                        password.type =
-                            isPassword
-                                ? "text"
-                                : "password";
-
-
-                        togglePassword.setAttribute(
-                            "aria-pressed",
-                            String(isPassword)
-                        );
-
-
-                        togglePassword.setAttribute(
-                            "aria-label",
-                            isPassword
-                                ? "Masquer le mot de passe"
-                                : "Afficher le mot de passe"
-                        );
-
-
-                        const icon =
-                            togglePassword.querySelector(
-                                "i"
-                            );
-
-
-                        if(icon){
-
-                            icon.classList.toggle(
-                                "fa-eye",
-                                !isPassword
-                            );
-
-                            icon.classList.toggle(
-                                "fa-eye-slash",
-                                isPassword
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-
-
-            // ======================================
-            // Session existante
-            // ======================================
-
-            try {
-
-                const session =
-                    await getSession();
-
-
-                if(session){
-
-                    window.location.replace(
-                        "index.html"
-                    );
-
-                    return;
-
-                }
-
-            }
-            catch(error){
-
-                console.error(
-                    "Erreur lors de la vérification de session :",
-                    error
-                );
-
-            }
-
-
-            // ======================================
-            // Login form
-            // ======================================
-
-            const form =
-                document.getElementById(
-                    "loginForm"
-                );
-
-
-            if(!form) return;
-
-
-            form.addEventListener(
-                "submit",
-                async (event) => {
-
-                    event.preventDefault();
-
-
-                    // ==================================
-                    // Elements
-                    // ==================================
-
-                    const emailInput =
-                        document.getElementById(
-                            "email"
-                        );
-
-                    const passwordInput =
-                        document.getElementById(
-                            "password"
-                        );
-
-                    const button =
-                        document.getElementById(
-                            "loginButton"
-                        );
-
-                    const emailError =
-                        document.getElementById(
-                            "emailError"
-                        );
-
-                    const passwordError =
-                        document.getElementById(
-                            "passwordError"
-                        );
-
-
-                    // ==================================
-                    // Reset errors
-                    // ==================================
-
-                    if(emailError){
-
-                        emailError.textContent =
-                            "";
-
-                    }
-
-                    if(passwordError){
-
-                        passwordError.textContent =
-                            "";
-
-                    }
-
-
-                    const email =
-                        emailInput
-                            ?.value
-                            .trim();
-
-
-                    const passwordValue =
-                        passwordInput
-                            ?.value || "";
-
-
-                    // ==================================
-                    // Validation
-                    // ==================================
-
-                    let valid = true;
-
-
-                    if(!email){
-
-                        if(emailError){
-
-                            emailError.textContent =
-                                "Veuillez saisir votre adresse e-mail.";
-
-                        }
-
-                        valid = false;
-
-                    }
-                    else if(
-                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                            email
-                        )
-                    ){
-
-                        if(emailError){
-
-                            emailError.textContent =
-                                "Veuillez saisir une adresse e-mail valide.";
-
-                        }
-
-                        valid = false;
-
-                    }
-
-
-                    if(!passwordValue){
-
-                        if(passwordError){
-
-                            passwordError.textContent =
-                                "Veuillez saisir votre mot de passe.";
-
-                        }
-
-                        valid = false;
-
-                    }
-
-
-                    if(!valid){
-
-                        return;
-
-                    }
-
-
-                    // ==================================
-                    // Loading
-                    // ==================================
-
-                    buttonLoading(
-                        button,
-                        true
-                    );
-
-
-                    try {
-
-                        const {
-                            data,
-                            error
-                        } = await signIn(
-                            email,
-                            passwordValue
-                        );
-
-
-                        if(error){
-
-                            throw error;
-
-                        }
-
-
-                        if(
-                            !data ||
-                            !data.session
-                        ){
-
-                            throw new Error(
-                                "La connexion n'a pas pu être établie."
-                            );
-
-                        }
-
-
-                        // ==================================
-                        // Success
-                        // ==================================
-
-                        showSuccess(
-                            "Connexion réussie."
-                        );
-
-
-                        /*
-                         * Laisser le message de succès
-                         * apparaître brièvement avant
-                         * la navigation.
-                         */
-
-                        setTimeout(
-                            () => {
-
-                                window.location.replace(
-                                    "index.html"
-                                );
-
-                            },
-                            500
-                        );
-
-                    }
-                    catch(error){
-
-                        buttonLoading(
-                            button,
-                            false
-                        );
-
-
-                        // ==================================
-                        // Friendly Supabase errors
-                        // ==================================
-
-                        let message =
-                            "Impossible de vous connecter.";
-
-
-                        const errorMessage =
-                            (
-                                error?.message ||
-                                ""
-                            ).toLowerCase();
-
-
-                        if(
-                            errorMessage.includes(
-                                "invalid login credentials"
-                            )
-                        ){
-
-                            message =
-                                "Adresse e-mail ou mot de passe incorrect.";
-
-                        }
-                        else if(
-                            errorMessage.includes(
-                                "email not confirmed"
-                            )
-                        ){
-
-                            message =
-                                "Votre adresse e-mail n'est pas encore confirmée.";
-
-                        }
-                        else if(
-                            errorMessage.includes(
-                                "too many requests"
-                            )
-                        ){
-
-                            message =
-                                "Trop de tentatives. Veuillez patienter avant de réessayer.";
-
-                        }
-                        else if(
-                            error?.message
-                        ){
-
-                            message =
-                                error.message;
-
-                        }
-
-
-                        showError(
-                            new Error(
-                                message
-                            )
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-</script>
-```
+<script
+    type="module"
+    src="js/pages/login.js"
+></script>
 
 </body>
 </html>
