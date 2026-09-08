@@ -14,7 +14,7 @@ getRole
 import {
 navigate,
 initNavigation
-} from "../navigation.js";
+} from "../core/navigation.js";
 
 import {
 showError,
