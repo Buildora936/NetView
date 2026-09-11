@@ -1,542 +1,766 @@
-/* ==========================================
-   NetView
-   login.js
-   js/pages/login.js
-========================================== */
-
 import {
-    signIn,
-    getSession,
-    getUser,
-    getRole
+signIn,
+getSession,
+getUser
 } from "../core/auth.js";
 
 import {
-    navigate,
-    initNavigation
-} from "../core/navigation.js";
+getProfile
+} from "../core/data.js";
 
-import {
-    showError,
-    showSuccess,
-    buttonLoading
-} from "../core/ui.js";
+const loginForm =
+document.getElementById("loginForm");
 
-/* ==========================================
-   DOM
-========================================== */
+const emailInput =
+document.getElementById("email");
 
-const form = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const rememberInput = document.getElementById("remember");
-const loginButton = document.getElementById("loginButton");
-const togglePassword = document.getElementById("togglePassword");
-const emailError = document.getElementById("emailError");
-const passwordError = document.getElementById("passwordError");
-const pageLoader = document.getElementById("pageLoader");
-const currentYear = document.getElementById("currentYear");
+const passwordInput =
+document.getElementById("password");
 
-/* ==========================================
-   Initialization
-========================================== */
+const togglePasswordButton =
+document.getElementById("togglePassword");
 
-document.addEventListener("DOMContentLoaded", initLogin);
+const rememberInput =
+document.getElementById("remember");
 
-/* ==========================================
-   Initialize Login
-========================================== */
+const loginButton =
+document.getElementById("loginButton");
 
-async function initLogin() {
-    if (currentYear) {
-        currentYear.textContent = new Date().getFullYear();
-    }
+const emailError =
+document.getElementById("emailError");
 
-    initNavigation();
-    hidePageLoader();
+const passwordError =
+document.getElementById("passwordError");
 
-    setupPasswordToggle();
-    setupFormValidation();
-    setupLoginForm();
+const pageLoader =
+document.getElementById("pageLoader");
 
-    await checkExistingSession();
+const currentYear =
+document.getElementById("currentYear");
+
+let isSubmitting = false;
+
+document.addEventListener(
+"DOMContentLoaded",
+init
+);
+
+async function init() {
+setCurrentYear();
+setupPasswordToggle();
+setupForm();
+setupLinks();
+
+```
+await checkExistingSession();
+```
+
 }
 
-/* ==========================================
-   Existing Session
-========================================== */
-
-async function checkExistingSession() {
-    try {
-        showPageLoader();
-
-        const session = await getSession();
-
-        if (!session) {
-            hidePageLoader();
-            return;
-        }
-
-        const user = await getUser();
-
-        if (!user) {
-            hidePageLoader();
-            return;
-        }
-
-        const role = await getRole();
-
-        if (role !== "user" && role !== "pro") {
-            hidePageLoader();
-            return;
-        }
-
-        redirectAfterLogin();
-
-    } catch (error) {
-        console.error("NetView — Vérification session :", error);
-        hidePageLoader();
-    }
+function setCurrentYear() {
+if (!currentYear) {
+return;
 }
 
-/* ==========================================
-   Password Toggle
-========================================== */
+```
+currentYear.textContent =
+    String(new Date().getFullYear());
+```
+
+}
+
+function setupForm() {
+if (!loginForm) {
+return;
+}
+
+```
+loginForm.addEventListener(
+    "submit",
+    handleSubmit
+);
+
+emailInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(emailInput, emailError);
+    }
+);
+
+passwordInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(passwordInput, passwordError);
+    }
+);
+```
+
+}
 
 function setupPasswordToggle() {
-    if (!togglePassword || !passwordInput) {
-        return;
-    }
+if (
+!togglePasswordButton ||
+!passwordInput
+) {
+return;
+}
 
-    togglePassword.addEventListener("click", () => {
-        const isPassword = passwordInput.type === "password";
+```
+togglePasswordButton.addEventListener(
+    "click",
+    () => {
+        const isPassword =
+            passwordInput.type === "password";
 
-        passwordInput.type = isPassword ? "text" : "password";
+        passwordInput.type =
+            isPassword
+                ? "text"
+                : "password";
 
-        togglePassword.setAttribute("aria-pressed", String(isPassword));
-        togglePassword.setAttribute(
+        togglePasswordButton.setAttribute(
+            "aria-pressed",
+            String(isPassword)
+        );
+
+        togglePasswordButton.setAttribute(
             "aria-label",
-            isPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
+            isPassword
+                ? "Masquer le mot de passe"
+                : "Afficher le mot de passe"
         );
 
-        const icon = togglePassword.querySelector("i");
-        if (!icon) {
-            return;
+        const icon =
+            togglePasswordButton.querySelector("i");
+
+        if (icon) {
+            icon.className =
+                isPassword
+                    ? "fa-regular fa-eye-slash"
+                    : "fa-regular fa-eye";
         }
 
-        icon.classList.toggle("fa-eye", !isPassword);
-        icon.classList.toggle("fa-eye-slash", isPassword);
-    });
-}
-
-/* ==========================================
-   Form Setup
-========================================== */
-
-function setupLoginForm() {
-    if (!form) {
-        return;
-    }
-
-    form.addEventListener("submit", handleLogin);
-}
-
-/* ==========================================
-   Login
-========================================== */
-
-async function handleLogin(event) {
-    event.preventDefault();
-
-    clearErrors();
-
-    const email = emailInput ? emailInput.value.trim() : "";
-    const password = passwordInput ? passwordInput.value : "";
-    const remember = rememberInput ? rememberInput.checked : true;
-
-    /* ======================================
-       Validation
-       ====================================== */
-
-    const valid = validateForm(email, password);
-
-    if (!valid) {
-        return;
-    }
-
-    /* ======================================
-       Prevent Multiple Submissions
-       ====================================== */
-
-    if (loginButton && loginButton.disabled) {
-        return;
-    }
-
-    setLoginLoading(true);
-
-    try {
-        const result = await signIn(email, password);
-
-        if (result?.error) {
-            throw result.error;
-        }
-
-        const session = result?.data?.session || await getSession();
-
-        if (!session) {
-            throw new Error("La connexion n'a pas pu être établie.");
-        }
-
-        const user = await getUser();
-
-        if (!user) {
-            throw new Error("Utilisateur introuvable après la connexion.");
-        }
-
-        const accountType = await getRole();
-
-        if (accountType !== "user" && accountType !== "pro") {
-            throw new Error("Le type de compte NetView est invalide.");
-        }
-
-        if (remember) {
-            localStorage.setItem("netview_remember_login", "true");
-        } else {
-            localStorage.removeItem("netview_remember_login");
-        }
-
-        showSuccess("Connexion réussie.");
-
-        await wait(250);
-
-        redirectAfterLogin();
-
-    } catch (error) {
-        console.error("NetView — Connexion :", error);
-
-        handleLoginError(error);
-
-        setLoginLoading(false);
-        hidePageLoader();
-    }
-}
-
-/* ==========================================
-   Validation
-========================================== */
-
-function validateForm(email, password) {
-    let valid = true;
-
-    /* ======================================
-       Email
-       ====================================== */
-
-    if (!email) {
-        setFieldError(
-            emailInput,
-            emailError,
-            "Veuillez saisir votre adresse e-mail."
-        );
-        valid = false;
-    } else if (!isValidEmail(email)) {
-        setFieldError(
-            emailInput,
-            emailError,
-            "Veuillez saisir une adresse e-mail valide."
-        );
-        valid = false;
-    }
-
-    /* ======================================
-       Password
-       ====================================== */
-
-    if (!password) {
-        setFieldError(
-            passwordInput,
-            passwordError,
-            "Veuillez saisir votre mot de passe."
-        );
-        valid = false;
-    }
-
-    if (!valid) {
-        focusFirstInvalidField();
-    }
-
-    return valid;
-}
-
-/* ==========================================
-   Email Validation
-========================================== */
-
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-/* ==========================================
-   Field Error
-========================================== */
-
-function setFieldError(input, errorElement, message) {
-    if (input) {
-        input.classList.add("is-invalid");
-        input.setAttribute("aria-invalid", "true");
-    }
-
-    if (errorElement) {
-        errorElement.textContent = message;
-    }
-}
-
-/* ==========================================
-   Clear Errors
-========================================== */
-
-function clearErrors() {
-    if (emailError) {
-        emailError.textContent = "";
-    }
-
-    if (passwordError) {
-        passwordError.textContent = "";
-    }
-
-    [emailInput, passwordInput].forEach(input => {
-        if (!input) {
-            return;
-        }
-
-        input.classList.remove("is-invalid");
-        input.removeAttribute("aria-invalid");
-    });
-}
-
-/* ==========================================
-   Live Validation
-========================================== */
-
-function setupFormValidation() {
-    if (emailInput) {
-        emailInput.addEventListener("input", () => {
-            emailInput.classList.remove("is-invalid");
-            emailInput.removeAttribute("aria-invalid");
-
-            if (emailError) {
-                emailError.textContent = "";
-            }
-        });
-    }
-
-    if (passwordInput) {
-        passwordInput.addEventListener("input", () => {
-            passwordInput.classList.remove("is-invalid");
-            passwordInput.removeAttribute("aria-invalid");
-
-            if (passwordError) {
-                passwordError.textContent = "";
-            }
-        });
-    }
-}
-
-/* ==========================================
-   Focus Invalid Field
-========================================== */
-
-function focusFirstInvalidField() {
-    if (emailInput && emailInput.classList.contains("is-invalid")) {
-        emailInput.focus();
-        return;
-    }
-
-    if (passwordInput && passwordInput.classList.contains("is-invalid")) {
         passwordInput.focus();
     }
+);
+```
+
 }
 
-/* ==========================================
-   Login Error Handler
-========================================== */
+function setupLinks() {
+document
+.querySelectorAll("[data-link]")
+.forEach(link => {
+link.addEventListener(
+"click",
+event => {
+const target =
+link.getAttribute("data-link");
 
-function handleLoginError(error) {
-    const message = getFriendlyAuthError(error);
+```
+                if (!target) {
+                    return;
+                }
 
-    if (message.field === "email") {
-        setFieldError(emailInput, emailError, message.text);
-        if (emailInput) {
-            emailInput.focus();
-        }
-        return;
-    }
+                event.preventDefault();
 
-    if (message.field === "password") {
-        setFieldError(passwordInput, passwordError, message.text);
-        if (passwordInput) {
-            passwordInput.focus();
-        }
-        return;
-    }
-
-    showError({
-        message: message.text
+                window.location.href =
+                    target;
+            }
+        );
     });
+```
+
 }
 
-/* ==========================================
-   Friendly Supabase Errors
-========================================== */
+async function checkExistingSession() {
+try {
+const session =
+await getSession();
 
-function getFriendlyAuthError(error) {
-    const raw = String(error?.message || "").toLowerCase();
-
-    if (
-        raw.includes("email not confirmed") ||
-        raw.includes("email_not_confirmed")
-    ) {
-        return {
-            field: "email",
-            text: "Votre adresse e-mail n'est pas encore confirmée. Vérifiez votre boîte e-mail avant de vous connecter."
-        };
+```
+    if (!session?.user?.id) {
+        hidePageLoader();
+        return;
     }
 
-    if (
-        raw.includes("invalid login credentials") ||
-        raw.includes("invalid credentials") ||
-        raw.includes("invalid email or password")
-    ) {
-        return {
-            field: "password",
-            text: "Adresse e-mail ou mot de passe incorrect."
-        };
+    const user =
+        await getUser();
+
+    if (!user?.id) {
+        hidePageLoader();
+        return;
     }
 
-    if (
-        raw.includes("rate limit") ||
-        raw.includes("too many requests")
-    ) {
-        return {
-            field: null,
-            text: "Trop de tentatives. Veuillez patienter quelques instants avant de réessayer."
-        };
+    await redirectAuthenticatedUser();
+} catch (error) {
+    console.error(
+        "NetView login session check error:",
+        error
+    );
+
+    hidePageLoader();
+}
+```
+
+}
+
+async function handleSubmit(event) {
+event.preventDefault();
+
+```
+if (isSubmitting) {
+    return;
+}
+
+clearErrors();
+
+const validation =
+    validateForm();
+
+if (!validation.valid) {
+    showValidationError(
+        validation.field,
+        validation.message
+    );
+
+    return;
+}
+
+const email =
+    normalizeEmail(
+        emailInput.value
+    );
+
+const password =
+    passwordInput.value;
+
+isSubmitting = true;
+
+setSubmittingState(true);
+
+showPageLoader();
+
+try {
+    const result =
+        await signIn(
+            email,
+            password
+        );
+
+    const user =
+        result?.user ||
+        result?.data?.user ||
+        await getUser();
+
+    if (!user?.id) {
+        throw new Error(
+            "La connexion a réussi, mais le compte NetView n'a pas pu être récupéré."
+        );
     }
 
-    if (
-        raw.includes("network") ||
-        raw.includes("fetch") ||
-        raw.includes("failed to fetch") ||
-        raw.includes("connection")
-    ) {
-        return {
-            field: null,
-            text: "Impossible de contacter NetView. Vérifiez votre connexion Internet puis réessayez."
-        };
+    await getProfileSafe();
+
+    /*
+     * Supabase est actuellement configuré avec
+     * persistSession: true dans supabase.js.
+     *
+     * Le champ "Rester connecté" reste donc une
+     * préférence d'interface tant que le client Supabase
+     * n'est pas configuré pour un mode session-only.
+     */
+    void rememberInput?.checked;
+
+    await redirectAuthenticatedUser();
+} catch (error) {
+    console.error(
+        "NetView login error:",
+        error
+    );
+
+    hidePageLoader();
+
+    showAuthenticationError(
+        error
+    );
+} finally {
+    isSubmitting = false;
+
+    setSubmittingState(false);
+}
+```
+
+}
+
+async function getProfileSafe() {
+try {
+const profile =
+await getProfile();
+
+```
+    if (!profile) {
+        console.warn(
+            "NetView: aucun profil trouvé pour l'utilisateur connecté."
+        );
     }
 
+    return profile;
+} catch (error) {
+    console.warn(
+        "NetView profile retrieval warning:",
+        error
+    );
+
+    return null;
+}
+```
+
+}
+
+async function redirectAuthenticatedUser() {
+const destination =
+getSafeRedirectDestination();
+
+```
+window.location.replace(
+    destination
+);
+```
+
+}
+
+function getSafeRedirectDestination() {
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+```
+const redirect =
+    params.get("redirect");
+
+if (
+    redirect &&
+    isSafeInternalPath(redirect)
+) {
+    return redirect;
+}
+
+return "index.html";
+```
+
+}
+
+function isSafeInternalPath(value) {
+if (!value) {
+return false;
+}
+
+```
+if (
+    value.startsWith("//") ||
+    value.includes("://")
+) {
+    return false;
+}
+
+if (
+    value.startsWith("javascript:")
+) {
+    return false;
+}
+
+return (
+    value.startsWith("/") ||
+    value.startsWith("./") ||
+    value.endsWith(".html") ||
+    value.includes(".html?")
+);
+```
+
+}
+
+function validateForm() {
+const email =
+normalizeEmail(
+emailInput?.value
+);
+
+```
+const password =
+    passwordInput?.value || "";
+
+if (!email) {
     return {
-        field: null,
-        text: "Impossible de vous connecter pour le moment. Vérifiez vos informations puis réessayez."
+        valid: false,
+        field: "email",
+        message:
+            "Veuillez saisir votre adresse e-mail."
     };
 }
 
-/* ==========================================
-   Loading State
-========================================== */
-
-function setLoginLoading(state) {
-    if (loginButton) {
-        buttonLoading(loginButton, state);
-    }
-
-    if (state) {
-        showPageLoader();
-    } else {
-        hidePageLoader();
-    }
+if (!isValidEmail(email)) {
+    return {
+        valid: false,
+        field: "email",
+        message:
+            "Veuillez saisir une adresse e-mail valide."
+    };
 }
 
-/* ==========================================
-   Page Loader
-========================================== */
+if (!password) {
+    return {
+        valid: false,
+        field: "password",
+        message:
+            "Veuillez saisir votre mot de passe."
+    };
+}
+
+return {
+    valid: true
+};
+```
+
+}
+
+function normalizeEmail(value) {
+return String(
+value || ""
+)
+.trim()
+.toLowerCase();
+}
+
+function isValidEmail(email) {
+return /^[^\s@]+@[^\s@]+.[^\s@]+$/.test(
+email
+);
+}
+
+function showAuthenticationError(error) {
+const message =
+normalizeAuthError(error);
+
+```
+if (
+    isEmailError(message)
+) {
+    showValidationError(
+        "email",
+        message
+    );
+
+    return;
+}
+
+if (
+    isPasswordError(message)
+) {
+    showValidationError(
+        "password",
+        message
+    );
+
+    return;
+}
+
+showGlobalError(
+    message
+);
+```
+
+}
+
+function normalizeAuthError(error) {
+if (!error) {
+return (
+"Impossible de vous connecter à NetView."
+);
+}
+
+```
+const rawMessage =
+    String(
+        error.message ||
+        error.error_description ||
+        error.details ||
+        ""
+    );
+
+const message =
+    rawMessage.toLowerCase();
+
+if (
+    message.includes(
+        "invalid login credentials"
+    )
+) {
+    return (
+        "Adresse e-mail ou mot de passe incorrect."
+    );
+}
+
+if (
+    message.includes(
+        "email not confirmed"
+    ) ||
+    message.includes(
+        "email_not_confirmed"
+    )
+) {
+    return (
+        "Votre adresse e-mail n'est pas encore confirmée."
+    );
+}
+
+if (
+    message.includes(
+        "user not found"
+    )
+) {
+    return (
+        "Aucun compte NetView ne correspond à cette adresse e-mail."
+    );
+}
+
+if (
+    message.includes(
+        "too many requests"
+    ) ||
+    message.includes(
+        "rate limit"
+    )
+) {
+    return (
+        "Trop de tentatives. Veuillez patienter avant de réessayer."
+    );
+}
+
+if (
+    message.includes(
+        "network"
+    ) ||
+    message.includes(
+        "failed to fetch"
+    )
+) {
+    return (
+        "Impossible de contacter NetView. Vérifiez votre connexion Internet."
+    );
+}
+
+return (
+    "Impossible de vous connecter. Vérifiez vos informations et réessayez."
+);
+```
+
+}
+
+function isEmailError(message) {
+return (
+message.includes(
+"e-mail"
+) &&
+!message.includes(
+"mot de passe"
+)
+);
+}
+
+function isPasswordError(message) {
+return message.includes(
+"mot de passe"
+);
+}
+
+function showValidationError(
+field,
+message
+) {
+clearErrors();
+
+```
+if (field === "email") {
+    showFieldError(
+        emailInput,
+        emailError,
+        message
+    );
+
+    return;
+}
+
+if (field === "password") {
+    showFieldError(
+        passwordInput,
+        passwordError,
+        message
+    );
+}
+```
+
+}
+
+function showFieldError(
+input,
+errorElement,
+message
+) {
+if (input) {
+input.classList.add(
+"is-invalid"
+);
+
+```
+    input.setAttribute(
+        "aria-invalid",
+        "true"
+    );
+}
+
+if (errorElement) {
+    errorElement.textContent =
+        message;
+}
+
+input?.focus();
+```
+
+}
+
+function clearFieldError(
+input,
+errorElement
+) {
+if (input) {
+input.classList.remove(
+"is-invalid"
+);
+
+```
+    input.setAttribute(
+        "aria-invalid",
+        "false"
+    );
+}
+
+if (errorElement) {
+    errorElement.textContent =
+        "";
+}
+```
+
+}
+
+function clearErrors() {
+clearFieldError(
+emailInput,
+emailError
+);
+
+```
+clearFieldError(
+    passwordInput,
+    passwordError
+);
+```
+
+}
+
+function showGlobalError(message) {
+/*
+* login.html actuel ne possède pas de conteneur
+* d'erreur global. On utilise donc les champs
+* lorsqu'une erreur peut être rattachée à un champ,
+* sinon une notification navigateur contrôlée.
+*/
+window.alert(
+message
+);
+}
+
+function setSubmittingState(submitting) {
+if (!loginButton) {
+return;
+}
+
+```
+loginButton.disabled =
+    submitting;
+
+loginButton.setAttribute(
+    "aria-busy",
+    String(submitting)
+);
+
+const content =
+    loginButton.querySelector(
+        ".login-submit-content"
+    );
+
+if (!content) {
+    return;
+}
+
+if (submitting) {
+    content.dataset.original =
+        content.innerHTML;
+
+    content.innerHTML = `
+        <span>
+            Connexion...
+        </span>
+        <i
+            class="fa-solid fa-spinner fa-spin"
+            aria-hidden="true"
+        ></i>
+    `;
+
+    return;
+}
+
+if (
+    content.dataset.original
+) {
+    content.innerHTML =
+        content.dataset.original;
+
+    delete content.dataset.original;
+}
+```
+
+}
 
 function showPageLoader() {
-    if (!pageLoader) {
-        return;
-    }
+if (!pageLoader) {
+return;
+}
 
-    pageLoader.style.display = "flex";
-    pageLoader.setAttribute("aria-hidden", "false");
+```
+pageLoader.style.display =
+    "flex";
+
+pageLoader.setAttribute(
+    "aria-hidden",
+    "false"
+);
+```
+
 }
 
 function hidePageLoader() {
-    if (!pageLoader) {
-        return;
-    }
-
-    pageLoader.style.display = "none";
-    pageLoader.setAttribute("aria-hidden", "true");
+if (!pageLoader) {
+return;
 }
 
-/* ==========================================
-   Redirect
-========================================== */
+```
+pageLoader.style.display =
+    "none";
 
-function redirectAfterLogin() {
-    const redirect = getRedirectUrl();
+pageLoader.setAttribute(
+    "aria-hidden",
+    "true"
+);
+```
 
-    if (redirect && isSafeRedirect(redirect)) {
-        navigate(redirect);
-        return;
-    }
-
-    navigate("index.html");
-}
-
-/* ==========================================
-   Redirect URL
-========================================== */
-
-function getRedirectUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get("redirect");
-
-    if (!redirect) {
-        return null;
-    }
-
-    return decodeURIComponent(redirect);
-}
-
-/* ==========================================
-   Safe Redirect
-========================================== */
-
-function isSafeRedirect(url) {
-    if (!url) {
-        return false;
-    }
-
-    if (
-        url.startsWith("http://") ||
-        url.startsWith("https://") ||
-        url.startsWith("//")
-    ) {
-        return false;
-    }
-
-    if (/^[a-z][a-z0-9+.-]*:/i.test(url)) {
-        return false;
-    }
-
-    return true;
-}
-
-/* ==========================================
-   Utility
-========================================== */
-
-function wait(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
