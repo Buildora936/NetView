@@ -1,663 +1,772 @@
 <!DOCTYPE html>
+
 <html lang="fr">
-
 <head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
+```
 <meta
     name="description"
-    content="Créez gratuitement votre compte NetView. Regardez des vidéos, des shorts, des lives, discutez avec la communauté et profitez de toutes les fonctionnalités de la plateforme.">
+    content="Créez votre compte NetView et rejoignez votre nouvel espace vidéo."
+>
 
 <meta
     name="theme-color"
-    content="#2563EB">
+    content="#0B1220"
+>
 
-<title>
-    Créer un compte • NetView
-</title>
+<title>Créer un compte — NetView</title>
 
-<link
-    rel="icon"
-    type="image/png"
-    href="NetView_icone.png">
-
-<link
-    rel="preconnect"
-    href="https://fonts.googleapis.com">
-
-<link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin>
+<!-- =====================================================
+     FONT AWESOME
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
 
-<!-- ==========================================
-Core CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/core/variables.css">
+<!-- =====================================================
+     NETVIEW CORE
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/core/reset.css">
+    href="CSS/core/variables.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/typography.css">
+    href="CSS/core/reset.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/animations.css">
+    href="CSS/core/typography.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/core/utilities.css">
-
-<!-- ==========================================
-Components
-========================================== -->
+    href="CSS/core/animations.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/buttons.css">
+    href="CSS/core/utilities.css"
+>
+
+<!-- =====================================================
+     NETVIEW COMPONENTS
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/components/forms.css">
+    href="CSS/components/buttons.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/cards.css">
+    href="CSS/components/forms.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/modal.css">
+    href="CSS/components/toast.css"
+>
 
 <link
     rel="stylesheet"
-    href="CSS/components/toast.css">
+    href="CSS/components/loader.css"
+>
+
+<!-- =====================================================
+     PAGE
+     ===================================================== -->
 
 <link
     rel="stylesheet"
-    href="CSS/components/loader.css">
-
-<!-- ==========================================
-Page CSS
-========================================== -->
-
-<link
-    rel="stylesheet"
-    href="CSS/pages/signup.css">
+    href="CSS/pages/signup.css"
+>
+```
 
 </head>
 
-<body>
-
-<div class="nv-signup-background">
-
-    <div class="nv-orb one"></div>
-
-    <div class="nv-orb two"></div>
-
-    <div class="nv-orb three"></div>
-
-    <div class="nv-particles">
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-</div>
-
-<main class="nv-signup">
-
-<section class="nv-signup-card">
-
-<img
-    src="NetView.png"
-    alt="NetView"
-    class="nv-signup-logo">
-
-<div class="nv-signup-header">
-
-<h1 class="nv-signup-title">
-
-Bienvenue sur NetView
-
-</h1>
-
-<p class="nv-signup-subtitle">
-
-Créez gratuitement votre compte et accédez aux vidéos, shorts, lives, communautés, messages et marketplace NetView.
-
-</p>
-
-</div>
-
-<form
-    id="signupForm"
-    class="nv-signup-form">
-
-<div class="nv-form-row">
-
-<div class="nv-form-group">
-
-<label
-    for="displayName"
-    class="nv-label">
-
-Nom affiché
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="displayName"
-    name="displayName"
-    type="text"
-    class="nv-input"
-    maxlength="50"
-    autocomplete="name"
-    placeholder="Votre nom affiché"
-    required>
-
-<div class="nv-input-icon">
-
-<i class="fa-regular fa-user"></i>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="email"
-    class="nv-label">
-
-Adresse e-mail
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="email"
-    name="email"
-    type="email"
-    class="nv-input"
-    autocomplete="email"
-    placeholder="exemple@email.com"
-    required>
-
-<div class="nv-input-icon">
-
-<i class="fa-regular fa-envelope"></i>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="password"
-    class="nv-label">
-
-Mot de passe
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="password"
-    name="password"
-    type="password"
-    class="nv-input"
-    autocomplete="new-password"
-    placeholder="Minimum 8 caractères"
-    required>
-
-<div class="nv-input-icon">
-
-<i class="fa-solid fa-lock"></i>
-
-</div>
-
-<button
-    type="button"
-    id="togglePassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-
-<i class="fa-regular fa-eye"></i>
-
-</button>
-
-</div>
-
-<div class="nv-password-strength">
-
-<div
-    id="passwordStrengthBar"
-    class="nv-password-strength-bar">
-
-</div>
-
-</div>
-
-<div
-    id="passwordStrengthText"
-    class="nv-password-strength-text">
-
-Choisissez un mot de passe sécurisé.
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label
-    for="confirmPassword"
-    class="nv-label">
-
-Confirmer le mot de passe
-
-</label>
-
-<div class="nv-input-wrapper">
-
-<input
-    id="confirmPassword"
-    name="confirmPassword"
-    type="password"
-    class="nv-input"
-    autocomplete="new-password"
-    placeholder="Confirmez votre mot de passe"
-    required>
-
-<div class="nv-input-icon">
-
-<i class="fa-solid fa-shield-halved"></i>
-
-</div>
-
-<button
-    type="button"
-    id="toggleConfirmPassword"
-    class="nv-password-toggle"
-    aria-label="Afficher le mot de passe">
-
-<i class="fa-regular fa-eye"></i>
-
-</button>
-
-</div>
-
-<div
-    id="passwordMatch"
-    class="nv-password-match">
-
-</div>
-
-</div>
-
-<div class="nv-account-preview">
-
-<div class="nv-account-preview-icon">
-
-<i class="fa-solid fa-user-plus"></i>
-
-</div>
-
-<div class="nv-account-preview-content">
-
-<h2>
-
-Compte Utilisateur
-
-</h2>
-
-<p>
-
-Votre compte vous permettra de regarder des vidéos, des shorts, des lives, commenter, aimer, partager, créer des playlists, discuter avec vos amis et acheter des produits numériques.
-
-</p>
-
-</div>
-
-</div>
-
-<div class="nv-benefits">
-
-<div class="nv-benefit">
-
-<i class="fa-solid fa-circle-check"></i>
-
-<span>
-
-Vidéos, Shorts et Lives illimités
-
-</span>
-
-</div>
-
-<div class="nv-benefit">
-
-<i class="fa-solid fa-circle-check"></i>
-
-<span>
-
-Messagerie privée intégrée
-
-</span>
-
-</div>
-
-<div class="nv-benefit">
-
-<i class="fa-solid fa-circle-check"></i>
-
-<span>
-
-Marketplace numérique sécurisée
-
-</span>
-
-</div>
-
-<div class="nv-benefit">
-
-<i class="fa-solid fa-circle-check"></i>
-
-<span>
-
-Playlists, abonnements et notifications
-
-</span>
-
-</div>
-
-</div>
-
-<div class="nv-form-group">
-
-<label class="nv-checkbox">
-
-<input
-    id="acceptTerms"
-    type="checkbox"
-    required>
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-J'accepte les
-
-<a
-    href="conditions-utilisation.html"
-    target="_blank">
-
-Conditions d'utilisation
-
-</a>
-
-et la
-
-<a
-    href="privacy.html"
-    target="_blank">
-
-Politique de confidentialité
-
-</a>
-
-de NetView.
-
-</span>
-
-</label>
-
-</div>
-
-<div class="nv-form-group">
-
-<label class="nv-checkbox">
-
-<input
-    id="newsletter"
-    type="checkbox">
-
-<span class="nv-checkbox-mark"></span>
-
-<span>
-
-Je souhaite recevoir les actualités, nouveautés et informations de NetView.
-
-</span>
-
-</label>
-
-</div>
-
-<div
-    id="signupError"
-    class="error">
-
-</div>
-
-<button
-    id="signupButton"
-    type="submit"
-    class="nv-btn nv-btn-gradient nv-signup-button">
-
-Créer mon compte
-
-</button>
-
-</form>
-
-<div class="nv-divider">
-
-<span>
-
-Déjà membre ?
-
-</span>
-
-</div>
-
-<div class="nv-login-link">
-
-Vous possédez déjà un compte NetView ?
-
-<br><br>
-
-<a href="login.html">
-
-Se connecter
-
-</a>
-
-</div>
-
-<div class="nv-version">
-
-NetView v1.0 • Tous droits réservés
-
-</div>
-
-</section>
-
-</main>
+<body class="nv-page signup-page">
+
+```
+<!-- =====================================================
+     PAGE LOADER
+     ===================================================== -->
 
 <div
     id="pageLoader"
     class="nv-page-loader"
-    style="display:none;">
-
-<div class="nv-spinner nv-spinner-lg"></div>
-
-<div class="nv-loader-text">
-
-Création du compte...
-
+    aria-hidden="true"
+>
+    <div
+        class="nv-spinner"
+        aria-label="Chargement"
+    ></div>
 </div>
 
-</div>
 
-<!-- ==========================================
-Confirmation e-mail
-========================================== -->
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
 
-<div
-    id="emailVerificationModal"
-    class="nv-modal">
+<main class="signup-main">
 
-<div class="nv-modal-overlay"></div>
+    <section
+        class="signup-layout"
+        aria-labelledby="signupTitle"
+    >
 
-<div class="nv-modal-content">
+        <!-- =================================================
+             LEFT INFORMATION
+             ================================================= -->
 
-<div class="nv-email-icon">
+        <div class="signup-intro">
 
-<i class="fa-solid fa-envelope-circle-check"></i>
+            <a
+                href="index.html"
+                class="signup-brand"
+                data-link="index.html"
+                aria-label="NetView — Accueil"
+            >
 
-</div>
+                <img
+                    src="NetView.png"
+                    alt="NetView"
+                    class="signup-brand-logo"
+                >
 
-<h2>
+            </a>
 
-Vérifiez votre adresse e-mail
 
-</h2>
+            <div class="signup-intro-content">
 
-<p class="nv-email-description">
+                <span class="signup-eyebrow">
+                    Votre espace NetView
+                </span>
 
-Nous avons envoyé un lien de confirmation à :
+                <h1>
+                    Un seul compte.
+                    <br>
+                    Tout NetView.
+                </h1>
 
-</p>
+                <p>
+                    Créez votre compte gratuitement et retrouvez
+                    votre univers vidéo, vos abonnements, vos
+                    conversations et vos contenus au même endroit.
+                </p>
 
-<div
-    id="verificationEmail"
-    class="nv-email-address">
 
-utilisateur@email.com
+                <!-- =========================================
+                     BENEFITS
+                     ========================================= -->
 
-</div>
+                <div class="signup-benefits">
 
-<p class="nv-email-note">
+                    <div class="signup-benefit">
 
-Cliquez sur le lien reçu dans votre boîte de réception pour activer votre compte NetView.
+                        <span class="signup-benefit-icon">
+                            <i
+                                class="fa-solid fa-play"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
 
-</p>
+                        <div>
+                            <strong>
+                                Regardez et découvrez
+                            </strong>
 
-<div class="nv-email-edit">
+                            <span>
+                                Vidéos, Shorts et contenus
+                                de vos chaînes préférées.
+                            </span>
+                        </div>
 
-<label
-    for="newVerificationEmail"
-    class="nv-label">
+                    </div>
 
-Modifier l'adresse e-mail
 
-</label>
+                    <div class="signup-benefit">
 
-<input
-    id="newVerificationEmail"
-    type="email"
-    class="nv-input"
-    placeholder="Nouvelle adresse e-mail">
+                        <span class="signup-benefit-icon">
+                            <i
+                                class="fa-solid fa-user"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
 
-</div>
+                        <div>
+                            <strong>
+                                Votre espace personnel
+                            </strong>
 
-<div
-    id="verificationMessage"
-    class="nv-email-message">
+                            <span>
+                                Historique, bibliothèque,
+                                abonnements et préférences.
+                            </span>
+                        </div>
 
-</div>
+                    </div>
 
-<div class="nv-modal-actions">
 
-<button
-    id="changeEmailButton"
-    class="nv-btn nv-btn-secondary">
+                    <div class="signup-benefit">
 
-Mettre à jour l'e-mail
+                        <span class="signup-benefit-icon">
+                            <i
+                                class="fa-solid fa-lock"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
 
-</button>
+                        <div>
+                            <strong>
+                                Pensé pour votre sécurité
+                            </strong>
 
-<button
-    id="resendEmailButton"
-    class="nv-btn nv-btn-outline">
+                            <span>
+                                Une authentification sécurisée
+                                pour protéger votre compte.
+                            </span>
+                        </div>
 
-Renvoyer l'e-mail
+                    </div>
 
-</button>
+                </div>
 
-<button
-    id="emailVerifiedButton"
-    class="nv-btn nv-btn-gradient">
+            </div>
 
-J'ai confirmé mon adresse
+        </div>
 
-</button>
 
-</div>
+        <!-- =================================================
+             SIGNUP CARD
+             ================================================= -->
 
-<div
-    id="resendCountdown"
-    class="nv-email-countdown">
+        <div class="signup-card">
 
-Vous pourrez renvoyer un e-mail dans 60 s.
+            <!-- =============================================
+                 CARD HEADER
+                 ============================================= -->
 
-</div>
+            <header class="signup-header">
 
-</div>
+                <div class="signup-mobile-brand">
 
-</div>
+                    <img
+                        src="NetView.png"
+                        alt="NetView"
+                        class="signup-mobile-logo"
+                    >
 
-<!-- ==========================================
-Notification Flottante
-========================================== -->
-<div
-    id="notification"
-    class="notification">
-</div>
+                </div>
+
+                <h2 id="signupTitle">
+                    Créer votre compte
+                </h2>
+
+                <p>
+                    Quelques informations suffisent pour commencer.
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 FORM
+                 ================================================= -->
+
+            <form
+                id="signupForm"
+                class="signup-form"
+                novalidate
+            >
+
+                <!-- =========================================
+                     USERNAME
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="username"
+                        class="nv-form-label"
+                    >
+                        Nom d'utilisateur
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            class="nv-form-input signup-input"
+                            autocomplete="username"
+                            placeholder="ex. joseph123"
+                            minlength="3"
+                            maxlength="30"
+                            required
+                        >
+
+                    </div>
+
+                    <span class="signup-field-hint">
+                        3 à 30 caractères.
+                    </span>
+
+                    <span
+                        id="usernameError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     DISPLAY NAME
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="displayName"
+                        class="nv-form-label"
+                    >
+                        Nom affiché
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="displayName"
+                            name="display_name"
+                            type="text"
+                            class="nv-form-input signup-input"
+                            autocomplete="name"
+                            placeholder="Votre nom"
+                            maxlength="80"
+                            required
+                        >
+
+                    </div>
+
+                    <span
+                        id="displayNameError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     EMAIL
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="email"
+                        class="nv-form-label"
+                    >
+                        Adresse e-mail
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            class="nv-form-input signup-input"
+                            autocomplete="email"
+                            inputmode="email"
+                            placeholder="nom@exemple.com"
+                            required
+                        >
+
+                    </div>
+
+                    <span
+                        id="emailError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     PASSWORD
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="password"
+                        class="nv-form-label"
+                    >
+                        Mot de passe
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            class="nv-form-input signup-input"
+                            autocomplete="new-password"
+                            placeholder="Choisissez un mot de passe"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            id="togglePassword"
+                            class="signup-password-toggle"
+                            type="button"
+                            aria-label="Afficher le mot de passe"
+                            aria-pressed="false"
+                        >
+
+                            <i
+                                class="fa-regular fa-eye"
+                                aria-hidden="true"
+                            ></i>
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="passwordStrength"
+                        class="signup-password-strength"
+                        aria-live="polite"
+                    ></div>
+
+                    <span
+                        id="passwordError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     CONFIRM PASSWORD
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="confirmPassword"
+                        class="nv-form-label"
+                    >
+                        Confirmer le mot de passe
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="confirmPassword"
+                            name="confirm_password"
+                            type="password"
+                            class="nv-form-input signup-input"
+                            autocomplete="new-password"
+                            placeholder="Saisissez à nouveau votre mot de passe"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            id="toggleConfirmPassword"
+                            class="signup-password-toggle"
+                            type="button"
+                            aria-label="Afficher la confirmation du mot de passe"
+                            aria-pressed="false"
+                        >
+
+                            <i
+                                class="fa-regular fa-eye"
+                                aria-hidden="true"
+                            ></i>
+
+                        </button>
+
+                    </div>
+
+                    <span
+                        id="confirmPasswordError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     COUNTRY
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="country"
+                        class="nv-form-label"
+                    >
+                        Pays
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <input
+                            id="country"
+                            name="country"
+                            type="text"
+                            class="nv-form-input signup-input"
+                            autocomplete="country-name"
+                            placeholder="Votre pays"
+                            maxlength="80"
+                            required
+                        >
+
+                    </div>
+
+                    <span
+                        id="countryError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     LANGUAGE
+                     ========================================= -->
+
+                <div class="nv-form-group signup-field">
+
+                    <label
+                        for="language"
+                        class="nv-form-label"
+                    >
+                        Langue
+                    </label>
+
+                    <div class="signup-input-wrapper">
+
+                        <select
+                            id="language"
+                            name="language"
+                            class="nv-form-input signup-input"
+                        >
+
+                            <option value="fr">
+                                Français
+                            </option>
+
+                            <option value="en">
+                                English
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     TERMS
+                     ========================================= -->
+
+                <div class="signup-terms">
+
+                    <label class="signup-checkbox">
+
+                        <input
+                            id="acceptTerms"
+                            name="accept_terms"
+                            type="checkbox"
+                            required
+                        >
+
+                        <span class="signup-checkbox-mark">
+                            <i
+                                class="fa-solid fa-check"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
+
+                        <span class="signup-terms-text">
+                            J'accepte les
+                            <a href="#">
+                                conditions d'utilisation
+                            </a>
+                            et la
+                            <a href="#">
+                                politique de confidentialité
+                            </a>
+                            de NetView.
+                        </span>
+
+                    </label>
+
+                    <span
+                        id="termsError"
+                        class="signup-field-error"
+                        aria-live="polite"
+                    ></span>
+
+                </div>
+
+
+                <!-- =========================================
+                     SUBMIT
+                     ========================================= -->
+
+                <button
+                    id="signupButton"
+                    type="submit"
+                    class="nv-btn nv-btn-primary signup-submit"
+                >
+
+                    <span class="signup-submit-content">
+
+                        <span>
+                            Créer mon compte
+                        </span>
+
+                        <i
+                            class="fa-solid fa-arrow-right"
+                            aria-hidden="true"
+                        ></i>
+
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- =================================================
+                 EMAIL CONFIRMATION NOTICE
+                 ================================================= -->
+
+            <div class="signup-confirmation-note">
+
+                <span class="signup-confirmation-icon">
+
+                    <i
+                        class="fa-regular fa-envelope"
+                        aria-hidden="true"
+                    ></i>
+
+                </span>
+
+                <div>
+
+                    <strong>
+                        Vérification de votre e-mail
+                    </strong>
+
+                    <p>
+                        Après votre inscription, NetView vous
+                        enverra un e-mail de confirmation avant
+                        l'accès complet à votre compte.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN
+                 ================================================= -->
+
+            <div class="signup-login">
+
+                <span>
+                    Vous avez déjà un compte ?
+                </span>
+
+                <a
+                    href="login.html"
+                    class="signup-login-link"
+                    data-link="login.html"
+                >
+                    Se connecter
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 BACK
+                 ================================================= -->
+
+            <div class="signup-back">
+
+                <a
+                    href="auth.html"
+                    class="signup-back-link"
+                    data-link="auth.html"
+                >
+
+                    <i
+                        class="fa-solid fa-arrow-left"
+                        aria-hidden="true"
+                    ></i>
+
+                    Retour
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="signup-footer">
+
+    <span>
+        © <span id="currentYear"></span> NetView
+    </span>
+
+</footer>
+
+
+<!-- =====================================================
+     PAGE JAVASCRIPT
+     ===================================================== -->
 
 <script
     type="module"
-    src="js/pages/signup.js">
-</script>
+    src="js/pages/signup.js"
+></script>
+
 
 </body>
-
 </html>
