@@ -1,582 +1,1358 @@
-// ==========================================
-// NetView
-// signup.js
-// ==========================================
+/* =========================================================
+NetView — Signup
+js/pages/signup.js
+========================================================= */
 
 import {
-    signUp,
-    resendVerification,
-    updateUser,
-    getSession,
-    refreshUser,
-    createProfile
+signUp,
+createProfile,
+getSession,
+getUser
 } from "../core/auth.js";
 
 import {
-    showLoader,
-    hideLoader,
-    buttonLoading
-} from "../core/ui.js";
+registerCurrentDevice,
+isUsernameAvailable
+} from "../core/data.js";
 
-import {
-    navigate
-} from "../core/navigation.js";
+/* =========================================================
+DOM
+========================================================= */
 
+const pageLoader =
+document.getElementById("pageLoader");
 
-// ==========================================
-// DOM
-// ==========================================
+const signupForm =
+document.getElementById("signupForm");
 
-// Formulaire
-const signupForm = document.getElementById("signupForm");
-const signupButton = document.getElementById("signupButton");
-const signupError = document.getElementById("signupError");
+const usernameInput =
+document.getElementById("username");
 
-// Notification flottante
-const notification = document.getElementById("notification");
+const displayNameInput =
+document.getElementById("displayName");
 
-// Champs
-const inputDisplayName = document.getElementById("displayName");
-const inputEmail = document.getElementById("email");
-const inputPassword = document.getElementById("password");
-const inputConfirmPassword = document.getElementById("confirmPassword");
-const acceptTerms = document.getElementById("acceptTerms");
-const newsletter = document.getElementById("newsletter");
+const emailInput =
+document.getElementById("email");
 
-// Mot de passe
-const togglePassword = document.getElementById("togglePassword");
-const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-const passwordStrengthBar = document.getElementById("passwordStrengthBar");
-const passwordStrengthText = document.getElementById("passwordStrengthText");
-const passwordMatch = document.getElementById("passwordMatch");
+const passwordInput =
+document.getElementById("password");
 
-// Loader
-const pageLoader = document.getElementById("pageLoader");
+const confirmPasswordInput =
+document.getElementById("confirmPassword");
 
-// ==========================================
-// Modal confirmation e-mail
-// ==========================================
+const countryInput =
+document.getElementById("country");
 
-const emailVerificationModal = document.getElementById("emailVerificationModal");
-const verificationEmail = document.getElementById("verificationEmail");
-const newVerificationEmail = document.getElementById("newVerificationEmail");
-const verificationMessage = document.getElementById("verificationMessage");
-const changeEmailButton = document.getElementById("changeEmailButton");
-const resendEmailButton = document.getElementById("resendEmailButton");
-const emailVerifiedButton = document.getElementById("emailVerifiedButton");
-const resendCountdown = document.getElementById("resendCountdown");
+const languageInput =
+document.getElementById("language");
 
+const acceptTermsInput =
+document.getElementById("acceptTerms");
 
-// ==========================================
-// État global
-// ==========================================
+const togglePassword =
+document.getElementById("togglePassword");
 
-let currentEmail = "";
+const toggleConfirmPassword =
+document.getElementById(
+"toggleConfirmPassword"
+);
 
-let signupData = {
-    displayName: "",
-    email: "",
-    password: "",
-    newsletter: false
-};
+const passwordStrength =
+document.getElementById(
+"passwordStrength"
+);
 
-let resendSeconds = 60;
-let resendTimer = null;
-let verificationInterval = null;
+const usernameError =
+document.getElementById(
+"usernameError"
+);
+
+const displayNameError =
+document.getElementById(
+"displayNameError"
+);
+
+const emailError =
+document.getElementById(
+"emailError"
+);
+
+const passwordError =
+document.getElementById(
+"passwordError"
+);
+
+const confirmPasswordError =
+document.getElementById(
+"confirmPasswordError"
+);
+
+const countryError =
+document.getElementById(
+"countryError"
+);
+
+const termsError =
+document.getElementById(
+"termsError"
+);
+
+const signupButton =
+document.getElementById(
+"signupButton"
+);
+
+const currentYear =
+document.getElementById(
+"currentYear"
+);
+
+/* =========================================================
+STATE
+========================================================= */
+
 let isSubmitting = false;
-let isResending = false;
 
+/* =========================================================
+INITIALIZATION
+========================================================= */
 
-// ==========================================
-// Notification Helper
-// ==========================================
+document.addEventListener(
+"DOMContentLoaded",
+init
+);
 
-function showNotification(message, isError = false) {
-    if (!notification) return;
-    
-    notification.textContent = message;
-    notification.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "rgba(34, 197, 94, 0.4)";
-    notification.style.color = isError ? "#ef4444" : "#22c55e";
-    notification.classList.add("show");
+async function init() {
+setCurrentYear();
+setupForm();
+setupPasswordToggle(
+togglePassword,
+passwordInput,
+"Afficher le mot de passe",
+"Masquer le mot de passe"
+);
+setupPasswordToggle(
+toggleConfirmPassword,
+confirmPasswordInput,
+"Afficher la confirmation du mot de passe",
+"Masquer la confirmation du mot de passe"
+);
+setupPasswordStrength();
+setupNavigationLinks();
 
-    setTimeout(() => {
-        notification.classList.remove("show");
-    }, 4000);
+```
+await checkExistingSession();
+```
+
 }
 
+/* =========================================================
+YEAR
+========================================================= */
 
-// ==========================================
-// Password Visibility
-// ==========================================
+function setCurrentYear() {
+if (!currentYear) {
+return;
+}
 
-function togglePasswordVisibility(input, button) {
-    const isVisible = input.type === "text";
+```
+currentYear.textContent =
+    new Date().getFullYear();
+```
 
-    input.type = isVisible ? "password" : "text";
+}
 
-    button.innerHTML = isVisible
-        ? '<i class="fa-regular fa-eye"></i>'
-        : '<i class="fa-regular fa-eye-slash"></i>';
+/* =========================================================
+EXISTING SESSION
+========================================================= */
 
-    button.setAttribute(
-        "aria-label",
-        isVisible ? "Afficher le mot de passe" : "Masquer le mot de passe"
+async function checkExistingSession() {
+showPageLoader();
+
+```
+try {
+    const session =
+        await getSession();
+
+    if (!session?.user?.id) {
+        hidePageLoader();
+        return;
+    }
+
+    window.location.replace(
+        "index.html"
+    );
+} catch (error) {
+    console.error(
+        "NetView signup session check error:",
+        error
+    );
+
+    hidePageLoader();
+}
+```
+
+}
+
+/* =========================================================
+FORM
+========================================================= */
+
+function setupForm() {
+if (!signupForm) {
+return;
+}
+
+```
+signupForm.addEventListener(
+    "submit",
+    handleSubmit
+);
+
+usernameInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            usernameInput,
+            usernameError
+        );
+    }
+);
+
+displayNameInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            displayNameInput,
+            displayNameError
+        );
+    }
+);
+
+emailInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            emailInput,
+            emailError
+        );
+    }
+);
+
+passwordInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            passwordInput,
+            passwordError
+        );
+
+        updatePasswordStrength();
+        updateConfirmPasswordState();
+    }
+);
+
+confirmPasswordInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            confirmPasswordInput,
+            confirmPasswordError
+        );
+
+        updateConfirmPasswordState();
+    }
+);
+
+countryInput?.addEventListener(
+    "input",
+    () => {
+        clearFieldError(
+            countryInput,
+            countryError
+        );
+    }
+);
+
+acceptTermsInput?.addEventListener(
+    "change",
+    () => {
+        clearFieldError(
+            acceptTermsInput,
+            termsError
+        );
+    }
+);
+```
+
+}
+
+/* =========================================================
+PASSWORD TOGGLE
+========================================================= */
+
+function setupPasswordToggle(
+button,
+input,
+showLabel,
+hideLabel
+) {
+if (!button || !input) {
+return;
+}
+
+```
+button.addEventListener(
+    "click",
+    () => {
+        const visible =
+            input.type ===
+            "password";
+
+        input.type =
+            visible
+                ? "text"
+                : "password";
+
+        button.setAttribute(
+            "aria-pressed",
+            String(visible)
+        );
+
+        button.setAttribute(
+            "aria-label",
+            visible
+                ? hideLabel
+                : showLabel
+        );
+
+        const icon =
+            button.querySelector(
+                "i"
+            );
+
+        if (icon) {
+            icon.className =
+                visible
+                    ? "fa-regular fa-eye-slash"
+                    : "fa-regular fa-eye";
+        }
+
+        input.focus();
+    }
+);
+```
+
+}
+
+/* =========================================================
+PASSWORD STRENGTH
+========================================================= */
+
+function setupPasswordStrength() {
+updatePasswordStrength();
+}
+
+function updatePasswordStrength() {
+if (!passwordStrength) {
+return;
+}
+
+```
+const password =
+    passwordInput?.value || "";
+
+if (!password) {
+    passwordStrength.textContent =
+        "";
+
+    passwordStrength.removeAttribute(
+        "data-strength"
+    );
+
+    return;
+}
+
+const strength =
+    calculatePasswordStrength(
+        password
+    );
+
+const labels = {
+    weak: "Faible",
+    medium: "Moyen",
+    strong: "Fort"
+};
+
+passwordStrength.textContent =
+    `Sécurité du mot de passe : ${labels[strength]}`;
+
+passwordStrength.setAttribute(
+    "data-strength",
+    strength
+);
+```
+
+}
+
+function calculatePasswordStrength(
+password
+) {
+let score = 0;
+
+```
+if (password.length >= 8) {
+    score++;
+}
+
+if (password.length >= 12) {
+    score++;
+}
+
+if (/[a-z]/.test(password)) {
+    score++;
+}
+
+if (/[A-Z]/.test(password)) {
+    score++;
+}
+
+if (/[0-9]/.test(password)) {
+    score++;
+}
+
+if (
+    /[^A-Za-z0-9]/.test(
+        password
+    )
+) {
+    score++;
+}
+
+if (score <= 2) {
+    return "weak";
+}
+
+if (score <= 4) {
+    return "medium";
+}
+
+return "strong";
+```
+
+}
+
+/* =========================================================
+CONFIRM PASSWORD
+========================================================= */
+
+function updateConfirmPasswordState() {
+if (
+!confirmPasswordInput
+) {
+return;
+}
+
+```
+const password =
+    passwordInput?.value || "";
+
+const confirmation =
+    confirmPasswordInput.value;
+
+if (!confirmation) {
+    return;
+}
+
+if (
+    password !== confirmation
+) {
+    confirmPasswordInput.classList.add(
+        "is-invalid"
+    );
+
+    confirmPasswordInput.setAttribute(
+        "aria-invalid",
+        "true"
+    );
+
+    if (confirmPasswordError) {
+        confirmPasswordError.textContent =
+            "Les mots de passe ne correspondent pas.";
+    }
+
+    return;
+}
+
+clearFieldError(
+    confirmPasswordInput,
+    confirmPasswordError
+);
+```
+
+}
+
+/* =========================================================
+NAVIGATION
+========================================================= */
+
+function setupNavigationLinks() {
+document
+.querySelectorAll("[data-link]")
+.forEach(link => {
+link.addEventListener(
+"click",
+event => {
+const target =
+link.getAttribute(
+"data-link"
+);
+
+```
+                if (!target) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                window.location.href =
+                    target;
+            }
+        );
+    });
+```
+
+}
+
+/* =========================================================
+SUBMIT
+========================================================= */
+
+async function handleSubmit(
+event
+) {
+event.preventDefault();
+
+```
+if (isSubmitting) {
+    return;
+}
+
+clearAllErrors();
+
+const validation =
+    validateForm();
+
+if (!validation.valid) {
+    showFieldError(
+        validation.field,
+        validation.message
+    );
+
+    return;
+}
+
+isSubmitting = true;
+
+setSubmittingState(
+    true
+);
+
+showPageLoader();
+
+try {
+    const username =
+        normalizeUsername(
+            usernameInput.value
+        );
+
+    const displayName =
+        normalizeText(
+            displayNameInput.value
+        );
+
+    const email =
+        normalizeEmail(
+            emailInput.value
+        );
+
+    const password =
+        passwordInput.value;
+
+    const country =
+        normalizeText(
+            countryInput.value
+        );
+
+    const language =
+        normalizeLanguage(
+            languageInput?.value
+        );
+
+    /*
+     * Vérification du nom d'utilisateur
+     * avant de créer le compte Auth.
+     */
+    const usernameAvailable =
+        await isUsernameAvailable(
+            username
+        );
+
+    if (!usernameAvailable) {
+        throw new SignupFieldError(
+            "username",
+            "Ce nom d'utilisateur est déjà utilisé."
+        );
+    }
+
+    /*
+     * 1. Création du compte Supabase Auth.
+     */
+    const authResult =
+        await signUp(
+            email,
+            password
+        );
+
+    const user =
+        authResult?.user ||
+        authResult?.data?.user ||
+        null;
+
+    if (!user?.id) {
+        throw new Error(
+            "Le compte n'a pas pu être créé."
+        );
+    }
+
+    /*
+     * 2. Création du profil NetView.
+     *
+     * Le compte est toujours créé comme "user".
+     * Aucun type "creator", "admin" ou "seller".
+     */
+    await createProfile({
+        username,
+        display_name:
+            displayName,
+        country,
+        language,
+        account_type:
+            "user"
+    });
+
+    /*
+     * 3. Si Supabase fournit immédiatement
+     * une session, on peut enregistrer l'appareil.
+     *
+     * Si la confirmation email est obligatoire,
+     * la session peut être null : le device sera
+     * enregistré lors de la première connexion.
+     */
+    let session = null;
+
+    try {
+        session =
+            await getSession();
+    } catch (sessionError) {
+        console.warn(
+            "NetView signup session check warning:",
+            sessionError
+        );
+    }
+
+    if (
+        session?.user?.id ===
+        user.id
+    ) {
+        try {
+            await registerCurrentDevice();
+        } catch (deviceError) {
+            console.error(
+                "NetView signup device registration error:",
+                deviceError
+            );
+        }
+    }
+
+    /*
+     * 4. Redirection vers confirmation email.
+     */
+    window.location.replace(
+        `confirm-email.html?email=${encodeURIComponent(email)}`
+    );
+
+} catch (error) {
+    console.error(
+        "NetView signup error:",
+        error
+    );
+
+    hidePageLoader();
+
+    if (
+        error instanceof
+        SignupFieldError
+    ) {
+        showFieldError(
+            error.field,
+            error.message
+        );
+
+        return;
+    }
+
+    handleSignupError(
+        error
+    );
+} finally {
+    isSubmitting = false;
+
+    setSubmittingState(
+        false
+    );
+}
+```
+
+}
+
+/* =========================================================
+VALIDATION
+========================================================= */
+
+function validateForm() {
+const username =
+normalizeUsername(
+usernameInput?.value
+);
+
+```
+const displayName =
+    normalizeText(
+        displayNameInput?.value
+    );
+
+const email =
+    normalizeEmail(
+        emailInput?.value
+    );
+
+const password =
+    passwordInput?.value || "";
+
+const confirmation =
+    confirmPasswordInput?.value ||
+    "";
+
+const country =
+    normalizeText(
+        countryInput?.value
+    );
+
+if (!username) {
+    return {
+        valid: false,
+        field: "username",
+        message:
+            "Veuillez choisir un nom d'utilisateur."
+    };
+}
+
+if (
+    username.length < 3 ||
+    username.length > 30
+) {
+    return {
+        valid: false,
+        field: "username",
+        message:
+            "Le nom d'utilisateur doit contenir entre 3 et 30 caractères."
+    };
+}
+
+if (
+    !/^[a-zA-Z0-9._-]+$/.test(
+        username
+    )
+) {
+    return {
+        valid: false,
+        field: "username",
+        message:
+            "Le nom d'utilisateur peut contenir uniquement des lettres, chiffres, points, tirets et underscores."
+    };
+}
+
+if (!displayName) {
+    return {
+        valid: false,
+        field: "displayName",
+        message:
+            "Veuillez saisir votre nom affiché."
+    };
+}
+
+if (
+    displayName.length > 80
+) {
+    return {
+        valid: false,
+        field: "displayName",
+        message:
+            "Le nom affiché ne peut pas dépasser 80 caractères."
+    };
+}
+
+if (!email) {
+    return {
+        valid: false,
+        field: "email",
+        message:
+            "Veuillez saisir votre adresse e-mail."
+    };
+}
+
+if (!isValidEmail(email)) {
+    return {
+        valid: false,
+        field: "email",
+        message:
+            "Veuillez saisir une adresse e-mail valide."
+    };
+}
+
+if (!password) {
+    return {
+        valid: false,
+        field: "password",
+        message:
+            "Veuillez choisir un mot de passe."
+    };
+}
+
+if (password.length < 8) {
+    return {
+        valid: false,
+        field: "password",
+        message:
+            "Le mot de passe doit contenir au moins 8 caractères."
+    };
+}
+
+if (!confirmation) {
+    return {
+        valid: false,
+        field: "confirmPassword",
+        message:
+            "Veuillez confirmer votre mot de passe."
+    };
+}
+
+if (
+    password !== confirmation
+) {
+    return {
+        valid: false,
+        field: "confirmPassword",
+        message:
+            "Les mots de passe ne correspondent pas."
+    };
+}
+
+if (!country) {
+    return {
+        valid: false,
+        field: "country",
+        message:
+            "Veuillez saisir votre pays."
+    };
+}
+
+if (
+    !acceptTermsInput?.checked
+) {
+    return {
+        valid: false,
+        field: "terms",
+        message:
+            "Vous devez accepter les conditions d'utilisation et la politique de confidentialité."
+    };
+}
+
+return {
+    valid: true
+};
+```
+
+}
+
+/* =========================================================
+NORMALIZATION
+========================================================= */
+
+function normalizeUsername(
+value
+) {
+return String(
+value || ""
+)
+.trim()
+.toLowerCase();
+}
+
+function normalizeText(
+value
+) {
+return String(
+value || ""
+)
+.trim()
+.replace(/\s+/g, " ");
+}
+
+function normalizeEmail(
+value
+) {
+return String(
+value || ""
+)
+.trim()
+.toLowerCase();
+}
+
+function normalizeLanguage(
+value
+) {
+const language =
+String(
+value || "fr"
+)
+.trim()
+.toLowerCase();
+
+```
+return language === "en"
+    ? "en"
+    : "fr";
+```
+
+}
+
+function isValidEmail(
+email
+) {
+return /^[^\s@]+@[^\s@]+.[^\s@]+$/.test(
+email
+);
+}
+
+/* =========================================================
+FIELD ERRORS
+========================================================= */
+
+function showFieldError(
+field,
+message
+) {
+clearAllErrors();
+
+```
+switch (field) {
+    case "username":
+        showInputError(
+            usernameInput,
+            usernameError,
+            message
+        );
+        break;
+
+    case "displayName":
+        showInputError(
+            displayNameInput,
+            displayNameError,
+            message
+        );
+        break;
+
+    case "email":
+        showInputError(
+            emailInput,
+            emailError,
+            message
+        );
+        break;
+
+    case "password":
+        showInputError(
+            passwordInput,
+            passwordError,
+            message
+        );
+        break;
+
+    case "confirmPassword":
+        showInputError(
+            confirmPasswordInput,
+            confirmPasswordError,
+            message
+        );
+        break;
+
+    case "country":
+        showInputError(
+            countryInput,
+            countryError,
+            message
+        );
+        break;
+
+    case "terms":
+        showInputError(
+            acceptTermsInput,
+            termsError,
+            message
+        );
+        break;
+}
+```
+
+}
+
+function showInputError(
+input,
+errorElement,
+message
+) {
+if (input) {
+input.classList.add(
+"is-invalid"
+);
+
+```
+    input.setAttribute(
+        "aria-invalid",
+        "true"
     );
 }
 
-togglePassword.addEventListener("click", () => {
-    togglePasswordVisibility(inputPassword, togglePassword);
-});
-
-toggleConfirmPassword.addEventListener("click", () => {
-    togglePasswordVisibility(inputConfirmPassword, toggleConfirmPassword);
-});
-
-
-// ==========================================
-// Password Strength
-// ==========================================
-
-function updatePasswordStrength() {
-    const value = inputPassword.value;
-    let score = 0;
-
-    if (value.length >= 8) score++;
-    if (/[A-Z]/.test(value)) score++;
-    if (/[a-z]/.test(value)) score++;
-    if (/[0-9]/.test(value)) score++;
-    if (/[^A-Za-z0-9]/.test(value)) score++;
-
-    passwordStrengthBar.className = "nv-password-strength-bar";
-
-    switch (score) {
-        case 0:
-        case 1:
-            passwordStrengthBar.style.width = "20%";
-            passwordStrengthBar.classList.add("weak");
-            passwordStrengthText.textContent = "Mot de passe très faible.";
-            break;
-        case 2:
-            passwordStrengthBar.style.width = "40%";
-            passwordStrengthBar.classList.add("medium");
-            passwordStrengthText.textContent = "Mot de passe faible.";
-            break;
-        case 3:
-            passwordStrengthBar.style.width = "60%";
-            passwordStrengthBar.classList.add("good");
-            passwordStrengthText.textContent = "Mot de passe correct.";
-            break;
-        case 4:
-            passwordStrengthBar.style.width = "80%";
-            passwordStrengthBar.classList.add("strong");
-            passwordStrengthText.textContent = "Mot de passe fort.";
-            break;
-        case 5:
-            passwordStrengthBar.style.width = "100%";
-            passwordStrengthBar.classList.add("very-strong");
-            passwordStrengthText.textContent = "Excellent mot de passe.";
-            break;
-    }
-
-    checkPasswordMatch();
+if (errorElement) {
+    errorElement.textContent =
+        message;
 }
 
+input?.focus();
+```
 
-// ==========================================
-// Password Confirmation
-// ==========================================
-
-function checkPasswordMatch() {
-    passwordMatch.textContent = "";
-    passwordMatch.className = "nv-password-match";
-
-    if (inputConfirmPassword.value === "") {
-        return true;
-    }
-
-    if (inputPassword.value === inputConfirmPassword.value) {
-        passwordMatch.textContent = "Les mots de passe correspondent.";
-        passwordMatch.classList.add("success");
-        return true;
-    }
-
-    passwordMatch.textContent = "Les mots de passe ne correspondent pas.";
-    passwordMatch.classList.add("error");
-    return false;
 }
 
+function clearFieldError(
+input,
+errorElement
+) {
+if (input) {
+input.classList.remove(
+"is-invalid"
+);
 
-// ==========================================
-// Events Input
-// ==========================================
-
-inputPassword.addEventListener("input", updatePasswordStrength);
-inputConfirmPassword.addEventListener("input", checkPasswordMatch);
-
-
-// ==========================================
-// Signup Form
-// ==========================================
-
-signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    signupError.textContent = "";
-    signupError.classList.remove("show");
-
-    const displayNameVal = inputDisplayName.value.trim();
-    const emailVal = inputEmail.value.trim().toLowerCase();
-    const passwordVal = inputPassword.value;
-    const confirmPasswordVal = inputConfirmPassword.value;
-
-    if (displayNameVal.length < 3) {
-        const msg = "Le nom affiché doit contenir au moins 3 caractères.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-        inputDisplayName.focus();
-        return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailVal)) {
-        const msg = "Adresse e-mail invalide.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-        inputEmail.focus();
-        return;
-    }
-
-    if (passwordVal.length < 8) {
-        const msg = "Le mot de passe doit contenir au moins 8 caractères.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-        inputPassword.focus();
-        return;
-    }
-
-    if (passwordVal !== confirmPasswordVal) {
-        const msg = "Les mots de passe ne correspondent pas.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-        inputConfirmPassword.focus();
-        return;
-    }
-
-    if (!acceptTerms.checked) {
-        const msg = "Vous devez accepter les Conditions d'utilisation.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-        acceptTerms.focus();
-        return;
-    }
-
-    buttonLoading(signupButton, true);
-    showLoader();
-
-    try {
-        const { data, error } = await signUp(emailVal, passwordVal);
-
-        if (error) {
-            throw error;
-        }
-
-        signupData = {
-            displayName: displayNameVal,
-            email: emailVal,
-            password: passwordVal,
-            newsletter: newsletter.checked
-        };
-
-        currentEmail = emailVal;
-        verificationEmail.textContent = emailVal;
-        newVerificationEmail.value = emailVal;
-
-        // 1. Réinitialiser les états des boutons
-        buttonLoading(signupButton, false);
-        
-        // 2. S'assurer que le loader global disparaît
-        if (typeof hideLoader === "function") {
-            hideLoader();
-        } else if (pageLoader) {
-            pageLoader.classList.remove("show"); // ou style.display = "none" selon votre UI
-        }
-
-        // 3. Afficher la notification et FORCER l'ouverture du modal
-        showNotification("Compte créé avec succès ! Vérifiez vos e-mails.");
-        
-        // On s'assure que le modal s'affiche bien en forçant le display si nécessaire
-        emailVerificationModal.classList.add("show");
-        emailVerificationModal.style.display = "flex";
-
-    } catch (error) {
-        hideLoader();
-        buttonLoading(signupButton, false);
-
-        const msg = error.message || "Impossible de créer le compte.";
-        signupError.textContent = msg;
-        signupError.classList.add("show");
-        showNotification(msg, true);
-    }
-});
-
-
-// ==========================================
-// Email Verification Modal Functions
-// ==========================================
-
-function startResendCountdown() {
-    resendSeconds = 60;
-    resendEmailButton.disabled = true;
-
-    resendCountdown.textContent = `Vous pourrez renvoyer un e-mail dans ${resendSeconds} s.`;
-
-    clearInterval(resendTimer);
-
-    resendTimer = setInterval(() => {
-        resendSeconds--;
-
-        if (resendSeconds <= 0) {
-            clearInterval(resendTimer);
-            resendEmailButton.disabled = false;
-            resendCountdown.textContent = "Vous pouvez maintenant renvoyer un e-mail.";
-            return;
-        }
-
-        resendCountdown.textContent = `Vous pourrez renvoyer un e-mail dans ${resendSeconds} s.`;
-    }, 1000);
+```
+    input.setAttribute(
+        "aria-invalid",
+        "false"
+    );
 }
 
+if (errorElement) {
+    errorElement.textContent =
+        "";
+}
+```
 
-// ==========================================
-// Change Email
-// ==========================================
-
-changeEmailButton.addEventListener("click", async () => {
-    verificationMessage.textContent = "";
-
-    const newEmail = newVerificationEmail.value.trim().toLowerCase();
-
-    if (!newEmail) {
-        verificationMessage.textContent = "Veuillez saisir une adresse e-mail.";
-        showNotification("Veuillez saisir une adresse e-mail.", true);
-        return;
-    }
-
-    if (newEmail === currentEmail) {
-        verificationMessage.textContent = "Cette adresse e-mail est déjà utilisée.";
-        showNotification("Cette adresse e-mail est déjà utilisée.", true);
-        return;
-    }
-
-    changeEmailButton.disabled = true;
-
-    try {
-        const { error } = await updateUser({ email: newEmail });
-
-        if (error) throw error;
-
-        currentEmail = newEmail;
-        signupData.email = newEmail;
-        verificationEmail.textContent = newEmail;
-        verificationMessage.textContent = "Adresse e-mail mise à jour. Un nouvel e-mail de confirmation a été envoyé.";
-        showNotification("Adresse e-mail mise à jour avec succès.");
-
-        await resendVerification(newEmail);
-        startResendCountdown();
-
-    } catch (error) {
-        const msg = error.message || "Impossible de modifier l'adresse e-mail.";
-        verificationMessage.textContent = msg;
-        showNotification(msg, true);
-    }
-
-    changeEmailButton.disabled = false;
-});
-
-
-// ==========================================
-// Resend Verification Email
-// ==========================================
-
-resendEmailButton.addEventListener("click", async () => {
-    verificationMessage.textContent = "";
-    resendEmailButton.disabled = true;
-
-    try {
-        const { error } = await resendVerification(currentEmail);
-
-        if (error) throw error;
-
-        verificationMessage.textContent = "Un nouvel e-mail de confirmation a été envoyé.";
-        showNotification("E-mail de confirmation renvoyé.");
-        startResendCountdown();
-
-    } catch (error) {
-        resendEmailButton.disabled = false;
-        const msg = error.message || "Impossible de renvoyer l'e-mail.";
-        verificationMessage.textContent = msg;
-        showNotification(msg, true);
-    }
-});
-
-
-// ==========================================
-// Prevent Closing Modal on Overlay Click
-// ==========================================
-
-const modalOverlay = emailVerificationModal.querySelector(".nv-modal-overlay");
-if (modalOverlay) {
-    modalOverlay.addEventListener("click", event => {
-        event.stopPropagation();
-    });
 }
 
+function clearAllErrors() {
+clearFieldError(
+usernameInput,
+usernameError
+);
 
-// ==========================================
-// Email Confirmation Check
-// ==========================================
+```
+clearFieldError(
+    displayNameInput,
+    displayNameError
+);
 
-async function checkEmailConfirmation() {
-    try {
-        const user = await refreshUser();
+clearFieldError(
+    emailInput,
+    emailError
+);
 
-        if (!user || !user.email_confirmed_at) {
-            return false;
-        }
+clearFieldError(
+    passwordInput,
+    passwordError
+);
 
-        clearInterval(verificationInterval);
+clearFieldError(
+    confirmPasswordInput,
+    confirmPasswordError
+);
 
-        emailVerifiedButton.disabled = true;
-        emailVerifiedButton.textContent = "Confirmation détectée...";
+clearFieldError(
+    countryInput,
+    countryError
+);
 
-        await createProfile({
-            display_name: signupData.displayName,
-            username: null,
-            country: null,
-            language: "fr"
-        });
+clearFieldError(
+    acceptTermsInput,
+    termsError
+);
+```
 
-        showNotification("E-mail confirmé avec succès !");
-        navigate("profile.html");
-        return true;
-
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
 }
 
-emailVerifiedButton.addEventListener("click", async () => {
-    verificationMessage.textContent = "Vérification en cours...";
+/* =========================================================
+SIGNUP ERRORS
+========================================================= */
 
-    const confirmed = await checkEmailConfirmation();
+function handleSignupError(
+error
+) {
+const message =
+getReadableSignupError(
+error
+);
 
-    if (!confirmed) {
-        const msg = "Votre adresse e-mail n'est pas encore confirmée.";
-        verificationMessage.textContent = msg;
-        showNotification(msg, true);
-    }
-});
+```
+window.alert(
+    message
+);
+```
 
-function startVerificationWatcher() {
-    clearInterval(verificationInterval);
-    verificationInterval = setInterval(checkEmailConfirmation, 10000);
 }
 
-const observer = new MutationObserver(() => {
-    if (emailVerificationModal.classList.contains("show")) {
-        startVerificationWatcher();
-    }
-});
-
-observer.observe(emailVerificationModal, {
-    attributes: true,
-    attributeFilter: ["class"]
-});
-
-
-// ==========================================
-// Existing Session Check
-// ==========================================
-
-(async () => {
-    try {
-        const session = await getSession();
-        if (session) {
-            navigate("index.html");
-        }
-    } catch (error) {
-        console.error(error);
-    }
-})();
-
-
-// ==========================================
-// Clear Errors While Typing & Sync Modal
-// ==========================================
-
-[
-    inputDisplayName,
-    inputEmail,
-    inputPassword,
-    inputConfirmPassword
-].forEach(input => {
-    input.addEventListener("input", () => {
-        signupError.textContent = "";
-        signupError.classList.remove("show");
-    });
-});
-
-inputEmail.addEventListener("input", () => {
-    if (!emailVerificationModal.classList.contains("show")) return;
-
-    const value = inputEmail.value.trim().toLowerCase();
-    currentEmail = value;
-    verificationEmail.textContent = value;
-    newVerificationEmail.value = value;
-});
-
-newVerificationEmail.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        changeEmailButton.click();
-    }
-});
-
-window.addEventListener("load", () => {
-    inputDisplayName.focus();
-});
-
-window.addEventListener("beforeunload", () => {
-    clearInterval(verificationInterval);
-    clearInterval(resendTimer);
-});
-
-function resetVerificationMessage() {
-    verificationMessage.textContent = "";
+function getReadableSignupError(
+error
+) {
+if (!error) {
+return (
+"Impossible de créer votre compte NetView."
+);
 }
 
-newVerificationEmail.addEventListener("input", resetVerificationMessage);
+```
+const raw =
+    String(
+        error.message ||
+        error.error_description ||
+        error.details ||
+        ""
+    );
 
-inputEmail.addEventListener("blur", () => {
-    inputEmail.value = inputEmail.value.trim().toLowerCase();
-});
+const message =
+    raw.toLowerCase();
 
-newVerificationEmail.addEventListener("blur", () => {
-    newVerificationEmail.value = newVerificationEmail.value.trim().toLowerCase();
-});
+if (
+    message.includes(
+        "user already registered"
+    )
+) {
+    return (
+        "Un compte existe déjà avec cette adresse e-mail."
+    );
+}
 
+if (
+    message.includes(
+        "email already registered"
+    )
+) {
+    return (
+        "Un compte existe déjà avec cette adresse e-mail."
+    );
+}
 
-// ==========================================
-// Final Initialization
-// ==========================================
+if (
+    message.includes(
+        "invalid email"
+    )
+) {
+    return (
+        "L'adresse e-mail saisie est invalide."
+    );
+}
 
-updatePasswordStrength();
-checkPasswordMatch();
+if (
+    message.includes(
+        "password"
+    ) &&
+    (
+        message.includes(
+            "at least"
+        ) ||
+        message.includes(
+            "weak"
+        )
+    )
+) {
+    return (
+        "Le mot de passe choisi n'est pas suffisamment sécurisé."
+    );
+}
 
-console.info("NetView Signup Ready.");
+if (
+    message.includes(
+        "rate limit"
+    ) ||
+    message.includes(
+        "too many requests"
+    )
+) {
+    return (
+        "Trop de tentatives. Veuillez patienter avant de réessayer."
+    );
+}
+
+if (
+    message.includes(
+        "failed to fetch"
+    ) ||
+    message.includes(
+        "network"
+    )
+) {
+    return (
+        "Impossible de contacter NetView. Vérifiez votre connexion Internet."
+    );
+}
+
+return (
+    "Impossible de créer votre compte. Vérifiez les informations saisies et réessayez."
+);
+```
+
+}
+
+/* =========================================================
+SUBMIT STATE
+========================================================= */
+
+function setSubmittingState(
+submitting
+) {
+if (!signupButton) {
+return;
+}
+
+```
+signupButton.disabled =
+    submitting;
+
+signupButton.setAttribute(
+    "aria-busy",
+    String(submitting)
+);
+
+const content =
+    signupButton.querySelector(
+        ".signup-submit-content"
+    );
+
+if (!content) {
+    return;
+}
+
+if (submitting) {
+    if (
+        !content.dataset.originalHtml
+    ) {
+        content.dataset.originalHtml =
+            content.innerHTML;
+    }
+
+    content.innerHTML = `
+        <span>
+            Création du compte...
+        </span>
+        <i
+            class="fa-solid fa-spinner fa-spin"
+            aria-hidden="true"
+        ></i>
+    `;
+
+    return;
+}
+
+if (
+    content.dataset.originalHtml
+) {
+    content.innerHTML =
+        content.dataset.originalHtml;
+
+    delete content.dataset.originalHtml;
+}
+```
+
+}
+
+/* =========================================================
+PAGE LOADER
+========================================================= */
+
+function showPageLoader() {
+if (!pageLoader) {
+return;
+}
+
+```
+pageLoader.style.display =
+    "flex";
+
+pageLoader.setAttribute(
+    "aria-hidden",
+    "false"
+);
+```
+
+}
+
+function hidePageLoader() {
+if (!pageLoader) {
+return;
+}
+
+```
+pageLoader.style.display =
+    "none";
+
+pageLoader.setAttribute(
+    "aria-hidden",
+    "true"
+);
+```
+
+}
+
+/* =========================================================
+FIELD ERROR CLASS
+========================================================= */
+
+class SignupFieldError
+extends Error {
+constructor(
+field,
+message
+) {
+super(message);
+
+```
+    this.name =
+        "SignupFieldError";
+
+    this.field =
+        field;
+
+    this.message =
+        message;
+}
+```
+
+}
