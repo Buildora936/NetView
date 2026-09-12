@@ -286,3 +286,35 @@ function getOperatingSystem(
 
     return "Système inconnu";
 }
+export async function isUsernameAvailable(
+    username
+) {
+    const normalizedUsername =
+        String(
+            username || ""
+        )
+        .trim()
+        .toLowerCase();
+
+    if (!normalizedUsername) {
+        return false;
+    }
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq(
+            "username",
+            normalizedUsername
+        )
+        .limit(1);
+
+    if (error) {
+        throw error;
+    }
+
+    return !data?.length;
+}
