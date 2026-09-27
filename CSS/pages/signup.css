@@ -240,15 +240,18 @@ font-size:.75rem;
 line-height:1.4;
 }
 
-.signup-field.has-error .signup-field-error{
+.signup-field.has-error .signup-field-error,
+.signup-field-error:not(:empty){
 display:block;
 }
 
-.signup-field.has-error .signup-input{
+.signup-field.has-error .signup-input,
+.signup-input.is-invalid{
 border-color:rgba(239,68,68,.7);
 }
 
-.signup-field.has-error .signup-input:focus{
+.signup-field.has-error .signup-input:focus,
+.signup-input.is-invalid:focus{
 border-color:#EF4444;
 box-shadow:0 0 0 3px rgba(239,68,68,.1);
 }
@@ -297,6 +300,8 @@ margin-top:9px;
 border-radius:999px;
 background:rgba(255,255,255,.07);
 overflow:hidden;
+font-size:.75rem;
+color:#94A3B8;
 }
 
 .signup-password-strength::before{
@@ -306,29 +311,26 @@ width:0;
 height:4px;
 border-radius:inherit;
 background:#64748B;
+margin-bottom:6px;
 transition:
 width .25s ease,
 background .25s ease;
 }
 
-/* Classes that can be applied by signup.js */
-
-.signup-password-strength.weak::before{
-width:25%;
+.signup-password-strength.weak::before,
+.signup-password-strength[data-strength="weak"]::before{
+width:33%;
 background:#EF4444;
 }
 
-.signup-password-strength.medium::before{
-width:55%;
+.signup-password-strength.medium::before,
+.signup-password-strength[data-strength="medium"]::before{
+width:66%;
 background:#F59E0B;
 }
 
-.signup-password-strength.strong::before{
-width:78%;
-background:#06B6D4;
-}
-
-.signup-password-strength.very-strong::before{
+.signup-password-strength.strong::before,
+.signup-password-strength[data-strength="strong"]::before{
 width:100%;
 background:#22C55E;
 }
@@ -387,7 +389,8 @@ outline:2px solid rgba(96,165,250,.7);
 outline-offset:2px;
 }
 
-.signup-checkbox.has-error .signup-checkbox-mark{
+.signup-checkbox.has-error .signup-checkbox-mark,
+.signup-checkbox input.is-invalid + .signup-checkbox-mark{
 border-color:#EF4444;
 }
 
@@ -404,7 +407,10 @@ text-decoration-color:rgba(203,213,225,.35);
 text-underline-offset:2px;
 }
 
-.signup-terms-text a:hover
+.signup-terms-text a:hover{
+color:#FFFFFF;
+text-decoration-color:#FFFFFF;
+}
 
 /* =========================================================
 SUBMIT
@@ -472,7 +478,9 @@ font-weight:700;
 text-decoration:none;
 }
 
-.signup-login-link:hover
+.signup-login-link:hover{
+text-decoration:underline;
+}
 
 /* =========================================================
 BACK
@@ -493,7 +501,9 @@ text-decoration:none;
 transition:color .18s ease;
 }
 
-.signup-back-link:hover
+.signup-back-link:hover{
+color:#94A3B8;
+}
 
 /* =========================================================
 FOOTER
@@ -511,7 +521,10 @@ color:#64748B;
 text-decoration:none;
 }
 
-.signup-footer a:hover
+.signup-footer a:hover{
+color:#94A3B8;
+text-decoration:underline;
+}
 
 /* =========================================================
 LIGHT THEME
@@ -600,6 +613,7 @@ background:rgba(15,23,42,.05);
 [data-theme="light"] .signup-password-strength,
 .light-theme .signup-password-strength{
 background:rgba(15,23,42,.08);
+color:#64748B;
 }
 
 [data-theme="light"] .signup-checkbox-mark,
@@ -655,123 +669,111 @@ RESPONSIVE
 ========================================================= */
 
 @media (max-width:1000px){
-
-```
 .signup-layout{
-    grid-template-columns:1fr;
-    max-width:540px;
-    gap:30px;
+grid-template-columns:1fr;
+max-width:540px;
+gap:30px;
 }
 
 .signup-intro{
-    text-align:center;
+text-align:center;
 }
 
 .signup-brand{
-    justify-content:center;
-    margin-bottom:24px;
+justify-content:center;
+margin-bottom:24px;
 }
 
 .signup-intro-content{
-    max-width:none;
+max-width:none;
 }
 
 .signup-intro h1{
-    margin:0 auto;
-    font-size:clamp(2.1rem,7vw,3.2rem);
+margin:0 auto;
+font-size:clamp(2.1rem,7vw,3.2rem);
 }
 
 .signup-intro p{
-    margin-left:auto;
-    margin-right:auto;
+margin-left:auto;
+margin-right:auto;
 }
 
 .signup-benefits{
-    margin-left:auto;
-    margin-right:auto;
+margin-left:auto;
+margin-right:auto;
 }
-```
-
 }
 
 @media (max-width:600px){
-
-```
 .signup-main{
-    min-height:auto;
-    padding:28px 16px 36px;
+min-height:auto;
+padding:28px 16px 36px;
 }
 
 .signup-layout{
-    gap:24px;
+gap:24px;
 }
 
 .signup-intro{
-    display:none;
+display:none;
 }
 
 .signup-card{
-    padding:24px 19px;
-    border-radius:18px;
+padding:24px 19px;
+border-radius:18px;
 }
 
 .signup-mobile-brand{
-    display:flex;
-    justify-content:center;
-    margin-bottom:24px;
+display:flex;
+justify-content:center;
+margin-bottom:24px;
 }
 
 .signup-mobile-logo{
-    width:50px;
-    height:50px;
-    object-fit:contain;
+width:50px;
+height:50px;
+object-fit:contain;
 }
 
 .signup-header{
-    margin-bottom:22px;
-    text-align:center;
+margin-bottom:22px;
+text-align:center;
 }
 
 .signup-header h2{
-    font-size:1.4rem;
+font-size:1.4rem;
 }
 
 .signup-header p{
-    font-size:.84rem;
+font-size:.84rem;
 }
 
 .signup-form{
-    gap:15px;
+gap:15px;
 }
 
 .signup-confirmation-note{
-    font-size:.7rem;
+font-size:.7rem;
 }
 
 .signup-footer{
-    padding:0 16px 20px;
+padding:0 16px 20px;
 }
-```
-
 }
 
 @media (max-width:380px){
-
-```
 .signup-main{
-    padding-left:12px;
-    padding-right:12px;
+padding-left:12px;
+padding-right:12px;
 }
 
 .signup-card{
-    padding:21px 15px;
+padding:21px 15px;
 }
 
 .signup-terms-text{
-    font-size:.72rem;
+font-size:.72rem;
 }
-```
-
 }
 
 /* =========================================================
@@ -779,18 +781,14 @@ REDUCED MOTION
 ========================================================= */
 
 @media (prefers-reduced-motion:reduce){
-
-```
 .signup-benefit,
 .signup-password-toggle,
 .signup-checkbox-mark,
 .signup-password-strength::before{
-    transition:none;
+transition:none;
 }
 
 .signup-benefit:hover{
-    transform:none;
+transform:none;
 }
-```
-
 }
