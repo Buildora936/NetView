@@ -635,49 +635,104 @@ clearFieldError(acceptTermsInput, termsError);
 }
 
 /* =========================================================
-SIGNUP ERRORS
+   SIGNUP ERRORS & NOTIFICATIONS
 ========================================================= */
 
 function handleSignupError(error) {
-const message = getReadableSignupError(error);
-window.alert(message);
+    const message = getReadableSignupError(error);
+    window.alert(message);
 }
 
 function getReadableSignupError(error) {
-if (!error) {
-return "Impossible de créer votre compte NetView.";
-}
+    if (!error) {
+        return "Impossible de créer votre compte NetView.";
+    }
 
-const raw = String(
-    error.message ||
-    error.error_description ||
-    error.details ||
-    ""
-);
+    // Extraction de toutes les propriétés utiles envoyées par Supabase
+    const code = String(error.code || "").toLowerCase();
+    const rawMessage = String(error.message || "").toLowerCase();
+    const rawDetails = String(error.details || "").toLowerCase();
+    const rawDescription = String(error.error_description || "").toLowerCase();
+    
+    // Chaîne combinée pour des recherches flexibles
+    const fullErrorString = `${code} ${rawMessage} ${rawDetails} ${rawDescription}`;
 
-const message = raw.toLowerCase();
+    // 1. Compte / Adresse e-mail déjà existants
+    if (
+        code === "user_already_exists" ||
+        code === "identity_already_exists" ||
+        fullErrorString.includes("user already registered") ||
+        fullErrorString.includes("email already registered") ||
+        fullErrorString.includes("already has been taken") ||
+        fullErrorString.includes("already registered")
+    ) {
+        return "Un compte existe déjà avec cette adresse e-mail. Essayez de vous connecter.";
+    }
 
-if (message.includes("user already registered") || message.includes("email already registered")) {
-    return "Un compte existe déjà avec cette adresse e-mail.";
-}
+    // 2. Format d'e-mail invalide ou non autorisé
+    if (
+        code === "validation_failed" ||
+        fullErrorString.includes("invalid email") ||
+        fullErrorString.includes("email address is invalid") ||
+        fullErrorString.includes("unable to validate email address")
+    ) {
+        return "L'adresse e-mail saisie est invalide ou n'est pas acceptée.";
+    }
 
-if (message.includes("invalid email")) {
-    return "L'adresse e-mail saisie est invalide.";
-}
+    // 3. Sécurité et exigences du mot de passe
+    if (
+        code === "weak_password" ||
+        (fullErrorString.includes("password") && (
+            fullErrorString.includes("at least") ||
+            fullErrorString.includes("weak") ||
+            fullErrorString.includes("short") ||
+            fullErrorString.includes("pwned") ||
+            fullErrorString.includes("security")
+        ))
+    ) {
+        return "Le mot de passe est trop faible. Choisissez un mot de passe d'au moins 6 à 8 caractères avec des chiffres ou symboles.";
+    }
 
-if (message.includes("password") && (message.includes("at least") || message.includes("weak"))) {
-    return "Le mot de passe choisi n'est pas suffisamment sécurisé.";
-}
+    // 4. Limite de requêtes (Rate Limit / Anti-spam Supabase)
+    if (
+        code === "over_email_send_rate_limit" ||
+        error.status === 429 ||
+        fullErrorString.includes("rate limit") ||
+        fullErrorString.includes("too many requests") ||
+        fullErrorString.includes("email rate limit exceeded")
+    ) {
+        return "Trop de tentatives d'inscription en peu de temps. Veuillez attendre quelques minutes avant de réessayer.";
+    }
 
-if (message.includes("rate limit") || message.includes("too many requests")) {
-    return "Trop de tentatives. Veuillez patienter avant de réessayer.";
-}
+    // 5. Problèmes de réseau ou de serveur
+    if (
+        error.status === 500 ||
+        error.status === 502 ||
+        fullErrorString.includes("failed to fetch") ||
+        fullErrorString.includes("network") ||
+        fullErrorString.includes("connection refused")
+    ) {
+        return "Impossible de contacter les serveurs NetView. Vérifiez votre connexion Internet.";
+    }
 
-if (message.includes("failed to fetch") || message.includes("network")) {
-    return "Impossible de contacter NetView. Vérifiez votre connexion Internet.";
-}
+    // 6. Captcha ou vérification de sécurité échouée
+    if (
+        code === "captcha_failed" ||
+        fullErrorString.includes("captcha")
+    ) {
+        return "La vérification de sécurité (Captcha) a échoué. Veuillez réessayer.";
+    }
 
-return "Impossible de créer votre compte. Vérifiez les informations saisies et réessayez.";
+    // 7. Inscription désactivée sur le projet Supabase
+    if (
+        code === "signup_disabled" ||
+        fullErrorString.includes("signups are disabled")
+    ) {
+        return "Les nouvelles inscriptions sont temporairement fermées sur NetView.";
+    }
+
+    // Message par défaut pour les cas non identifiés
+    return "Erreur non-identifié. veullieuz verifier votre inbox ou Vérifiez les informations saisies et réessayez.";
 }
 
 /* =========================================================
